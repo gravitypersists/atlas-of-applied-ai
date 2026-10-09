@@ -167,4 +167,13 @@ settlements:
   - {id: trust-calibration, x: 3327, y: 1305.1, settled: "2026-10-08"}
   - {id: voice-turn-taking, x: 3873.1, y: 1566.8, settled: "2026-10-08"}
   - {id: mid-run-steering, x: 3268, y: 1254.7, settled: "2026-10-08"}
+  - {id: program-aided-reasoning, x: 2551.4, y: 1758.1, settled: "2026-10-08"}
+  - {id: reasoning-via-planning, x: 2218.3, y: 2035, settled: "2026-10-08"}
+  - {id: graph-of-thoughts, x: 2243.1, y: 2133.1, settled: "2026-10-08"}
+  - {id: step-back-prompting, x: 2689, y: 2054.5, settled: "2026-10-08"}
+  - {id: language-agent-tree-search, x: 2709.4, y: 1985.7, settled: "2026-10-08"}
+  - {id: math-shepherd, x: 2160.5, y: 1972.2, settled: "2026-10-08"}
+  - {id: quiet-star, x: 2127.9, y: 2066.1, settled: "2026-10-08"}
+  - {id: latent-reasoning, x: 2268, y: 2222.8, settled: "2026-10-08"}
+  - {id: cot-monitoring, x: 2687, y: 2144.7, settled: "2026-10-08"}
 retired: []

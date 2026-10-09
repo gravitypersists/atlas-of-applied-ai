@@ -21,9 +21,8 @@ LEADS = {
         ("RoPE and context-length extension", "2104.09864"),
     ],
     "planning-and-reasoning": [
-        ("Quiet-STaR (learned internal rationales)", "2403.09629"),
-        ("CoT-Pass@k and evaluating reasoning-trace correctness under RLVR (verify source)", None),
-        ("Language Agent Tree Search (LATS) — new node, or an alias of tree-of-thoughts?", "2310.04406"),
+        ("STaR (self-taught reasoner; iterative fine-tuning on self-generated rationales) as an anchor", "2203.14465"),
+        ("Portfolio Beam Search and diversity-aware search under PRM uncertainty (single blog source; verify adoption)", None),
     ],
     "adaptation-and-post-training": [
         ("KTO (binary-feedback preference optimization)", "2402.01306"),

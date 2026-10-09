@@ -29,6 +29,10 @@ nodes:
   # Chat stays the capital: it is the region's defining surface. Exactly one capital per region.
   chat-interfaces: {tier: capital}
   streaming-responses: {tier: town}
+  # The Peninsula's deep dive (2026-10-09) gave LLM-as-a-Judge a child (CoT Monitoring), outscoring
+  # Capability Benchmarks. Benchmarks stay the capital: the region grew out of them.
+  capability-benchmarks: {tier: capital}
+  llm-as-a-judge: {tier: city}
 
 # Title anchors (world units). Pinned when a new landmark pushes a neighbouring title into a clash.
 regions:
@@ -36,3 +40,6 @@ regions:
   agents-and-orchestration: {label: [2762, 1518]}
   # Reasoning Trace Display (2026-10-09) settled under The Agora's title; moved east to clear it.
   ai-product-and-interaction-design: {label: [3250, 1690]}
+  # The Peninsula's deep dive (2026-10-09) reshaped the eastern coast and pushed this title onto
+  # Query Rewriting; pinned at its previous position.
+  retrieval-and-knowledge: {label: [3014, 2154]}

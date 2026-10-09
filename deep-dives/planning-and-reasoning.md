@@ -1,6 +1,6 @@
 # Deep dive: Planning and Reasoning
 
-Backbone v0.2 · 10 anchors · 11 cross-region edges
+Backbone v0.2 · 19 anchors · 16 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -39,6 +39,15 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `reasoning-models` — Reasoning Models (maturity 4, 2024-09)
 - `llm-plus-p` — LLM+P (maturity 1, 2023-04)
 - `llm-modulo` — LLM-Modulo (maturity 2, 2024-02)
+- `program-aided-reasoning` — Program-Aided Reasoning (maturity 4, 2022-11)
+- `reasoning-via-planning` — Reasoning via Planning (maturity 1, 2023-05)
+- `graph-of-thoughts` — Graph of Thoughts (maturity 1, 2023-08)
+- `step-back-prompting` — Step-Back Prompting (maturity 2, 2023-10)
+- `language-agent-tree-search` — Language Agent Tree Search (maturity 1, 2023-10)
+- `math-shepherd` — Automatic Process Supervision (maturity 2, 2023-12)
+- `quiet-star` — Quiet-STaR (maturity 1, 2024-03)
+- `latent-reasoning` — Latent Reasoning (maturity 1, 2024-12)
+- `cot-monitoring` — CoT Monitoring (maturity 2, 2025-03)
 
 Nodes homed elsewhere that also touch this region:
 - `zero-shot-cot` — Zero-Shot Chain-of-Thought (home: prompting-and-context-engineering)
@@ -57,9 +66,8 @@ Nodes homed elsewhere that also touch this region:
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- Quiet-STaR (learned internal rationales) (arXiv:2403.09629)
-- CoT-Pass@k and evaluating reasoning-trace correctness under RLVR (verify source)
-- Language Agent Tree Search (LATS) — new node, or an alias of tree-of-thoughts? (arXiv:2310.04406)
+- STaR (self-taught reasoner; iterative fine-tuning on self-generated rationales) as an anchor (arXiv:2203.14465)
+- Portfolio Beam Search and diversity-aware search under PRM uncertainty (single blog source; verify adoption)
 
 ## Output
 
@@ -160,7 +168,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - prompting-and-context-engineering: zero-shot-prompting (Zero-Shot Prompting; direct prompting; instruction prompting), few-shot-prompting (Few-Shot Prompting; in-context learning; ICL), system-prompts (System Prompts; system messages; custom instructions; developer messages), prompt-templating (Prompt Templating; prompt templates), prompt-chaining (Prompt Chaining; LLM chains; pipelines of prompts; AI chains), structured-outputs (Structured Outputs; JSON outputs; schema-constrained outputs), context-compaction (Context Compaction; prompt compression; summarization of history), context-engineering (Context Engineering; context management), automatic-prompt-optimization (Automatic Prompt Optimization; APO; APE; prompt search), declarative-prompt-compilation (Declarative Prompt Compilation; DSPy; LM programs), zero-shot-cot (Zero-Shot Chain-of-Thought; zero-shot CoT; Let's think step by step), dynamic-few-shot-selection (Dynamic Few-Shot Selection; example selection; prompt retrieval; kNN prompting; KATE), decomposed-prompting (Decomposed Prompting; DECOMP; task decomposition prompting), textual-gradients (Textual Gradients; TextGrad; textual gradient descent), context-ordering (Context Ordering; position engineering; context reordering; lost-in-the-middle mitigation), progressive-disclosure (Progressive Disclosure; just-in-time context; lazy-loaded context)
 - retrieval-and-knowledge: text-embeddings (Text Embeddings; embedding models; sentence embeddings), dense-retrieval (Dense Retrieval; vector search; semantic search; DPR), retrieval-augmented-generation (Retrieval-Augmented Generation; RAG; naive RAG), chunking-strategies (Chunking Strategies; text splitting; semantic chunking), hybrid-search (Hybrid Search; sparse + dense retrieval; reciprocal rank fusion), cross-encoder-reranking (Cross-Encoder Reranking; rerankers; retrieve-and-rerank; multi-stage retrieval), query-rewriting (Query Rewriting and HyDE; query expansion; HyDE), contextual-retrieval (Contextual Retrieval; contextual chunking), graph-rag (GraphRAG; knowledge-graph RAG), self-rag (Self-RAG; self-reflective RAG), corrective-rag (Corrective RAG; CRAG), agentic-rag (Agentic RAG; agentic search; iterative retrieval)
 - agents-and-orchestration: mrkl-systems (MRKL Systems; modular reasoning; neuro-symbolic routing), tool-learning (Tool Learning; Toolformer; self-taught tool use), function-calling (Function Calling; tool use; tool calling), react-agent-loop (ReAct Agent Loop; reason and act; agent loop), workflow-state-machines (Workflow Graphs and State Machines; graph-based agents; agent workflows), model-context-protocol (Model Context Protocol; MCP), agent-memory (Agent Memory; long-term memory; episodic memory; MemGPT; structured note-taking), multi-agent-systems (Multi-Agent Systems; orchestrator-worker; subagents; agent teams), coding-agents (Coding Agents; software engineering agents; SWE-agent), computer-use-agents (Computer-Use Agents; GUI agents; browser agents), deep-research-agents (Deep Research Agents; research agents), agent-skills (Agent Skills; skills; packaged procedures), decision-models (Decision Models; System One models; typed decision models; calibrated classifiers for agents), semantic-routing (Semantic Routing; embedding-based intent routing; Semantic Router), mcp-code-execution (Code Execution with MCP; Code Mode; tools as code APIs), long-running-agent-harness (Long-Running Agent Harnesses; multi-session agents; initializer agent pattern; progress files), context-aware-mcp (Context-Aware MCP; CA-MCP; shared context store)
-- planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; LATS), reflexion (Self-Reflection; Reflexion; self-critique; self-refine; evaluator-optimizer), process-reward-models (Process Reward Models; PRMs; step-level verifiers), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling), reasoning-models (Reasoning Models; thinking models; extended thinking), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning)
+- planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; search-based decoding), reflexion (Self-Reflection; Reflexion; self-critique; self-refine; evaluator-optimizer), process-reward-models (Process Reward Models; PRMs; step-level verifiers; process supervision), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling; search against verifiers), reasoning-models (Reasoning Models; thinking models; extended thinking; o1-class models), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning), program-aided-reasoning (Program-Aided Reasoning; PAL; Program of Thoughts; PoT; program-aided language models), reasoning-via-planning (Reasoning via Planning; RAP; MCTS over reasoning), graph-of-thoughts (Graph of Thoughts; GoT), step-back-prompting (Step-Back Prompting; abstraction prompting), language-agent-tree-search (Language Agent Tree Search; LATS), math-shepherd (Automatic Process Supervision; Math-Shepherd; Monte Carlo step labels), quiet-star (Quiet-STaR; learned internal rationales; think before speaking), latent-reasoning (Latent Reasoning; Coconut; Chain of Continuous Thought; continuous thought), cot-monitoring (CoT Monitoring; CoT faithfulness; chain-of-thought monitorability; reasoning trace monitoring)
 - adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling), direct-preference-optimization (Direct Preference Optimization; DPO; KTO; ORPO; IPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT)
 - data-and-synthetic-data: self-instruct (Self-Instruct; synthetic instruction generation), evol-instruct (Evol-Instruct; instruction evolution), synthetic-textbook-data (Synthetic Pretraining Data; textbook-quality data; synthetic corpora), human-instruction-datasets (Crowdsourced Instruction Data; human-written demonstrations; OpenAssistant), llm-annotation (LLM-Assisted Annotation; LLM labeling; model-as-annotator), data-deduplication (Data Deduplication; near-duplicate removal; MinHash dedup), data-decontamination (Data Decontamination; test-set leakage prevention), data-quality-filtering (Data Quality Filtering; corpus curation; classifier-based filtering)
 - evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing), llm-tracing (LLM Tracing; LLM observability; agent traces), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring)
@@ -179,19 +187,33 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - Self-Reflection: Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn et al.) — arXiv:2303.11366
 - Process Reward Models: Let's Verify Step by Step (Lightman et al.) — arXiv:2305.20050
 - Test-Time Compute Scaling: Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters (Snell et al.) — arXiv:2408.03314
-- Reasoning Models: DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning — arXiv:2501.12948
+- Reasoning Models: Learning to reason with LLMs (OpenAI, o1) — https://openai.com/index/learning-to-reason-with-llms/
 - LLM+P: LLM+P: Empowering Large Language Models with Optimal Planning Proficiency (Liu et al.) — arXiv:2304.11477
 - LLM-Modulo: LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks (Kambhampati et al.) — arXiv:2402.01817
+- Program-Aided Reasoning: PAL: Program-aided Language Models (Gao et al.) — arXiv:2211.10435
+- Reasoning via Planning: Reasoning with Language Model is Planning with World Model (Hao et al.) — arXiv:2305.14992
+- Graph of Thoughts: Graph of Thoughts: Solving Elaborate Problems with Large Language Models (Besta et al.) — arXiv:2308.09687
+- Step-Back Prompting: Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models (Zheng et al.) — arXiv:2310.06117
+- Language Agent Tree Search: Language Agent Tree Search Unifies Reasoning Acting and Planning in Language Models (Zhou et al.) — arXiv:2310.04406
+- Automatic Process Supervision: Math-Shepherd: Verify and Reinforce LLMs Step-by-step without Human Annotations (Wang et al.) — arXiv:2312.08935
+- Quiet-STaR: Quiet-STaR: Language Models Can Teach Themselves to Think Before Speaking (Zelikman et al.) — arXiv:2403.09629
+- Latent Reasoning: Training Large Language Models to Reason in a Continuous Latent Space (Hao et al.) — arXiv:2412.06769
+- CoT Monitoring: Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation (Baker et al.) — arXiv:2503.11926
 
 ## Reference: cross-region edges touching this region
 - chain-of-thought --extends--> few-shot-prompting
+- cot-monitoring --applies--> llm-as-a-judge
+- language-agent-tree-search --extends--> react-agent-loop
 - llm-plus-p --combines--> pddl
 - llm-plus-p --combines--> pretrained-language-models
 - process-reward-models --specializes--> rlhf
+- program-aided-reasoning --specializes--> mrkl-systems
+- quiet-star --applies--> policy-gradient-methods
 - react-agent-loop --combines--> chain-of-thought
 - reasoning-models --applies--> policy-gradient-methods
 - reasoning-trace-display --applies--> reasoning-models
 - reflexion --extends--> react-agent-loop
 - scratchpads --applies--> pretrained-language-models
+- step-back-prompting --combines--> retrieval-augmented-generation
 - tree-of-thoughts --combines--> heuristic-search
 - zero-shot-cot --specializes--> chain-of-thought

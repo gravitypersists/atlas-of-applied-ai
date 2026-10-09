@@ -267,6 +267,57 @@
         "Neuro-symbolic planning — LLM+P, LLM-Modulo, LLM-generated PDDL, verifier-in-the-loop systems",
         "Test-time compute strategies and when they pay for themselves",
         "Faithfulness of reasoning traces and what that means for engineers"
+      ],
+      "overview": "Planning and Reasoning covers how a model works its way to an answer instead of producing it in one shot. It starts with chain-of-thought: asking the model to write out intermediate steps before answering turned out to unlock multi-step math and logic in large models. Variations followed quickly. Self-consistency samples several chains and takes the majority answer, and program-aided reasoning has the model write code so an interpreter does the arithmetic.\n\nA single chain can't recover from an early mistake, so the next step was search. Tree of Thoughts and its descendants treat partial reasoning as states to expand, score and backtrack from, and process reward models score each step so the search knows where to go. Planning researchers pushed further toward external checking: in LLM-Modulo systems the model only proposes plans and formal verifiers decide whether they are valid.\n\nSince late 2024 much of this has moved inside the model. Reasoning models are trained with reinforcement learning to think at length before answering, and test-time compute became a dial: more thinking or more samples for a better answer at higher cost and latency. Landmarks worth knowing: chain-of-thought, self-consistency, tree search, process reward models, and reasoning models. Open questions are whether the visible reasoning reflects what the model actually computed, which matters for anyone relying on it to monitor behavior, and whether reasoning will move out of text into hidden vectors.",
+      "learning_path": [
+        {
+          "kind": "talk",
+          "title": "Stanford CS25: V5 I Large Language Model Reasoning, Denny Zhou of Google Deepmind",
+          "by": "Denny Zhou (Stanford CS25)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=ebnX5Ur1hBk",
+          "why": "One of the people behind chain-of-thought and self-consistency explains why intermediate steps help and how sampling, aggregation and RL fine-tuning build on that, which gives you the frame for everything in this region."
+        },
+        {
+          "kind": "paper",
+          "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+          "by": "Jason Wei et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2201.11903",
+          "why": "The paper that showed a few worked examples with written-out steps make large models much better at math and logic problems. Most later techniques here start from it."
+        },
+        {
+          "kind": "blog",
+          "title": "Why We Think",
+          "by": "Lilian Weng",
+          "year": 2025,
+          "url": "https://lilianweng.github.io/posts/2025-05-01-thinking/",
+          "why": "A single long survey of test-time thinking: parallel sampling, sequential revision, search, reward models, latent thinking and faithfulness, with the papers behind each, so the node-level reading has somewhere to land."
+        },
+        {
+          "kind": "paper",
+          "title": "Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters",
+          "by": "Charlie Snell et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2408.03314",
+          "why": "Measures when spending more compute at answer time (search against a verifier, or revising answers) beats using a bigger model, and shows the best strategy depends on how hard the question is."
+        },
+        {
+          "kind": "blog",
+          "title": "Understanding Reasoning LLMs",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/understanding-reasoning-llms",
+          "why": "Explains how reasoning models like DeepSeek-R1 are actually built (inference-time scaling, pure RL, SFT plus RL, distillation) in plain terms, which connects the prompting techniques above to today's trained thinkers."
+        },
+        {
+          "kind": "talk",
+          "title": "LLM-Modulo Frameworks as Compound AI Architectures for Robust Planning (& Reasoning)",
+          "by": "Subbarao Kambhampati",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=lDCUr2V522o",
+          "why": "The skeptic's case: LLMs alone don't plan reliably, so pair them with external verifiers and solvers. Useful for deciding when to trust a model's plan and when to check it."
+        }
       ]
     },
     {
@@ -4288,6 +4339,7 @@
       ],
       "region": "planning-and-reasoning",
       "desc": "Training or prompting models to write intermediate computation steps before the final answer.",
+      "summary": "Training or prompting a model to write out intermediate steps, such as partial results of a calculation or a program's state, before it gives the final answer. The 2021 work showed that a model that \"shows its work\" can do multi-step computation it fails at when answering directly. The idea was quickly absorbed into chain-of-thought.",
       "parents": [
         {
           "id": "pretrained-language-models",
@@ -4304,6 +4356,29 @@
         "arxiv": "2112.00114"
       },
       "examples": [],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "LLM Agents MOOC | UC Berkeley CS294-196 Fall 2024 | LLM Reasoning by Denny Zhou",
+          "by": "Denny Zhou (Berkeley RDI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=QL-FS_Zcmyo"
+        },
+        {
+          "kind": "blog",
+          "title": "Why We Think",
+          "by": "Lilian Weng",
+          "year": 2025,
+          "url": "https://lilianweng.github.io/posts/2025-05-01-thinking/"
+        },
+        {
+          "kind": "paper",
+          "title": "Chain of Thought Empowers Transformers to Solve Inherently Serial Problems",
+          "by": "Zhiyuan Li et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2402.12875"
+        }
+      ],
       "status": "added"
     },
     {
@@ -4318,6 +4393,7 @@
         "prompting-and-context-engineering"
       ],
       "desc": "Eliciting intermediate reasoning steps before a final answer, improving performance on multi-step problems.",
+      "summary": "Asking a model to reason step by step in plain language before answering. On multi-step math, logic and planning problems this sharply improves accuracy in large models, and it became the base of almost everything else in this region. Today reasoning models do it by default.",
       "parents": [
         {
           "id": "few-shot-prompting",
@@ -4343,6 +4419,36 @@
       "examples": [
         "Let's think step by step"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Language Models Perform Reasoning via Chain of Thought",
+          "by": "Google Research (Jason Wei, Denny Zhou)",
+          "year": 2022,
+          "url": "https://research.google/blog/language-models-perform-reasoning-via-chain-of-thought/"
+        },
+        {
+          "kind": "docs",
+          "title": "Prompting best practices: leverage thinking",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#leverage-thinking-and-interleaved-thinking-capabilities"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS25: V5 I Large Language Model Reasoning, Denny Zhou of Google Deepmind",
+          "by": "Denny Zhou (Stanford CS25)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=ebnX5Ur1hBk"
+        },
+        {
+          "kind": "paper",
+          "title": "Large Language Models are Zero-Shot Reasoners",
+          "by": "Takeshi Kojima et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2205.11916"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -4354,6 +4460,7 @@
       ],
       "region": "planning-and-reasoning",
       "desc": "Sampling several reasoning paths and taking the most common answer.",
+      "summary": "Run the same chain-of-thought prompt several times with some randomness, then take the answer that comes up most often. Wrong reasoning paths tend to disagree with each other while right ones converge, so the vote filters out many errors. It costs one call per sample.",
       "parents": [
         {
           "id": "chain-of-thought",
@@ -4370,6 +4477,29 @@
         "arxiv": "2203.11171"
       },
       "examples": [],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Self-Consistency",
+          "by": "DAIR.AI Prompt Engineering Guide",
+          "year": 2023,
+          "url": "https://www.promptingguide.ai/techniques/consistency"
+        },
+        {
+          "kind": "talk",
+          "title": "Adv. LLM Agents MOOC | UC Berkeley Sp25 | Inference-Time Techniques for LLM Reasoning by Xinyun Chen",
+          "by": "Xinyun Chen (Berkeley RDI)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=g0Dwtf3BH-0"
+        },
+        {
+          "kind": "paper",
+          "title": "Universal Self-Consistency for Large Language Model Generation",
+          "by": "Xinyun Chen et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2311.17311"
+        }
+      ],
       "status": "kept"
     },
     {
@@ -4378,13 +4508,14 @@
       "aliases": [
         "Tree of Thoughts",
         "ToT",
-        "LATS"
+        "search-based decoding"
       ],
       "region": "planning-and-reasoning",
       "also": [
         "agents-and-orchestration"
       ],
       "desc": "Exploring a tree of partial reasoning states with evaluation, lookahead, and backtracking.",
+      "summary": "Treating partial reasoning as states in a search tree: the model proposes several next steps, an evaluator (often the model itself) scores them, and the search expands the promising ones and backtracks from dead ends. It solves puzzles a single chain can't, but uses many times the tokens, so it's mostly used in research and high-value offline tasks.",
       "parents": [
         {
           "id": "chain-of-thought",
@@ -4407,7 +4538,31 @@
         "arxiv": "2305.10601"
       },
       "examples": [
-        "LATS"
+        "Game of 24 solvers",
+        "beam search over steps"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models (Full Paper Review)",
+          "by": "Yannic Kilcher (YouTube)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=ut5kp56wW_4"
+        },
+        {
+          "kind": "docs",
+          "title": "Tree of Thoughts (ToT)",
+          "by": "DAIR.AI Prompt Engineering Guide",
+          "year": 2023,
+          "url": "https://www.promptingguide.ai/techniques/tot"
+        },
+        {
+          "kind": "code",
+          "title": "princeton-nlp/tree-of-thought-llm",
+          "by": "Shunyu Yao et al.",
+          "year": 2023,
+          "url": "https://github.com/princeton-nlp/tree-of-thought-llm"
+        }
       ],
       "status": "repaired"
     },
@@ -4425,6 +4580,7 @@
         "agents-and-orchestration"
       ],
       "desc": "Having a model critique its own output or trajectory and retry with the critique in context.",
+      "summary": "Having a model critique its own output or past attempt, then retry with that critique in context. Reflexion stores the lessons from failed agent trials as notes it reads on the next try; self-refine does the same within one answer. It works best when the critique is grounded in real feedback such as test results; pure self-critique can talk itself into errors.",
       "parents": [
         {
           "id": "react-agent-loop",
@@ -4443,6 +4599,36 @@
       "examples": [
         "critique-and-revise loops"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Reflection Agents",
+          "by": "LangChain",
+          "year": 2024,
+          "url": "https://www.langchain.com/blog/reflection-agents"
+        },
+        {
+          "kind": "talk",
+          "title": "Reflection Agents",
+          "by": "LangChain (YouTube)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=v5ymBTXNqtk"
+        },
+        {
+          "kind": "paper",
+          "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+          "by": "Aman Madaan et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2303.17651"
+        },
+        {
+          "kind": "code",
+          "title": "noahshinn/reflexion",
+          "by": "Noah Shinn et al.",
+          "year": 2023,
+          "url": "https://github.com/noahshinn/reflexion"
+        }
+      ],
       "status": "added"
     },
     {
@@ -4450,13 +4636,15 @@
       "name": "Process Reward Models",
       "aliases": [
         "PRMs",
-        "step-level verifiers"
+        "step-level verifiers",
+        "process supervision"
       ],
       "region": "planning-and-reasoning",
       "also": [
         "adaptation-and-post-training"
       ],
       "desc": "Reward models that score each reasoning step rather than only the final answer, used to guide search and training.",
+      "summary": "A reward model that grades each step of a solution instead of only the final answer. Step-level scores tell a search where reasoning went wrong and can rank candidate solutions better than outcome checks. Labeling steps is expensive, and for training reasoning models, simple outcome checks have turned out easier to scale.",
       "parents": [
         {
           "id": "rlhf",
@@ -4475,19 +4663,51 @@
       "examples": [
         "PRM800K"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Scaling test-time compute with open models",
+          "by": "Edward Beeching, Lewis Tunstall, Sasha Rush (Hugging Face)",
+          "year": 2024,
+          "url": "https://huggingface.co/spaces/HuggingFaceH4/blogpost-scaling-test-time-compute"
+        },
+        {
+          "kind": "talk",
+          "title": "OpenAI's Noam Brown, Ilge Akkaya and Hunter Lightman on o1 and Teaching LLMs to Reason Better",
+          "by": "Noam Brown, Ilge Akkaya, Hunter Lightman (Sequoia Capital)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=jPluSXJpdrA"
+        },
+        {
+          "kind": "code",
+          "title": "openai/prm800k",
+          "by": "OpenAI",
+          "year": 2023,
+          "url": "https://github.com/openai/prm800k"
+        },
+        {
+          "kind": "paper",
+          "title": "Rewarding Progress: Scaling Automated Process Verifiers for LLM Reasoning",
+          "by": "Amrith Setlur et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2410.08146"
+        }
+      ],
       "status": "repaired"
     },
     {
       "id": "test-time-compute-scaling",
       "name": "Test-Time Compute Scaling",
       "aliases": [
-        "inference-time scaling"
+        "inference-time scaling",
+        "search against verifiers"
       ],
       "region": "planning-and-reasoning",
       "also": [
         "inference-and-serving"
       ],
       "desc": "Spending more computation at inference — longer reasoning, more samples, search — to improve answers, with predictable returns.",
+      "summary": "Spending more computation when answering, through longer reasoning, more samples, or search against a verifier, to get better answers. Returns are predictable enough to plan around, and on hard problems extra inference compute can beat a larger model. It turned reasoning effort into a setting you trade against cost and latency.",
       "parents": [
         {
           "id": "self-consistency",
@@ -4499,6 +4719,12 @@
           "id": "tree-of-thoughts",
           "rel": "extends",
           "why": "Includes search-based allocation strategies.",
+          "src": "Scaling LLM Test-Time Compute Optimally (Snell et al. 2024)"
+        },
+        {
+          "id": "process-reward-models",
+          "rel": "combines",
+          "why": "One of its two scaling mechanisms is search guided by a process reward model.",
           "src": "Scaling LLM Test-Time Compute Optimally (Snell et al. 2024)"
         }
       ],
@@ -4513,6 +4739,36 @@
         "reasoning effort settings",
         "best-of-n with verifiers"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Charlie Snell, UC Berkeley. Title: Scaling LLM Test-Time Compute",
+          "by": "Charlie Snell (Decentralized AI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=OXwGp9YeuBg"
+        },
+        {
+          "kind": "blog",
+          "title": "Scaling test-time compute with open models",
+          "by": "Edward Beeching, Lewis Tunstall, Sasha Rush (Hugging Face)",
+          "year": 2024,
+          "url": "https://huggingface.co/spaces/HuggingFaceH4/blogpost-scaling-test-time-compute"
+        },
+        {
+          "kind": "blog",
+          "title": "The State of LLM Reasoning Model Inference",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/state-of-llm-reasoning-and-inference-scaling"
+        },
+        {
+          "kind": "paper",
+          "title": "Inference Scaling Laws: An Empirical Analysis of Compute-Optimal Inference for Problem-Solving with Language Models",
+          "by": "Yangzhen Wu et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2408.00724"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -4520,13 +4776,15 @@
       "name": "Reasoning Models",
       "aliases": [
         "thinking models",
-        "extended thinking"
+        "extended thinking",
+        "o1-class models"
       ],
       "region": "planning-and-reasoning",
       "also": [
         "adaptation-and-post-training"
       ],
       "desc": "Models trained with RL to produce long internal reasoning before answering, with controllable thinking budgets.",
+      "summary": "Models trained with reinforcement learning to think at length before answering, backtracking and checking their own work along the way. They are much stronger on math, code and multi-step problems, at the cost of more tokens and latency, and most expose a thinking budget or effort setting. OpenAI's o1 introduced the class in 2024; DeepSeek-R1 showed the recipe openly.",
       "parents": [
         {
           "id": "chain-of-thought",
@@ -4551,14 +4809,44 @@
       "maturity_note": "Available from all major providers; standard for hard tasks.",
       "date": "2024-09",
       "ref": {
-        "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
-        "arxiv": "2501.12948"
+        "title": "Learning to reason with LLMs (OpenAI, o1)",
+        "url": "https://openai.com/index/learning-to-reason-with-llms/"
       },
       "examples": [
         "OpenAI o-series",
         "Claude extended thinking",
         "DeepSeek-R1",
         "Gemini thinking"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+          "by": "DeepSeek-AI",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2501.12948"
+        },
+        {
+          "kind": "blog",
+          "title": "Understanding Reasoning LLMs",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/understanding-reasoning-llms"
+        },
+        {
+          "kind": "talk",
+          "title": "Learning to Reason with LLMs",
+          "by": "Noam Brown (Simons Institute)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=Gr_eYXdHFis"
+        },
+        {
+          "kind": "blog",
+          "title": "Claude's extended thinking",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/news/visible-extended-thinking"
+        }
       ],
       "status": "repaired"
     },
@@ -4571,6 +4859,7 @@
       ],
       "region": "planning-and-reasoning",
       "desc": "The LLM translates a natural-language problem into PDDL, a classical planner solves it, and the LLM translates the plan back.",
+      "summary": "The language model translates a planning problem from plain language into PDDL, a classical planner finds a provably valid plan, and the model translates the plan back. The model never plans; it only translates. It showed how to get guaranteed-correct plans from models that are unreliable planners on their own.",
       "parents": [
         {
           "id": "pddl",
@@ -4593,6 +4882,36 @@
         "arxiv": "2304.11477"
       },
       "examples": [],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Language Models meet Classical Planners to make smarter Robot Task Plans",
+          "by": "Ishika Singh (USC Robotics and Autonomous Systems Center)",
+          "year": 2024,
+          "url": "https://rasc.usc.edu/blog/language-models-meet-classical-planners-to-make-smarter-robot-task-plans/"
+        },
+        {
+          "kind": "talk",
+          "title": "On the Role of LLMs in Planning (ICML 2024 Tutorial)",
+          "by": "Subbarao Kambhampati (ICML)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=2DbmSTK2owI"
+        },
+        {
+          "kind": "paper",
+          "title": "Leveraging Pre-trained Large Language Models to Construct and Utilize World Models for Model-based Task Planning",
+          "by": "Lin Guan et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2305.14909"
+        },
+        {
+          "kind": "code",
+          "title": "Cranial-XIX/llm-pddl",
+          "by": "Bo Liu et al.",
+          "year": 2023,
+          "url": "https://github.com/Cranial-XIX/llm-pddl"
+        }
+      ],
       "status": "added"
     },
     {
@@ -4604,6 +4923,7 @@
       ],
       "region": "planning-and-reasoning",
       "desc": "LLMs generate candidate plans that a bank of external verifiers and critics checks, iterating until a plan passes.",
+      "summary": "The model proposes candidate plans and a bank of external critics, such as formal verifiers, simulators or constraint checkers, tests them. Failures go back to the model as specific feedback, and the loop repeats until a plan passes. Correctness comes from the critics rather than the model, which only has to generate good guesses.",
       "parents": [
         {
           "id": "llm-plus-p",
@@ -4626,7 +4946,586 @@
         "arxiv": "2402.01817"
       },
       "examples": [],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "LLM-Modulo Frameworks as Compound AI Architectures for Robust Planning (& Reasoning)",
+          "by": "Subbarao Kambhampati",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=lDCUr2V522o"
+        },
+        {
+          "kind": "talk",
+          "title": "(How) Do LLMs Reason/Plan? (Talk given at Microsoft Research; 4/11/25)",
+          "by": "Subbarao Kambhampati (Microsoft Research)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=0u2hdSpNS2o"
+        },
+        {
+          "kind": "paper",
+          "title": "Robust Planning with LLM-Modulo Framework: Case Study in Travel Planning",
+          "by": "Atharva Gundawar et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2405.20625"
+        }
+      ],
       "status": "repaired"
+    },
+    {
+      "id": "program-aided-reasoning",
+      "name": "Program-Aided Reasoning",
+      "aliases": [
+        "PAL",
+        "Program of Thoughts",
+        "PoT",
+        "program-aided language models"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "agents-and-orchestration"
+      ],
+      "desc": "The model writes its reasoning as a program, and an interpreter runs it to compute the answer, separating the logic from the arithmetic.",
+      "summary": "Instead of doing math in its head, the model writes a short program that computes the answer, and an interpreter runs it. The model handles the logic and the interpreter handles the arithmetic, which removes most calculation errors. It's why assistants reach for a Python tool when a question involves numbers or data.",
+      "parents": [
+        {
+          "id": "chain-of-thought",
+          "rel": "extends",
+          "why": "Writes the reasoning steps as executable code instead of prose.",
+          "src": "PAL: Program-aided Language Models (Gao et al. 2022)"
+        },
+        {
+          "id": "mrkl-systems",
+          "rel": "specializes",
+          "why": "Offloads computation to a symbolic executor, as MRKL routes arithmetic to a calculator, but the model writes the whole program.",
+          "src": "PAL: Program-aided Language Models (Gao et al. 2022)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "The papers' exact method is rarely used, but having the model write and run code for calculation is standard in assistants and agents.",
+      "date": "2022-11",
+      "ref": {
+        "title": "PAL: Program-aided Language Models (Gao et al.)",
+        "arxiv": "2211.10435"
+      },
+      "examples": [
+        "ChatGPT data analysis",
+        "code execution tools"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Program of Thoughts Prompting: Disentangling Computation from Reasoning for Numerical Reasoning Tasks",
+          "by": "Wenhu Chen et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2211.12588"
+        },
+        {
+          "kind": "docs",
+          "title": "PAL (Program-Aided Language Models)",
+          "by": "DAIR.AI Prompt Engineering Guide",
+          "year": 2023,
+          "url": "https://www.promptingguide.ai/techniques/pal"
+        },
+        {
+          "kind": "talk",
+          "title": "PAL : Program-aided Language Models with LangChain code",
+          "by": "Sam Witteveen (YouTube)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=dy7-LvDu-3s"
+        },
+        {
+          "kind": "code",
+          "title": "reasoning-machines/pal",
+          "by": "Luyu Gao et al.",
+          "year": 2022,
+          "url": "https://github.com/reasoning-machines/pal"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "reasoning-via-planning",
+      "name": "Reasoning via Planning",
+      "aliases": [
+        "RAP",
+        "MCTS over reasoning"
+      ],
+      "region": "planning-and-reasoning",
+      "layer": "detail",
+      "desc": "Monte Carlo Tree Search over reasoning steps, with the language model acting both as the policy that proposes steps and as a world model that predicts their outcome.",
+      "summary": "Runs Monte Carlo Tree Search, the algorithm behind game-playing programs like AlphaGo, over reasoning steps. The same model proposes the next step and predicts what state it leads to, and simulated rollouts tell the search which branches pay off. More principled than simple tree search, and more expensive.",
+      "parents": [
+        {
+          "id": "tree-of-thoughts",
+          "rel": "specializes",
+          "why": "Replaces breadth- or depth-first search with MCTS and a model-simulated world state.",
+          "src": "Reasoning with Language Model is Planning with World Model (Hao et al. 2023)"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "Research method; MCTS over reasoning reappears in work on training reasoning models but rarely in deployed systems.",
+      "date": "2023-05",
+      "ref": {
+        "title": "Reasoning with Language Model is Planning with World Model (Hao et al.)",
+        "arxiv": "2305.14992"
+      },
+      "examples": [
+        "Blocksworld planning"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "SIGIR VF Lean and Learn Series: LLM Reasoners (Shibo Hao)",
+          "by": "Shibo Hao (SIGIR Virtual Forum)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=d_x2pzEHGQY"
+        },
+        {
+          "kind": "paper",
+          "title": "LLM Reasoners: New Evaluation, Library, and Analysis of Step-by-Step Reasoning with Large Language Models",
+          "by": "Shibo Hao et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.05221"
+        },
+        {
+          "kind": "code",
+          "title": "maitrix-org/llm-reasoners",
+          "by": "Maitrix",
+          "year": 2023,
+          "url": "https://github.com/maitrix-org/llm-reasoners"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "graph-of-thoughts",
+      "name": "Graph of Thoughts",
+      "aliases": [
+        "GoT"
+      ],
+      "region": "planning-and-reasoning",
+      "layer": "detail",
+      "desc": "Generalizes tree search so that partial thoughts form a graph, letting separate lines of reasoning be merged, refined and looped back.",
+      "summary": "Like tree search, but branches can merge: several partial results are combined into one, or a thought is refined in a loop. This suits tasks that split into parts and recombine, such as sorting or merging documents. The orchestration is complex, so it stays mostly in research.",
+      "parents": [
+        {
+          "id": "tree-of-thoughts",
+          "rel": "extends",
+          "why": "Adds aggregation and refinement, so reasoning forms a graph rather than a tree.",
+          "src": "Graph of Thoughts (Besta et al. 2023)"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "Research framework with an open-source implementation; little production use.",
+      "date": "2023-08",
+      "ref": {
+        "title": "Graph of Thoughts: Solving Elaborate Problems with Large Language Models (Besta et al.)",
+        "arxiv": "2308.09687"
+      },
+      "examples": [],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Maciej Besta: Chains, Trees, and Graphs of Thoughts",
+          "by": "Maciej Besta (KUIS AI)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=n10_cdSGjXY"
+        },
+        {
+          "kind": "paper",
+          "title": "Demystifying Chains, Trees, and Graphs of Thoughts",
+          "by": "Maciej Besta et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2401.14295"
+        },
+        {
+          "kind": "code",
+          "title": "spcl/graph-of-thoughts",
+          "by": "ETH Zurich SPCL",
+          "year": 2023,
+          "url": "https://github.com/spcl/graph-of-thoughts"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "step-back-prompting",
+      "name": "Step-Back Prompting",
+      "aliases": [
+        "abstraction prompting"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "prompting-and-context-engineering"
+      ],
+      "layer": "detail",
+      "desc": "Prompting the model to first state the general principle or concept behind a question, then reason from that principle to the specific answer.",
+      "summary": "Before solving the problem, the model is asked a more general question, such as which physics law applies, and answers it first. Reasoning then starts from that principle rather than from surface details. The step-back question can also drive retrieval, fetching background a direct search would miss.",
+      "parents": [
+        {
+          "id": "chain-of-thought",
+          "rel": "specializes",
+          "why": "Starts the chain with an explicit abstraction step.",
+          "src": "Take a Step Back (Zheng et al. 2023)"
+        },
+        {
+          "id": "retrieval-augmented-generation",
+          "rel": "combines",
+          "why": "Retrieves on the step-back question to ground the reasoning.",
+          "src": "Take a Step Back (Zheng et al. 2023)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "A cheap prompt pattern with clear gains in the paper; used in some RAG pipelines, rarely named in production.",
+      "date": "2023-10",
+      "ref": {
+        "title": "Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models (Zheng et al.)",
+        "arxiv": "2310.06117"
+      },
+      "examples": [
+        "LangChain step-back retrieval"
+      ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Step-Back Prompting",
+          "by": "Learn Prompting",
+          "year": 2024,
+          "url": "https://learnprompting.org/docs/advanced/thought_generation/step_back_prompting"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "language-agent-tree-search",
+      "name": "Language Agent Tree Search",
+      "aliases": [
+        "LATS"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "agents-and-orchestration"
+      ],
+      "layer": "detail",
+      "desc": "Monte Carlo Tree Search over an agent's actions in a real environment, using self-reflection on failed branches and model-estimated values to guide the search.",
+      "summary": "Tree search for agents that act. The agent tries different action sequences in its environment, such as running code or querying a search API, scores the outcomes, writes reflections on failures, and searches toward the most promising path. It beats a single ReAct loop on coding and web tasks, but only where actions can be safely retried.",
+      "parents": [
+        {
+          "id": "react-agent-loop",
+          "rel": "extends",
+          "why": "Searches over many ReAct trajectories instead of following one.",
+          "src": "Language Agent Tree Search (Zhou et al. 2023)"
+        },
+        {
+          "id": "tree-of-thoughts",
+          "rel": "combines",
+          "why": "Brings MCTS-style tree search from reasoning to environment actions.",
+          "src": "Language Agent Tree Search (Zhou et al. 2023)"
+        },
+        {
+          "id": "reflexion",
+          "rel": "combines",
+          "why": "Uses self-reflections on failed trajectories as extra context for the search.",
+          "src": "Language Agent Tree Search (Zhou et al. 2023)"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "Research method; deployed agents rarely branch because most real actions can't be undone.",
+      "date": "2023-10",
+      "ref": {
+        "title": "Language Agent Tree Search Unifies Reasoning Acting and Planning in Language Models (Zhou et al.)",
+        "arxiv": "2310.04406"
+      },
+      "examples": [
+        "LangGraph LATS example"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Reflection Agents",
+          "by": "LangChain",
+          "year": 2024,
+          "url": "https://www.langchain.com/blog/reflection-agents"
+        },
+        {
+          "kind": "talk",
+          "title": "Andy Zhou: Language Agent Tree Search & Autonomous Red Teaming",
+          "by": "Andy Zhou (Nnamdi Iregbulem)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=sr1n4Swgk8k"
+        },
+        {
+          "kind": "code",
+          "title": "andyz245/LanguageAgentTreeSearch",
+          "by": "Andy Zhou et al.",
+          "year": 2023,
+          "url": "https://github.com/andyz245/LanguageAgentTreeSearch"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "math-shepherd",
+      "name": "Automatic Process Supervision",
+      "aliases": [
+        "Math-Shepherd",
+        "Monte Carlo step labels"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "data-and-synthetic-data"
+      ],
+      "layer": "detail",
+      "desc": "Labeling each reasoning step for process reward model training without humans, by checking how often rollouts from that step reach the correct final answer.",
+      "summary": "Process reward models need every step labeled right or wrong, and human labeling is slow and costly. Here the labels come from the model itself: from each step, it finishes the solution several times, and a step counts as good if those completions usually reach the known correct answer. This made step-level verifiers practical for open-source teams.",
+      "parents": [
+        {
+          "id": "process-reward-models",
+          "rel": "specializes",
+          "why": "Replaces human step annotations with labels estimated from rollouts.",
+          "src": "Math-Shepherd (Wang et al. 2023)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Widely used to build open process reward models; later work found the labels noisy.",
+      "date": "2023-12",
+      "ref": {
+        "title": "Math-Shepherd: Verify and Reinforce LLMs Step-by-step without Human Annotations (Wang et al.)",
+        "arxiv": "2312.08935"
+      },
+      "examples": [
+        "Math-Shepherd PRM",
+        "OmegaPRM"
+      ],
+      "resources": [
+        {
+          "kind": "code",
+          "title": "peiyi9979/math-shepherd-mistral-7b-prm",
+          "by": "Peiyi Wang (Hugging Face)",
+          "year": 2023,
+          "url": "https://huggingface.co/peiyi9979/math-shepherd-mistral-7b-prm"
+        },
+        {
+          "kind": "paper",
+          "title": "Improve Mathematical Reasoning in Language Models by Automated Process Supervision",
+          "by": "Liangchen Luo et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.06592"
+        },
+        {
+          "kind": "paper",
+          "title": "The Lessons of Developing Process Reward Models in Mathematical Reasoning",
+          "by": "Zhenru Zhang et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2501.07301"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "quiet-star",
+      "name": "Quiet-STaR",
+      "aliases": [
+        "learned internal rationales",
+        "think before speaking"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "adaptation-and-post-training"
+      ],
+      "layer": "detail",
+      "desc": "Training a model with reinforcement learning to generate hidden rationales between tokens of ordinary text, keeping those that help predict what comes next.",
+      "summary": "Teaches a model to think before each word on ordinary text, not just on math problems. During training it generates short hidden rationales and is rewarded when they make the next tokens easier to predict. An early demonstration that models can learn to reason on their own, without curated reasoning data.",
+      "parents": [
+        {
+          "id": "chain-of-thought",
+          "rel": "extends",
+          "why": "Makes rationales hidden and learned, generated throughout general text.",
+          "src": "Quiet-STaR (Zelikman et al. 2024)"
+        },
+        {
+          "id": "policy-gradient-methods",
+          "rel": "applies",
+          "why": "Trains rationale generation with a REINFORCE objective.",
+          "src": "Quiet-STaR (Zelikman et al. 2024)"
+        },
+        {
+          "id": "external:star-self-taught-reasoner",
+          "rel": "extends",
+          "why": "Generalizes STaR's learning from self-generated rationales beyond question answering.",
+          "src": "Quiet-STaR (Zelikman et al. 2024)"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "Research result; reasoning models went a different route (RL on verifiable tasks).",
+      "date": "2024-03",
+      "ref": {
+        "title": "Quiet-STaR: Language Models Can Teach Themselves to Think Before Speaking (Zelikman et al.)",
+        "arxiv": "2403.09629"
+      },
+      "examples": [],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "STaR: Bootstrapping Reasoning With Reasoning",
+          "by": "Eric Zelikman et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2203.14465"
+        },
+        {
+          "kind": "blog",
+          "title": "Quiet-STaR trains AI to think before it speaks, promising a leap in machine understanding",
+          "by": "Matthias Bastian (The Decoder)",
+          "year": 2024,
+          "url": "https://the-decoder.com/quiet-star-trains-ai-to-think-before-it-speaks-promising-a-leap-in-machine-understanding/"
+        },
+        {
+          "kind": "code",
+          "title": "ezelikman/quiet-star",
+          "by": "Eric Zelikman",
+          "year": 2024,
+          "url": "https://github.com/ezelikman/quiet-star"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "latent-reasoning",
+      "name": "Latent Reasoning",
+      "aliases": [
+        "Coconut",
+        "Chain of Continuous Thought",
+        "continuous thought"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "adaptation-and-post-training"
+      ],
+      "layer": "detail",
+      "desc": "Reasoning in the model's hidden-state vectors instead of text, feeding the last hidden state back as the next input rather than decoding it to a token.",
+      "summary": "Instead of writing out each reasoning step as words, the model passes its internal state straight back into itself and thinks in vectors. This can be more efficient and can keep several possibilities open at once. The cost is that nobody can read the reasoning, which matters for monitoring.",
+      "parents": [
+        {
+          "id": "chain-of-thought",
+          "rel": "extends",
+          "why": "Replaces language reasoning steps with continuous hidden states, trained from CoT data.",
+          "src": "Training LLMs to Reason in a Continuous Latent Space (Hao et al. 2024)"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "Early research on small models; not in any production model.",
+      "date": "2024-12",
+      "ref": {
+        "title": "Training Large Language Models to Reason in a Continuous Latent Space (Hao et al.)",
+        "arxiv": "2412.06769"
+      },
+      "examples": [
+        "Coconut"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Training large language models to reason in a continuous latent space – COCONUT Paper explained",
+          "by": "Letitia Parcalabescu (AI Coffee Break with Letitia)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=mhKC3Avqy2E"
+        },
+        {
+          "kind": "blog",
+          "title": "Why We Think",
+          "by": "Lilian Weng",
+          "year": 2025,
+          "url": "https://lilianweng.github.io/posts/2025-05-01-thinking/"
+        },
+        {
+          "kind": "paper",
+          "title": "Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach",
+          "by": "Jonas Geiping et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2502.05171"
+        },
+        {
+          "kind": "code",
+          "title": "facebookresearch/coconut",
+          "by": "Meta FAIR",
+          "year": 2024,
+          "url": "https://github.com/facebookresearch/coconut"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "cot-monitoring",
+      "name": "CoT Monitoring",
+      "aliases": [
+        "CoT faithfulness",
+        "chain-of-thought monitorability",
+        "reasoning trace monitoring"
+      ],
+      "region": "planning-and-reasoning",
+      "also": [
+        "safety-security-and-governance",
+        "evaluation-and-observability"
+      ],
+      "layer": "detail",
+      "desc": "Reading a reasoning model's chain of thought, usually with another model, to catch misbehavior, and checking whether the visible reasoning actually drives the answer.",
+      "summary": "A reasoning model's thinking can reveal intentions its final answer hides, such as a plan to game a test, so a second model can read the trace and flag problems. It only works if the trace is faithful: models sometimes leave out what really drove their answer, and training them to avoid flagged thoughts can teach them to hide those thoughts instead.",
+      "parents": [
+        {
+          "id": "reasoning-models",
+          "rel": "counters",
+          "why": "Watches reasoning traces for reward hacking and other misbehavior.",
+          "src": "Monitoring Reasoning Models for Misbehavior (Baker et al. 2025)"
+        },
+        {
+          "id": "llm-as-a-judge",
+          "rel": "applies",
+          "why": "The monitor is typically a second model grading the trace.",
+          "src": "Monitoring Reasoning Models for Misbehavior (Baker et al. 2025)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Used by frontier labs during training and evaluation; little tooling for application builders, and faithfulness is unresolved.",
+      "date": "2025-03",
+      "ref": {
+        "title": "Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation (Baker et al.)",
+        "arxiv": "2503.11926"
+      },
+      "examples": [],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Reasoning models don't always say what they think",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/research/reasoning-models-dont-say-think"
+        },
+        {
+          "kind": "talk",
+          "title": "Chain of thought monitorability: A new and fragile opportunity for AI safety by Tomek Korbak",
+          "by": "Tomek Korbak (AI Safety Poland)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=nAy1sFNAsBw"
+        },
+        {
+          "kind": "paper",
+          "title": "Chain of Thought Monitorability: A New and Fragile Opportunity for AI Safety",
+          "by": "Tomek Korbak et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2507.11473"
+        },
+        {
+          "kind": "paper",
+          "title": "Measuring Faithfulness in Chain-of-Thought Reasoning",
+          "by": "Tamera Lanham et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2307.13702"
+        }
+      ],
+      "status": "added"
     },
     {
       "id": "supervised-fine-tuning",
@@ -7166,6 +8065,7 @@
     "external:preference-learning",
     "external:security-red-teaming",
     "external:shared-task-benchmarks",
+    "external:star-self-taught-reasoner",
     "external:template-engines",
     "external:trust-in-automation"
   ]
