@@ -14,6 +14,7 @@ const defs = svg.append("defs");
 const terrainLayer = svg.append("g").attr("class", "terrain");
 const routeLayer = svg.append("g").attr("class", "routes");
 const titleLayer = svg.append("g").attr("class", "titles");
+const doodleLayer = svg.append("g").attr("class", "doodles");
 const landmarkLayer = svg.append("g").attr("class", "landmarks");
 
 let fitK = 1;
@@ -114,6 +115,19 @@ function init(map) {
   landmarks.each(function (d) { drawSymbol(d3.select(this), d.tier); });
   landmarks.append("text").attr("class", "label").text((d) => d.name).each(function (d) { placeLabel(d3.select(this), d); });
 
+  // ---------------------------------------------------------------- doodles (doodles.js)
+  // A doodle pinned to a landmark shows only when that landmark does, so it inherits the zoom tier.
+  const doodles = doodleLayer.selectAll("g").data((window.DOODLES ?? [])
+    .map((d) => ({ ...d, pin: typeof d.at === "string" ? byId.get(d.at) : { x: d.at[0], y: d.at[1] } }))
+    .filter((d) => d.pin)).join("g")
+    .attr("class", (d) => `doodle doodle-${d.id} dz${d.minZoom ?? 0}${d.pin.tier ? ` ${d.pin.tier}` : ""}`)
+    .attr("aria-hidden", "true")
+    .html((d) => `<g transform="translate(${d.dx ?? 0},${d.dy ?? 0})" filter="url(#doodle-wobble)">${d.svg}</g>`);
+  // A slight wobble in every line, so the doodles read as drawn by hand rather than as icons.
+  const wobble = defs.append("filter").attr("id", "doodle-wobble").attr("x", "-10%").attr("y", "-10%").attr("width", "120%").attr("height", "120%");
+  wobble.append("feTurbulence").attr("type", "fractalNoise").attr("baseFrequency", 0.09).attr("numOctaves", 2).attr("seed", 7);
+  wobble.append("feDisplacementMap").attr("in", "SourceGraphic").attr("scale", 1.1).attr("xChannelSelector", "R").attr("yChannelSelector", "G");
+
   // ---------------------------------------------------------------- zoom
   let transform = d3.zoomIdentity;
   const zoom = d3.zoom().on("zoom", ({ transform: t }) => {
@@ -122,6 +136,7 @@ function init(map) {
     routeLayer.attr("transform", t);
     const f = scales ? Math.max(MIN_MARK_SCALE, Math.min(1, t.k / scales[0])) : 1;
     landmarks.attr("transform", (d) => `translate(${t.applyX(d.x)},${t.applyY(d.y)}) scale(${f})`);
+    doodles.attr("transform", (d) => `translate(${t.applyX(d.pin.x)},${t.applyY(d.pin.y)}) scale(${f})`);
     titles.attr("transform", (d) => `translate(${t.applyX(d.label[0])},${t.applyY(d.label[1])}) scale(${f})`);
     const level = scales
       ? (t.k < scales[1] ? 0 : t.k < scales[2] ? 1 : 2)
@@ -204,6 +219,7 @@ function init(map) {
     landmarks
       .classed("selected", (d) => d === l)
       .classed("related", (d) => related.has(d.id));
+    doodles.classed("lit", (d) => d.pin === l || related.has(d.pin.id));
     routeLayer.selectAll("path").data(routesFor(id), (r) => `${r.from}>${r.to}`).join("path")
       .attr("class", (r) => `route ${r.to === id ? "ancestor" : "descendant"}${r.oceanic ? " oceanic" : ""}`)
       .attr("d", (r) => r.path);
@@ -233,6 +249,7 @@ function init(map) {
     selected = null;
     svg.classed("has-selection", false);
     landmarks.classed("selected", false).classed("related", false);
+    doodles.classed("lit", false);
     routeLayer.selectAll("path").remove();
     document.getElementById("panel").hidden = true;
     setHash(location.pathname + location.search);

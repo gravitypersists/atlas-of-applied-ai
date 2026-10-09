@@ -4,7 +4,7 @@
 
 Artifacts wrap the published page in their own <!doctype>/<html>/<head>/<body>, so the page itself must
 not carry them. Everything else (title, font and stylesheet links, markup, scripts) is kept as is, and
-app.js, style.css and map.json are published alongside it as supporting files (SPEC.md §8, Hosting).
+app.js, doodles.js, style.css and map.json are published alongside it as supporting files (SPEC.md §8, Hosting).
 """
 
 import re

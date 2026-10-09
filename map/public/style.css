@@ -92,10 +92,80 @@ html, body {
 .territory-label.province { fill: var(--ink-soft); }
 .territory-label .province-name { font-size: 10.5px; letter-spacing: 0.14em; }
 
+/* Doodles (doodles.js): ink line drawings at a constant screen size, under the landmarks. Each part
+   animates in its own box (transform-box: fill-box), so the motion stays put as the map pans and zooms. */
+.doodle { pointer-events: none; transition: opacity 150ms; }
+.doodle path, .doodle circle { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+.doodle .solid { fill: var(--parchment); }
+.doodle .fill-ink { fill: var(--ink); stroke: none; }
+.doodle .hatch, .doodle .ground { stroke: var(--ink-soft); stroke-width: 0.8; }
+.doodle .water, .doodle .wake { stroke: var(--ink-soft); stroke-width: 0.9; }
+.doodle .wake { stroke-dasharray: 1 3.5; }
+.doodle .caption { font-family: var(--body-font); font-style: italic; font-size: 11px; fill: var(--ink-soft);
+  paint-order: stroke; stroke: var(--sea); stroke-width: 3px; stroke-linejoin: round; }
+.doodle .ribbon { fill: var(--ink-soft); stroke-width: 0.6; }
+.doodle .lens { fill: color-mix(in srgb, var(--sea) 60%, transparent); }
+.doodle .handle { stroke-width: 2; }
+.doodle .glint { stroke: var(--parchment); stroke-width: 0.9; }
+.doodle .flag { fill: var(--ink-soft); stroke-width: 0.8; }
+.doodle .tongue { stroke-width: 0.8; }
+.doodle .lamp { fill: #f2d488; }
+.doodle .beam { fill: #f2d488; stroke: none; opacity: 0; }
+
+.doodle .puff, .doodle .magnifier, .doodle .flag, .doodle .bob, .doodle .rock, .doodle .beam, .doodle .step, .doodle .tongue {
+  transform-box: fill-box;
+}
+.doodle .puff { fill: var(--parchment); stroke: var(--ink-soft); stroke-width: 0.8; transform-origin: center; opacity: 0;
+  animation: doodle-puff 4.5s linear infinite; }
+.doodle .puff:nth-of-type(2) { animation-delay: 1.5s; }
+.doodle .puff:nth-of-type(3) { animation-delay: 3s; }
+@keyframes doodle-puff {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translate(7px, -17px) scale(1.5); }
+}
+.doodle .magnifier { transform-origin: 85% 100%; animation: doodle-search 5s ease-in-out infinite; }
+@keyframes doodle-search {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(-3px, -1px) rotate(-8deg); }
+  60% { transform: translate(-1px, -3px) rotate(4deg); }
+}
+.doodle .flag { transform-origin: 0% 50%; animation: doodle-flutter 1.6s ease-in-out infinite alternate; }
+@keyframes doodle-flutter { from { transform: skewY(-7deg) scaleX(1); } to { transform: skewY(6deg) scaleX(0.86); } }
+.doodle .bob { animation: doodle-bob 5s ease-in-out infinite; }
+@keyframes doodle-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2.5px); } }
+.doodle .tongue { transform-origin: 0% 50%; animation: doodle-tongue 5s steps(1) infinite; }
+@keyframes doodle-tongue { 0%, 70% { opacity: 0; } 72%, 80% { opacity: 1; } 82%, 100% { opacity: 0; } }
+.doodle .rock { transform-origin: 50% 95%; animation: doodle-rock 4s ease-in-out infinite; }
+@keyframes doodle-rock { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(0.8px); } }
+.doodle .beam.left { transform-origin: 100% 50%; animation: doodle-beam 4s ease-in-out infinite; }
+.doodle .beam.right { transform-origin: 0% 50%; animation: doodle-beam 4s ease-in-out -2s infinite; }
+@keyframes doodle-beam {
+  0%, 100% { opacity: 0; transform: scaleX(0.3); }
+  25% { opacity: 0.55; transform: scaleX(1); }
+  50% { opacity: 0; transform: scaleX(0.3); }
+}
+/* The thought builds up step by step, holds, then starts over. */
+.doodle .step { opacity: 0; animation: doodle-think 6s ease-out infinite; }
+.doodle .step.s2 { animation-delay: 0.4s; }
+.doodle .step.s3 { animation-delay: 0.8s; }
+.doodle .step.s4 { animation-delay: 1.2s; }
+@keyframes doodle-think { 0% { opacity: 0; } 8%, 75% { opacity: 1; } 90%, 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle * { animation: none !important; }
+  .doodle .step, .doodle .puff:first-of-type { opacity: 1; }
+}
+
 /* Semantic zoom (SPEC §5.2). Labels and symbols fade rather than pop. */
 .landmark, .landmark .label, .territory-label { transition: opacity 150ms; }
 #map.z0 .landmark:not(.capital) { opacity: 0; pointer-events: none; }
 #map.z1 .landmark.outpost, #map.z1 .landmark.hamlet { opacity: 0; pointer-events: none; }
+/* A doodle pinned to a landmark shows with it. */
+#map.z0 .doodle:is(.city, .town, .outpost, .hamlet, .old),
+#map.z1 .doodle:is(.outpost, .hamlet),
+#map.z0 .doodle:is(.dz1, .dz2), #map.z1 .doodle.dz2 { opacity: 0; }
+#map.has-selection .doodle:not(.lit) { opacity: 0.3; }
 /* Region titles open the region's panel while they're prominent (z0–z1). */
 #map.z0 .territory-label.title, #map.z1 .territory-label.title { pointer-events: visiblePainted; cursor: pointer; }
 #map.z0 .landmark:not(.lz0) .label,

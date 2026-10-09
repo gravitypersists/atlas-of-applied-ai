@@ -24,11 +24,11 @@ python3 map/acceptance_test.py         # permanence/growth/determinism checks (~
 python3 map/artifact_page.py out.html  # the viewer page without its document skeleton, for publishing as an artifact
 ```
 
-The atlas is published as a private claude.ai artifact (https://claude.ai/artifact/1w3VzysDkBXJxvaewKsQau). To update it, publish the `artifact_page.py` output to that URL with `map/public/app.js`, `style.css` and `map.json` as supporting files.
+The atlas is published as a private claude.ai artifact (https://claude.ai/artifact/1w3VzysDkBXJxvaewKsQau). To update it, publish the `artifact_page.py` output to that URL with `map/public/app.js`, `doodles.js`, `style.css` and `map.json` as supporting files.
 
 Run `map/acceptance_test.py` after changing `build.mjs`, `terrain.mjs` or settlement logic. The viewer has no automated tests, so check it in a browser at a desktop width and in a narrow (phone-sized) frame.
 
-The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`. Cartography (symbol tiers, title anchors, collision-free label placement per zoom level) lives in `map/labels.mjs`; its text sizes must match `map/public/style.css`. Region `title` (the fun name) is set in `backbone.yaml`, and `name` is the subtitle.
+The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`. Cartography (symbol tiers, title anchors, collision-free label placement per zoom level) lives in `map/labels.mjs`; its text sizes must match `map/public/style.css`. Region `title` (the fun name) is set in `backbone.yaml`, and `name` is the subtitle. Doodles (small ink vignettes pinned to landmarks or sea) live in `map/public/doodles.js`; follow `DOODLES.md` when adding one.
 
 After any edit to `backbone.yaml`, run both Python scripts, then `node map/build.mjs` so the new node settles onto the map. `validate.py` must report 0 errors.
 
