@@ -549,28 +549,36 @@ function buildTerrain(model, ledger, { write = true, quiet = false, level = ledg
   const world = ledger.world;
   const grid = Terrain.makeGrid(world);
   const placed = placedOf(ledger);
-  const inputs = Terrain.terrainInputs(model, placed, model.terrainStyles);
+  const inputs = Terrain.harbours(grid, Terrain.terrainInputs(model, placed, model.terrainStyles), world.seed, level);
   // Before the survey is accepted, terrain is a draft and regenerated from scratch every build.
   const previous = world.accepted ? loadTerrain(grid) : null;
   if (previous && level > previous.sea_level) fail(`sea level may only fall (was ${previous.sea_level}, now ${level})`);
 
-  // Guarantee: every landmark sits on land. Raise uplift where needed, at most 3 passes.
+  // Guarantee: every landmark sits on land, and a harbour at least minShore from the sea. Raise uplift
+  // (or make a bay shallower) where needed, at most 5 passes.
   const boost = new Map();
   let E, land, missing = [];
-  for (let pass = 0; pass <= 3; pass++) {
+  for (let pass = 0; pass <= 5; pass++) {
     E = Terrain.elevation(grid, { ...inputs, seed: world.seed }, boost);
     land = Terrain.threshold(E, level);
     if (previous) for (let k = 0; k < land.length; k++) land[k] |= previous.land[k];
-    missing = inputs.landmarks.filter((l) => !land[Terrain.cellOf(grid, l.x, l.y)]);
+    const { dist } = Terrain.coastField(grid, land, new Uint8Array(land.length));
+    missing = inputs.landmarks.filter((l) => dist[Terrain.cellOf(grid, l.x, l.y)] < (l.bay ? Terrain.TERRAIN.minShore : 0));
+    if (process.env.ATLAS_DEBUG) console.log(`  repair pass ${pass}: ${missing.map((l) => `${l.id}(${dist[Terrain.cellOf(grid, l.x, l.y)].toFixed(0)}, bay ${l.bay?.depth ?? 0})`).join(" ")}`);
     if (!missing.length) break;
-    if (pass === 3) fail(`landmarks still at sea after 3 repair passes: ${missing.map((l) => l.id).join(", ")}`);
-    for (const l of missing) boost.set(l.id, (boost.get(l.id) ?? 0) + Terrain.TERRAIN.repairBoost);
+    if (pass === 5) fail(`landmarks still at sea or on the waterline after 5 repair passes: ${missing.map((l) => l.id).join(", ")}`);
+    // A harbour landmark first gets a shallower bay; others get more height.
+    for (const l of missing) {
+      if (l.bay?.depth > 0.15) { l.bay.depth /= 2; continue; }
+      if (l.bay) l.bay.depth = 0;
+      boost.set(l.id, (boost.get(l.id) ?? 0) + Terrain.TERRAIN.repairBoost);
+    }
   }
 
   const regions = previous ? [...previous.regions] : [];
   for (const r of model.bb.regions) if (!regions.includes(r.id)) regions.push(r.id);
-  const sources = inputs.landmarks.map((l) => ({ cell: Terrain.cellOf(grid, l.x, l.y), region: regions.indexOf(l.region) }));
-  const owner = Terrain.claim(grid, land, previous?.owner, sources);
+  const sources = inputs.landmarks.map((l) => ({ id: l.id, cell: Terrain.cellOf(grid, l.x, l.y), region: regions.indexOf(l.region), curated: l.curated }));
+  const owner = Terrain.claim(grid, land, previous?.owner, Terrain.frontiers(grid, land, previous?.owner, sources));
 
   if (previous) {
     for (let k = 0; k < land.length; k++) {

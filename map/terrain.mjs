@@ -31,6 +31,21 @@ export const TERRAIN = {
   minLandmassCells: 60,                          // smaller components don't count as landmasses
   blur: 0.6,                                     // cells; softens the cell staircase in contours
   repairBoost: 0.35,                             // uplift added per guarantee pass
+  // Harbours: a seeded share of the landmarks already near the shore get a bay carved just seaward of
+  // them, so they sit on a cove close to the waterline.
+  harbour: {
+    share: 0.5,             // of eligible landmarks (maturity ≥ 3, within `reach` of the sea)
+    reach: 90,              // world units from the coast, measured on terrain without bays
+    target: [8, 20],        // how far from the bay's shore the landmark ends up, world units, seeded
+    radius: [18, 34],       // bay sigma, world units, seeded
+    depth: 0.9,             // elevation removed at the bay's centre
+  },
+  // Frontier towns: a seeded share of landmarks get a claim head start, pushing their border up to
+  // `target` from the nearest landmark across it (world units, seeded) when that is within `reach`.
+  // No claim ever comes within `guard` of another region's landmark, and no region loses more than
+  // `maxLoss` of its land to head starts.
+  frontier: { share: 0.7, reach: 160, target: [12, 26], guard: 12, maxLoss: 0.1 },
+  minShore: 6,                                   // world units: a landmark never sits closer to the sea
   // Per-region terrain styles, chosen in curation.yaml under `terrain`.
   styles: {
     // Each landmark rises as its own small island: tighter uplift, and no lineage ridges into or
@@ -154,6 +169,17 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
 
   for (let k = 0; k < E.length; k++) E[k] = 1 - Math.exp(-E[k]);
 
+  // Harbour bays: round dents (unwarped, so the bay sits where it was measured).
+  for (const l of landmarks) {
+    const b = l.bay;
+    if (!b || !b.depth) continue;
+    const { i0, i1, j0, j1 } = span(b.x, b.y, 3 * b.sigma - T.warp.amplitude);
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+      const dx = wx(i) - b.x, dy = wy(j) - b.y, d2 = dx * dx + dy * dy;
+      if (d2 < 9 * b.sigma * b.sigma) E[j * width + i] -= b.depth * Math.exp(-d2 / (2 * b.sigma * b.sigma));
+    }
+  }
+
   // Submerged shelf: a plateau just below sea level, with fine noise breaking the surface as islets.
   // It fades out where other territories' land is rising, so its rocks never bridge to a neighbour.
   // (That fade means a new neighbouring landmark can lower the shelf locally; once the survey is
@@ -197,9 +223,12 @@ export function terrainInputs(model, placed, regionStyles = {}) {
   const landmarks = nodes.map((n) => {
     const p = placed.get(n.id), root = isRoot(n.region) ? T.uplift.rootBonus : 1, st = style(n.region);
     const size = st.size ? lerp(st.size[0], st.size[1], idRandom(n.id, "size")) : 1;
+    const sigma = (T.uplift.sigmaBase + T.uplift.sigmaPerMaturity * n.maturity) * root * st.sigmaScale * size;
     return {
-      id: n.id, x: p.x, y: p.y, region: n.region, maturity: n.maturity,
-      sigma: (T.uplift.sigmaBase + T.uplift.sigmaPerMaturity * n.maturity) * root * st.sigmaScale * size,
+      id: n.id, x: p.x, y: p.y, bay: null, region: n.region, maturity: n.maturity,
+      // A region with a curated spine is hand-shaped: no harbour bays, and no head starts into or out of it.
+      curated: Boolean(curated(n.region).spine),
+      sigma,
       height: (T.uplift.heightBase + T.uplift.heightPerMaturity * n.maturity + T.uplift.tierBonus[n.maturity]) * root,
       elongation: st.elongation ? lerp(st.elongation[0], st.elongation[1], idRandom(n.id, "elongation")) : 1,
       angle: idRandom(n.id, "angle") * Math.PI,
@@ -241,6 +270,28 @@ export function terrainInputs(model, placed, regionStyles = {}) {
   return { landmarks, ridges };
 }
 
+// Carves a harbour bay for a seeded share of near-shore landmarks (sets `bay` on inputs.landmarks).
+// Measured on the terrain without bays, so the choice doesn't feed back on itself.
+export function harbours(grid, inputs, seed, level) {
+  const H = TERRAIN.harbour;
+  for (const l of inputs.landmarks) l.bay = null;
+  const land = threshold(elevation(grid, { ...inputs, seed }), level);
+  const { dist } = coastField(grid, land, new Uint8Array(land.length));
+  const at = (x, y) => dist[cellOf(grid, x, y)];
+  const h = 3 * grid.cell;
+  const lerp = (r, t) => r[0] + (r[1] - r[0]) * t;
+  for (const l of inputs.landmarks) {
+    const d = at(l.x, l.y);
+    if (l.curated || l.maturity < 3 || d < 0 || d > H.reach || idRandom(l.id, "harbour") >= H.share) continue;
+    // Seaward is down the distance-to-sea gradient.
+    const gx = at(l.x + h, l.y) - at(l.x - h, l.y), gy = at(l.x, l.y + h) - at(l.x, l.y - h), g = Math.hypot(gx, gy);
+    if (g < 1e-6) continue;
+    const sigma = lerp(H.radius, idRandom(l.id, "harbour-radius")), off = lerp(H.target, idRandom(l.id, "harbour-target")) + sigma;
+    l.bay = { x: l.x - (gx / g) * off, y: l.y - (gy / g) * off, sigma, depth: H.depth };
+  }
+  return inputs;
+}
+
 // ---------------------------------------------------------------- land, components, claims
 export function cellOf(grid, x, y) {
   const i = Math.min(grid.width - 1, Math.max(0, Math.floor((x - grid.x0) / grid.cell)));
@@ -277,35 +328,158 @@ export function components(grid, land) {
   return { label, sizes };
 }
 
-// Claims: each unowned land cell goes to the region of its nearest landmark by distance through land
-// (multi-source BFS), so claims never jump water. Existing owners are kept. 255 = unclaimed.
+// Claims: each unowned land cell goes to the region of the landmark that reaches it first through land
+// (multi-source BFS), so claims never jump water. A source with a `head` start (cells) begins that many
+// rounds early, pushing its claim toward its neighbours; the cells within `frontier.guard` of every
+// landmark are reserved for its region, so none is swallowed. Existing owners are kept. 255 = unclaimed.
 export function claim(grid, land, owner, sources) {
+  return flood(grid, land, owner, sources).out;
+}
+
+// The claim BFS. Also returns, per cell, the index of the source that reached it (-1 if none) and the
+// round it was reached, counted from that source's own start.
+function flood(grid, land, owner, sources) {
   const { width, height } = grid;
-  const out = owner ? Uint8Array.from(owner) : new Uint8Array(land.length).fill(255);
-  const seen = new Uint8Array(land.length);
-  let queue = [];
+  const n = land.length;
+  const out = owner ? Uint8Array.from(owner) : new Uint8Array(n).fill(255);
+  const src = new Int32Array(n).fill(-1), reach = new Int32Array(n);
+  const neighbours = (k) => {
+    const i = k % width, j = (k / width) | 0;
+    return [i > 0 ? k - 1 : -1, i < width - 1 ? k + 1 : -1, j > 0 ? k - width : -1, j < height - 1 ? k + width : -1];
+  };
+  const reserved = new Uint8Array(n).fill(255);
+  const guard = Math.round(TERRAIN.frontier.guard / grid.cell);
   for (const { cell, region } of sources) {
-    if (!land[cell] || seen[cell]) continue;
-    seen[cell] = 1;
-    if (out[cell] === 255) out[cell] = region;
-    queue.push(cell);
+    if (!land[cell]) continue;
+    let ring = [cell];
+    const near = new Set(ring);
+    for (let r = 0; r < guard; r++) {
+      const next = [];
+      for (const k of ring) for (const q of neighbours(k)) if (q >= 0 && land[q] && !near.has(q)) { near.add(q); next.push(q); }
+      ring = next;
+    }
+    for (const k of near) if (reserved[k] === 255) reserved[k] = region;
   }
+  const maxHead = Math.max(0, ...sources.map((s) => s.head ?? 0));
+  const starts = new Map();
+  sources.forEach((s, idx) => {
+    const r = maxHead - (s.head ?? 0);
+    if (!starts.has(r)) starts.set(r, []);
+    starts.get(r).push(idx);
+  });
+  const seen = new Uint8Array(n);
+  let queue = [];
   // BFS carries the source region outward; already-owned cells pass on their own owner.
-  while (queue.length) {
+  for (let round = 0; queue.length || round <= maxHead; round++) {
+    for (const idx of starts.get(round) ?? []) {
+      const { cell, region } = sources[idx];
+      if (!land[cell] || seen[cell]) continue;
+      seen[cell] = 1;
+      if (out[cell] === 255) out[cell] = region;
+      src[cell] = idx; reach[cell] = 0;
+      queue.push(cell);
+    }
     const next = [];
     for (const k of queue) {
-      const i = k % width, j = (k / width) | 0;
-      for (const q of [i > 0 ? k - 1 : -1, i < width - 1 ? k + 1 : -1, j > 0 ? k - width : -1, j < height - 1 ? k + width : -1]) {
+      for (const q of neighbours(k)) {
         if (q < 0 || !land[q] || seen[q]) continue;
+        if (reserved[q] !== 255 && reserved[q] !== out[k] && out[q] === 255) continue; // another region's guard
         seen[q] = 1;
         if (out[q] === 255) out[q] = out[k];
+        src[q] = src[k]; reach[q] = reach[k] + 1;
         next.push(q);
       }
     }
     queue = next;
   }
-  for (let k = 0; k < land.length; k++) if (!land[k]) out[k] = 255;
-  return out;
+  for (let k = 0; k < n; k++) if (!land[k]) out[k] = 255;
+  return { out, src, reach };
+}
+
+// Frontier towns: a seeded share of landmarks get a claim head start that pushes their border up to
+// within `frontier.target` of the nearest landmark across it. Measured on claims without head starts.
+// Sets `head` on the sources and returns them.
+export function frontiers(grid, land, owner, sources) {
+  const F = TERRAIN.frontier;
+  for (const s of sources) s.head = 0;
+  const { out, src, reach } = flood(grid, land, owner, sources);
+  const { width } = grid;
+  // For each source, the closest its border with another region comes to the landmark on the far side.
+  const facing = sources.map(() => new Map()); // facing[a]: other source b → min distance (cells) to b
+  for (let k = 0; k < land.length; k++) {
+    if (src[k] < 0) continue;
+    const i = k % width;
+    for (const q of [i < width - 1 ? k + 1 : -1, k + width < land.length ? k + width : -1]) {
+      if (q < 0 || src[q] < 0 || out[q] === out[k]) continue;
+      const a = src[k], b = src[q];
+      facing[a].set(b, Math.min(facing[a].get(b) ?? Infinity, reach[q]));
+      facing[b].set(a, Math.min(facing[b].get(a) ?? Infinity, reach[k]));
+    }
+  }
+  // Each region's territory, measured on these claims: area, and which piece is its main body.
+  const territory = (claims) => {
+    const area = new Map(), piece = new Int32Array(land.length).fill(-1), sizes = [];
+    for (let k0 = 0; k0 < land.length; k0++) {
+      if (!land[k0] || claims[k0] === 255) continue;
+      area.set(claims[k0], (area.get(claims[k0]) ?? 0) + 1);
+      if (piece[k0] >= 0) continue;
+      const id = sizes.length, stack = [k0];
+      let size = 0;
+      piece[k0] = id;
+      while (stack.length) {
+        const k = stack.pop(), i = k % width; size++;
+        for (const q of [i > 0 ? k - 1 : -1, i < width - 1 ? k + 1 : -1, k - width, k + width]) {
+          if (q >= 0 && q < land.length && land[q] && claims[q] === claims[k0] && piece[q] < 0) { piece[q] = id; stack.push(q); }
+        }
+      }
+      sizes.push({ region: claims[k0], size });
+    }
+    const main = new Map();
+    sizes.forEach((p, id) => { if (p.size > (sizes[main.get(p.region)]?.size ?? 0)) main.set(p.region, id); });
+    const pieces = new Map();
+    for (const p of sizes) if (p.size >= TERRAIN.minLandmassCells) pieces.set(p.region, (pieces.get(p.region) ?? 0) + 1);
+    return { area, piece, main, pieces };
+  };
+  const plain = territory(out);
+  const curated = new Set(sources.filter((s) => s.curated).map((s) => s.region));
+
+  // Head starts are accepted one at a time (sources in ledger order). Each is checked by running the
+  // claims again: one that costs any region more than `maxLoss` of its land (a curated region: any of
+  // it), or splits a territory, is
+  // halved, then dropped. Only landmarks on their region's main body qualify, so outlying pieces never grow. Two
+  // head starts across the same border would cancel out, so a source's neighbours across a border are
+  // skipped once it has one.
+  const blocked = new Set();
+  sources.forEach((s, a) => {
+    if (blocked.has(a) || !facing[a].size || idRandom(s.id, "frontier") >= F.share) return;
+    if (s.curated || plain.piece[s.cell] !== plain.main.get(s.region)) return;
+    const near = Math.min(...facing[a].values()) * grid.cell;
+    if (near > F.reach) return;
+    const target = F.target[0] + (F.target[1] - F.target[0]) * idRandom(s.id, "frontier-target");
+    // Both claims advance one cell per round, so the border moves half the head start.
+    // If the full head start costs too much, try it at half size before giving up.
+    const full = Math.max(0, Math.round((2 * (near - target)) / grid.cell));
+    let why = null;
+    for (const head of [full, Math.round(full / 2)]) {
+      s.head = head;
+      const t = territory(flood(grid, land, owner, sources).out);
+      const lost = [...plain.area].map(([r, n]) => [r, 1 - (t.area.get(r) ?? 0) / n]);
+      const loss = Math.max(...lost.map(([, l]) => l));
+      const split = [...t.pieces].some(([r, n]) => n > (plain.pieces.get(r) ?? 0));
+      why = split ? "splits a territory"
+        : lost.some(([r, l]) => curated.has(r) && l > 0) ? "takes land from a curated region"
+        : loss > F.maxLoss ? `a region would lose ${(100 * loss).toFixed(0)}%` : null;
+      if (!why) break;
+    }
+    if (why) {
+      if (process.env.ATLAS_DEBUG) console.log(`  frontier ${s.id}: dropped (${why})`);
+      s.head = 0;
+      return;
+    }
+    for (const b of facing[a].keys()) blocked.add(b);
+    if (process.env.ATLAS_DEBUG) console.log(`  frontier ${s.id}: border ${near.toFixed(0)} from the nearest landmark across it, head ${s.head}`);
+  });
+  return sources;
 }
 
 // ---------------------------------------------------------------- RLE

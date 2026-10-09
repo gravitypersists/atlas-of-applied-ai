@@ -201,7 +201,9 @@ The saturating sum keeps dense interiors near 1, so coasts form where influence 
 - **Bedrock.** Seeded fBm at two scales: a broad one that pushes land out into peninsulas and pulls it back into bays independently of the landmarks, and a fine one (`detail`) that gives coasts their raggedness, coves, and small rocks.
 - **Basin.** A smooth falloff in the outer margin of `bounds`, so the world ends in sea.
 
-Uplift and ridges are non-negative, and bedrock and basin are fixed per location. Adding nodes, raising maturity, or adding edges can therefore only raise E.
+- **Harbours.** About half of the landmarks of maturity 3 or more that sit within `TERRAIN.harbour.reach` of the sea (chosen by a seed from the node id) get a round bay carved just seaward of them, so they sit on a cove a few units from the water instead of in the middle of their own rise. Which landmarks qualify, and which way is seaward, are measured on E without bays. A region with a curated spine gets no bays, since its outline is hand-shaped.
+
+Uplift and ridges are non-negative, and bedrock and basin are fixed per location. Bays are the one negative term, and which landmarks get one can change as the map grows. Adding nodes, raising maturity, or adding edges can therefore lower E in places, but once the survey is accepted the high-water mark (§4.2) means no land ever sinks.
 
 ### 4.2 Land and claims
 
@@ -210,8 +212,9 @@ While the survey is a draft (`world.accepted: false`), `terrain.json` is regener
 Each build:
 1. Compute E.
 2. Set `newLand = E > sea_level AND NOT land`, then `land |= newLand`. This is the high-water mark.
-3. **Guarantee:** every landmark's cell must be land. For an outpost, that land is usually its own islet. If one isn't, add uplift at that node until it is (up to 3 passes), then fail and name the node.
-4. **Claims:** each `newLand` cell is owned by the region of its nearest landmark, measured by distance through land (BFS over land cells from all landmarks). That way claims don't jump across water. Cells that already had an owner keep it.
+3. **Guarantee:** every landmark's cell must be land, and a harbour landmark must sit at least `TERRAIN.minShore` from the sea. For an outpost, that land is usually its own islet. If one isn't, halve its bay's depth (dropping the bay once it is shallow) or add uplift at that node until it is (up to 5 passes), then fail and name the node.
+4. **Claims:** each `newLand` cell is owned by the region of the landmark that reaches it first through land (BFS over land cells from all landmarks). That way claims don't jump across water. Cells that already had an owner keep it.
+   - **Frontier towns.** Claims are first run with every landmark starting together. Then a seeded share of landmarks (`TERRAIN.frontier`) get a head start, sized so that their border ends up a set distance (12–26 units) from the nearest landmark on the other side of it. Without this, a border always falls midway between two landmarks, so no landmark ever sits near one. Head starts are accepted one at a time, each checked by re-running the claims: one that would cost any region more than `frontier.maxLoss` of its land, or split a territory, is halved, then dropped. Only landmarks on their region's main body qualify, so outlying pieces never grow. A region with a curated spine is left as it is: its landmarks get no head starts, and no head start may take any of its land. Landmarks that face each other across a border never both get a head start. The cells within `frontier.guard` of every landmark are reserved for its region, so no landmark is ever swallowed.
 5. **Invariant checks.** Fail the build if any of the following happened:
    - a land bit flipped 1→0
    - an existing owner changed

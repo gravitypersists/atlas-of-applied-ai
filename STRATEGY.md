@@ -55,7 +55,7 @@ As a safety net, the land mask is also persisted as a high-water mark. Even if d
 
 Regions are **territories on the land**, not islands. A region might occupy part of a continent, a whole island, or a coastal strip plus some islets.
 
-- **Claims are permanent.** When a land cell first appears, it's claimed by the region of its nearest landmark, and it keeps that owner forever. Borders are as fixed as positions.
+- **Claims are permanent.** When a land cell first appears, it's claimed by the region of the landmark that reaches it first (usually the nearest; some landmarks get a head start so borders don't always fall midway), and it keeps that owner forever. Borders are as fixed as positions.
 - **Borders inside a landmass** are drawn as faint dashed lines. Where a region is a whole island, the coast is its border.
 - **The Old World** is the 8 root disciplines. It's a continent of its own in the west, kept as a reference. It carries one shared title, "The Old World", with each discipline as a province.
 
@@ -91,7 +91,7 @@ Ledger order sets placement, not date. A 2019 paper found by a deep dive in 2027
 | Position | Lineage, through the founding survey and local settlement. Fixed once placed. |
 | Land vs. sea | Elevation (maturity and connectivity) relative to sea level. Only grows. |
 | Contiguous land vs. strait | How strongly regions are connected by lineage. |
-| Territory borders | Region of the nearest landmark when a cell first became land. Permanent. |
+| Territory borders | Region of the landmark that reached a cell first when it became land (usually the nearest). Permanent. |
 | Islets | Frontier landmarks (maturity 1–2) that haven't joined the mainland yet. |
 | Landmark prominence | Maturity × degree. Drives symbol and label weight. |
 | Lineage lines | `parents[]`, shown only for the selected landmark. |
