@@ -47,6 +47,7 @@ Top-level keys: `meta` (relationship enum, maturity tiers), `regions`, `boundary
 - **Edges** exist only as `parents[]` on the child: `{id, rel, why, src}`. `rel` must be in `meta.relationship_types` (extends, specializes, combines, applies, replaces, counters). A missing `src` produces a warning.
 - `parents[].id` may be `external:<name>` for a real ancestor that isn't anchored yet. These ancestors are skipped by the resolution and date checks, and they count as candidates for the next revision, not as errors.
 - Hard constraints: a child can't be dated before any parent (month precision only when both dates have months), and the graph has no cycles. Edges connect nodes, never regions.
+- Reader content (optional): node `layer` (`core` default, or `detail` for deep-dive nodes, which show only at local zoom), `summary` (plain language, leads the panel), and `resources` (`{kind, title, by, year, url}`, the panel's "Learn more"; kinds in `meta.resource_kinds`). Regions can have an `overview` and a `learning_path` (resources plus `why`) for the region panel. Never add a resource URL that hasn't been opened and checked.
 - `boundary_rules` decide which region owns ambiguous concepts (e.g. function calling → Agents, prompt caching → Inference, RLVR → Adaptation). Check them before placing a node.
 
 ## Semantics that matter for edits (from STRATEGY.md)
@@ -59,7 +60,7 @@ The map gives these fields meaning, so treat them carefully:
 ## Deep-dive workflow (from README.md)
 
 1. Run a guide's research prompt (`deep-dives/<region>.md`) in a deep-research tool.
-2. Parse the output's Section 2 (nodes) into YAML, merge it into `backbone.yaml`, and run `validate.py`.
+2. Parse the output's Section 2 (nodes) into YAML, merge it into `backbone.yaml`, and run `validate.py`. Keep existing anchors' parents unless a change is argued for (deep-research runs tend to drop cross-region edges), check new nodes against existing names and aliases in every region, and spot-check refs. Section 1's overview and learning path go on the region.
 3. Section 3 (backbone amendments) gets human review before any structural change is accepted. Don't apply it automatically.
 4. Re-run `make_guides.py` so later guides see the updated ids.
 

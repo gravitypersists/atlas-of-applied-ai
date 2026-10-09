@@ -20,10 +20,6 @@ LEADS = {
         ("Mixture-of-Depths (dynamic per-token compute)", "2404.02258"),
         ("RoPE and context-length extension", "2104.09864"),
     ],
-    "prompting-and-context-engineering": [
-        ("TextGrad and gradient-free prompt optimizers", None),
-        ("Zero-shot CoT ('Let's think step by step') as a prompting technique distinct from CoT", None),
-    ],
     "agents-and-orchestration": [
         ("Semantic routing (embedding-based intent routing to sub-agents)", None),
         ("Language Agent Tree Search (LATS)", "2310.04406"),
@@ -62,10 +58,15 @@ def main():
     tiers = data["meta"]["maturity_tiers"]
     OUT.mkdir(exist_ok=True)
 
+    def index_entry(n):
+        names = [n["name"], *(n.get("aliases") or [])]
+        return f"{n['id']} ({'; '.join(names)})"
+
     id_index = "\n".join(
-        f"- {rid}: " + ", ".join(n["id"] for n in nodes if n["region"] == rid)
+        f"- {rid}: " + ", ".join(index_entry(n) for n in nodes if n["region"] == rid)
         for rid in regions
     )
+    region_ids = ", ".join(regions)
     rel_lines = "\n".join(f"- {k}: {v}" for k, v in rels.items())
     tier_lines = "\n".join(f"{k} {v}" for k, v in tiers.items())
 
@@ -115,7 +116,8 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - Take the view of a practicing AI engineer building products and systems, not a model researcher.
 - Cover the field through 2026. 2024–2026 work is easy to under-represent — look for it deliberately.
 - A node is a technique, pattern, method, or discipline. Products, libraries, frameworks, benchmarks, and companies are NOT nodes; list them under `examples`.
-- Target 25–45 nodes for this region in total, counting the existing anchors below.
+- Target 15–30 nodes for this region in total, counting the existing anchors below. Quality over count: leave out research-only ideas that no practitioner would meet unless they're real ancestors of something that matters.
+- Before adding a node, check the backbone index at the end (ids, names, and aliases across ALL regions). If the concept already exists anywhere, even in another region or under an alias, attach to that id (correct it, or add an alias or example). Never re-create it under a new id.
 
 ## Existing anchors in this region (keep these ids; you may correct their fields)
 {anchor_lines}
@@ -135,31 +137,49 @@ For each: add it as a node, fold it into an existing anchor as an alias or examp
 
 ## Output
 
+The learning path (Section 1) and the nodes (Section 2) are parsed by a script. Put each in ONE fenced ```yaml block, exactly in the shapes below, with nothing else inside the block. Prose goes outside the blocks.
+
 ### Section 1: Region overview (for map readers)
 200–300 words a curious engineer would read when they open this region on the map: what the region is, how it evolved, the 3–5 landmarks worth knowing, and where it's heading. Plain language, no hype.
 
-### Section 2: Nodes
-Return every node — existing anchors (with any corrections) and new ones — using exactly this structure:
+Then a learning path: 4–6 resources in the order a newcomer should take them. Mix primary papers, a survey or tutorial, practitioner write-ups, and recorded talks.
 
-id: <kebab-case; reuse backbone ids exactly>
-name: <name>
-aliases: <comma-separated>
-region: <region id>
-also: <secondary region ids, or none>
-desc: <1–2 sentences, technical>
-reader_summary: <2–3 plain-language sentences for map readers: what it is and why it matters>
-parents:
-  - id: <backbone id, new node id from this run, or external:<name> when the true ancestor isn't in the graph>
-    rel: <extends | specializes | combines | applies | replaces | counters>
-    why: <one sentence>
-    src: <citation supporting the lineage claim>
-    confidence: <high | medium | low>
-maturity: <1–5> — <one-sentence justification>
-date: <YYYY or YYYY-MM of origin>
-ref: <originating paper or announcement, with arXiv id or URL>
-further_reading: <2–4 sources for someone going deeper: one primary source, one survey or tutorial if available, one practitioner write-up>
-examples: <products, libraries, systems>
-status: <existing | new>
+```yaml
+learning_path:
+  - {{kind: <paper | talk | blog | docs | tutorial | code>, title: "<title>", by: "<author or org>", year: <YYYY>, url: "<url>", why: "<one sentence: what the reader gets from it>"}}
+```
+
+### Section 2: Nodes
+Return every node — existing anchors (with any corrections) and new ones — as one YAML list:
+
+```yaml
+nodes:
+  - id: <kebab-case; reuse backbone ids exactly>
+    name: <name>
+    aliases: [<alias>, ...]
+    region: <region id>
+    also: [<secondary REGION ids only, never node ids>]
+    layer: <core | detail>
+    desc: <1–2 sentences, technical>
+    summary: <2–3 plain-language sentences for map readers: what it is and why it matters>
+    parents:
+      - {{id: <backbone id, new node id from this run, or external:<name>>, rel: <relationship type>, why: "<one sentence>", src: "<citation supporting the lineage claim>", confidence: <high | medium | low>}}
+    maturity: <1–5>
+    maturity_note: <one-sentence justification>
+    date: "<YYYY or YYYY-MM of origin>"
+    ref: {{title: "<originating paper or announcement>", arxiv: "<id>"}}   # or url: "<url>" when there's no arXiv id
+    resources:
+      - {{kind: <paper | talk | blog | docs | tutorial | code>, title: "<title>", by: "<author or org>", year: <YYYY>, url: "<url>"}}
+    examples: [<products, libraries, systems>]
+    status: <existing | new>
+```
+
+Field rules:
+- `layer`: `core` if a newcomer needs this node on the region's overview map; `detail` if it's finer-grained knowledge that only shows when zoomed in. Existing anchors are `core` unless you argue otherwise in Amendments. Expect most new nodes to be `detail`.
+- `also`: allowed values are {region_ids}.
+- `src` is required on every parent edge. If you can't cite the lineage claim, lower `confidence` and say why in `why`; don't leave `src` empty.
+- `resources` are what the map's side panel shows under "Learn more", so they're the most reader-facing part of the output. Give 2–5 per node, each with a URL you actually opened. Aim for one primary source (paper, spec, or announcement), one practitioner write-up (an engineering blog or a well-known practitioner's post), and, where one exists, one recorded talk (conference talk, YouTube lecture, or podcast episode). Prefer docs or cookbook pages that show the technique in use. Don't repeat `ref` here.
+- Never invent a URL. If you couldn't open it, append ` [unverified]` to the title. If nothing good exists for a kind, leave it out.
 
 Relationship types (use only these):
 {rel_lines}
@@ -181,6 +201,10 @@ Cases where origin or parentage is disputed (present both accounts), and areas w
 ### Section 5: Self-check
 Report honestly; this output will be verified mechanically afterward.
 - every parent id is a backbone id (listed below), a node in this run, or `external:`
+- every parent edge has a non-empty `src`
+- no new node duplicates an existing backbone node (check names and aliases, not just ids)
+- every `also` value is a region id
+- every resource URL was opened, or is marked [unverified]
 - every rel value is one of the six allowed
 - no child is dated earlier than its parent
 - no node is a product, library, framework, or benchmark
@@ -188,7 +212,7 @@ Report honestly; this output will be verified mechanically afterward.
 
 Prefer primary sources (papers, official engineering blogs, specifications, repositories) over aggregators. Mark anything you could not verify. Do not invent citations.
 
-## Backbone id index (all regions; use these ids for cross-region parents)
+## Backbone index (all regions: id, then name and aliases; use these ids for cross-region parents)
 {id_index}
 """
 
@@ -199,7 +223,7 @@ Backbone v{data['meta']['version']} · {len(anchors)} anchors · {len(bridges)} 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
 2. Save the output and hand it to a Claude agent for merging: validate ids, enums, and date order with `validate.py`, then fold Section 3 amendments into `backbone.yaml` by hand.
-3. Section 1 and the `reader_summary` / `further_reading` fields are the content for this region's panel on the map.
+3. Section 1 (overview and learning path) and each node's `summary` and `resources` are the content for the map's side panel. `layer: detail` nodes appear only when zoomed in.
 
 ## Research prompt
 

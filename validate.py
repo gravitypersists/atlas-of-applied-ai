@@ -2,7 +2,8 @@
 
 Checks: unique ids, parent resolution, relationship enum, region membership,
 date order (child not older than parent), maturity range, cycles, missing
-sources, per-region anchor counts. Exits non-zero on hard errors.
+sources, per-region anchor counts, layer values, and the shape of reader
+content (resources, learning paths). Exits non-zero on hard errors.
 """
 import json
 import sys
@@ -34,9 +35,36 @@ def older(child, parent):
     return cm < pm
 
 
+def check_resources(owner, items, kinds, errors, need_why=False):
+    """Resources and learning-path entries: {kind, title, url, by?, year?, why?}."""
+    if not isinstance(items, list):
+        errors.append(f"{owner}: resources must be a list")
+        return
+    seen = set()
+    for i, r in enumerate(items):
+        where = f"{owner} resource {i + 1}"
+        if not isinstance(r, dict):
+            errors.append(f"{where}: not a mapping")
+            continue
+        if r.get("kind") not in kinds:
+            errors.append(f"{where}: bad kind '{r.get('kind')}'")
+        if not r.get("title"):
+            errors.append(f"{where}: missing title")
+        url = str(r.get("url") or "")
+        if not url.startswith(("https://", "http://")):
+            errors.append(f"{where}: missing or non-http url")
+        elif url in seen:
+            errors.append(f"{where}: duplicate url {url}")
+        seen.add(url)
+        if need_why and not r.get("why"):
+            errors.append(f"{where}: learning-path entry needs a why")
+
+
 def main():
     data = yaml.safe_load((HERE / "backbone.yaml").read_text())
     rels = set(data["meta"]["relationship_types"])
+    layers = set(data["meta"]["layers"])
+    kinds = set(data["meta"]["resource_kinds"])
     regions = {r["id"]: r for r in data["regions"]}
     nodes = data["nodes"]
     by_id = {}
@@ -58,6 +86,14 @@ def main():
             errors.append(f"{n['id']}: maturity out of range")
         if not n.get("ref", {}).get("title"):
             errors.append(f"{n['id']}: missing key reference")
+        if n.get("layer", "core") not in layers:
+            errors.append(f"{n['id']}: bad layer '{n.get('layer')}'")
+        if "resources" in n:
+            check_resources(n["id"], n["resources"], kinds, errors)
+            ref = n.get("ref", {})
+            ref_url = ref.get("url") or (f"https://arxiv.org/abs/{ref['arxiv']}" if ref.get("arxiv") else None)
+            if ref_url and any(r.get("url") == ref_url for r in n["resources"] if isinstance(r, dict)):
+                warnings.append(f"{n['id']}: a resource repeats the key reference")
         for p in n.get("parents", []) or []:
             if p["rel"] not in rels:
                 errors.append(f"{n['id']}: bad relationship '{p['rel']}'")
@@ -93,6 +129,10 @@ def main():
         if nid not in state:
             visit(nid, [nid])
 
+    for rid, r in regions.items():
+        if "learning_path" in r:
+            check_resources(f"region {rid}", r["learning_path"], kinds, errors, need_why=True)
+
     counts = Counter(n["region"] for n in nodes)
     for rid, r in regions.items():
         if r["kind"] == "applied" and counts[rid] < MIN_APPLIED:
@@ -110,6 +150,8 @@ def main():
     )
     edges = sum(len(n.get("parents", []) or []) for n in nodes)
     status = Counter(n["status"] for n in nodes)
+    layer_counts = Counter(n.get("layer", "core") for n in nodes)
+    with_resources = sum(1 for n in nodes if n.get("resources"))
 
     children = defaultdict(list)
     for n in nodes:
@@ -127,7 +169,7 @@ def main():
 
     lines = [
         f"nodes: {len(nodes)}  edges: {edges}  cross-region edges: {cross}  external ancestors: {len(externals)}",
-        f"status: {dict(status)}",
+        f"status: {dict(status)}  layers: {dict(layer_counts)}  with resources: {with_resources}",
         "per region:",
     ]
     for rid, r in regions.items():

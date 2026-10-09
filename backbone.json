@@ -16,7 +16,19 @@
       "3": "Maturing — real production use; best practices still forming",
       "4": "Established — widely used; well-understood tradeoffs",
       "5": "Foundational — assumed infrastructure; rarely discussed as new"
-    }
+    },
+    "layers": [
+      "core",
+      "detail"
+    ],
+    "resource_kinds": [
+      "paper",
+      "talk",
+      "blog",
+      "docs",
+      "tutorial",
+      "code"
+    ]
   },
   "regions": [
     {
@@ -99,6 +111,57 @@
         "The shift from prompt engineering to context engineering, and which techniques it absorbed",
         "Programmatic prompt optimization in practice (DSPy, GEPA-style methods, eval-gated prompts)",
         "Context management for long-running agents (compaction, note-taking, progressive disclosure)"
+      ],
+      "overview": "Prompting and Context Engineering is about shaping what a model does purely through what you send it, without touching its weights. It began as prompt engineering: finding instructions and examples that got a pretrained model to do a task. As models went into products, prompts became software: templates, chains, system prompts, and schema-shaped outputs that code can parse.\n\nTwo branches grew from there. Programmatic optimization stops hand-tuning: methods like APE, DSPy and TextGrad generate and score prompt variants against a dataset and a metric, so prompts become compiled artifacts gated by evals. Context engineering arrived with agents: once a model runs for hundreds of turns with tools, the question shifts from how to word an instruction to what should be in the context window at all. Long windows didn't remove the problem, since models still miss material buried in the middle, so compaction, careful ordering, and progressive disclosure keep the working set small and relevant.\n\nLandmarks worth knowing: few-shot prompting, structured outputs, declarative prompt compilation, and context engineering. The direction of travel is from writing prompts to engineering the whole input state, measured by evals.",
+      "learning_path": [
+        {
+          "kind": "blog",
+          "title": "Prompt Engineering",
+          "by": "Lilian Weng",
+          "year": 2023,
+          "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
+          "why": "A compact map of the basic techniques (zero-/few-shot, example selection, chain-of-thought, automatic prompt design), with the papers behind each, before you go deeper on any one."
+        },
+        {
+          "kind": "talk",
+          "title": "Prompting 101 | Code w/ Claude",
+          "by": "Anthropic (Hannah Moran, Christian Ryan)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=ysPbXH0LpIE",
+          "why": "Watch a production prompt get built and debugged step by step: system prompt, task context, examples, output format."
+        },
+        {
+          "kind": "paper",
+          "title": "Lost in the Middle: How Language Models Use Long Contexts",
+          "by": "Nelson F. Liu et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2307.03172",
+          "why": "The experiment that showed where you put information in a long context changes whether the model uses it, which is why context engineering became its own discipline."
+        },
+        {
+          "kind": "blog",
+          "title": "Effective context engineering for AI agents",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "why": "Shifts the question from wording one prompt to curating everything an agent sees over many turns: compaction, note-taking, sub-agents and just-in-time retrieval."
+        },
+        {
+          "kind": "talk",
+          "title": "Let the LLM Write the Prompts: An Intro to DSPy in Compound AI Pipelines",
+          "by": "Drew Breunig (Data + AI Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=I9ZtkgYZnOw",
+          "why": "A 30-minute practitioner case for treating prompts as optimizable parameters, showing a real pipeline improved with an optimizer instead of hand-tuning."
+        },
+        {
+          "kind": "paper",
+          "title": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines",
+          "by": "Omar Khattab et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2310.03714",
+          "why": "The formal version of that idea: signatures, modules and a compiler that bootstraps demonstrations and instructions against a metric."
+        }
       ]
     },
     {
@@ -1533,6 +1596,7 @@
       ],
       "region": "prompting-and-context-engineering",
       "desc": "Asking a model to perform a task from instructions alone, with no examples.",
+      "summary": "Telling a model what to do in plain language, with no examples. It relies entirely on what the model learned in training, and it's where every prompt starts.",
       "parents": [
         {
           "id": "pretrained-language-models",
@@ -1551,6 +1615,36 @@
       "examples": [
         "any chat interface"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Prompting Fundamentals and How to Apply them Effectively",
+          "by": "Eugene Yan",
+          "year": 2024,
+          "url": "https://eugeneyan.com/writing/prompting/"
+        },
+        {
+          "kind": "talk",
+          "title": "State of GPT | BRK216HFS",
+          "by": "Andrej Karpathy (Microsoft Build)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=bZQun8Y4L2A"
+        },
+        {
+          "kind": "docs",
+          "title": "Zero-Shot Prompting | Prompt Engineering Guide",
+          "by": "DAIR.AI",
+          "year": 2023,
+          "url": "https://www.promptingguide.ai/techniques/zeroshot"
+        },
+        {
+          "kind": "paper",
+          "title": "Finetuned Language Models Are Zero-Shot Learners",
+          "by": "Jason Wei et al.",
+          "year": 2021,
+          "url": "https://arxiv.org/abs/2109.01652"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1562,6 +1656,7 @@
       ],
       "region": "prompting-and-context-engineering",
       "desc": "Including example input-output pairs in the prompt to condition format and behavior.",
+      "summary": "Showing the model a few worked examples before the real task. The examples teach format, tone, and edge cases without changing the model itself.",
       "parents": [
         {
           "id": "zero-shot-prompting",
@@ -1580,6 +1675,36 @@
       "examples": [
         "prompt templates with examples"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Prompt Engineering",
+          "by": "Lilian Weng",
+          "year": 2023,
+          "url": "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
+        },
+        {
+          "kind": "docs",
+          "title": "Prompting best practices (Use examples effectively)",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#use-examples-effectively"
+        },
+        {
+          "kind": "talk",
+          "title": "State of GPT | BRK216HFS",
+          "by": "Andrej Karpathy (Microsoft Build)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=bZQun8Y4L2A"
+        },
+        {
+          "kind": "paper",
+          "title": "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?",
+          "by": "Sewon Min et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2202.12837"
+        }
+      ],
       "status": "kept"
     },
     {
@@ -1587,10 +1712,12 @@
       "name": "System Prompts",
       "aliases": [
         "system messages",
-        "custom instructions"
+        "custom instructions",
+        "developer messages"
       ],
       "region": "prompting-and-context-engineering",
       "desc": "A privileged, persistent instruction block that defines role, constraints, and behavior for a conversation.",
+      "summary": "Standing instructions, sent separately from the user's messages, that set the model's role, rules, and boundaries for a whole conversation. Most of a product's behavior is defined here.",
       "parents": [
         {
           "id": "zero-shot-prompting",
@@ -1609,6 +1736,36 @@
         "Chat Completions",
         "Claude Messages API"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "System prompts - Claude Platform Docs (published Claude system prompts)",
+          "by": "Anthropic",
+          "year": 2024,
+          "url": "https://platform.claude.com/docs/en/release-notes/system-prompts/overview"
+        },
+        {
+          "kind": "blog",
+          "title": "Highlights from the Claude 4 system prompt",
+          "by": "Simon Willison",
+          "year": 2025,
+          "url": "https://simonwillison.net/2025/May/25/claude-4-system-prompt/"
+        },
+        {
+          "kind": "talk",
+          "title": "Prompting 101 | Code w/ Claude",
+          "by": "Anthropic (Hannah Moran, Christian Ryan)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=ysPbXH0LpIE"
+        },
+        {
+          "kind": "paper",
+          "title": "The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions",
+          "by": "Eric Wallace et al. (OpenAI)",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.13208"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1619,6 +1776,7 @@
       ],
       "region": "prompting-and-context-engineering",
       "desc": "Separating fixed prompt structure from variable data using templating, so prompts can be versioned and reused.",
+      "summary": "Reusable prompts with fill-in-the-blank slots that code fills at runtime, like a mail merge. It turns prompts into maintainable parts of an application.",
       "parents": [
         {
           "id": "zero-shot-prompting",
@@ -1645,6 +1803,29 @@
         "LangChain PromptTemplate",
         "Prompty"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Fuck You, Show Me The Prompt.",
+          "by": "Hamel Husain",
+          "year": 2024,
+          "url": "https://hamel.dev/blog/posts/prompt/"
+        },
+        {
+          "kind": "docs",
+          "title": "Templates - LLM",
+          "by": "Simon Willison",
+          "year": 2024,
+          "url": "https://llm.datasette.io/en/stable/templates.html"
+        },
+        {
+          "kind": "docs",
+          "title": "Template Designer Documentation — Jinja Documentation (3.1.x)",
+          "by": "Pallets",
+          "year": 2024,
+          "url": "https://jinja.palletsprojects.com/en/stable/templates/"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1652,13 +1833,15 @@
       "name": "Prompt Chaining",
       "aliases": [
         "LLM chains",
-        "pipelines of prompts"
+        "pipelines of prompts",
+        "AI chains"
       ],
       "region": "prompting-and-context-engineering",
       "also": [
         "agents-and-orchestration"
       ],
       "desc": "Decomposing a task into a fixed sequence of LLM calls, each consuming the previous call's output.",
+      "summary": "Splitting a big task into steps and feeding each step's output into the next prompt. Small, focused calls are easier to test and more reliable than one giant prompt.",
       "parents": [
         {
           "id": "zero-shot-prompting",
@@ -1684,6 +1867,36 @@
         "LangChain LCEL",
         "workflow builders"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Building Effective AI Agents",
+          "by": "Anthropic (Erik Schluntz, Barry Zhang)",
+          "year": 2024,
+          "url": "https://www.anthropic.com/engineering/building-effective-agents"
+        },
+        {
+          "kind": "talk",
+          "title": "How We Build Effective Agents: Barry Zhang, Anthropic",
+          "by": "Barry Zhang (AI Engineer Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=D7_ipDqhtwk"
+        },
+        {
+          "kind": "docs",
+          "title": "Prompt Chaining | Prompt Engineering Guide",
+          "by": "DAIR.AI",
+          "year": 2023,
+          "url": "https://www.promptingguide.ai/techniques/prompt_chaining"
+        },
+        {
+          "kind": "paper",
+          "title": "PromptChainer: Chaining Large Language Model Prompts through Visual Programming",
+          "by": "Tongshuang Wu et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2203.06566"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1695,6 +1908,7 @@
       ],
       "region": "prompting-and-context-engineering",
       "desc": "Getting models to emit machine-readable data matching a schema, through prompting, validation, or constrained decoding.",
+      "summary": "Getting the model to answer in a machine-readable shape, such as JSON matching a schema, so ordinary code can use the result. Modern APIs can guarantee the format; getting the content right is still the prompt's job.",
       "parents": [
         {
           "id": "few-shot-prompting",
@@ -1721,6 +1935,36 @@
         "Pydantic AI",
         "OpenAI Structured Outputs"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Prompting vs JSON Mode vs Function Calling vs Constrained Generation vs SAP",
+          "by": "BoundaryML",
+          "year": 2024,
+          "url": "https://boundaryml.com/blog/schema-aligned-parsing"
+        },
+        {
+          "kind": "talk",
+          "title": "Pydantic is all you need: Jason Liu",
+          "by": "Jason Liu (AI Engineer Summit)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=yj-wSRJwrrc"
+        },
+        {
+          "kind": "talk",
+          "title": "No more bad outputs with structured generation: Remi Louf",
+          "by": "Rémi Louf (AI Engineer World's Fair)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=aNmfvN6S_n4"
+        },
+        {
+          "kind": "docs",
+          "title": "Structured model outputs | OpenAI API",
+          "by": "OpenAI",
+          "year": 2024,
+          "url": "https://developers.openai.com/api/docs/guides/structured-outputs"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1732,24 +1976,56 @@
       ],
       "region": "prompting-and-context-engineering",
       "desc": "Compressing, summarizing, or pruning context so long tasks fit within the window without losing what matters.",
+      "summary": "Shrinking what goes into the context window (compressing documents, summarizing old conversation, dropping stale tool output) so long tasks fit and the model stays focused. It saves cost and keeps the signal high.",
       "parents": [
         {
           "id": "pretrained-language-models",
           "rel": "applies",
-          "why": "Uses language models to compress text for other model calls.",
-          "src": "LLMLingua (Jiang et al. 2023)"
+          "why": "Uses language models to score and compress text for other model calls.",
+          "src": "Selective Context (Li 2023); LLMLingua (Jiang et al. 2023)"
         }
       ],
       "maturity": 3,
       "maturity_note": "Common in agent harnesses; techniques still forming.",
-      "date": "2023-10",
+      "date": "2023-04",
       "ref": {
-        "title": "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models (Jiang et al.)",
-        "arxiv": "2310.05736"
+        "title": "Unlocking Context Constraints of LLMs: Enhancing Context Efficiency of LLMs with Self-Information-Based Content Filtering (Li)",
+        "arxiv": "2304.12102"
       },
       "examples": [
+        "Selective Context",
         "LLMLingua",
         "agent harness auto-compaction"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "LLMLingua: Innovating LLM efficiency with prompt compression",
+          "by": "Microsoft Research",
+          "year": 2023,
+          "url": "https://www.microsoft.com/en-us/research/blog/llmlingua-innovating-llm-efficiency-with-prompt-compression/"
+        },
+        {
+          "kind": "docs",
+          "title": "Compaction overview - Claude Platform Docs",
+          "by": "Anthropic",
+          "year": 2026,
+          "url": "https://platform.claude.com/docs/en/build-with-claude/compaction"
+        },
+        {
+          "kind": "talk",
+          "title": "Context Engineering for AI Agents with LangChain and Manus",
+          "by": "Lance Martin (LangChain), Yichao 'Peak' Ji (Manus)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=6_BcCthVvb8"
+        },
+        {
+          "kind": "paper",
+          "title": "MemGPT: Towards LLMs as Operating Systems",
+          "by": "Charles Packer et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2310.08560"
+        }
       ],
       "status": "repaired"
     },
@@ -1764,6 +2040,7 @@
         "agents-and-orchestration"
       ],
       "desc": "Curating the entire set of tokens a model sees — instructions, tools, retrieved data, history, memory — as a finite resource, especially for long-running agents.",
+      "summary": "The successor to prompt engineering for agents: deciding, turn by turn, which instructions, tools, data, and history the model sees. The context window is treated as a limited attention budget, not free space.",
       "parents": [
         {
           "id": "system-prompts",
@@ -1795,6 +2072,36 @@
         "agent harnesses",
         "AGENTS.md / CLAUDE.md files"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Context Engineering for Agents",
+          "by": "Lance Martin",
+          "year": 2025,
+          "url": "https://rlancemartin.github.io/2025/06/23/context_engineering/"
+        },
+        {
+          "kind": "talk",
+          "title": "Context Engineering for Agents",
+          "by": "Lance Martin (LangChain)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=4GiqzUHD5AA"
+        },
+        {
+          "kind": "blog",
+          "title": "Context Engineering for AI Agents: Lessons from Building Manus",
+          "by": "Yichao 'Peak' Ji (Manus)",
+          "year": 2025,
+          "url": "https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus"
+        },
+        {
+          "kind": "blog",
+          "title": "How Long Contexts Fail",
+          "by": "Drew Breunig",
+          "year": 2025,
+          "url": "https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1810,6 +2117,7 @@
         "evaluation-and-observability"
       ],
       "desc": "Using models and search to generate, score, and refine prompts against a dataset instead of tuning them by hand.",
+      "summary": "Using a model to write and test many prompt variants against a dataset and keep the best. It replaces guesswork with measurement.",
       "parents": [
         {
           "id": "zero-shot-prompting",
@@ -1826,9 +2134,39 @@
         "arxiv": "2211.01910"
       },
       "examples": [
-        "TextGrad",
-        "Promptfoo",
-        "GEPA"
+        "OPRO",
+        "GEPA",
+        "Promptfoo"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Automatic Prompt Optimization",
+          "by": "Cameron R. Wolfe",
+          "year": 2024,
+          "url": "https://cameronrwolfe.substack.com/p/automatic-prompt-optimization"
+        },
+        {
+          "kind": "talk",
+          "title": "Let the LLM Write the Prompts: An Intro to DSPy in Compound AI Pipelines",
+          "by": "Drew Breunig (Data + AI Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=I9ZtkgYZnOw"
+        },
+        {
+          "kind": "docs",
+          "title": "GEPA optimization - DSPy",
+          "by": "DSPy",
+          "year": 2025,
+          "url": "https://dspy.ai/current/getting-started/gepa-optimization/"
+        },
+        {
+          "kind": "paper",
+          "title": "Large Language Models as Optimizers",
+          "by": "Chengrun Yang et al. (Google DeepMind)",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2309.03409"
+        }
       ],
       "status": "kept"
     },
@@ -1841,6 +2179,7 @@
       ],
       "region": "prompting-and-context-engineering",
       "desc": "Writing LM pipelines as declarative modules with signatures, then compiling prompts and few-shot examples automatically with optimizers.",
+      "summary": "Writing an AI pipeline as code with declared inputs, outputs, and a quality metric, and letting an optimizer generate the prompts and examples. Prompts become compiled artifacts rather than hand-edited strings.",
       "parents": [
         {
           "id": "automatic-prompt-optimization",
@@ -1865,7 +2204,430 @@
       "examples": [
         "DSPy"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Program, don't prompt - DSPy",
+          "by": "DSPy",
+          "year": 2025,
+          "url": "https://dspy.ai/current/getting-started/program-dont-prompt/"
+        },
+        {
+          "kind": "talk",
+          "title": "On Engineering AI Systems that Endure The Bitter Lesson - Omar Khattab, DSPy & Databricks",
+          "by": "Omar Khattab (AI Engineer)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=qdmxApz3EJI"
+        },
+        {
+          "kind": "blog",
+          "title": "Pipelines & Prompt Optimization with DSPy",
+          "by": "Drew Breunig",
+          "year": 2024,
+          "url": "https://www.dbreunig.com/2024/12/12/pipelines-prompt-optimization-with-dspy.html"
+        },
+        {
+          "kind": "paper",
+          "title": "Optimizing Instructions and Demonstrations for Multi-Stage Language Model Programs",
+          "by": "Krista Opsahl-Ong et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.11695"
+        }
+      ],
       "status": "repaired"
+    },
+    {
+      "id": "zero-shot-cot",
+      "name": "Zero-Shot Chain-of-Thought",
+      "aliases": [
+        "zero-shot CoT",
+        "Let's think step by step"
+      ],
+      "region": "prompting-and-context-engineering",
+      "also": [
+        "planning-and-reasoning"
+      ],
+      "desc": "Eliciting step-by-step reasoning without demonstrations by appending a trigger phrase such as \"Let's think step by step\" to the prompt.",
+      "summary": "Adding a phrase like \"Let's think step by step\" gets a model to reason before it answers, with no worked examples. It showed that step-by-step reasoning was already latent in large models.",
+      "parents": [
+        {
+          "id": "zero-shot-prompting",
+          "rel": "extends",
+          "why": "Unlocks multi-step reasoning in a purely zero-shot setting.",
+          "src": "Large Language Models are Zero-Shot Reasoners (Kojima et al. 2022)"
+        },
+        {
+          "id": "chain-of-thought",
+          "rel": "specializes",
+          "why": "Chain-of-thought triggered by a cue instead of few-shot exemplars.",
+          "src": "Large Language Models are Zero-Shot Reasoners (Kojima et al. 2022)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "A universal baseline, now largely absorbed into reasoning models.",
+      "date": "2022-05",
+      "ref": {
+        "title": "Large Language Models are Zero-Shot Reasoners (Kojima et al.)",
+        "arxiv": "2205.11916"
+      },
+      "examples": [
+        "Plan-and-Solve prompting"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Chain-of-Thought Prompting | Prompt Engineering Guide",
+          "by": "DAIR.AI",
+          "year": 2023,
+          "url": "https://www.promptingguide.ai/techniques/cot"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS25: V5 I Large Language Model Reasoning, Denny Zhou of Google Deepmind",
+          "by": "Denny Zhou (Stanford CS25)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=ebnX5Ur1hBk"
+        },
+        {
+          "kind": "paper",
+          "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+          "by": "Jason Wei et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2201.11903"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "dynamic-few-shot-selection",
+      "name": "Dynamic Few-Shot Selection",
+      "aliases": [
+        "example selection",
+        "prompt retrieval",
+        "kNN prompting",
+        "KATE"
+      ],
+      "region": "prompting-and-context-engineering",
+      "also": [
+        "retrieval-and-knowledge"
+      ],
+      "layer": "detail",
+      "desc": "Selecting in-context demonstrations at runtime by retrieving the examples most similar to the incoming query from a larger pool.",
+      "summary": "Instead of hard-coding the same examples into every prompt, retrieve the past examples most similar to the current input. Better-matched examples give better answers for the same token cost.",
+      "parents": [
+        {
+          "id": "few-shot-prompting",
+          "rel": "extends",
+          "why": "Replaces fixed demonstrations with ones chosen per input.",
+          "src": "What Makes Good In-Context Examples for GPT-3? (Liu et al. 2021)"
+        },
+        {
+          "id": "dense-retrieval",
+          "rel": "applies",
+          "why": "Uses embedding similarity to pick the nearest examples.",
+          "src": "What Makes Good In-Context Examples for GPT-3? (Liu et al. 2021)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "A standard pattern wherever few-shot prompts meet varied inputs.",
+      "date": "2021-01",
+      "ref": {
+        "title": "What Makes Good In-Context Examples for GPT-3? (Liu et al.)",
+        "arxiv": "2101.06804"
+      },
+      "examples": [
+        "LangChain SemanticSimilarityExampleSelector",
+        "DSPy KNNFewShot"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Few-shot prompting to improve tool-calling performance",
+          "by": "LangChain",
+          "year": 2024,
+          "url": "https://www.langchain.com/blog/few-shot-prompting-to-improve-tool-calling-performance"
+        },
+        {
+          "kind": "docs",
+          "title": "KNNFewShot - DSPy",
+          "by": "DSPy",
+          "year": 2024,
+          "url": "https://dspy.ai/current/api/optimizers/KNNFewShot/"
+        },
+        {
+          "kind": "paper",
+          "title": "Learning To Retrieve Prompts for In-Context Learning",
+          "by": "Ohad Rubin, Jonathan Herzig, Jonathan Berant",
+          "year": 2021,
+          "url": "https://arxiv.org/abs/2112.08633"
+        },
+        {
+          "kind": "paper",
+          "title": "In-context Learning with Retrieved Demonstrations for Language Models: A Survey",
+          "by": "Man Luo et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2401.11624"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "decomposed-prompting",
+      "name": "Decomposed Prompting",
+      "aliases": [
+        "DECOMP",
+        "task decomposition prompting"
+      ],
+      "region": "prompting-and-context-engineering",
+      "also": [
+        "planning-and-reasoning"
+      ],
+      "layer": "detail",
+      "desc": "Breaking a complex task into sub-tasks, each delegated to a specialized prompt handler or a symbolic function, under a decomposer prompt.",
+      "summary": "Breaking a hard problem into sub-tasks, each handled by its own specialized prompt or by ordinary code. It's prompt chaining with an explicit plan for who does what.",
+      "parents": [
+        {
+          "id": "prompt-chaining",
+          "rel": "extends",
+          "why": "Turns fixed chains into a modular, recursive decomposition chosen by a decomposer prompt.",
+          "src": "Decomposed Prompting (Khot et al. 2022)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "The idea is everywhere in workflows and agents; the specific method is mostly cited, not used.",
+      "date": "2022-10",
+      "ref": {
+        "title": "Decomposed Prompting: A Modular Approach for Solving Complex Tasks (Khot et al.)",
+        "arxiv": "2210.02406"
+      },
+      "examples": [
+        "least-to-most prompting",
+        "sub-task routers"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Least-to-Most Prompting Enables Complex Reasoning in Large Language Models",
+          "by": "Denny Zhou et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2205.10625"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS25: V5 I Large Language Model Reasoning, Denny Zhou of Google Deepmind",
+          "by": "Denny Zhou (Stanford CS25)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=ebnX5Ur1hBk"
+        },
+        {
+          "kind": "paper",
+          "title": "Measuring and Narrowing the Compositionality Gap in Language Models (Self-Ask)",
+          "by": "Ofir Press et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2210.03350"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "textual-gradients",
+      "name": "Textual Gradients",
+      "aliases": [
+        "TextGrad",
+        "textual gradient descent"
+      ],
+      "region": "prompting-and-context-engineering",
+      "layer": "detail",
+      "desc": "Treating a compound AI system as a computation graph and backpropagating natural-language critiques from an evaluator model to update prompts and other text variables.",
+      "summary": "Optimizing a multi-step AI pipeline the way neural networks are trained, but with words. An evaluator model critiques the output, and the critique is passed back to improve each prompt. Promising, but still mostly research.",
+      "parents": [
+        {
+          "id": "automatic-prompt-optimization",
+          "rel": "extends",
+          "why": "Replaces search over candidates with feedback-directed edits propagated through a pipeline.",
+          "src": "TextGrad (Yuksekgonul et al. 2024)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Influential framework; production use is still rare.",
+      "date": "2024-06",
+      "ref": {
+        "title": "TextGrad: Automatic \"Differentiation\" via Text (Yuksekgonul et al.)",
+        "arxiv": "2406.07496"
+      },
+      "examples": [
+        "TextGrad"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Welcome to TextGrad's documentation! — TextGrad",
+          "by": "Zou Group (Stanford)",
+          "year": 2024,
+          "url": "https://textgrad.readthedocs.io/en/latest/"
+        },
+        {
+          "kind": "code",
+          "title": "zou-group/textgrad",
+          "by": "Zou Group (Stanford)",
+          "year": 2024,
+          "url": "https://github.com/zou-group/textgrad"
+        },
+        {
+          "kind": "paper",
+          "title": "Optimizing generative AI by backpropagating language model feedback",
+          "by": "Mert Yuksekgonul et al. (Nature)",
+          "year": 2025,
+          "url": "https://www.nature.com/articles/s41586-025-08661-4"
+        },
+        {
+          "kind": "paper",
+          "title": "Automatic Prompt Optimization with \"Gradient Descent\" and Beam Search",
+          "by": "Reid Pryzant et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2305.03495"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "context-ordering",
+      "name": "Context Ordering",
+      "aliases": [
+        "position engineering",
+        "context reordering",
+        "lost-in-the-middle mitigation"
+      ],
+      "region": "prompting-and-context-engineering",
+      "also": [
+        "retrieval-and-knowledge"
+      ],
+      "layer": "detail",
+      "desc": "Arranging long inputs so the highest-value material sits at the start or end of the context, where models attend most reliably.",
+      "summary": "Models pay most attention to the start and end of a long context and can miss what's in the middle. Putting the most important material at the edges is a cheap, reliable fix.",
+      "parents": [
+        {
+          "id": "retrieval-augmented-generation",
+          "rel": "extends",
+          "why": "Orders retrieved passages by relevance toward the edges of the prompt.",
+          "src": "Lost in the Middle (Liu et al. 2023)"
+        },
+        {
+          "id": "few-shot-prompting",
+          "rel": "extends",
+          "why": "Sensitivity to demonstration order was the first sign that position in the prompt changes results.",
+          "src": "Fantastically Ordered Prompts and Where to Find Them (Lu et al. 2021)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Common in RAG pipelines; less critical as long-context models improve.",
+      "date": "2023-07",
+      "ref": {
+        "title": "Lost in the Middle: How Language Models Use Long Contexts (Liu et al.)",
+        "arxiv": "2307.03172"
+      },
+      "examples": [
+        "LlamaIndex LongContextReorder",
+        "LangChain LongContextReorder"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Prompting Claude's long context window",
+          "by": "Anthropic",
+          "year": 2023,
+          "url": "https://www.anthropic.com/news/prompting-long-context"
+        },
+        {
+          "kind": "blog",
+          "title": "Context Rot: How Increasing Input Tokens Impacts LLM Performance",
+          "by": "Chroma (Kelly Hong, Anton Troynikov, Jeff Huber)",
+          "year": 2025,
+          "url": "https://www.trychroma.com/research/context-rot"
+        },
+        {
+          "kind": "talk",
+          "title": "Context Engineering SF: Context Engineering for Engineers - Jeff Huber",
+          "by": "Jeff Huber (Chroma)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=L8ZM78APDPk"
+        },
+        {
+          "kind": "paper",
+          "title": "Found in the Middle: Calibrating Positional Attention Bias Improves Long Context Utilization",
+          "by": "Cheng-Yu Hsieh et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.16008"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "progressive-disclosure",
+      "name": "Progressive Disclosure",
+      "aliases": [
+        "just-in-time context",
+        "lazy-loaded context"
+      ],
+      "region": "prompting-and-context-engineering",
+      "also": [
+        "agents-and-orchestration"
+      ],
+      "layer": "detail",
+      "desc": "Giving an agent lightweight identifiers (file paths, search tools, short skill descriptions) instead of full content, so it loads detail only when a step needs it.",
+      "summary": "Instead of loading everything an agent might need up front, give it lightweight pointers and let it pull in details only when it needs them. This keeps the context small and focused over long tasks.",
+      "parents": [
+        {
+          "id": "context-engineering",
+          "rel": "specializes",
+          "why": "A strategy for deferring context until execution time.",
+          "src": "Effective context engineering for AI agents (Anthropic 2025)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Standard in coding agents; patterns are still settling.",
+      "date": "2025-09",
+      "ref": {
+        "title": "Effective context engineering for AI agents (Anthropic)",
+        "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+      },
+      "examples": [
+        "Claude Code file exploration",
+        "agent skills",
+        "lazy-loaded tool schemas"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Equipping agents for the real world with Agent Skills",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills"
+        },
+        {
+          "kind": "talk",
+          "title": "Don't Build Agents, Build Skills Instead – Barry Zhang & Mahesh Murag, Anthropic",
+          "by": "Barry Zhang, Mahesh Murag (AI Engineer)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=CEvIs9y1uog"
+        },
+        {
+          "kind": "blog",
+          "title": "Code execution with MCP: building more efficient AI agents",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/code-execution-with-mcp"
+        },
+        {
+          "kind": "blog",
+          "title": "Introducing advanced tool use on the Claude Developer Platform",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/advanced-tool-use"
+        }
+      ],
+      "status": "added"
     },
     {
       "id": "text-embeddings",
@@ -2524,7 +3286,8 @@
       "aliases": [
         "long-term memory",
         "episodic memory",
-        "MemGPT"
+        "MemGPT",
+        "structured note-taking"
       ],
       "region": "agents-and-orchestration",
       "also": [
@@ -2556,7 +3319,9 @@
         "Letta",
         "Zep",
         "mem0",
-        "assistant memory features"
+        "assistant memory features",
+        "NOTES.md progress files",
+        "Claude memory tool"
       ],
       "status": "repaired"
     },
@@ -2730,9 +3495,9 @@
       "desc": "Packaging instructions, scripts, and resources as folders an agent loads on demand, disclosing detail progressively to save context.",
       "parents": [
         {
-          "id": "context-engineering",
+          "id": "progressive-disclosure",
           "rel": "applies",
-          "why": "Progressive disclosure keeps context lean.",
+          "why": "Packages procedures so only a short description sits in context until the skill is needed.",
           "src": "Equipping agents for the real world with Agent Skills (Anthropic 2025)"
         },
         {

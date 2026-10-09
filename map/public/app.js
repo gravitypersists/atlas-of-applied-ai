@@ -32,7 +32,7 @@ function starPath(r) {
 }
 
 // Symbol per tier (SPEC §5.6): capital 14px star in a ring, city 10px dot, town 6px dot,
-// outpost 7px hollow ring, Old World 7px square. A halo ring sits behind, shown when related.
+// outpost 7px hollow ring, hamlet (deep-dive detail) 5px soft dot, Old World 7px square. A halo ring sits behind, shown when related.
 function drawSymbol(g, tier) {
   g.append("circle").attr("class", "halo").attr("r", SYMBOL_R[tier] + 5);
   if (tier === "capital") {
@@ -41,11 +41,12 @@ function drawSymbol(g, tier) {
   } else if (tier === "city") g.append("circle").attr("class", "sym-fill").attr("r", 5);
   else if (tier === "town") g.append("circle").attr("class", "sym-fill").attr("r", 3);
   else if (tier === "outpost") g.append("circle").attr("class", "sym-hollow").attr("r", 3.5);
+  else if (tier === "hamlet") g.append("circle").attr("class", "sym-fill sym-soft").attr("r", 2.5);
   else g.append("rect").attr("class", "sym-fill").attr("x", -3.5).attr("y", -3.5).attr("width", 7).attr("height", 7);
   g.append("circle").attr("class", "hit").attr("r", 12); // ≥ 24px tap target
 }
 
-const SYMBOL_R = { capital: 7, city: 5, town: 3, outpost: 3.5, old: 3.5 };
+const SYMBOL_R = { capital: 7, city: 5, town: 3, outpost: 3.5, hamlet: 2.5, old: 3.5 };
 const GAP = 4;
 
 function placeLabel(text, d) {
@@ -96,6 +97,8 @@ function init(map) {
   const titles = titleLayer.selectAll("text").data(titled).join("text")
     .attr("class", (d) => `territory-label ${d.kind}`)
     .style("fill", (d) => d.ink);
+  // Applied titles open their region's panel (SPEC §5.3).
+  titles.filter((d) => d.kind === "title").on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
   titles.each(function (d) {
     const t = d3.select(this);
     if (d.kind === "province") { t.append("tspan").attr("class", "province-name").text(d.subtitle.toUpperCase()); return; }
@@ -170,11 +173,13 @@ function init(map) {
   function flyTo(x, y, k, ms = FLY_MS) {
     svg.transition().duration(ms).ease(d3.easeCubicInOut).call(zoom.transform, centredOn(x, y, k));
   }
-  // Fit a world box into the open area, stopping short of local zoom (z2) so a region keeps its title.
+  // Fit a world box into the open area, stopping short of local zoom (z2) so a region keeps its title,
+  // and never below region zoom (z1), so its towns show. On a phone the box may overflow; it pans.
   function fitBox(x0, y0, x1, y1, ms = FLY_MS) {
-    const a = openArea(), pad = 80;
+    const a = openArea(), pad = Math.min(80, a.width * 0.08);
     const cap = scales ? scales[2] * 0.85 : fitK * K_RANGE[1];
-    const k = Math.max(fitK * K_RANGE[0], Math.min(cap, (a.width - 2 * pad) / Math.max(1, x1 - x0), (a.height - 2 * pad) / Math.max(1, y1 - y0)));
+    const floor = scales ? scales[1] * 1.05 : fitK * K_RANGE[0];
+    const k = Math.max(floor, Math.min(cap, (a.width - 2 * pad) / Math.max(1, x1 - x0), (a.height - 2 * pad) / Math.max(1, y1 - y0)));
     flyTo((x0 + x1) / 2, (y0 + y1) / 2, k, ms);
   }
 
@@ -190,6 +195,7 @@ function init(map) {
   let selected = null;
 
   function select(id, { fly = true, instant = false } = {}) {
+    if (territoryById.get(id)?.group === "applied") { selectRegion(id, { instant }); return; }
     const l = byId.get(id);
     if (!l) return;
     selected = l;
@@ -208,6 +214,18 @@ function init(map) {
       const k = Math.max(transform.k, scales ? scales[1] * 1.15 : fitK * 2.3);
       flyTo(l.x, l.y, k, instant ? 0 : FLY_MS);
     }
+  }
+
+  // A region: its panel (overview, learning path, landmarks), framed on the map. Landmarks stay undimmed.
+  function selectRegion(id, { instant = false } = {}) {
+    const t = territoryById.get(id);
+    if (!t) return;
+    clearSelection();
+    selected = t;
+    renderRegionPanel(t);
+    setHash(`#${encodeURIComponent(id)}`);
+    const members = map.landmarks.filter((l) => l.region === id);
+    fitBox(d3.min(members, (l) => l.x), d3.min(members, (l) => l.y), d3.max(members, (l) => l.x), d3.max(members, (l) => l.y), instant ? 0 : FLY_MS);
   }
 
   function clearSelection() {
@@ -242,13 +260,67 @@ function init(map) {
     return t.title ? `${t.title} · ${t.subtitle}` : t.subtitle;
   }
 
+  // "Learn more" and "Start here" entries: a kind tag, the linked title, then who and when, and an
+  // optional line on what the reader gets from it.
+  const KIND_LABEL = { paper: "Paper", talk: "Talk", blog: "Blog", docs: "Docs", tutorial: "Tutorial", code: "Code" };
+  function resourceItem(r) {
+    const li = document.createElement("li");
+    const kind = document.createElement("span"); kind.className = `kind kind-${r.kind}`; kind.textContent = KIND_LABEL[r.kind] ?? r.kind;
+    const a = document.createElement("a"); a.href = r.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = r.title;
+    const head = document.createElement("div"); head.className = "res-head"; head.append(kind, a);
+    li.append(head);
+    const by = [r.by, r.year].filter(Boolean).join(", ");
+    if (by) { const p = document.createElement("div"); p.className = "res-by"; p.textContent = by; li.append(p); }
+    if (r.why) { const p = document.createElement("p"); p.className = "why"; p.textContent = r.why; li.append(p); }
+    return li;
+  }
+  function fillResources(listId, sectionId, items) {
+    el(listId).replaceChildren(...(items ?? []).map(resourceItem));
+    el(sectionId).hidden = !(items ?? []).length;
+  }
+  // Sections that belong to only one of the two panel kinds.
+  const LANDMARK_ONLY = ["panel-meta", "panel-note", "panel-examples", "panel-parents-section", "panel-children-section", "panel-learn-section", "panel-cite", "panel-source"];
+  const REGION_ONLY = ["panel-path-section", "panel-members-section"];
+  const openPanel = () => {
+    const panel = el("panel");
+    panel.hidden = false;
+    panel.querySelector(".panel-body").scrollTop = 0;
+  };
+
+  function renderRegionPanel(t) {
+    for (const id of [...LANDMARK_ONLY, "panel-summary"]) el(id).hidden = true;
+    el("panel-where").textContent = t.title ? `Region · ${t.subtitle}` : "Region";
+    el("panel-name").textContent = t.title ?? t.subtitle;
+    el("panel-desc").hidden = true;
+    el("panel-summary").textContent = t.about ?? "";
+    el("panel-summary").hidden = !t.about;
+    fillResources("panel-path", "panel-path-section", t.learningPath);
+    // Core landmarks first (the overview), deep-dive detail after; each group oldest first.
+    const members = map.landmarks.filter((l) => l.region === t.id)
+      .sort((a, b) => (a.layer === "detail") - (b.layer === "detail") || String(a.date).localeCompare(String(b.date)));
+    el("panel-members").replaceChildren(...members.map((l) => {
+      const c = chip(l.name, l.id);
+      if (l.layer === "detail") c.classList.add("detail");
+      return c;
+    }));
+    el("panel-members-section").hidden = !members.length;
+    openPanel();
+  }
+
   function renderPanel(l) {
+    for (const id of REGION_ONLY) el(id).hidden = true;
+    el("panel-meta").hidden = false;
+    el("panel-desc").hidden = false;
     el("panel-where").textContent = placeName(l);
     el("panel-name").textContent = l.name;
     el("panel-maturity").textContent = l.maturityLabel;
     el("panel-maturity").dataset.maturity = l.maturity;
     el("panel-date").textContent = yearOf(l.date) ? `c. ${yearOf(l.date)}` : "";
+    // The plain-language summary leads when there is one; the technical description follows it.
+    el("panel-summary").textContent = l.summary ?? "";
+    el("panel-summary").hidden = !l.summary;
     el("panel-desc").textContent = l.desc ?? "";
+    el("panel-desc").classList.toggle("secondary", !!l.summary);
     el("panel-note").textContent = l.maturityNote ?? "";
     el("panel-note").hidden = !l.maturityNote;
 
@@ -279,6 +351,8 @@ function init(map) {
     el("panel-children").replaceChildren(...l.children.map((id) => chip(byId.get(id)?.name ?? id, id)));
     el("panel-children-section").hidden = !l.children.length;
 
+    fillResources("panel-learn", "panel-learn-section", l.resources);
+
     // The citation always shows; the link only when the source has one (many classic papers don't).
     el("panel-cite").textContent = l.ref?.title ?? "";
     el("panel-cite").hidden = !l.ref?.title;
@@ -286,9 +360,7 @@ function init(map) {
     src.hidden = !l.ref?.href;
     if (l.ref?.href) src.href = l.ref.href;
 
-    const panel = el("panel");
-    panel.hidden = false;
-    panel.querySelector(".panel-body").scrollTop = 0;
+    openPanel();
   }
 
   // ---------------------------------------------------------------- search (SPEC §5.4)
@@ -304,7 +376,7 @@ function init(map) {
     nameLower: l.name.toLowerCase(),
     aliases: (l.aliases ?? []).map((a) => [a, a.toLowerCase()]),
     examples: (l.examples ?? []).map((x) => [x, x.toLowerCase()]),
-    prose: [l.desc, l.maturityNote].filter(Boolean),
+    prose: [l.summary, l.desc, l.maturityNote].filter(Boolean),
   }));
   let results = [], active = -1;
 
@@ -370,7 +442,7 @@ function init(map) {
     searchInput.value = "";
     results = []; active = -1; renderResults();
     searchInput.blur();
-    if (r.kind === "landmark") { select(r.id); return; }
+    if (r.kind === "landmark" || territoryById.get(r.id)?.group === "applied") { select(r.id); return; }
     clearSelection();
     const members = map.landmarks.filter((l) => l.region === r.id);
     fitBox(d3.min(members, (l) => l.x), d3.min(members, (l) => l.y), d3.max(members, (l) => l.x), d3.max(members, (l) => l.y));
@@ -389,8 +461,9 @@ function init(map) {
 
   // ---------------------------------------------------------------- deep links (SPEC §5.5)
   const fromHash = () => decodeURIComponent(location.hash.slice(1));
-  if (byId.has(fromHash())) select(fromHash(), { instant: true });
-  window.addEventListener("hashchange", () => { if (byId.has(fromHash())) select(fromHash()); });
+  const linkable = (id) => byId.has(id) || territoryById.get(id)?.group === "applied";
+  if (linkable(fromHash())) select(fromHash(), { instant: true });
+  window.addEventListener("hashchange", () => { if (linkable(fromHash()) && fromHash() !== selected?.id) select(fromHash()); });
 
   // Debug hook: atlas.zoomTo(rel, x, y) jumps to a zoom relative to fit-to-world, centred on a world point.
   window.atlas = {

@@ -1,5 +1,5 @@
-nodes: 142  edges: 194  cross-region edges: 84  external ancestors: 15
-status: {'kept': 8, 'added': 58, 'repaired': 76}
+nodes: 148  edges: 203  cross-region edges: 87  external ancestors: 15
+status: {'kept': 8, 'added': 64, 'repaired': 76}  layers: {'core': 143, 'detail': 5}  with resources: 16
 per region:
   root    information-retrieval                3
   root    deep-learning-nlp                    8
@@ -10,7 +10,7 @@ per region:
   root    systems-security                     3
   root    software-engineering                 4
   applied inference-and-serving                12
-  applied prompting-and-context-engineering    10
+  applied prompting-and-context-engineering    16
   applied retrieval-and-knowledge              12
   applied agents-and-orchestration             13
   applied planning-and-reasoning               10

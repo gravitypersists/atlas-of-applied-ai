@@ -70,7 +70,18 @@ Applied regions get a `title`, which is the fun name. The existing `name` serves
     kind: applied
     name: Retrieval and Knowledge        # subtitle
     title: The Archive Reach             # NEW
+    overview: "…"                        # optional: 150–300 words for the region panel
+    learning_path:                       # optional: the region panel's "Start here", in reading order
+      - {kind: talk, title: "…", by: "…", year: 2024, url: "https://…", why: "…"}
 ```
+
+Nodes get three optional reader fields, which come from the deep-dive runs (`make_guides.py`):
+
+- `layer`: `core` (the default; the backbone overview) or `detail` (deep-dive content). Detail nodes settle and shape the land like any other node, but appear only at local zoom (§4.7).
+- `summary`: 2–3 plain-language sentences. When present, the panel leads with it and shows `desc` as the technical line.
+- `resources`: the panel's "Learn more" list, `[{kind, title, by, year, url}]`, where `kind` is in `meta.resource_kinds` (paper, talk, blog, docs, tutorial, code). The node's `ref` isn't repeated here.
+
+`validate.py` checks layer values, resource kinds, titles and URLs, and duplicate URLs, and warns when a resource repeats the key reference.
 
 ### 3.2 `map/atlas/ledger.yaml` (permanent)
 
@@ -131,7 +142,8 @@ Curation never touches settled geography. The `survey` block only shapes the fou
     "tint": "#d9c9a3", "ink": "#6d8c4f",      // territory fill colour; symbol and label colour
     "fill": "M…Z",                            // owned land cells as a path; drawn with a dashed outline, which forms the borders
     "label": [x, y], "group": "applied",      // "old-world" for root provinces
-    "titleLines": ["THE ISLE OF", "LONG THOUGHT"]   // applied territories only
+    "titleLines": ["THE ISLE OF", "LONG THOUGHT"],  // applied territories only
+    "about": "…", "learningPath": [{"kind": "paper", "title": "…", "by": "…", "year": 2022, "url": "…", "why": "…"}]   // region overview (falls back to the definition)
   }],
   "view": {"levels": [2, 5], "margin": {"x": 150, "y": 60}},   // zoom thresholds and fit margin used for label placement
   "oldWorld": {"title": "The Old World", "subtitle": "Ancestral Disciplines", "label": [x, y], "titleLines": ["THE OLD WORLD"]},
@@ -140,7 +152,9 @@ Curation never touches settled geography. The `survey` block only shapes the fou
     "x": 0, "y": 0, "tier": "outpost", "score": 2.58, "minZoom": 2, "labelSide": "right",
     "desc": "…", "maturity": 2, "maturityLabel": "Emerging", "maturityNote": "…",
     "date": "2024-04", "aliases": […], "examples": […],
+    "layer": "core", "summary": "…",          // summary is null when the node has none
     "ref": {"title": "…", "href": "https://arxiv.org/abs/2404.16130"},
+    "resources": [{"kind": "talk", "title": "…", "by": "…", "year": 2024, "url": "…", "why": null}],
     "parents": [{"id": "…", "rel": "combines", "why": "…"}],
     "external": [{"name": "minhash", "why": "…"}],
     "children": ["…"]
@@ -274,6 +288,7 @@ Within each region, `score = maturity + log2(1 + childCount)`. The rules below r
 | `old` | Root-region node. Size is still scaled by score. |
 | `capital` | The highest score in each applied region. Exactly one per region. |
 | `outpost` | maturity ≤ 2 |
+| `hamlet` | `layer: detail` (deep-dive content). Never the capital. |
 | `city` | maturity ≥ 4 and childCount ≥ 2 |
 | `town` | everything else |
 
@@ -322,7 +337,7 @@ Zoom is the d3-zoom scale `k`, clamped to [0.8, 12] × fit-to-world. Levels swit
 |---|---|---|
 | z0 World | < 2 | coast, territory titles and subtitles, the Old World title, capitals with labels |
 | z1 Region | 2–5 | adds city and town symbols, and labels where `minZoom ≤ 1` |
-| z2 Local | ≥ 5 | adds outposts, all labels, Old World province names, and internal borders at full strength |
+| z2 Local | ≥ 5 | adds outposts and hamlets, all labels, Old World province names, and internal borders at full strength |
 
 - Territory titles fade between z1 and z2.
 - Symbols and text stay a constant screen size.
@@ -341,11 +356,14 @@ When a landmark is selected:
 **Panel contents:**
 1. The territory title and subtitle as a small header, then the name.
 2. A maturity pill (e.g. "Emerging"), plus "c. 2024" in muted text.
-3. The description, then the maturity note in italics.
+3. The plain-language summary when there is one, then the description (smaller and muted when it follows a summary), then the maturity note in italics.
 4. Example chips.
 5. **Built on:** parent chips, each with its `why` underneath. External ancestors appear as non-clickable "beyond the map" chips.
 6. **Led to:** child chips.
-7. The citation (`ref.title`), then "Read the source ↗" when the source has a link. Classic papers often have no link, and their citation still shows.
+7. **Learn more:** the node's `resources`, each a kind tag (Paper, Talk, Blog, Docs, Tutorial, Code), the linked title, and author and year.
+8. The citation (`ref.title`), then "Read the source ↗" when the source has a link. Classic papers often have no link, and their citation still shows.
+
+**Region panel.** Clicking an applied territory title (at z0–z1), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle", the title, the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style.
 
 **Chip behavior:** clicking a chip flies there (600ms, eased, to at least z1) and selects that landmark.
 
@@ -361,11 +379,11 @@ When a landmark is selected:
 - When a result matched on something other than its name, a second line says why: "Also called …", "Example: Jev (TypeSafe AI)", or a short excerpt of the matching description.
 - It shows up to 8 results, each with its territory title.
 - Ranking: name prefix, then name, alias, and example matches; then regions; then description-only matches.
-- Arrow keys and Enter work, Esc clears, and `/` focuses the search box. Choosing a landmark flies to it and selects it. Choosing a territory clears any selection and fits the view to that territory's landmarks, stopping just short of z2 so the title stays visible.
+- Arrow keys and Enter work, Esc clears, and `/` focuses the search box. Choosing a landmark flies to it and selects it. Choosing an applied territory opens its region panel (§5.3); choosing an Old World province clears any selection and fits the view to its landmarks. Both frame the region between z1 (so its towns show) and just short of z2 (so its title stays visible). On a phone the region can be wider than the screen, and the reader pans.
 
 ### 5.5 Deep links
 
-`#graph-rag` opens the map focused on that landmark with it selected. Selection changes update the hash with `replaceState`, and clearing the selection removes it. Editing the hash by hand (`hashchange`) selects the new landmark.
+`#graph-rag` opens the map focused on that landmark with it selected; `#retrieval-and-knowledge` opens that region's panel. Selection changes update the hash with `replaceState`, and clearing the selection removes it. Editing the hash by hand (`hashchange`) selects the new landmark.
 
 ### 5.6 Visual tokens
 
@@ -373,7 +391,7 @@ When a landmark is selected:
 - **Ink:** one dark sepia for all lines and text.
 - **Territory tints:** 19 muted, low-saturation tints, distinct in hue and close in lightness. Root provinces use a shared, slightly darker family of tints.
 - **Coast:** about 1.5px ink stroke, with a faint inner hachure. Shallows are a pale band. Internal borders are 0.75px dashed.
-- **Symbols:** sizes on screen are capital 14px, city 10px, town 6px, outpost 7px (hollow), old 7px (square).
+- **Symbols:** sizes on screen are capital 14px, city 10px, town 6px, outpost 7px (hollow), hamlet 5px (soft ink), old 7px (square).
 
 ## 6. Acceptance criteria (v1 done)
 

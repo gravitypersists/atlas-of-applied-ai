@@ -151,4 +151,10 @@ settlements:
   - {id: text-to-image, x: 4314, y: 1518.5, settled: "2026-10-08"}
   - {id: video-generation, x: 4407.9, y: 1662.2, settled: "2026-10-08"}
   - {id: decision-models, x: 2952.1, y: 1309.2, settled: "2026-10-08"}
+  - {id: zero-shot-cot, x: 2366.5, y: 1732, settled: "2026-10-08"}
+  - {id: dynamic-few-shot-selection, x: 2439.6, y: 1651.7, settled: "2026-10-08"}
+  - {id: decomposed-prompting, x: 2109.8, y: 1466.8, settled: "2026-10-08"}
+  - {id: textual-gradients, x: 2031.2, y: 1353.7, settled: "2026-10-08"}
+  - {id: context-ordering, x: 2284.7, y: 1802.9, settled: "2026-10-08"}
+  - {id: progressive-disclosure, x: 2364.9, y: 1618, settled: "2026-10-08"}
 retired: []

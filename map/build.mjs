@@ -438,6 +438,9 @@ function hrefFor(ref) {
   return ref.url ?? null;
 }
 
+// Reader content for the panel (SPEC §5.3): one shape for node resources and region learning paths.
+const resourceOf = (r) => ({ kind: r.kind, title: r.title, by: r.by ?? null, year: r.year ?? null, url: r.url, why: r.why ?? null });
+
 function render(model, curation) {
   const ledger = readYaml(PATHS.ledger, null);
   if (!ledger) fail("No ledger yet. Run `node build.mjs survey` first.");
@@ -453,8 +456,10 @@ function render(model, curation) {
       id: n.id, name: n.name, region: n.region, x: s.x, y: s.y,
       group: regionById.get(n.region).kind === "root" ? "old-world" : "applied",
       maturity: n.maturity, maturityLabel: MATURITY_LABEL[n.maturity], maturityNote: n.maturity_note ?? null,
-      desc: n.desc ?? null, date: n.date ?? null, aliases: n.aliases ?? [], examples: n.examples ?? [],
+      desc: n.desc ?? null, summary: n.summary ?? null, date: n.date ?? null, aliases: n.aliases ?? [], examples: n.examples ?? [],
+      layer: n.layer ?? "core",
       ref: n.ref ? { title: n.ref.title, href: hrefFor(n.ref) } : null,
+      resources: (n.resources ?? []).map(resourceOf),
       parents: (n.parents ?? []).filter((p) => byId.has(p.id)).map((p) => ({ id: p.id, rel: p.rel, why: p.why ?? null })),
       external: (n.parents ?? []).filter((p) => !byId.has(p.id)).map((p) => ({ name: p.id.replace(/^external:/, ""), why: p.why ?? null })),
       children: children.get(n.id),
@@ -463,6 +468,7 @@ function render(model, curation) {
 
   const territories = bb.regions.map((r) => ({
     id: r.id, title: r.title ?? null, subtitle: r.name, group: r.kind === "root" ? "old-world" : "applied",
+    about: r.overview ?? r.definition ?? null, learningPath: (r.learning_path ?? []).map(resourceOf),
     labelCurated: curation.regions?.[r.id]?.label ?? null,
   }));
   const colors = regionPalette(bb);

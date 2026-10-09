@@ -22,3 +22,8 @@ survey:
   spread:
     # The Painted Isles: room for sea between the islands.
     multimodal-applied: {scale: 1.6, shift: [170, 0], jitter: 45}   # jitter: seeded nudge so spacing isn't too even
+
+# Title anchors (world units). Pinned when a new landmark pushes a neighbouring title into a clash.
+regions:
+  # The Whispering Coast's title moved north for Zero-Shot CoT (2026-10-09) and crowded this one.
+  agents-and-orchestration: {label: [2762, 1518]}

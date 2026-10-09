@@ -19,28 +19,32 @@ export const LABELS = {
     city: { size: 12, em: 0.5, caps: 0.72 },
     town: { size: 11.5, em: 0.46, caps: 0.68 },
     outpost: { size: 11, em: 0.47, caps: 0.68 },
+    hamlet: { size: 11, em: 0.46, caps: 0.68 },
     old: { size: 11.5, em: 0.46, caps: 0.68 },
     title: { size: 16, em: 0.9, caps: 0.9, lineHeight: 1.1 },   // IM Fell English SC, spaced caps
     subtitle: { size: 11, em: 0.5, caps: 0.68 },                // EB Garamond italic
     province: { size: 10.5, em: 0.88, caps: 0.88 },             // spaced caps
   },
   titleWrap: 14,                    // titles longer than this many characters break onto two lines
-  symbol: { capital: 7, city: 5, town: 3, outpost: 3.5, old: 3.5 },   // radius in px
+  symbol: { capital: 7, city: 5, town: 3, outpost: 3.5, hamlet: 2.5, old: 3.5 },   // radius in px
   gap: 4,                           // px between a symbol and its label
   pad: 1.5,                         // px of clearance around every box
 };
 
-const TIER_ORDER = { capital: 0, city: 1, town: 2, old: 2, outpost: 3 };
+const TIER_ORDER = { capital: 0, city: 1, town: 2, old: 2, outpost: 3, hamlet: 3 };
+// Tiers that appear only at local zoom (z2): the frontier, and deep-dive detail.
+const LOCAL_ONLY = new Set(["outpost", "hamlet"]);
 const SIDES = ["right", "left", "above", "below"];
 
 // ---------------------------------------------------------------- tiers (§4.7)
 // score = maturity + log2(1 + childCount). Root nodes are `old`; each applied region has exactly one
-// capital (highest score, then most children, then oldest, then id); then outposts, cities, towns.
+// capital (highest score, then most children, then oldest, then id); then outposts, hamlets (deep-dive
+// `layer: detail` nodes, which never compete with the backbone on the overview), cities, towns.
 export function assignTiers(landmarks, overrides = {}) {
   const score = (l) => l.maturity + Math.log2(1 + l.children.length);
   const capitals = new Map();
   for (const l of landmarks) {
-    if (l.group === "old-world") continue;
+    if (l.group === "old-world" || l.layer === "detail") continue;
     const c = capitals.get(l.region);
     const better = !c || score(l) > score(c) ||
       (score(l) === score(c) && (l.children.length > c.children.length ||
@@ -53,6 +57,7 @@ export function assignTiers(landmarks, overrides = {}) {
       (l.group === "old-world" ? "old"
         : capitals.get(l.region) === l ? "capital"
         : l.maturity <= 2 ? "outpost"
+        : l.layer === "detail" ? "hamlet"
         : l.maturity >= 4 && l.children.length >= 2 ? "city"
         : "town");
   }
@@ -159,7 +164,7 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
   // that clears the titles already placed and the capitals at z0, and every symbol visible at z1.
   const s0 = scales[0], s1 = scales[1];
   const capitals = landmarks.filter((l) => l.tier === "capital");
-  const z1Symbols = landmarks.filter((l) => l.tier !== "outpost");
+  const z1Symbols = landmarks.filter((l) => !LOCAL_ONLY.has(l.tier));
   const titled = [
     ...applied.map((t) => ({ t, titleLines: titleLines(t.title ?? t.subtitle), subtitleText: t.title ? t.subtitle : null, size: landmarks.filter((l) => l.region === t.id).length })),
     { t: oldWorld, id: "old-world", titleLines: titleLines(oldWorld.title), subtitleText: oldWorld.subtitle, size: Infinity },
@@ -195,7 +200,7 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
   const order = [...landmarks].sort((a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier] || a.settledIndex - b.settledIndex || b.score - a.score);
   const eligible = [
     (l) => l.tier === "capital",
-    (l) => l.tier !== "outpost",
+    (l) => !LOCAL_ONLY.has(l.tier),
     () => true,
   ];
   const symbolVisible = eligible; // symbols follow the same schedule as label eligibility (§5.2)
