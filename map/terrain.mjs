@@ -30,6 +30,20 @@ export const TERRAIN = {
   minLandmassCells: 60,                          // smaller components don't count as landmasses
   blur: 0.6,                                     // cells; softens the cell staircase in contours
   repairBoost: 0.35,                             // uplift added per guarantee pass
+  // Per-region terrain styles, chosen in curation.yaml under `terrain`.
+  styles: {
+    // Each landmark rises as its own small island: tighter uplift, and no lineage ridges into or
+    // within the region, so islands neither fuse with each other nor with neighbouring territories.
+    archipelago: {
+      sigmaScale: 0.6,
+      ridges: false,
+      size: [0.6, 1.55],          // per-island size factor, seeded by landmark id
+      elongation: [1, 2.4],       // per-island stretch (length / width) in a seeded direction
+      // A submerged shelf under the region, just below sea level, with fine noise that breaks the
+      // surface as scattered islets and rocks between the main islands.
+      shelf: { height: 0.03, sigma: 140, noise: 0.45, scale: 26, octaves: 3, fade: 12 },
+    },
+  },
 };
 
 // ---------------------------------------------------------------- noise
@@ -39,6 +53,14 @@ function hash2(ix, iy, seed) {
   return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
 }
 const smooth = (t) => t * t * (3 - 2 * t);
+// Stable per-landmark random number in [0, 1), from its id and a salt. Depends on nothing else, so a
+// landmark's terrain never changes when other landmarks are added.
+function idRandom(id, salt) {
+  let h = 2166136261;
+  for (const ch of `${salt}:${id}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  h = Math.imul(h ^ (h >>> 15), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
 function valueNoise(x, y, seed) {
   const ix = Math.floor(x), iy = Math.floor(y), fx = smooth(x - ix), fy = smooth(y - iy);
   const a = hash2(ix, iy, seed), b = hash2(ix + 1, iy, seed), c = hash2(ix, iy + 1, seed), d = hash2(ix + 1, iy + 1, seed);
@@ -86,13 +108,30 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
     j0: Math.max(0, Math.floor((y - grid.y0) / cell) - reach(r)), j1: Math.min(height - 1, Math.floor((y - grid.y0) / cell) + reach(r)),
   });
 
+  // Bumps may be stretched along a seeded direction (same area as the round bump: σ·√e by σ/√e).
+  const shelfS = new Float32Array(width * height);
+  const other = new Float32Array(width * height); // uplift from landmarks outside any shelf, plus ridges
+  let shelf = null;
   for (const l of landmarks) {
-    const s = l.sigma, h = l.height + (boost.get(l.id) ?? 0), r = 3 * s;
+    const e = l.elongation ?? 1, su = l.sigma * Math.sqrt(e), sv = l.sigma / Math.sqrt(e);
+    const h = l.height + (boost.get(l.id) ?? 0), r = 3 * su;
+    const c = Math.cos(l.angle ?? 0), sn = Math.sin(l.angle ?? 0);
     const [lx, ly] = warp(l.x, l.y);
     const { i0, i1, j0, j1 } = span(l.x, l.y, r);
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
-      const k = j * width + i, dx = qx[k] - lx, dy = qy[k] - ly, d2 = dx * dx + dy * dy;
-      if (d2 < r * r) E[k] += h * Math.exp(-d2 / (2 * s * s));
+      const k = j * width + i, dx = qx[k] - lx, dy = qy[k] - ly;
+      const u = dx * c + dy * sn, v = -dx * sn + dy * c;
+      const q = (u * u) / (2 * su * su) + (v * v) / (2 * sv * sv);
+      if (q < 4.5) { const v = h * Math.exp(-q); E[k] += v; if (!l.shelf) other[k] += v; }
+    }
+    if (l.shelf) {
+      shelf = l.shelf;
+      const ss = l.shelf.sigma, rs = 3 * ss;
+      const b = span(l.x, l.y, rs);
+      for (let j = b.j0; j <= b.j1; j++) for (let i = b.i0; i <= b.i1; i++) {
+        const k = j * width + i, dx = wx(i) - l.x, dy = wy(j) - l.y, d2 = dx * dx + dy * dy;
+        if (d2 < rs * rs) shelfS[k] += Math.exp(-d2 / (2 * ss * ss));
+      }
     }
   }
 
@@ -109,11 +148,23 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
       const k = j * width + i;
       const t = Math.max(0, Math.min(1, ((qx[k] - ax) * vx + (qy[k] - ay) * vy) / len2));
       const dx = qx[k] - (ax + t * vx), dy = qy[k] - (ay + t * vy), d2 = dx * dx + dy * dy;
-      if (d2 < 9 * w * w) E[k] += h * Math.exp(-d2 / (2 * w * w));
+      if (d2 < 9 * w * w) { const v = h * Math.exp(-d2 / (2 * w * w)); E[k] += v; other[k] += v; }
     }
   }
 
   for (let k = 0; k < E.length; k++) E[k] = 1 - Math.exp(-E[k]);
+
+  // Submerged shelf: a plateau just below sea level, with fine noise breaking the surface as islets.
+  // It fades out where other territories' land is rising, so its rocks never bridge to a neighbour.
+  // (That fade means a new neighbouring landmark can lower the shelf locally; once the survey is
+  // accepted the high-water mark keeps any land that already exists.)
+  if (shelf) for (let j = 0; j < height; j++) for (let i = 0; i < width; i++) {
+    const k = j * width + i;
+    if (shelfS[k] < 1e-3) continue;
+    const m = (1 - Math.exp(-2 * shelfS[k])) * Math.exp(-shelf.fade * other[k]);
+    const nz = Math.max(0, fbm(wx(i) / shelf.scale, wy(j) / shelf.scale, seed + 71, shelf.octaves));
+    E[k] += m * (shelf.height + shelf.noise * nz);
+  }
 
   const [bx0, by0] = [grid.x0, grid.y0], W = width * cell, H = height * cell;
   const mx = W * T.basin.margin, my = H * T.basin.margin;
@@ -130,17 +181,27 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
 }
 
 // Per-landmark uplift parameters and per-edge ridges, from the model and settled positions.
-export function terrainInputs(model, placed) {
+export function terrainInputs(model, placed, regionStyles = {}) {
   const T = TERRAIN;
   const { bb, byId, regionById, edges } = model;
+  const style = (region) => {
+    const name = regionStyles[region];
+    if (name && !T.styles[name]) throw new Error(`unknown terrain style "${name}" for ${region}`);
+    return T.styles[name] ?? { sigmaScale: 1, ridges: true };
+  };
+  const lerp = (a, b, t) => a + (b - a) * t;
   const isRoot = (r) => regionById.get(r).kind === "root";
   const nodes = bb.nodes.filter((n) => placed.has(n.id));
   const landmarks = nodes.map((n) => {
-    const p = placed.get(n.id), root = isRoot(n.region) ? T.uplift.rootBonus : 1;
+    const p = placed.get(n.id), root = isRoot(n.region) ? T.uplift.rootBonus : 1, st = style(n.region);
+    const size = st.size ? lerp(st.size[0], st.size[1], idRandom(n.id, "size")) : 1;
     return {
       id: n.id, x: p.x, y: p.y, region: n.region, maturity: n.maturity,
-      sigma: (T.uplift.sigmaBase + T.uplift.sigmaPerMaturity * n.maturity) * root,
+      sigma: (T.uplift.sigmaBase + T.uplift.sigmaPerMaturity * n.maturity) * root * st.sigmaScale * size,
       height: (T.uplift.heightBase + T.uplift.heightPerMaturity * n.maturity + T.uplift.tierBonus[n.maturity]) * root,
+      elongation: st.elongation ? lerp(st.elongation[0], st.elongation[1], idRandom(n.id, "elongation")) : 1,
+      angle: idRandom(n.id, "angle") * Math.PI,
+      shelf: st.shelf ?? null,
     };
   });
 
@@ -157,6 +218,7 @@ export function terrainInputs(model, placed) {
     if (e.oceanic || !placed.has(e.source) || !placed.has(e.target)) continue;
     const a = byId.get(e.source), b = byId.get(e.target);
     if (a.maturity < 3 || b.maturity < 3) continue; // frontier stays an islet until it matures
+    if (!style(a.region).ridges || !style(b.region).ridges) continue;
     const pa = placed.get(e.source), pb = placed.get(e.target);
     const h = e.cross
       ? T.ridge.crossMin + (T.ridge.crossMax - T.ridge.crossMin) * (pairCount.get(pairKey(a.region, b.region)) / pmax)

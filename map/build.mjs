@@ -11,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
 import * as Terrain from "./terrain.mjs";
+import { assignTiers, placeLabels, levelScales, LABELS } from "./labels.mjs";
 import {
   forceSimulation, forceLink, forceManyBody, forceCollide, forceX, forceY,
 } from "d3-force";
@@ -402,14 +403,28 @@ function survey(model, curation, { redo }) {
   const nodes = surveyLandmarks(model, regions);
   const fit = fitToBounds(nodes);
   const date = model.bb.meta.date;
+  const previous = fs.existsSync(PATHS.ledger) ? readYaml(PATHS.ledger, {}) : null;
   const ledger = {
-    world: { seed: CONFIG.seed, bounds: CONFIG.bounds, cell: CONFIG.cell, sea_level: null, surveyed: date, accepted: false },
+    // A redo keeps the chosen sea level.
+    world: { seed: CONFIG.seed, bounds: CONFIG.bounds, cell: CONFIG.cell, sea_level: previous?.world?.sea_level ?? null, surveyed: date, accepted: false },
     settlements: model.bb.nodes.map((n) => {
       const p = fit(nodes.find((m) => m.id === n.id));
       return { id: n.id, x: p.x, y: p.y, settled: date };
     }),
     retired: [],
   };
+  // Curated spread: scale a region's landmarks out from their centroid (world units), then shift.
+  for (const [region, { scale = 1, shift = [0, 0], jitter = 0 }] of Object.entries(curation.survey?.spread ?? {})) {
+    const members = ledger.settlements.filter((s) => model.byId.get(s.id)?.region === region);
+    if (!members.length) fail(`curation survey.spread: no landmarks in ${region}`);
+    const cx = members.reduce((a, s) => a + s.x, 0) / members.length, cy = members.reduce((a, s) => a + s.y, 0) / members.length;
+    for (const s of members) {
+      // Seeded per landmark, so the jitter is reproducible and independent of other landmarks.
+      const rng = rngFor(CONFIG.seed, `jitter:${s.id}`), a = rng() * Math.PI * 2, d = jitter * Math.sqrt(rng());
+      s.x = round1(cx + (s.x - cx) * scale + shift[0] + Math.cos(a) * d);
+      s.y = round1(cy + (s.y - cy) * scale + shift[1] + Math.sin(a) * d);
+    }
+  }
   writeLedger(ledger);
   console.log(`survey: ${ledger.settlements.length} landmarks placed (region arrangement: trial ${regions.trial}, energy ${regions.energy.toFixed(0)})`);
   console.log(`wrote ${path.relative(ROOT, PATHS.ledger)}`);
@@ -430,10 +445,12 @@ function render(model, curation) {
   const unplaced = bb.nodes.filter((n) => !placed.has(n.id));
   if (unplaced.length) fail(`not settled: ${unplaced.map((n) => n.id).join(", ")}`);
 
+  const settledIndex = new Map(ledger.settlements.map((s, i) => [s.id, i]));
   const landmarks = bb.nodes.filter((n) => placed.has(n.id)).map((n) => {
     const s = placed.get(n.id);
     return {
       id: n.id, name: n.name, region: n.region, x: s.x, y: s.y,
+      group: regionById.get(n.region).kind === "root" ? "old-world" : "applied",
       maturity: n.maturity, maturityLabel: MATURITY_LABEL[n.maturity], maturityNote: n.maturity_note ?? null,
       desc: n.desc ?? null, date: n.date ?? null, aliases: n.aliases ?? [], examples: n.examples ?? [],
       ref: n.ref ? { title: n.ref.title, href: hrefFor(n.ref) } : null,
@@ -443,35 +460,45 @@ function render(model, curation) {
     };
   });
 
-  const territories = bb.regions.map((r) => {
-    const members = landmarks.filter((l) => l.region === r.id);
-    const label = members.length
-      ? [round1(members.reduce((a, l) => a + l.x, 0) / members.length), round1(members.reduce((a, l) => a + l.y, 0) / members.length)]
-      : null;
-    const cur = curation.regions?.[r.id] ?? {};
-    return {
-      id: r.id, title: r.title ?? null, subtitle: r.name, group: r.kind === "root" ? "old-world" : "applied",
-      label: cur.label ?? label,
-    };
-  });
-
+  const territories = bb.regions.map((r) => ({
+    id: r.id, title: r.title ?? null, subtitle: r.name, group: r.kind === "root" ? "old-world" : "applied",
+    labelCurated: curation.regions?.[r.id]?.label ?? null,
+  }));
   const colors = regionPalette(bb);
   for (const t of territories) Object.assign(t, colors.get(t.id));
+  const oldWorld = { title: "The Old World", subtitle: "Ancestral Disciplines", ...curation.old_world };
+  oldWorld.labelCurated = oldWorld.label ?? null;
 
-  let geometry = {};
+  let geometry = {}, terrain = null;
   if (ledger.world.sea_level == null) {
     console.warn("warning: no sea level yet; run `node build.mjs sea --sweep`, then `sea --set <level>`");
   } else {
-    const terrain = buildTerrain(model, ledger);
+    terrain = buildTerrain(model, ledger);
     geometry = terrainGeometry(terrain, territories);
   }
+
+  // Cartography: tiers, title anchors, and label zoom thresholds (SPEC §4.7–4.8).
+  for (const l of landmarks) l.settledIndex = settledIndex.get(l.id);
+  assignTiers(landmarks, curation.nodes ?? {});
+  const labelReport = placeLabels({ landmarks, territories, oldWorld, terrain, overrides: curation.nodes ?? {} });
+  for (const l of landmarks) delete l.settledIndex;
+  for (const t of [...territories, oldWorld]) delete t.labelCurated;
+  const tierCounts = {};
+  for (const l of landmarks) tierCounts[l.tier] = (tierCounts[l.tier] ?? 0) + 1;
+  const byZoom = [0, 1, 2].map((z) => landmarks.filter((l) => l.minZoom === z).length);
+  console.log(`labels: tiers ${Object.entries(tierCounts).map(([k, v]) => `${k} ${v}`).join(", ")}; labels appear at z0/z1/z2: ${byZoom.join("/")}`);
+  if (labelReport.titleOverlaps.length) console.warn(`warning: titles that could not avoid overlap: ${labelReport.titleOverlaps.join(", ")}`);
+  if (labelReport.titleCovers.length) console.log(`labels: titles covering z1 symbols: ${labelReport.titleCovers.join(", ")}`);
+  if (labelReport.unplaced.length) console.warn(`warning: labels still colliding at z2 (${labelReport.unplaced.length}): ${labelReport.unplaced.join(", ")}`);
 
   const out = {
     version: 1,
     built: ledger.world.surveyed,
     bounds: ledger.world.bounds,
     stage: ledger.world.accepted ? "accepted" : "survey-draft",
-    oldWorld: curation.old_world ?? { title: "The Old World", subtitle: "Ancestral Disciplines" },
+    // scales: px per world unit where z0, z1 and z2 begin, for the reference viewport labels were placed in.
+    view: { levels: LABELS.levels, margin: LABELS.margin, scales: levelScales(landmarks).map((v) => Math.round(v * 1e6) / 1e6) },
+    oldWorld,
     ...geometry,
     territories,
     landmarks,
@@ -515,7 +542,7 @@ function buildTerrain(model, ledger, { write = true, quiet = false, level = ledg
   const world = ledger.world;
   const grid = Terrain.makeGrid(world);
   const placed = placedOf(ledger);
-  const inputs = Terrain.terrainInputs(model, placed);
+  const inputs = Terrain.terrainInputs(model, placed, model.terrainStyles);
   // Before the survey is accepted, terrain is a draft and regenerated from scratch every build.
   const previous = world.accepted ? loadTerrain(grid) : null;
   if (previous && level > previous.sea_level) fail(`sea level may only fall (was ${previous.sea_level}, now ${level})`);
@@ -583,7 +610,7 @@ function terrainGeometry(terrain, territories) {
 function seaSweep(model, ledger, levels) {
   const grid = Terrain.makeGrid(ledger.world);
   const placed = placedOf(ledger);
-  const inputs = Terrain.terrainInputs(model, placed);
+  const inputs = Terrain.terrainInputs(model, placed, model.terrainStyles);
   const E = Terrain.elevation(grid, { ...inputs, seed: ledger.world.seed });
   const isRoot = (r) => model.regionById.get(r).kind === "root";
   fs.mkdirSync(PATHS.previewDir, { recursive: true });
@@ -806,6 +833,7 @@ const preview = previewIdx >= 0 ? args[previewIdx + 1] : null;
 
 const model = loadBackbone();
 const curation = readYaml(PATHS.curation, {});
+model.terrainStyles = curation.terrain ?? {};
 
 const argAfter = (flag) => { const i = args.indexOf(flag); return i >= 0 ? args[i + 1] : null; };
 

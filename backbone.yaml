@@ -63,6 +63,7 @@ regions:
   - id: inference-and-serving
     kind: applied
     name: Inference and Serving
+    title: The Engine Works
     definition: Running models efficiently and cheaply — memory management, batching, quantization, decoding acceleration, caching, and routing between models.
     distinct_from: Treats weights as fixed (vs. Adaptation) and works below the prompt/API layer (vs. Prompting). Decoding-time mechanisms like constrained decoding live here; the practices built on them live in Prompting.
     descends_from: [deep-learning-nlp, software-engineering]
@@ -73,6 +74,7 @@ regions:
   - id: prompting-and-context-engineering
     kind: applied
     name: Prompting and Context Engineering
+    title: The Whispering Coast
     definition: Shaping model behavior through inputs — prompt patterns, structured outputs, templates and chains, managing what occupies the context window, and optimizing prompts programmatically.
     distinct_from: No weight updates (vs. Adaptation); operates on text and API payloads rather than tensors (vs. Inference); concerns single calls and context state rather than control flow (vs. Agents).
     descends_from: [deep-learning-nlp, human-computer-interaction]
@@ -83,6 +85,7 @@ regions:
   - id: retrieval-and-knowledge
     kind: applied
     name: Retrieval and Knowledge
+    title: The Archival Reach
     definition: Bringing external knowledge into context — embeddings, RAG and its variants, hybrid search, reranking, graph-based and agentic retrieval.
     distinct_from: Goal is answering from a corpus (vs. Agents, which change state). Agentic RAG lives here when the end goal is information.
     descends_from: [information-retrieval, knowledge-representation, deep-learning-nlp]
@@ -93,6 +96,7 @@ regions:
   - id: agents-and-orchestration
     kind: applied
     name: Agents and Orchestration
+    title: The Free Cities
     definition: Models acting in environments — tool use, agent loops, workflows vs. autonomous agents, multi-agent systems, memory, protocols, and coding, computer-use, and research agents.
     distinct_from: Changes environment state or runs multi-step control flow (vs. Retrieval, which reads). Reasoning techniques that don't act live in Planning and Reasoning.
     descends_from: [symbolic-ai-planning, software-engineering, deep-learning-nlp]
@@ -103,6 +107,7 @@ regions:
   - id: planning-and-reasoning
     kind: applied
     name: Planning and Reasoning
+    title: The Peninsula of Long Thought
     definition: Structured problem solving — the chain-of-thought lineage, search over reasoning, test-time compute and reasoning models, self-reflection, and neuro-symbolic planning with external solvers and verifiers.
     distinct_from: Concerns how a solution is derived, not whether actions are taken (vs. Agents). Training methods that produce reasoning (RLVR, GRPO) live in Adaptation.
     descends_from: [symbolic-ai-planning, deep-learning-nlp, reinforcement-learning]
@@ -113,6 +118,7 @@ regions:
   - id: adaptation-and-post-training
     kind: applied
     name: Adaptation and Post-Training
+    title: The Tempering Grounds
     definition: Changing weights after pretraining — supervised fine-tuning, parameter-efficient methods, preference optimization, RL from verifiable rewards, distillation.
     distinct_from: Always involves gradient updates (vs. Prompting). Dataset construction lives in Data.
     descends_from: [deep-learning-nlp, reinforcement-learning]
@@ -123,6 +129,7 @@ regions:
   - id: data-and-synthetic-data
     kind: applied
     name: Data and Synthetic Data
+    title: The Quarries
     definition: Creating, curating, and cleaning data for training, retrieval, and evaluation — synthetic generation, deduplication, decontamination, quality filtering, model-assisted annotation.
     distinct_from: Produces datasets (vs. Adaptation, which consumes them; vs. Evaluation, which uses them to measure).
     descends_from: [deep-learning-nlp, information-retrieval]
@@ -133,6 +140,7 @@ regions:
   - id: evaluation-and-observability
     kind: applied
     name: Evaluation and Observability
+    title: The Watchtowers
     definition: Measuring and debugging AI systems — benchmarks, LLM-as-judge, eval-driven development, RAG and agent evals, tracing, and production monitoring.
     distinct_from: Measures and observes; does not change behavior. Reward models used for training or search live in Reasoning or Adaptation.
     descends_from: [software-engineering, deep-learning-nlp]
@@ -143,6 +151,7 @@ regions:
   - id: safety-security-and-governance
     kind: applied
     name: Safety, Security and Governance
+    title: The Bulwark
     definition: Keeping AI systems from causing harm — prompt injection and jailbreaks, guardrails and defenses, red teaming, sandboxing and permissions, interpretability as a control tool, documentation and governance.
     distinct_from: Primary purpose is risk reduction. Uses techniques from Prompting (guardrails) and Evaluation (red teaming) but is defined by intent.
     descends_from: [systems-security, deep-learning-nlp, human-computer-interaction]
@@ -153,6 +162,7 @@ regions:
   - id: ai-product-and-interaction-design
     kind: applied
     name: AI Product and Interaction Design
+    title: The Agora
     definition: How AI shows up for users — chat and copilot patterns, streaming, citations and grounding, human-in-the-loop approval, generative UI and canvases, trust and error recovery.
     distinct_from: Defined by the human-facing experience, not the backend mechanism.
     descends_from: [human-computer-interaction]
@@ -163,6 +173,7 @@ regions:
   - id: multimodal-applied
     kind: applied
     name: Multimodal
+    title: The Painted Isles
     definition: Vision, speech, documents, and generated media as used in applications — vision-language models, realtime voice, document understanding, image and video generation.
     distinct_from: Covers modality-specific engineering; general orchestration of multimodal agents lives in Agents.
     descends_from: [deep-learning-nlp]

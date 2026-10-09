@@ -22,7 +22,7 @@ node map/build.mjs --preview out.svg   # also write a static debug SVG
 python3 map/serve.py 8000              # dev server with no-cache headers
 ```
 
-The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`.
+The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`. Cartography (symbol tiers, title anchors, collision-free label placement per zoom level) lives in `map/labels.mjs`; its text sizes must match `map/public/style.css`. Region `title` (the fun name) is set in `backbone.yaml`, and `name` is the subtitle.
 
 After any edit to `backbone.yaml`, run both scripts. `validate.py` must report 0 errors.
 

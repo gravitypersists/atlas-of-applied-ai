@@ -141,13 +141,13 @@ settlements:
   - {id: human-in-the-loop-approval, x: 3080.2, y: 1464.8, settled: "2026-10-08"}
   - {id: generative-ui, x: 3070.9, y: 1547.8, settled: "2026-10-08"}
   - {id: canvas-artifacts, x: 3156.3, y: 1499.1, settled: "2026-10-08"}
-  - {id: contrastive-image-text-pretraining, x: 3966, y: 1616.6, settled: "2026-10-08"}
-  - {id: vision-language-models, x: 3880.3, y: 1686.5, settled: "2026-10-08"}
-  - {id: document-understanding, x: 3944.3, y: 1759.4, settled: "2026-10-08"}
-  - {id: visual-document-retrieval, x: 3864, y: 1782.2, settled: "2026-10-08"}
-  - {id: speech-recognition, x: 4030.1, y: 1792.7, settled: "2026-10-08"}
-  - {id: realtime-voice, x: 4111.5, y: 1749.7, settled: "2026-10-08"}
-  - {id: diffusion-models, x: 4039.3, y: 1692.5, settled: "2026-10-08"}
-  - {id: text-to-image, x: 4069.6, y: 1596.6, settled: "2026-10-08"}
-  - {id: video-generation, x: 4128, y: 1667.8, settled: "2026-10-08"}
+  - {id: contrastive-image-text-pretraining, x: 4113.5, y: 1529, settled: "2026-10-08"}
+  - {id: vision-language-models, x: 3985.8, y: 1689.4, settled: "2026-10-08"}
+  - {id: document-understanding, x: 4099.2, y: 1803, settled: "2026-10-08"}
+  - {id: visual-document-retrieval, x: 3937.5, y: 1823.4, settled: "2026-10-08"}
+  - {id: speech-recognition, x: 4246.6, y: 1862.7, settled: "2026-10-08"}
+  - {id: realtime-voice, x: 4371.4, y: 1799.5, settled: "2026-10-08"}
+  - {id: diffusion-models, x: 4255.7, y: 1666.9, settled: "2026-10-08"}
+  - {id: text-to-image, x: 4314, y: 1518.5, settled: "2026-10-08"}
+  - {id: video-generation, x: 4407.9, y: 1662.2, settled: "2026-10-08"}
 retired: []

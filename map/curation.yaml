@@ -3,6 +3,12 @@
 
 old_world: {title: The Old World, subtitle: Ancestral Disciplines}
 
+# Terrain style per region (styles are defined in TERRAIN.styles in map/terrain.mjs).
+# Shapes the land every build. Once the survey is accepted, land only grows, so a style change can add
+# land but never remove it.
+terrain:
+  multimodal-applied: archipelago   # The Painted Isles: a scatter of islands, Cyclades-style
+
 # Read only by `node build.mjs survey`. Inert once the survey is accepted.
 survey:
   # West–east position of a region within its own world: 0 = west edge, 1 = east edge.
@@ -12,3 +18,7 @@ survey:
     deep-learning-nlp: 1.0
     # New World: prompting was the first land LLMs conquered (few-shot prompting, 2020).
     prompting-and-context-engineering: 0.0
+  # Spread a region's landmarks out from their centroid by `scale`, then move them by `shift` (world units).
+  spread:
+    # The Painted Isles: room for sea between the islands.
+    multimodal-applied: {scale: 1.6, shift: [170, 0], jitter: 45}   # jitter: seeded nudge so spacing isn't too even

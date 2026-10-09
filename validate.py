@@ -99,6 +99,8 @@ def main():
             errors.append(f"region {rid} has {counts[rid]} anchors (< {MIN_APPLIED})")
         if r["kind"] == "root" and counts[rid] < 2:
             warnings.append(f"root {rid} has {counts[rid]} anchors")
+        if r["kind"] == "applied" and not r.get("title"):
+            warnings.append(f"region {rid} has no map title")
 
     cross = sum(
         1

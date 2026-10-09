@@ -106,6 +106,10 @@ survey:                                # read only by `survey`; inert once the s
   west_east:                           # 0 = west edge, 1 = east edge of the region's own world
     deep-learning-nlp: 1.0
     prompting-and-context-engineering: 0.0
+  spread:                              # scale a region's landmarks out from their centroid, then shift (world units)
+    multimodal-applied: {scale: 1.6, shift: [170, 0], jitter: 45}   # jitter: seeded per-landmark nudge off the even grid
+terrain:                               # per-region terrain style (TERRAIN.styles in map/terrain.mjs); read every build
+  multimodal-applied: archipelago      # tighter uplift and no lineage ridges: one island per landmark
 nodes:
   bm25: {label: left}                  # label side: right (default) | left | above | below
   react-agent-loop: {tier: capital}    # force a symbol tier
@@ -113,7 +117,7 @@ regions:
   retrieval-and-knowledge: {label: [1820, 700]}   # territory label position override
 ```
 
-Curation never touches settled geography. The `survey` block only shapes the founding survey. To move a settled landmark you edit the ledger, as described in 3.2.
+Curation never touches settled geography. The `survey` block only shapes the founding survey; `survey --redo` keeps the chosen sea level. The `terrain` block shapes land on every build. Once the survey is accepted, land only grows, so a style change there can add land but never remove it. To move a settled landmark you edit the ledger, as described in 3.2.
 
 ### 3.5 `map/public/map.json` (viewer contract)
 
@@ -126,12 +130,14 @@ Curation never touches settled geography. The `survey` block only shapes the fou
     "id": "retrieval-and-knowledge", "title": "The Archive Reach", "subtitle": "Retrieval and Knowledge",
     "tint": "#d9c9a3", "ink": "#6d8c4f",      // territory fill colour; symbol and label colour
     "fill": "M…Z",                            // owned land cells as a path; drawn with a dashed outline, which forms the borders
-    "label": [x, y], "group": "applied"       // "old-world" for root provinces
+    "label": [x, y], "group": "applied",      // "old-world" for root provinces
+    "titleLines": ["THE ISLE OF", "LONG THOUGHT"]   // applied territories only
   }],
-  "oldWorld": {"title": "The Old World", "subtitle": "Ancestral Disciplines", "label": [x, y]},
+  "view": {"levels": [2, 5], "margin": {"x": 150, "y": 60}},   // zoom thresholds and fit margin used for label placement
+  "oldWorld": {"title": "The Old World", "subtitle": "Ancestral Disciplines", "label": [x, y], "titleLines": ["THE OLD WORLD"]},
   "landmarks": [{
     "id": "graph-rag", "name": "GraphRAG", "region": "retrieval-and-knowledge",
-    "x": 0, "y": 0, "tier": "outpost", "minZoom": 2, "labelSide": "right",
+    "x": 0, "y": 0, "tier": "outpost", "score": 2.58, "minZoom": 2, "labelSide": "right",
     "desc": "…", "maturity": 2, "maturityLabel": "Emerging", "maturityNote": "…",
     "date": "2024-04", "aliases": […], "examples": […],
     "ref": {"title": "…", "href": "https://arxiv.org/abs/2404.16130"},
@@ -170,6 +176,11 @@ The saturating sum keeps dense interiors near 1, so coasts form where influence 
   - Shape: a ridge along the parent→child segment, with height following a smoothed profile `r · exp(−dist_to_segment²/2w²)`.
   - Height: for cross-region edges, `r` scales with the number of edges between that region pair, normalized by the strongest pair. Strong connections clear sea level and weak ones don't.
   - In-region edges use a constant `r`, which keeps each territory internally contiguous.
+- **Region styles.** A region can take a terrain style from `curation.yaml`. The Painted Isles use `archipelago`, which:
+  - scales its landmarks' `σ` by `sigmaScale`
+  - raises no lineage ridges into, out of, or within the region, so islands rarely fuse
+  - gives each island a size factor (`size`) and a stretch along a direction (`elongation`), so islands vary from small and round to long and thin. Both are seeded by the landmark's id alone, so they never change as other landmarks arrive.
+  - adds a submerged shelf: a broad, low plateau under the region (`shelf.sigma`, `shelf.height`) with fine noise (`shelf.noise`, `shelf.scale`) whose peaks break the surface as islets and rocks between the main islands. The shelf fades where other territories' uplift is rising (`shelf.fade`), so its rocks never bridge to a neighbour. That fade is the one place where adding a landmark can *lower* elevation; once the survey is accepted, the high-water mark keeps any land that already exists.
 - **Bedrock.** Seeded fBm at two scales: a broad one that pushes land out into peninsulas and pulls it back into bays independently of the landmarks, and a fine one (`detail`) that gives coasts their raggedness, coves, and small rocks.
 - **Basin.** A smooth falloff in the outer margin of `bounds`, so the world ends in sea.
 
@@ -267,13 +278,17 @@ Within each region, `score = maturity + log2(1 + childCount)`. The rules below r
 
 ### 4.8 Label zoom thresholds (`minZoom`)
 
-Labels are cartography, not geography, so they can change between builds. Even so, labels that are already placed have priority, which keeps them stable.
+Labels are cartography, not geography, so they can change between builds. Even so, labels that are already placed have priority, which keeps them stable. Implemented in `map/labels.mjs`. Its `LABELS` block holds the reference viewport, text sizes, and glyph-width estimates, and the CSS font sizes must match them.
+
+- **Screen-space placement.** Symbols and text are drawn at a constant screen size, so collisions depend on zoom. Placement works in pixels for a reference 1440×860 viewport at each level's lowest scale: fit-to-world for z0, ×2 for z1, ×5 for z2. That's each level's most crowded moment. Text widths are estimated per character, with capitals and digits counted wider. The widths were measured in the browser against the real fonts and rounded up. If fonts or sizes change, re-measure and update `LABELS.text` along with `style.css`. The build writes the fit margin, the zoom thresholds, and the absolute scales (px per world unit) where z0, z1 and z2 begin to `map.json` under `view`.
+- **Any screen size.** The viewer switches zoom levels at those absolute scales rather than relative to its own fit-to-world. Below the z0 reference scale, symbols, labels and titles shrink in proportion, down to 55%. A smaller screen therefore shows the same collision-free layout, just smaller. Only below 55% (phone-sized screens at full zoom-out) can marks crowd again.
+- **Titles first.** Applied territories get titles; the Old World gets one title over the union of its provinces. Each title has one fixed anchor. Candidates are points inside its territory, most interior first (from a distance transform of the territory's claims). Larger territories choose first. A title may not overlap a placed title or a capital at z0, and it prefers the candidate that covers the fewest symbols visible at z1. Titles longer than 14 characters wrap onto two lines. Province names show only at z2. They're placed last, at the most interior point of their province that clears every landmark label and symbol at that scale. Curation can pin any of these with `regions.<id>.label` or `old_world.label`.
 
 - **Placement.** Labels are placed greedily for z = 0, 1, 2.
 - **Order.** Landmarks are taken in tier order (capital > city > town > outpost), then by `settled` (oldest first), then by score.
 - **Eligibility by zoom.** z0 shows capitals only; z1 adds cities and towns; z2 shows everything.
-- **Fitting.** For each landmark, try its curated side first, then right, left, above, below. `minZoom` is the first zoom level at which a side fits without colliding.
-- **Build report.** z2 collisions are listed in the build report.
+- **Fitting.** For each landmark, try its curated side first, then right, left, above, below. `minZoom` is the first zoom level at which a side fits without colliding with a placed label, a title visible at that level, or a symbol visible at that level. A label that never fits still gets `minZoom: 2`, and it's reported.
+- **Build report.** Tier counts, labels per zoom level, titles covering z1 symbols, and z2 collisions.
 
 ### 4.9 Routes
 
@@ -300,7 +315,7 @@ The build prints:
 
 ### 5.2 Semantic zoom
 
-Zoom is measured as d3-zoom `k` relative to fit-to-world, clamped to [0.8, 12].
+Zoom is the d3-zoom scale `k`, clamped to [0.8, 12] × fit-to-world. Levels switch at the absolute scales in `map.json` `view.scales`, the scales at which the build placed labels. The relative thresholds below are what those scales mean on the 1440×860 reference screen.
 
 | Level | `k` | Shown |
 |---|---|---|
@@ -378,17 +393,18 @@ When a landmark is selected:
 3. **Settlement.** `settle` with invariant checks and the build report. Exercise it with acceptance tests 3 and 4 using throwaway test nodes.
 4. **Legibility.** Tiers, symbology, `minZoom` labels, and semantic-zoom CSS.
 5. **Interaction.** Panel, routes, dimming, search, fly-to, deep links, and the mobile sheet.
-6. **Polish.** Titles in `backbone.yaml`, a CLAUDE.md update, and publishing.
+6. **Polish.** A CLAUDE.md update and publishing. (Titles moved into `backbone.yaml` during milestone 4, because label placement depends on them.)
 
 Each milestone ends with a screenshot review before the next begins.
 
 ## 8. Open items
 
-- **Tuning constants.** These live in one `CONFIG` block at the top of `build.mjs`:
-  - **uplift and ridges:** uplift `h`/`σ` per maturity and rank, ridge `r`/`w`
-  - **noise:** warp `A`, bedrock amplitude
-  - **settlement:** `growthRoom`, `minSpacing`, `coastBand`, settlement `R`
-  - **thresholds:** shallows `δ`, zoom thresholds
+- **Tuning constants.** These live in one block per concern:
+  - **survey forces:** `CONFIG` in `map/build.mjs`
+  - **terrain:** uplift, ridges, warp, bedrock, detail, basin, shallows: `TERRAIN` in `map/terrain.mjs`
+  - **settlement:** search radius, spacing, coast band, islet distances: `SETTLE` in `map/build.mjs`
+  - **cartography:** reference viewport, zoom thresholds, text sizes, title wrapping: `LABELS` in `map/labels.mjs`
+- **Small screens.** Labels are placed for a 1440×860 reference viewport, and marks shrink down to 55% on smaller screens. A phone at full zoom-out is smaller still, so z0 labels can crowd there. Milestone 5 should check this. Options: a lower shrink floor, hiding capital labels below the floor, or placing labels for a second, small viewport.
 - **Terrain resolution versus future zoom.** A grid cell of 4 units supports z0–z2. If deep-dive detail at z3+ needs finer coastlines, we'd add a second, finer terrain layer for the zoomed-in view. That layer would derive from the base land mask and never contradict it. Not needed for v1.
 - **Root nodes as frontier.** Root nodes never become frontier. If a root discipline gains a new low-maturity node, it settles like any other node.
 - **Hosting.** Publish as a claude.ai artifact (page plus `map.json`, `app.js`, `style.css`), or host elsewhere.

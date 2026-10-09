@@ -37,40 +37,62 @@ html, body {
 .land { fill: var(--parchment); }
 .territory { fill-opacity: 0.55; stroke: var(--ink-soft); stroke-width: 0.75; stroke-dasharray: 3 3; stroke-opacity: 0.6; }
 .coast { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+/* Faint inner hachure: a wide, soft stroke clipped to the land, so it shades just inside the coast. */
+.coast-hachure { fill: none; stroke: var(--ink); stroke-width: 7; stroke-opacity: 0.09; }
 
 /* Lineage routes: debug overlay, toggled with "l" until selection arrives. */
 .route { display: none; stroke: var(--route); stroke-width: 1.2; fill: none; }
 .route.cross { stroke-dasharray: 4 4; opacity: 0.45; }
 #map.show-routes .route { display: inline; }
 
-.landmark circle { stroke: var(--parchment); stroke-width: 1; }
-.landmark.outpost circle { fill: var(--parchment); stroke-width: 2; }
+/* Landmark symbols (SPEC §5.6): one ink, tier decides shape and size. */
+.sym-fill { fill: var(--ink); stroke: var(--parchment); stroke-width: 1; }
+.sym-hollow { fill: var(--parchment); stroke: var(--ink); stroke-width: 1.5; }
+.sym-ring { fill: var(--parchment); stroke: var(--ink); stroke-width: 1.5; }
+.sym-star { fill: var(--ink); }
+.landmark.old .sym-fill { fill: var(--ink-soft); }
 
-.landmark text {
-  font-size: 12px;
+.landmark .label {
   fill: var(--ink);
   paint-order: stroke;
   stroke: var(--parchment);
   stroke-width: 3px;
   stroke-linejoin: round;
-  transition: opacity 150ms;
 }
+/* Sizes match LABELS.text in map/labels.mjs, which the build uses to place labels without overlap. */
+.landmark.capital .label { font-size: 13px; font-weight: 600; }
+.landmark.city .label { font-size: 12px; font-weight: 600; }
+.landmark.town .label { font-size: 11.5px; }
+.landmark.outpost .label { font-size: 11px; font-style: italic; }
+.landmark.old .label { font-size: 11.5px; fill: var(--ink-soft); }
 
 .territory-label {
   font-family: var(--title-font);
   text-anchor: middle;
-  letter-spacing: 0.12em;
   pointer-events: none;
-  transition: opacity 150ms;
+  paint-order: stroke;
+  stroke: color-mix(in srgb, var(--parchment) 70%, transparent);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
-.territory-label .title { font-size: 20px; }
-.territory-label .subtitle { font-family: var(--body-font); font-style: italic; font-size: 12px; letter-spacing: 0.02em; }
-.territory-label.old-world .title { font-size: 14px; }
+.territory-label .title-line { font-size: 16px; letter-spacing: 0.12em; }
+.territory-label .subtitle { font-family: var(--body-font); font-style: italic; font-size: 11px; letter-spacing: 0.02em; }
+.territory-label.old-world-title { fill: var(--ink-soft); }
+.territory-label.old-world-title .title-line { font-size: 16px; letter-spacing: 0.12em; }
+.territory-label.province { fill: var(--ink-soft); }
+.territory-label .province-name { font-size: 10.5px; letter-spacing: 0.14em; }
 
-/* Debug semantic zoom: placeholders until tiers and minZoom arrive (milestone 4). */
-#map.z0 .landmark text { opacity: 0; }
-#map.z0 .territory-label.old-world { opacity: 0.6; }
-#map.z2 .territory-label { opacity: 0.25; }
+/* Semantic zoom (SPEC §5.2). Labels and symbols fade rather than pop. */
+.landmark, .landmark .label, .territory-label { transition: opacity 150ms; }
+#map.z0 .landmark:not(.capital) { opacity: 0; pointer-events: none; }
+#map.z1 .landmark.outpost { opacity: 0; pointer-events: none; }
+#map.z0 .landmark:not(.lz0) .label,
+#map.z1 .landmark.lz2 .label { opacity: 0; }
+.territory-label.province { opacity: 0; }
+#map.z2 .territory-label.province { opacity: 1; }
+#map.z1 .territory-label.title { opacity: 0.75; }
+#map.z2 .territory-label.title { opacity: 0.18; }
+#map.z0 .territory.old-world, #map.z1 .territory.old-world { stroke-opacity: 0.25; }
 
 .controls {
   position: fixed;

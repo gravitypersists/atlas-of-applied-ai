@@ -137,19 +137,19 @@ The map is a full-screen, Google Maps-style canvas.
 | Title | Subtitle |
 |---|---|
 | **The Old World** | Ancestral Disciplines |
-| **The Engine Isles** | Inference and Serving |
-| **The Whispering Isles** | Prompting and Context Engineering |
-| **The Archive Reach** | Retrieval and Knowledge |
+| **The Engine Works** | Inference and Serving |
+| **The Whispering Coast** | Prompting and Context Engineering |
+| **The Archival Reach** | Retrieval and Knowledge |
 | **The Free Cities** | Agents and Orchestration |
-| **The Isle of Long Thought** | Planning and Reasoning |
+| **The Peninsula of Long Thought** | Planning and Reasoning |
 | **The Tempering Grounds** | Adaptation and Post-Training |
-| **The Mirror Mines** | Data and Synthetic Data |
+| **The Quarries** | Data and Synthetic Data |
 | **The Watchtowers** | Evaluation and Observability |
 | **The Bulwark** | Safety, Security and Governance |
-| **The Market Shore** | AI Product and Interaction Design |
+| **The Agora** | AI Product and Interaction Design |
 | **The Painted Isles** | Multimodal |
 
-The titles can drift in style, and "Isles" may stop being literal once sea level is chosen. The subtitle is what keeps the map honest.
+These now live as `title` on each applied region in `backbone.yaml`. The titles can drift in style, and "Isles" may stop being literal once sea level is chosen. The subtitle is what keeps the map honest.
 
 ## Content gaps to keep in mind
 
