@@ -121,6 +121,8 @@ survey:                                # read only by `survey`; inert once the s
     multimodal-applied: {scale: 1.6, shift: [170, 0], jitter: 45}   # jitter: seeded per-landmark nudge off the even grid
 terrain:                               # per-region terrain style (TERRAIN.styles in map/terrain.mjs); read every build
   multimodal-applied: archipelago      # tighter uplift and no lineage ridges: one island per landmark
+  planning-and-reasoning:              # or an object: optional `style`, plus a curated spine
+    spine: {points: [[2230, 1790], [2200, 1960], ...], height: 0.75, width: 45}   # height/width default to TERRAIN.spine
 nodes:
   bm25: {label: left}                  # label side: right (default) | left | above | below
   react-agent-loop: {tier: capital}    # force a symbol tier
@@ -195,6 +197,7 @@ The saturating sum keeps dense interiors near 1, so coasts form where influence 
   - raises no lineage ridges into, out of, or within the region, so islands rarely fuse
   - gives each island a size factor (`size`) and a stretch along a direction (`elongation`), so islands vary from small and round to long and thin. Both are seeded by the landmark's id alone, so they never change as other landmarks arrive.
   - adds a submerged shelf: a broad, low plateau under the region (`shelf.sigma`, `shelf.height`) with fine noise (`shelf.noise`, `shelf.scale`) whose peaks break the surface as islets and rocks between the main islands. The shelf fades where other territories' uplift is rising (`shelf.fade`), so its rocks never bridge to a neighbour. That fade is the one place where adding a landmark can *lower* elevation; once the survey is accepted, the high-water mark keeps any land that already exists.
+- **Spines.** A region's `terrain` entry may add a curated `spine`: a polyline in world units, raised as a broad ridge (the same profile as a lineage ridge, with its own `height` and `width`, defaulting to `TERRAIN.spine`). It holds a long landform together where the landmarks alone would break up, as with the Peninsula of Long Thought, whose young landmarks would otherwise be islets. A spine is fixed geography: it doesn't follow the landmarks, so their ledger positions are laid along it by hand.
 - **Bedrock.** Seeded fBm at two scales: a broad one that pushes land out into peninsulas and pulls it back into bays independently of the landmarks, and a fine one (`detail`) that gives coasts their raggedness, coves, and small rocks.
 - **Basin.** A smooth falloff in the outer margin of `bounds`, so the world ends in sea.
 

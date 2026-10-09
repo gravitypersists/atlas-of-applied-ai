@@ -8,6 +8,12 @@ old_world: {title: The Old World, subtitle: Ancestral Disciplines}
 # land but never remove it.
 terrain:
   multimodal-applied: archipelago   # The Painted Isles: a scatter of islands, Cyclades-style
+  # The Peninsula of Long Thought: a long arm hanging from the Whispering Coast and running south-east,
+  # Italy-style, to end under the Archival Reach's west end with a sea between them. The spine holds the
+  # arm together; its landmarks were laid along it by date in the ledger (2026-10-09).
+  planning-and-reasoning:
+    spine:
+      points: [[2230, 1790], [2200, 1960], [2250, 2130], [2370, 2270], [2540, 2370], [2730, 2440], [2920, 2465], [3080, 2435]]
 
 # Read only by `node build.mjs survey`. Inert once the survey is accepted.
 survey:
@@ -40,6 +46,3 @@ regions:
   agents-and-orchestration: {label: [2762, 1518]}
   # Reasoning Trace Display (2026-10-09) settled under The Agora's title; moved east to clear it.
   ai-product-and-interaction-design: {label: [3250, 1690]}
-  # The Peninsula's deep dive (2026-10-09) reshaped the eastern coast and pushed this title onto
-  # Query Rewriting; pinned at its previous position.
-  retrieval-and-knowledge: {label: [3014, 2154]}

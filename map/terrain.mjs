@@ -22,6 +22,7 @@ export const TERRAIN = {
     crossMax: 0.5,          // strongest cross-region pair
     width: 26,              // world units
   },
+  spine: { height: 0.75, width: 45 },              // defaults for a curated spine (curation.yaml terrain)
   warp: { amplitude: 120, scale: 380, octaves: 4 }, // multi-octave domain warp: peninsulas and coves
   bedrock: { amplitude: 0.32, scale: 240, octaves: 5 },
   detail: { amplitude: 0.16, scale: 38, octaves: 3 }, // fine coastal raggedness, rocks and skerries
@@ -135,9 +136,8 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
     }
   }
 
-  const w = T.ridge.width;
   for (const rd of ridges) {
-    const { height: h } = rd;
+    const { height: h } = rd, w = rd.width ?? T.ridge.width;
     const { i0, i1, j0, j1 } = {
       i0: Math.min(span(rd.ax, rd.ay, 3 * w).i0, span(rd.bx, rd.by, 3 * w).i0), i1: Math.max(span(rd.ax, rd.ay, 3 * w).i1, span(rd.bx, rd.by, 3 * w).i1),
       j0: Math.min(span(rd.ax, rd.ay, 3 * w).j0, span(rd.bx, rd.by, 3 * w).j0), j1: Math.max(span(rd.ax, rd.ay, 3 * w).j1, span(rd.bx, rd.by, 3 * w).j1),
@@ -184,8 +184,10 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
 export function terrainInputs(model, placed, regionStyles = {}) {
   const T = TERRAIN;
   const { bb, byId, regionById, edges } = model;
+  // A region's curation entry is a style name, or {style, spine} where spine is a curated polyline.
+  const curated = (region) => (typeof regionStyles[region] === "object" ? regionStyles[region] : { style: regionStyles[region] });
   const style = (region) => {
-    const name = regionStyles[region];
+    const name = curated(region).style;
     if (name && !T.styles[name]) throw new Error(`unknown terrain style "${name}" for ${region}`);
     return T.styles[name] ?? { sigmaScale: 1, ridges: true };
   };
@@ -224,6 +226,17 @@ export function terrainInputs(model, placed, regionStyles = {}) {
       ? T.ridge.crossMin + (T.ridge.crossMax - T.ridge.crossMin) * (pairCount.get(pairKey(a.region, b.region)) / pmax)
       : T.ridge.inRegion;
     ridges.push({ ax: pa.x, ay: pa.y, bx: pb.x, by: pb.y, height: h });
+  }
+  // Spines: a curated polyline per region, raised as a broad ridge so a long landform (a peninsula)
+  // holds together even where its landmarks are young islets. Positions are fixed world units.
+  for (const [region, c] of Object.entries(regionStyles)) {
+    if (typeof c !== "object" || !c.spine) continue;
+    if (!regionById.has(region)) throw new Error(`curation terrain: unknown region ${region}`);
+    const { points, height = T.spine.height, width = T.spine.width } = c.spine;
+    for (let i = 1; i < points.length; i++) {
+      const [ax, ay] = points[i - 1], [bx, by] = points[i];
+      ridges.push({ ax, ay, bx, by, height, width });
+    }
   }
   return { landmarks, ridges };
 }

@@ -85,16 +85,16 @@ settlements:
   - {id: computer-use-agents, x: 2867.1, y: 1584.8, settled: "2026-10-08"}
   - {id: deep-research-agents, x: 2788.6, y: 1613.4, settled: "2026-10-08"}
   - {id: agent-skills, x: 2485.9, y: 1492.4, settled: "2026-10-08"}
-  - {id: scratchpads, x: 2450.1, y: 1886.9, settled: "2026-10-08"}
-  - {id: chain-of-thought, x: 2337, y: 1902.1, settled: "2026-10-08"}
-  - {id: self-consistency, x: 2407.2, y: 2082.3, settled: "2026-10-08"}
-  - {id: tree-of-thoughts, x: 2418.1, y: 1982.3, settled: "2026-10-08"}
-  - {id: reflexion, x: 2542.1, y: 1883.3, settled: "2026-10-08"}
-  - {id: process-reward-models, x: 2470.1, y: 1797.1, settled: "2026-10-08"}
-  - {id: test-time-compute-scaling, x: 2578.4, y: 2017.5, settled: "2026-10-08"}
-  - {id: reasoning-models, x: 2489.3, y: 2040.7, settled: "2026-10-08"}
-  - {id: llm-plus-p, x: 2494.3, y: 2132.6, settled: "2026-10-08"}
-  - {id: llm-modulo, x: 2507.2, y: 1959.1, settled: "2026-10-08"}
+  - {id: scratchpads, x: 2216.6, y: 1866.1, settled: "2026-10-08"}
+  - {id: chain-of-thought, x: 2205.2, y: 1930.3, settled: "2026-10-08"}
+  - {id: self-consistency, x: 2209.9, y: 1993.5, settled: "2026-10-08"}
+  - {id: tree-of-thoughts, x: 2327, y: 2219.8, settled: "2026-10-08"}
+  - {id: reflexion, x: 2246.6, y: 2118.5, settled: "2026-10-08"}
+  - {id: process-reward-models, x: 2369.4, y: 2269.3, settled: "2026-10-08"}
+  - {id: test-time-compute-scaling, x: 2849.3, y: 2455.7, settled: "2026-10-08"}
+  - {id: reasoning-models, x: 2913.9, y: 2464.2, settled: "2026-10-08"}
+  - {id: llm-plus-p, x: 2102.4, y: 2326.5, settled: "2026-10-08"}
+  - {id: llm-modulo, x: 2720.7, y: 2436.6, settled: "2026-10-08"}
   - {id: supervised-fine-tuning, x: 2776.3, y: 912.1, settled: "2026-10-08"}
   - {id: parameter-efficient-fine-tuning, x: 2653.4, y: 1044.7, settled: "2026-10-08"}
   - {id: low-rank-adaptation, x: 2727.5, y: 990.1, settled: "2026-10-08"}
@@ -167,13 +167,13 @@ settlements:
   - {id: trust-calibration, x: 3327, y: 1305.1, settled: "2026-10-08"}
   - {id: voice-turn-taking, x: 3873.1, y: 1566.8, settled: "2026-10-08"}
   - {id: mid-run-steering, x: 3268, y: 1254.7, settled: "2026-10-08"}
-  - {id: program-aided-reasoning, x: 2551.4, y: 1758.1, settled: "2026-10-08"}
-  - {id: reasoning-via-planning, x: 2218.3, y: 2035, settled: "2026-10-08"}
-  - {id: graph-of-thoughts, x: 2243.1, y: 2133.1, settled: "2026-10-08"}
-  - {id: step-back-prompting, x: 2689, y: 2054.5, settled: "2026-10-08"}
-  - {id: language-agent-tree-search, x: 2709.4, y: 1985.7, settled: "2026-10-08"}
-  - {id: math-shepherd, x: 2160.5, y: 1972.2, settled: "2026-10-08"}
-  - {id: quiet-star, x: 2127.9, y: 2066.1, settled: "2026-10-08"}
-  - {id: latent-reasoning, x: 2268, y: 2222.8, settled: "2026-10-08"}
-  - {id: cot-monitoring, x: 2687, y: 2144.7, settled: "2026-10-08"}
+  - {id: program-aided-reasoning, x: 2228.2, y: 2056, settled: "2026-10-08"}
+  - {id: reasoning-via-planning, x: 2278.3, y: 2552.5, settled: "2026-10-08"}
+  - {id: graph-of-thoughts, x: 2359.8, y: 2542.4, settled: "2026-10-08"}
+  - {id: step-back-prompting, x: 2537.6, y: 2368.6, settled: "2026-10-08"}
+  - {id: language-agent-tree-search, x: 2498.2, y: 2663.7, settled: "2026-10-08"}
+  - {id: math-shepherd, x: 2659.6, y: 2414.1, settled: "2026-10-08"}
+  - {id: quiet-star, x: 2753.5, y: 2685.2, settled: "2026-10-08"}
+  - {id: latent-reasoning, x: 3031.4, y: 2739.2, settled: "2026-10-08"}
+  - {id: cot-monitoring, x: 3042, y: 2442.1, settled: "2026-10-08"}
 retired: []
