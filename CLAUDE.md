@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A data project, not an application: the **Applied AI Engineering Atlas** backbone, a taxonomy of AI-engineering techniques shown as a lineage graph. It is drawn as a fantasy-style slippy map (see `STRATEGY.md` and `SPEC.md`). There are no tests. The repo holds one YAML source of truth, two Python scripts (dependency: `pyyaml`), and the map in `map/` (a Node build script plus a static viewer).
+A data project, not an application: the **Applied AI Engineering Atlas** backbone, a taxonomy of AI-engineering techniques shown as a lineage graph. It is drawn as a fantasy-style slippy map (see `STRATEGY.md` and `SPEC.md`). The repo holds one YAML source of truth, two Python scripts (dependency: `pyyaml`), and the map in `map/`: a Node build (`build.mjs`, with `terrain.mjs` and `labels.mjs`), a static viewer in `map/public/`, and `acceptance_test.py`.
 
 ## Commands
 
@@ -20,11 +20,17 @@ node map/build.mjs sea --sweep         # landmass stats per sea level; previews 
 node map/build.mjs sea --set 0.4       # set the sea level (only lower, once the survey is accepted)
 node map/build.mjs --preview out.svg   # also write a static debug SVG
 python3 map/serve.py 8000              # dev server with no-cache headers
+python3 map/acceptance_test.py         # permanence/growth/determinism checks (~40s; restores all files)
+python3 map/artifact_page.py out.html  # the viewer page without its document skeleton, for publishing as an artifact
 ```
+
+The atlas is published as a private claude.ai artifact (https://claude.ai/artifact/1w3VzysDkBXJxvaewKsQau). To update it, publish the `artifact_page.py` output to that URL with `map/public/app.js`, `style.css` and `map.json` as supporting files.
+
+Run `map/acceptance_test.py` after changing `build.mjs`, `terrain.mjs` or settlement logic. The viewer has no automated tests, so check it in a browser at a desktop width and in a narrow (phone-sized) frame.
 
 The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`. Cartography (symbol tiers, title anchors, collision-free label placement per zoom level) lives in `map/labels.mjs`; its text sizes must match `map/public/style.css`. Region `title` (the fun name) is set in `backbone.yaml`, and `name` is the subtitle.
 
-After any edit to `backbone.yaml`, run both scripts. `validate.py` must report 0 errors.
+After any edit to `backbone.yaml`, run both Python scripts, then `node map/build.mjs` so the new node settles onto the map. `validate.py` must report 0 errors.
 
 ## Data flow
 

@@ -57,6 +57,11 @@ function placeLabel(text, d) {
 }
 
 const yearOf = (date) => (date ? String(date).slice(0, 4) : null);
+// Keeps the URL in step with the selection. Sandboxed frames (e.g. a published artifact) may refuse
+// history updates; selection must keep working regardless.
+function setHash(url) {
+  try { history.replaceState(null, "", url); } catch { /* not allowed here; deep links still work on load */ }
+}
 
 function init(map) {
   document.getElementById("edition").textContent = `${map.stage === "accepted" ? "Edition" : "Survey draft"} · ${map.built}`;
@@ -197,7 +202,7 @@ function init(map) {
       .attr("class", (r) => `route ${r.to === id ? "ancestor" : "descendant"}${r.oceanic ? " oceanic" : ""}`)
       .attr("d", (r) => r.path);
     renderPanel(l);
-    history.replaceState(null, "", `#${encodeURIComponent(id)}`);
+    setHash(`#${encodeURIComponent(id)}`);
     if (fly) {
       // At least region zoom, so the landmark and its neighbours are labelled.
       const k = Math.max(transform.k, scales ? scales[1] * 1.15 : fitK * 2.3);
@@ -212,7 +217,7 @@ function init(map) {
     landmarks.classed("selected", false).classed("related", false);
     routeLayer.selectAll("path").remove();
     document.getElementById("panel").hidden = true;
-    history.replaceState(null, "", location.pathname + location.search);
+    setHash(location.pathname + location.search);
   }
 
   landmarks.on("click", (event, d) => { event.stopPropagation(); select(d.id); });

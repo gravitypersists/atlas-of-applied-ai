@@ -389,7 +389,7 @@ When a landmark is selected:
 4. **Growth.** Raising a test node's maturity from 2 to 3 grows land around it. If its parent is close enough, its islet joins the mainland.
 5. Every landmark with maturity ≥ 3 sits on land. At z0 and z1, no labels overlap.
 6. At the chosen sea level there are a few landmasses. At least one isthmus joins strongly connected regions, and at least one strait separates weakly connected ones.
-7. All 141 landmarks can be found through search and open a complete panel. Deep links work on reload.
+7. Every landmark can be found through search and opens a complete panel. Deep links work on reload.
 8. At fit-to-world zoom, the viewer sees landmass shapes, about 12 titles, and the capitals, and nothing else competes for attention.
 9. On mobile, pinch, tap, and the bottom sheet all work. Pan and zoom are smooth on a mid-range laptop.
 
@@ -404,6 +404,8 @@ When a landmark is selected:
 
 Each milestone ends with a screenshot review before the next begins.
 
+**Status (2026-10-09):** milestones 1–6 are done. Criteria 1–4 are checked by `map/acceptance_test.py` and by a fresh-clone build. Criteria 5, 7 and 8 were verified in the browser with real rendered text (no label overlaps at any zoom level). Criterion 6 holds at sea level 0.36, which gives 12 landmasses, isthmuses joining strongly linked regions, and straits elsewhere. Criterion 9 was checked in a 390×844 frame: the bottom sheet and taps work, and pinch zoom comes from d3-zoom's touch support. The survey is still a draft (`world.accepted: false`) until it's accepted by hand.
+
 ## 8. Open items
 
 - **Tuning constants.** These live in one block per concern:
@@ -414,4 +416,4 @@ Each milestone ends with a screenshot review before the next begins.
 - **Small screens.** Labels are placed for a 1440×860 reference viewport, and marks shrink in step with the map down to 55%. Because text and distances shrink together, the layout stays collision-free down to that scale. Zooming out stops there, so a phone opens at the smallest legible scale, centred on the map, and pans to the rest instead of fitting the whole world. Desktop fit-to-world sits above the floor and is unaffected.
 - **Terrain resolution versus future zoom.** A grid cell of 4 units supports z0–z2. If deep-dive detail at z3+ needs finer coastlines, we'd add a second, finer terrain layer for the zoomed-in view. That layer would derive from the base land mask and never contradict it. Not needed for v1.
 - **Root nodes as frontier.** Root nodes never become frontier. If a root discipline gains a new low-maturity node, it settles like any other node.
-- **Hosting.** Publish as a claude.ai artifact (page plus `map.json`, `app.js`, `style.css`), or host elsewhere.
+- **Hosting.** Published as a private claude.ai artifact: https://claude.ai/artifact/1w3VzysDkBXJxvaewKsQau (share it from the page's Share menu). To republish after a rebuild, run `python3 map/artifact_page.py <out.html>`, which writes `index.html` without its document skeleton, then publish that page to the same artifact URL with `app.js`, `style.css` and `map.json` as supporting files. Any static host works too: serve `map/public/` as is.
