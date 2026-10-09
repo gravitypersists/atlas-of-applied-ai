@@ -1,0 +1,24 @@
+nodes: 141  edges: 190  cross-region edges: 81  external ancestors: 15
+status: {'kept': 8, 'added': 57, 'repaired': 76}
+per region:
+  root    information-retrieval                3
+  root    deep-learning-nlp                    8
+  root    symbolic-ai-planning                 4
+  root    reinforcement-learning               3
+  root    knowledge-representation             2
+  root    human-computer-interaction           3
+  root    systems-security                     3
+  root    software-engineering                 4
+  applied inference-and-serving                12
+  applied prompting-and-context-engineering    10
+  applied retrieval-and-knowledge              12
+  applied agents-and-orchestration             12
+  applied planning-and-reasoning               10
+  applied adaptation-and-post-training         9
+  applied data-and-synthetic-data              8
+  applied evaluation-and-observability         9
+  applied safety-security-and-governance       12
+  applied ai-product-and-interaction-design    8
+  applied multimodal-applied                   9
+errors: 0
+warnings: 0

@@ -1,0 +1,14 @@
+{
+  "name": "aimap-build",
+  "private": true,
+  "type": "module",
+  "description": "Builds the Applied AI Engineering Atlas map from backbone.json",
+  "scripts": {
+    "build": "node build.mjs",
+    "survey": "node build.mjs survey"
+  },
+  "dependencies": {
+    "d3-force": "^3.0.0",
+    "js-yaml": "^4.1.0"
+  }
+}
