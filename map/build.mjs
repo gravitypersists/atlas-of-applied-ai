@@ -503,7 +503,7 @@ function render(model, curation) {
     ...geometry,
     territories,
     landmarks,
-    routes: edges.filter((e) => placed.has(e.source) && placed.has(e.target)).map((e) => ({ from: e.source, to: e.target, cross: e.cross })),
+    routes: edges.filter((e) => placed.has(e.source) && placed.has(e.target)).map((e) => routeOf(e, placed)),
   };
   fs.writeFileSync(PATHS.mapJson, JSON.stringify(out, null, 1) + "\n");
   console.log(`wrote ${path.relative(ROOT, PATHS.mapJson)}: ${landmarks.length} landmarks, ${out.routes.length} routes`);
@@ -811,6 +811,21 @@ function printSettleReport(report, dryRun) {
   for (const id of report.retired) console.log(`${dryRun ? "would retire" : "retired"} ${id}: no longer in the backbone; its position and land are kept`);
   for (const w of report.warnings) console.warn(`warning: ${w}`);
   if (!report.settled.length && !report.retired.length) console.log("settle: nothing new");
+}
+
+// ---------------------------------------------------------------- routes (SPEC §4.9)
+// A gently curved path from parent to child: a quadratic curve bowed to a side chosen by the edge's
+// own hash (stable as the map grows). Routes across the ocean bow further, like sea lanes.
+function routeOf(e, placed) {
+  const a = placed.get(e.source), b = placed.get(e.target);
+  const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+  const side = hashString(`${e.source}>${e.target}`) & 1 ? 1 : -1;
+  const bow = (e.oceanic ? 0.22 : 0.14) * len * side;
+  const cx = (a.x + b.x) / 2 - (dy / len) * bow, cy = (a.y + b.y) / 2 + (dx / len) * bow;
+  return {
+    from: e.source, to: e.target, cross: e.cross, oceanic: e.oceanic,
+    path: `M${round1(a.x)},${round1(a.y)}Q${round1(cx)},${round1(cy)} ${round1(b.x)},${round1(b.y)}`,
+  };
 }
 
 // ---------------------------------------------------------------- debug preview

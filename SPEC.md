@@ -293,7 +293,7 @@ Labels are cartography, not geography, so they can change between builds. Even s
 
 ### 4.9 Routes
 
-Each lineage edge becomes a gently curved dotted path, a quadratic curve whose bend side is chosen by the seed.
+Each lineage edge becomes a gently curved path from parent to child: a quadratic curve bowed by 14% of its length (22% for routes across the ocean, like sea lanes) to a side chosen by a hash of the edge itself, so it never changes as the map grows. `map.json` routes carry `from`, `to`, `cross`, `oceanic` and `path`.
 
 ### 4.10 Build report
 
@@ -311,7 +311,7 @@ The build prints:
 - The map fills the viewport. Sea and land are two parchment tones, and territories carry their muted tints.
 - **Top left:** search box.
 - **Bottom right:** + / − / fit-world buttons.
-- **Side panel:** 360px, on the right. On screens 640px wide or narrower it becomes a bottom sheet.
+- **Side panel:** 360px, on the right; the zoom buttons move left of it while it's open. On screens 640px wide or narrower it becomes a bottom sheet up to 55% of the screen's height, the zoom buttons sit above it, and the cartouche is hidden.
 - **Bottom left:** a small cartouche reading "Applied AI Engineering Atlas" with the edition date. There is no legend.
 
 ### 5.2 Semantic zoom
@@ -345,21 +345,27 @@ When a landmark is selected:
 4. Example chips.
 5. **Built on:** parent chips, each with its `why` underneath. External ancestors appear as non-clickable "beyond the map" chips.
 6. **Led to:** child chips.
-7. "Read the source ↗"
+7. The citation (`ref.title`), then "Read the source ↗" when the source has a link. Classic papers often have no link, and their citation still shows.
 
 **Chip behavior:** clicking a chip flies there (600ms, eased, to at least z1) and selects that landmark.
 
-**Clearing selection:** Esc, the × button, or clicking empty map.
+**Fly-to** centres the target in the part of the screen the panel doesn't cover: left of the side panel on desktop, above the bottom sheet on phones.
+
+**Routes and dimming.** The selected landmark's routes are drawn in world units with a constant on-screen dotted stroke: dark ink to ancestors, lighter ink to descendants, and wider dots across the ocean. Dimming applies to child elements and fill-opacity, so it composes with zoom-level hiding rather than overriding it. A landmark hidden at the current zoom stays hidden unless it's selected or related.
+
+**Clearing selection:** Esc, the × button, or clicking empty map. d3-zoom suppresses the click that ends a drag, so panning never clears.
 
 ### 5.4 Search
 
-- Matching is case-insensitive substring on name and aliases, plus territory titles and subtitles.
+- Matching covers everything in a landmark's panel: case-insensitive substring on name, aliases and examples, and on the description and maturity note for queries of 3+ characters (matched at a word start, so short queries don't flood the list). Territory titles and subtitles match too.
+- When a result matched on something other than its name, a second line says why: "Also called …", "Example: Jev (TypeSafe AI)", or a short excerpt of the matching description.
 - It shows up to 8 results, each with its territory title.
-- Arrow keys and Enter work. Choosing a landmark flies to it and selects it. Choosing a territory fits the view to that territory.
+- Ranking: name prefix, then name, alias, and example matches; then regions; then description-only matches.
+- Arrow keys and Enter work, Esc clears, and `/` focuses the search box. Choosing a landmark flies to it and selects it. Choosing a territory clears any selection and fits the view to that territory's landmarks, stopping just short of z2 so the title stays visible.
 
 ### 5.5 Deep links
 
-`#graph-rag` opens the map focused on that landmark with it selected. Selection changes update the hash with `replaceState`.
+`#graph-rag` opens the map focused on that landmark with it selected. Selection changes update the hash with `replaceState`, and clearing the selection removes it. Editing the hash by hand (`hashchange`) selects the new landmark.
 
 ### 5.6 Visual tokens
 
@@ -405,7 +411,7 @@ Each milestone ends with a screenshot review before the next begins.
   - **terrain:** uplift, ridges, warp, bedrock, detail, basin, shallows: `TERRAIN` in `map/terrain.mjs`
   - **settlement:** search radius, spacing, coast band, islet distances: `SETTLE` in `map/build.mjs`
   - **cartography:** reference viewport, zoom thresholds, text sizes, title wrapping: `LABELS` in `map/labels.mjs`
-- **Small screens.** Labels are placed for a 1440×860 reference viewport, and marks shrink down to 55% on smaller screens. A phone at full zoom-out is smaller still, so z0 labels can crowd there. Milestone 5 should check this. Options: a lower shrink floor, hiding capital labels below the floor, or placing labels for a second, small viewport.
+- **Small screens.** Labels are placed for a 1440×860 reference viewport, and marks shrink in step with the map down to 55%. Because text and distances shrink together, the layout stays collision-free down to that scale. Zooming out stops there, so a phone opens at the smallest legible scale, centred on the map, and pans to the rest instead of fitting the whole world. Desktop fit-to-world sits above the floor and is unaffected.
 - **Terrain resolution versus future zoom.** A grid cell of 4 units supports z0–z2. If deep-dive detail at z3+ needs finer coastlines, we'd add a second, finer terrain layer for the zoomed-in view. That layer would derive from the base land mask and never contradict it. Not needed for v1.
 - **Root nodes as frontier.** Root nodes never become frontier. If a root discipline gains a new low-maturity node, it settles like any other node.
 - **Hosting.** Publish as a claude.ai artifact (page plus `map.json`, `app.js`, `style.css`), or host elsewhere.

@@ -11,6 +11,35 @@
 </head>
 <body>
   <svg id="map" role="img" aria-label="Applied AI Engineering Atlas"></svg>
+
+  <div class="search" role="search">
+    <input id="search" type="search" placeholder="Search the atlas" autocomplete="off" spellcheck="false"
+      aria-label="Search landmarks and regions" aria-controls="search-results" aria-expanded="false">
+    <ul id="search-results" role="listbox" hidden></ul>
+  </div>
+
+  <aside id="panel" class="panel" aria-labelledby="panel-name" hidden>
+    <button id="panel-close" class="panel-close" aria-label="Close">×</button>
+    <div class="panel-body">
+      <div class="panel-where" id="panel-where"></div>
+      <h1 class="panel-name" id="panel-name"></h1>
+      <div class="panel-meta"><span class="pill" id="panel-maturity"></span><span class="panel-date" id="panel-date"></span></div>
+      <p class="panel-desc" id="panel-desc"></p>
+      <p class="panel-note" id="panel-note"></p>
+      <div class="chips plain" id="panel-examples"></div>
+      <section id="panel-parents-section">
+        <h2>Built on</h2>
+        <ul class="lineage" id="panel-parents"></ul>
+      </section>
+      <section id="panel-children-section">
+        <h2>Led to</h2>
+        <div class="chips" id="panel-children"></div>
+      </section>
+      <p class="panel-cite" id="panel-cite"></p>
+      <a class="panel-source" id="panel-source" target="_blank" rel="noopener">Read the source ↗</a>
+    </div>
+  </aside>
+
   <div class="controls" role="group" aria-label="Zoom">
     <button id="zoom-in" aria-label="Zoom in">+</button>
     <button id="zoom-out" aria-label="Zoom out">−</button>

@@ -6251,897 +6251,1255 @@
   {
    "from": "bm25",
    "to": "open-domain-qa",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M1090.8,1123.2Q1129.6,1166.5 1185.2,1183.3"
   },
   {
    "from": "attention-mechanism",
    "to": "transformer-architecture",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M1448,1524.8Q1331.9,1509.1 1240.9,1435.5"
   },
   {
    "from": "sequence-to-sequence-learning",
    "to": "transformer-architecture",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M1356,1472.9Q1293.2,1470.3 1240.9,1435.5"
   },
   {
    "from": "transformer-architecture",
    "to": "pretrained-language-models",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M1240.9,1435.5Q1280.8,1375.3 1346.2,1344.6"
   },
   {
    "from": "heuristic-search",
    "to": "strips-planning",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M772.5,1940.6Q794.6,1890.5 787.5,1836.1"
   },
   {
    "from": "strips-planning",
    "to": "pddl",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M787.5,1836.1Q745.2,1866.7 693.1,1870.9"
   },
   {
    "from": "markov-decision-process",
    "to": "policy-gradient-methods",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M989.9,1709.5Q1006,1655.2 1048,1617.1"
   },
   {
    "from": "policy-gradient-methods",
    "to": "ppo",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M1048,1617.1Q1086,1662.6 1094.9,1721.2"
   },
   {
    "from": "semantic-networks",
    "to": "knowledge-graphs",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M952.7,1374.4Q997.2,1401.8 1049.4,1402.2"
   },
   {
    "from": "direct-manipulation",
    "to": "mixed-initiative-interaction",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M712.3,1501Q753.9,1547.6 813.7,1565.9"
   },
   {
    "from": "least-privilege",
    "to": "sandboxing-and-isolation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M1277.5,1817.3Q1331.3,1807 1382.7,1826.1"
   },
   {
    "from": "pretrained-language-models",
    "to": "autoregressive-decoding",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2327.2,2030.4 3495.6,1770.5"
   },
   {
    "from": "autoregressive-decoding",
    "to": "kv-cache",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3495.6,1770.5Q3516.9,1870.1 3586.8,1944.2"
   },
   {
    "from": "kv-cache",
    "to": "paged-attention",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3586.8,1944.2Q3515.1,1866.2 3413.4,1836.8"
   },
   {
    "from": "autoregressive-decoding",
    "to": "continuous-batching",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3495.6,1770.5Q3477.9,1827 3492.1,1884.5"
   },
   {
    "from": "autoregressive-decoding",
    "to": "speculative-decoding",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3495.6,1770.5Q3520.9,1874.5 3488.6,1976.5"
   },
   {
    "from": "transformer-architecture",
    "to": "weight-quantization",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1240.9,1435.5Q2548.4,1114 3668.7,1860.8"
   },
   {
    "from": "kv-cache",
    "to": "kv-cache-quantization",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3586.8,1944.2Q3629,1864.7 3623.7,1774.8"
   },
   {
    "from": "weight-quantization",
    "to": "kv-cache-quantization",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3668.7,1860.8Q3658.2,1811.5 3623.7,1774.8"
   },
   {
    "from": "kv-cache",
    "to": "prompt-caching",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3586.8,1944.2Q3475,1882.5 3347.4,1887.9"
   },
   {
    "from": "autoregressive-decoding",
    "to": "constrained-decoding",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3495.6,1770.5Q3409.1,1760.8 3330.2,1797.4"
   },
   {
    "from": "mixture-of-experts",
    "to": "model-routing",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1537.8,1479.4Q2418.2,2200.4 3544.6,2038.5"
   },
   {
    "from": "continuous-batching",
    "to": "prefill-decode-disaggregation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3492.1,1884.5Q3446.7,1899.5 3415.7,1935.9"
   },
   {
    "from": "kv-cache",
    "to": "prefill-decode-disaggregation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3586.8,1944.2Q3502.4,1916.1 3415.7,1935.9"
   },
   {
    "from": "weight-quantization",
    "to": "local-inference",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3668.7,1860.8Q3618.5,1864.6 3573.6,1841.7"
   },
   {
    "from": "pretrained-language-models",
    "to": "zero-shot-prompting",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q1752.3,1604.5 2218.3,1480.6"
   },
   {
    "from": "zero-shot-prompting",
    "to": "few-shot-prompting",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2108.6,1540.3 2045.9,1648.3"
   },
   {
    "from": "zero-shot-prompting",
    "to": "system-prompts",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2202.7,1625.1 2114.3,1740.5"
   },
   {
    "from": "zero-shot-prompting",
    "to": "prompt-templating",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2114,1486.9 2028.1,1546.4"
   },
   {
    "from": "zero-shot-prompting",
    "to": "prompt-chaining",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2159.8,1507.8 2124,1561.4"
   },
   {
    "from": "mixed-initiative-interaction",
    "to": "prompt-chaining",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M813.7,1565.9Q1467.9,1275.4 2124,1561.4"
   },
   {
    "from": "few-shot-prompting",
    "to": "structured-outputs",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2045.9,1648.3Q2195,1639.5 2317.9,1554.6"
   },
   {
    "from": "constrained-decoding",
    "to": "structured-outputs",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3330.2,1797.4Q2858,1534.3 2317.9,1554.6"
   },
   {
    "from": "pretrained-language-models",
    "to": "context-compaction",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q1865.7,1341.5 2218.9,1722.4"
   },
   {
    "from": "system-prompts",
    "to": "context-engineering",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2114.3,1740.5Q2220.3,1726.3 2303.5,1659.2"
   },
   {
    "from": "context-compaction",
    "to": "context-engineering",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2218.9,1722.4Q2270,1702.6 2303.5,1659.2"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "context-engineering",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q2656.9,1898.9 2303.5,1659.2"
   },
   {
    "from": "zero-shot-prompting",
    "to": "automatic-prompt-optimization",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2203.7,1540.7 2222.4,1599.7"
   },
   {
    "from": "automatic-prompt-optimization",
    "to": "declarative-prompt-compilation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2222.4,1599.7Q2193.5,1637.7 2149,1655.2"
   },
   {
    "from": "prompt-chaining",
    "to": "declarative-prompt-compilation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2124,1561.4Q2149.6,1604.8 2149,1655.2"
   },
   {
    "from": "pretrained-language-models",
    "to": "text-embeddings",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q1961.5,2054.1 2900.3,2079.8"
   },
   {
    "from": "text-embeddings",
    "to": "dense-retrieval",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2900.3,2079.8Q2955.6,2062.2 2993.8,2018.4"
   },
   {
    "from": "approximate-nearest-neighbor-search",
    "to": "dense-retrieval",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1195.3,1083.2Q2300.3,1155.1 2993.8,2018.4"
   },
   {
    "from": "bm25",
    "to": "dense-retrieval",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1090.8,1123.2Q1845.4,1989.5 2993.8,2018.4"
   },
   {
    "from": "open-domain-qa",
    "to": "retrieval-augmented-generation",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1185.2,1183.3Q1972.1,1969.3 3083.3,1920.2"
   },
   {
    "from": "dense-retrieval",
    "to": "retrieval-augmented-generation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2993.8,2018.4Q3052.3,1981.8 3083.3,1920.2"
   },
   {
    "from": "pretrained-language-models",
    "to": "retrieval-augmented-generation",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2088.1,2014.6 3083.3,1920.2"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "chunking-strategies",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q3021.4,1932.6 2962.1,1911.1"
   },
   {
    "from": "bm25",
    "to": "hybrid-search",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1090.8,1123.2Q2204.5,1050.7 3010.4,1822.9"
   },
   {
    "from": "dense-retrieval",
    "to": "hybrid-search",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2993.8,2018.4Q2974.7,1918.3 3010.4,1822.9"
   },
   {
    "from": "pretrained-language-models",
    "to": "cross-encoder-reranking",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2335.2,1372.8 2982.6,2121.1"
   },
   {
    "from": "bm25",
    "to": "cross-encoder-reranking",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1090.8,1123.2Q2256.2,1206 2982.6,2121.1"
   },
   {
    "from": "dense-retrieval",
    "to": "query-rewriting",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2993.8,2018.4Q3043,2039.8 3096.1,2032.5"
   },
   {
    "from": "chunking-strategies",
    "to": "contextual-retrieval",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2962.1,1911.1Q2929,1876.6 2918.6,1829.9"
   },
   {
    "from": "hybrid-search",
    "to": "contextual-retrieval",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3010.4,1822.9Q2965.5,1839.3 2918.6,1829.9"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "graph-rag",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q3095.8,2060.7 3033.5,2187.3"
   },
   {
    "from": "knowledge-graphs",
    "to": "graph-rag",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1049.4,1402.2Q2214.2,1358.2 3033.5,2187.3"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "self-rag",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q2960.9,1937.2 2847.4,1888.2"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "corrective-rag",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q3100.9,2017.7 3065.4,2110.1"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "agentic-rag",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q2977.6,1922.8 2888.7,1979.9"
   },
   {
    "from": "react-agent-loop",
    "to": "agentic-rag",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2584.3,1645Q2689.6,1855.1 2888.7,1979.9"
   },
   {
    "from": "self-rag",
    "to": "agentic-rag",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2847.4,1888.2Q2880.9,1928.3 2888.7,1979.9"
   },
   {
    "from": "expert-systems",
    "to": "mrkl-systems",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M868.2,1896.2Q1890.7,2124.3 2749.7,1524.5"
   },
   {
    "from": "pretrained-language-models",
    "to": "mrkl-systems",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2087.5,1125.8 2749.7,1524.5"
   },
   {
    "from": "mrkl-systems",
    "to": "tool-learning",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2749.7,1524.5Q2710.4,1562.7 2696.6,1615.7"
   },
   {
    "from": "few-shot-prompting",
    "to": "tool-learning",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2045.9,1648.3Q2366.7,1540.9 2696.6,1615.7"
   },
   {
    "from": "tool-learning",
    "to": "function-calling",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2696.6,1615.7Q2660.6,1511.6 2575.8,1441.3"
   },
   {
    "from": "structured-outputs",
    "to": "function-calling",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2317.9,1554.6Q2431,1461.8 2575.8,1441.3"
   },
   {
    "from": "chain-of-thought",
    "to": "react-agent-loop",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2337,1902.1Q2424.7,1738.9 2584.3,1645"
   },
   {
    "from": "mrkl-systems",
    "to": "react-agent-loop",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2749.7,1524.5Q2683.9,1607.9 2584.3,1645"
   },
   {
    "from": "statecharts",
    "to": "workflow-state-machines",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M672,1170.7Q1530.8,1770.2 2553,1542.1"
   },
   {
    "from": "prompt-chaining",
    "to": "workflow-state-machines",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2124,1561.4Q2341.2,1611.8 2553,1542.1"
   },
   {
    "from": "react-agent-loop",
    "to": "workflow-state-machines",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2584.3,1645Q2583.1,1589.2 2553,1542.1"
   },
   {
    "from": "function-calling",
    "to": "model-context-protocol",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2575.8,1441.3Q2631.4,1424.5 2687.6,1439.1"
   },
   {
    "from": "language-server-protocol",
    "to": "model-context-protocol",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M771.3,1154.6Q1792,875.3 2687.6,1439.1"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "agent-memory",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q2848.3,1869.9 2673.5,1704.9"
   },
   {
    "from": "context-compaction",
    "to": "agent-memory",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2218.9,1722.4Q2448.6,1777.3 2673.5,1704.9"
   },
   {
    "from": "react-agent-loop",
    "to": "multi-agent-systems",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2584.3,1645Q2630.4,1595.8 2644.2,1529.8"
   },
   {
    "from": "react-agent-loop",
    "to": "coding-agents",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2584.3,1645Q2652,1511.2 2779.4,1432.1"
   },
   {
    "from": "function-calling",
    "to": "coding-agents",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2575.8,1441.3Q2678.9,1465.2 2779.4,1432.1"
   },
   {
    "from": "react-agent-loop",
    "to": "computer-use-agents",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2584.3,1645Q2734.1,1654.5 2867.1,1584.8"
   },
   {
    "from": "vision-language-models",
    "to": "computer-use-agents",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3985.8,1689.4Q3441.1,1480.5 2867.1,1584.8"
   },
   {
    "from": "agentic-rag",
    "to": "deep-research-agents",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2888.7,1979.9Q2787.3,1810.7 2788.6,1613.4"
   },
   {
    "from": "multi-agent-systems",
    "to": "deep-research-agents",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2644.2,1529.8Q2728.1,1551.4 2788.6,1613.4"
   },
   {
    "from": "context-engineering",
    "to": "agent-skills",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2303.5,1659.2Q2371.3,1550.3 2485.9,1492.4"
   },
   {
    "from": "model-context-protocol",
    "to": "agent-skills",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2687.6,1439.1Q2579.3,1437.5 2485.9,1492.4"
   },
   {
    "from": "constrained-decoding",
    "to": "decision-models",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3330.2,1797.4Q3072.8,1606.2 2952.1,1309.2"
   },
   {
    "from": "model-routing",
    "to": "decision-models",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3544.6,2038.5Q3146.2,1756.8 2952.1,1309.2"
   },
   {
    "from": "function-calling",
    "to": "decision-models",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2575.8,1441.3Q2782.4,1427.9 2952.1,1309.2"
   },
   {
    "from": "pretrained-language-models",
    "to": "decision-models",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2141.4,973.6 2952.1,1309.2"
   },
   {
    "from": "pretrained-language-models",
    "to": "scratchpads",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q1778.8,1858.6 2450.1,1886.9"
   },
   {
    "from": "few-shot-prompting",
    "to": "chain-of-thought",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2045.9,1648.3Q2227,1734.4 2337,1902.1"
   },
   {
    "from": "scratchpads",
    "to": "chain-of-thought",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2450.1,1886.9Q2395.7,1910.3 2337,1902.1"
   },
   {
    "from": "chain-of-thought",
    "to": "self-consistency",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2337,1902.1Q2346.9,2002 2407.2,2082.3"
   },
   {
    "from": "chain-of-thought",
    "to": "tree-of-thoughts",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2337,1902.1Q2366.3,1953.6 2418.1,1982.3"
   },
   {
    "from": "heuristic-search",
    "to": "tree-of-thoughts",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M772.5,1940.6Q1586.1,2323.5 2418.1,1982.3"
   },
   {
    "from": "react-agent-loop",
    "to": "reflexion",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2584.3,1645Q2529.8,1758.2 2542.1,1883.3"
   },
   {
    "from": "rlhf",
    "to": "process-reward-models",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q2542.4,1355 2470.1,1797.1"
   },
   {
    "from": "self-consistency",
    "to": "test-time-compute-scaling",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2407.2,2082.3Q2483.7,2025.9 2578.4,2017.5"
   },
   {
    "from": "tree-of-thoughts",
    "to": "test-time-compute-scaling",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2418.1,1982.3Q2503.2,1977.5 2578.4,2017.5"
   },
   {
    "from": "chain-of-thought",
    "to": "reasoning-models",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2337,1902.1Q2393.7,1992.7 2489.3,2040.7"
   },
   {
    "from": "test-time-compute-scaling",
    "to": "reasoning-models",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2578.4,2017.5Q2537.1,2041.6 2489.3,2040.7"
   },
   {
    "from": "policy-gradient-methods",
    "to": "reasoning-models",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1048,1617.1Q1861.8,1511.8 2489.3,2040.7"
   },
   {
    "from": "pddl",
    "to": "llm-plus-p",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M693.1,1870.9Q1651.3,1605.5 2494.3,2132.6"
   },
   {
    "from": "pretrained-language-models",
    "to": "llm-plus-p",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2093.6,1486 2494.3,2132.6"
   },
   {
    "from": "llm-plus-p",
    "to": "llm-modulo",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2494.3,2132.6Q2476.5,2044 2507.2,1959.1"
   },
   {
    "from": "chain-of-thought",
    "to": "llm-modulo",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2337,1902.1Q2430.1,1906.8 2507.2,1959.1"
   },
   {
    "from": "transfer-learning-fine-tuning",
    "to": "supervised-fine-tuning",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1452,1417.9Q2225.4,1456.3 2776.3,912.1"
   },
   {
    "from": "transfer-learning-fine-tuning",
    "to": "parameter-efficient-fine-tuning",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1452,1417.9Q1970.6,967 2653.4,1044.7"
   },
   {
    "from": "parameter-efficient-fine-tuning",
    "to": "low-rank-adaptation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2653.4,1044.7Q2682.8,1007 2727.5,990.1"
   },
   {
    "from": "policy-gradient-methods",
    "to": "rlhf",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1048,1617.1Q2073.4,1708.8 2833.8,1014.8"
   },
   {
    "from": "rlhf",
    "to": "direct-preference-optimization",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q2743.1,966.5 2690.7,878.2"
   },
   {
    "from": "rlhf",
    "to": "constitutional-ai",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q2795.5,1056.6 2741.1,1072.5"
   },
   {
    "from": "rlhf",
    "to": "rlvr",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q2763.7,1071.1 2733,1155.6"
   },
   {
    "from": "ppo",
    "to": "rlvr",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1094.9,1721.2Q1789.5,1078 2733,1155.6"
   },
   {
    "from": "ppo",
    "to": "grpo",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1094.9,1721.2Q1820,1044 2809.1,1121.1"
   },
   {
    "from": "knowledge-distillation",
    "to": "llm-distillation",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1362.8,1578.3Q1870.2,981.7 2652.8,952.7"
   },
   {
    "from": "supervised-fine-tuning",
    "to": "llm-distillation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2776.3,912.1Q2720.2,949.7 2652.8,952.7"
   },
   {
    "from": "few-shot-prompting",
    "to": "self-instruct",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2045.9,1648.3Q2078.6,1417.7 2226.2,1237.6"
   },
   {
    "from": "self-instruct",
    "to": "evol-instruct",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2226.2,1237.6Q2233.2,1187.7 2213.2,1141.4"
   },
   {
    "from": "self-instruct",
    "to": "synthetic-textbook-data",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2226.2,1237.6Q2271.6,1259.4 2321.7,1254.5"
   },
   {
    "from": "zero-shot-prompting",
    "to": "llm-annotation",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2268.1,1315.6 2396.3,1200.5"
   },
   {
    "from": "data-deduplication",
    "to": "data-quality-filtering",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2302.4,1164.5Q2289.6,1118.4 2302.6,1072.4"
   },
   {
    "from": "llm-annotation",
    "to": "data-quality-filtering",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M2396.3,1200.5Q2367.4,1123.3 2302.6,1072.4"
   },
   {
    "from": "capability-benchmarks",
    "to": "long-context-evals",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3652.8,1269.5Q3650.4,1319.8 3622.2,1361.6"
   },
   {
    "from": "capability-benchmarks",
    "to": "agent-benchmarks",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3652.8,1269.5Q3607.2,1290.9 3557.1,1285.5"
   },
   {
    "from": "test-driven-development",
    "to": "agent-benchmarks",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M691,1274.5Q2126.5,649.5 3557.1,1285.5"
   },
   {
    "from": "zero-shot-prompting",
    "to": "llm-as-a-judge",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2883.4,1613.8 3520.9,1382.3"
   },
   {
    "from": "llm-as-a-judge",
    "to": "rag-evaluation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3520.9,1382.3Q3526.9,1435.6 3504.4,1484.3"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "rag-evaluation",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q3232.8,1643.3 3504.4,1484.3"
   },
   {
    "from": "test-driven-development",
    "to": "eval-driven-development",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M691,1274.5Q2096.6,2005.6 3585.2,1463.2"
   },
   {
    "from": "llm-as-a-judge",
    "to": "eval-driven-development",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3520.9,1382.3Q3564.4,1413.7 3585.2,1463.2"
   },
   {
    "from": "distributed-tracing",
    "to": "llm-tracing",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M794.3,1252.5Q2193.2,1978.7 3673.7,1437.9"
   },
   {
    "from": "llm-tracing",
    "to": "online-evaluation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3673.7,1437.9Q3721.5,1437.5 3762.2,1412.3"
   },
   {
    "from": "llm-as-a-judge",
    "to": "online-evaluation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3520.9,1382.3Q3637.4,1431.1 3762.2,1412.3"
   },
   {
    "from": "injection-attacks",
    "to": "prompt-injection",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1327.6,1910.2Q2046.2,1058.9 3159.3,1013.5"
   },
   {
    "from": "zero-shot-prompting",
    "to": "prompt-injection",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2218.3,1480.6Q2754.2,1378.8 3159.3,1013.5"
   },
   {
    "from": "prompt-injection",
    "to": "indirect-prompt-injection",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3159.3,1013.5Q3199.8,1050.5 3215.1,1103.2"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "indirect-prompt-injection",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q3034.8,1493.2 3215.1,1103.2"
   },
   {
    "from": "rlhf",
    "to": "jailbreaks",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q3091.8,1073.7 3342.8,990"
   },
   {
    "from": "rlhf",
    "to": "red-teaming",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q3080,985.3 3305.8,1087.9"
   },
   {
    "from": "llm-as-a-judge",
    "to": "guardrails",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3520.9,1382.3Q3497.9,1207.7 3387.5,1070.5"
   },
   {
    "from": "prompt-injection",
    "to": "injection-defenses",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3159.3,1013.5Q3182.8,968.9 3226,943"
   },
   {
    "from": "indirect-prompt-injection",
    "to": "injection-defenses",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3215.1,1103.2Q3243,1024.6 3226,943"
   },
   {
    "from": "sandboxing-and-isolation",
    "to": "agent-sandboxing",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1382.7,1826.1Q2093.9,1081.9 3123,1103.5"
   },
   {
    "from": "least-privilege",
    "to": "agent-sandboxing",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1277.5,1817.3Q2357.3,1866.4 3123,1103.5"
   },
   {
    "from": "function-calling",
    "to": "agent-sandboxing",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2575.8,1441.3Q2896.7,1349 3123,1103.5"
   },
   {
    "from": "transformer-architecture",
    "to": "interpretability",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1240.9,1435.5Q2397.3,1572.6 3279.7,812.7"
   },
   {
    "from": "interpretability",
    "to": "sparse-autoencoders",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3279.7,812.7Q3278.5,863 3303.6,906.7"
   },
   {
    "from": "interpretability",
    "to": "representation-engineering",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3279.7,812.7Q3331.8,829.7 3385.1,817.2"
   },
   {
    "from": "representation-engineering",
    "to": "circuit-breakers",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3385.1,817.2Q3373.2,863.5 3387,909.2"
   },
   {
    "from": "jailbreaks",
    "to": "circuit-breakers",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3342.8,990Q3353.6,943.4 3387,909.2"
   },
   {
    "from": "mixed-initiative-interaction",
    "to": "human-ai-interaction-guidelines",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M813.7,1565.9Q2027,2090.1 3233.2,1549.7"
   },
   {
    "from": "conversational-agents",
    "to": "chat-interfaces",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M710.9,1610.2Q1976.1,2045.7 3151.9,1407.1"
   },
   {
    "from": "rlhf",
    "to": "chat-interfaces",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2833.8,1014.8Q3047.8,1166.4 3151.9,1407.1"
   },
   {
    "from": "autoregressive-decoding",
    "to": "streaming-responses",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3495.6,1770.5Q3295,1725.1 3147.1,1582.1"
   },
   {
    "from": "mixed-initiative-interaction",
    "to": "copilots",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M813.7,1565.9Q2045.1,2043.1 3228.9,1457.7"
   },
   {
    "from": "pretrained-language-models",
    "to": "copilots",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2312.4,987 3228.9,1457.7"
   },
   {
    "from": "retrieval-augmented-generation",
    "to": "citation-ux",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M3083.3,1920.2Q3106.5,1761.7 3208.7,1638.4"
   },
   {
    "from": "human-ai-interaction-guidelines",
    "to": "citation-ux",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3233.2,1549.7Q3208.5,1590.6 3208.7,1638.4"
   },
   {
    "from": "mixed-initiative-interaction",
    "to": "human-in-the-loop-approval",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M813.7,1565.9Q1924.7,1016.7 3080.2,1464.8"
   },
   {
    "from": "function-calling",
    "to": "human-in-the-loop-approval",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2575.8,1441.3Q2831.3,1382.4 3080.2,1464.8"
   },
   {
    "from": "structured-outputs",
    "to": "generative-ui",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2317.9,1554.6Q2693.4,1445.8 3070.9,1547.8"
   },
   {
    "from": "direct-manipulation",
    "to": "generative-ui",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M712.3,1501Q1881.3,2043.3 3070.9,1547.8"
   },
   {
    "from": "direct-manipulation",
    "to": "canvas-artifacts",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M712.3,1501Q1933.9,962.4 3156.3,1499.1"
   },
   {
    "from": "chat-interfaces",
    "to": "canvas-artifacts",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3151.9,1407.1Q3167,1452.5 3156.3,1499.1"
   },
   {
    "from": "transformer-architecture",
    "to": "contrastive-image-text-pretraining",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1240.9,1435.5Q2697.8,850.3 4113.5,1529"
   },
   {
    "from": "contrastive-image-text-pretraining",
    "to": "vision-language-models",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M4113.5,1529Q4027.2,1591.3 3985.8,1689.4"
   },
   {
    "from": "pretrained-language-models",
    "to": "vision-language-models",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2590.1,2097.7 3985.8,1689.4"
   },
   {
    "from": "transformer-architecture",
    "to": "document-understanding",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1240.9,1435.5Q2750.9,990.4 4099.2,1803"
   },
   {
    "from": "vision-language-models",
    "to": "visual-document-retrieval",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M3985.8,1689.4Q3980.4,1763.2 3937.5,1823.4"
   },
   {
    "from": "dense-retrieval",
    "to": "visual-document-retrieval",
-   "cross": true
+   "cross": true,
+   "oceanic": false,
+   "path": "M2993.8,2018.4Q3438.4,1788.8 3937.5,1823.4"
   },
   {
    "from": "sequence-to-sequence-learning",
    "to": "speech-recognition",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1356,1472.9Q2715.5,2303.7 4246.6,1862.7"
   },
   {
    "from": "speech-recognition",
    "to": "realtime-voice",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M4246.6,1862.7Q4317.8,1848.6 4371.4,1799.5"
   },
   {
    "from": "pretrained-language-models",
    "to": "realtime-voice",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1346.2,1344.6Q2758.7,2237.6 4371.4,1799.5"
   },
   {
    "from": "diffusion-models",
    "to": "text-to-image",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M4255.7,1666.9Q4264.1,1584.5 4314,1518.5"
   },
   {
    "from": "contrastive-image-text-pretraining",
    "to": "text-to-image",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M4113.5,1529Q4212.3,1495.7 4314,1518.5"
   },
   {
    "from": "text-to-image",
    "to": "video-generation",
-   "cross": false
+   "cross": false,
+   "oceanic": false,
+   "path": "M4314,1518.5Q4381.1,1577.2 4407.9,1662.2"
   },
   {
    "from": "transformer-architecture",
    "to": "video-generation",
-   "cross": true
+   "cross": true,
+   "oceanic": true,
+   "path": "M1240.9,1435.5Q2874.3,852.1 4407.9,1662.2"
   }
  ]
 }

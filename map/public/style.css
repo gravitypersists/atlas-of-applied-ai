@@ -6,6 +6,8 @@
   --ink-soft: #8a7a60;
   --route: #a8977a;
   --panel: #f7f1e3;
+  --chip: #ece2cb;
+  --rule: #d6c8a8;
   --title-font: "IM Fell English SC", Georgia, serif;
   --body-font: "EB Garamond", Georgia, serif;
 }
@@ -40,10 +42,12 @@ html, body {
 /* Faint inner hachure: a wide, soft stroke clipped to the land, so it shades just inside the coast. */
 .coast-hachure { fill: none; stroke: var(--ink); stroke-width: 7; stroke-opacity: 0.09; }
 
-/* Lineage routes: debug overlay, toggled with "l" until selection arrives. */
-.route { display: none; stroke: var(--route); stroke-width: 1.2; fill: none; }
-.route.cross { stroke-dasharray: 4 4; opacity: 0.45; }
-#map.show-routes .route { display: inline; }
+/* Lineage routes for the selected landmark (SPEC §5.3): ancestors in dark ink, descendants lighter.
+   Drawn in world units; dashes and widths stay constant on screen. */
+.route { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-dasharray: 1 5; }
+.route.ancestor { stroke: var(--ink); stroke-width: 2.2; }
+.route.descendant { stroke: var(--ink-soft); stroke-width: 2; }
+.route.oceanic { stroke-dasharray: 1 8; }
 
 /* Landmark symbols (SPEC §5.6): one ink, tier decides shape and size. */
 .sym-fill { fill: var(--ink); stroke: var(--parchment); stroke-width: 1; }
@@ -51,6 +55,10 @@ html, body {
 .sym-ring { fill: var(--parchment); stroke: var(--ink); stroke-width: 1.5; }
 .sym-star { fill: var(--ink); }
 .landmark.old .sym-fill { fill: var(--ink-soft); }
+.landmark { cursor: pointer; }
+.landmark .hit { fill: transparent; }
+.landmark .halo { fill: none; stroke: none; }
+.landmark .label { pointer-events: visiblePainted; }
 
 .landmark .label {
   fill: var(--ink);
@@ -94,6 +102,18 @@ html, body {
 #map.z2 .territory-label.title { opacity: 0.18; }
 #map.z0 .territory.old-world, #map.z1 .territory.old-world { stroke-opacity: 0.25; }
 
+/* Selection: the selected landmark and its relatives are always shown and labelled; the rest dims. */
+/* Dimming works on children and fill-opacity, so it multiplies with (never overrides) zoom-level hiding. */
+#map.has-selection .landmark:not(.selected):not(.related) > * { opacity: 0.32; }
+#map.has-selection .territory-label { fill-opacity: 0.35; stroke-opacity: 0.2; }
+#map.has-selection .landmark.selected,
+#map.has-selection .landmark.related { opacity: 1; pointer-events: auto; }
+#map.has-selection .landmark.selected .label,
+#map.has-selection .landmark.related .label { opacity: 1; }
+.landmark.related .halo { stroke: var(--ink-soft); stroke-width: 1.2; fill: color-mix(in srgb, var(--parchment) 70%, transparent); }
+.landmark.selected .halo { stroke: var(--ink); stroke-width: 2; fill: var(--parchment); }
+.landmark.selected .label { font-weight: 600; }
+
 .controls {
   position: fixed;
   right: 16px;
@@ -125,3 +145,84 @@ html, body {
 }
 .cartouche-title { font-family: var(--title-font); font-size: 15px; letter-spacing: 0.06em; }
 .cartouche-sub { font-size: 12px; font-style: italic; color: var(--ink-soft); }
+
+/* ---------------------------------------------------------------- search (SPEC §5.4) */
+.search { position: fixed; top: 16px; left: 16px; width: min(320px, calc(100vw - 32px)); z-index: 3; }
+.search input {
+  width: 100%; height: 40px; padding: 0 12px;
+  border: 1px solid var(--ink-soft); border-radius: 4px; background: var(--panel);
+  color: var(--ink); font: 16px var(--body-font);
+  box-shadow: 0 1px 4px rgb(59 47 32 / 0.12);
+}
+.search input:focus { outline: 2px solid var(--ink-soft); outline-offset: 1px; }
+.search input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; } /* Escape clears */
+.search ul {
+  list-style: none; margin: 4px 0 0; padding: 4px 0;
+  border: 1px solid var(--ink-soft); border-radius: 4px; background: var(--panel);
+  box-shadow: 0 2px 8px rgb(59 47 32 / 0.15);
+}
+.result { padding: 6px 12px; cursor: pointer; }
+.result-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.result-why { font-size: 12.5px; line-height: 1.3; color: var(--ink-soft); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.result.active, .result:hover { background: var(--chip); }
+.result-name { font-size: 15px; }
+.result.territory .result-name { font-family: var(--title-font); letter-spacing: 0.06em; }
+.result-sub { font-size: 12px; font-style: italic; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------------------------------------------------------------- panel (SPEC §5.3) */
+.panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 360px; z-index: 2;
+  background: var(--panel); border-left: 1px solid var(--rule);
+  box-shadow: -4px 0 16px rgb(59 47 32 / 0.12);
+  display: flex; flex-direction: column;
+}
+.panel[hidden] { display: none; }
+.panel-body { overflow-y: auto; padding: 28px 24px 32px; }
+.panel-close {
+  position: absolute; top: 10px; right: 10px; width: 32px; height: 32px;
+  border: none; background: transparent; color: var(--ink-soft); font: 24px/1 var(--body-font); cursor: pointer;
+}
+.panel-close:hover { color: var(--ink); }
+.panel-where { font-family: var(--title-font); font-size: 12px; letter-spacing: 0.08em; color: var(--ink-soft); padding-right: 28px; }
+.panel-name { font: 600 26px/1.15 var(--body-font); margin: 6px 0 10px; }
+.panel-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.pill { font-size: 12px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--ink-soft); }
+.pill[data-maturity="1"], .pill[data-maturity="2"] { border-style: dashed; font-style: italic; }
+.pill[data-maturity="5"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.pill[data-maturity="4"] { background: var(--chip); }
+.panel-date { font-size: 13px; color: var(--ink-soft); font-style: italic; }
+.panel-desc { font-size: 16px; line-height: 1.45; margin: 0 0 8px; }
+.panel-note { font-size: 14px; line-height: 1.4; font-style: italic; color: var(--ink-soft); margin: 0 0 14px; }
+.panel h2 { font: 13px var(--title-font); letter-spacing: 0.1em; color: var(--ink-soft); margin: 20px 0 8px; border-top: 1px solid var(--rule); padding-top: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips.plain { margin-top: 4px; }
+.chip {
+  font: 14px var(--body-font); color: var(--ink); background: var(--chip);
+  border: 1px solid transparent; border-radius: 4px; padding: 3px 8px;
+}
+button.chip { cursor: pointer; border-color: var(--rule); }
+button.chip:hover { border-color: var(--ink-soft); background: var(--parchment); }
+.chip.beyond { background: transparent; border: 1px dashed var(--ink-soft); color: var(--ink-soft); font-style: italic; }
+.lineage { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.lineage .why { margin: 4px 0 0 2px; font-size: 13px; line-height: 1.35; color: var(--ink-soft); }
+.panel-cite { margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 13px; line-height: 1.35; color: var(--ink-soft); font-style: italic; }
+.panel-cite[hidden] { display: none; }
+.panel-source { display: inline-block; margin-top: 8px; color: var(--ink); font-size: 15px; }
+.panel-source[hidden] { display: none; }
+
+/* With the panel open on desktop, keep the zoom controls clear of it. */
+body:has(.panel:not([hidden])) .controls { right: 376px; }
+
+/* ---------------------------------------------------------------- phones: bottom sheet */
+@media (max-width: 640px) {
+  .panel {
+    top: auto; left: 0; width: auto; max-height: 55vh; max-height: 55dvh;
+    border-left: none; border-top: 1px solid var(--rule); border-radius: 12px 12px 0 0;
+    box-shadow: 0 -4px 16px rgb(59 47 32 / 0.15);
+  }
+  .panel-body { padding: 22px 18px 28px; }
+  .panel-name { font-size: 22px; }
+  body:has(.panel:not([hidden])) .controls { right: 16px; bottom: calc(55dvh + 12px); }
+  .cartouche { display: none; }
+  .controls { bottom: max(16px, env(safe-area-inset-bottom)); }
+}
