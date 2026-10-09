@@ -4,9 +4,9 @@ One guide per applied region, generated from `backbone.yaml` by `make_guides.py`
 
 | Region | Guide | Anchors | Cross-region edges |
 |---|---|---|---|
-| Inference and Serving | [inference-and-serving.md](inference-and-serving.md) | 12 | 7 |
+| Inference and Serving | [inference-and-serving.md](inference-and-serving.md) | 12 | 9 |
 | Prompting and Context Engineering | [prompting-and-context-engineering.md](prompting-and-context-engineering.md) | 16 | 20 |
-| Retrieval and Knowledge | [retrieval-and-knowledge.md](retrieval-and-knowledge.md) | 12 | 21 |
+| Retrieval and Knowledge | [retrieval-and-knowledge.md](retrieval-and-knowledge.md) | 21 | 25 |
 | Agents and Orchestration | [agents-and-orchestration.md](agents-and-orchestration.md) | 17 | 25 |
 | Planning and Reasoning | [planning-and-reasoning.md](planning-and-reasoning.md) | 19 | 16 |
 | Adaptation and Post-Training | [adaptation-and-post-training.md](adaptation-and-post-training.md) | 9 | 10 |

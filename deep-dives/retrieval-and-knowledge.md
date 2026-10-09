@@ -1,6 +1,6 @@
 # Deep dive: Retrieval and Knowledge
 
-Backbone v0.2 · 12 anchors · 21 cross-region edges
+Backbone v0.2 · 21 anchors · 25 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -40,6 +40,15 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `self-rag` — Self-RAG (maturity 2, 2023-10)
 - `corrective-rag` — Corrective RAG (maturity 2, 2024-01)
 - `agentic-rag` — Agentic RAG (maturity 3, 2024)
+- `parent-document-retrieval` — Parent-Document Retrieval (maturity 3, 2023-08)
+- `late-interaction` — Late Interaction (maturity 3, 2020-04)
+- `learned-sparse-retrieval` — Learned Sparse Retrieval (maturity 3, 2021-07)
+- `propositional-chunking` — Propositional Chunking (maturity 2, 2023-12)
+- `late-chunking` — Late Chunking (maturity 2, 2024-09)
+- `active-retrieval` — Active Retrieval (maturity 2, 2023-05)
+- `speculative-rag` — Speculative RAG (maturity 1, 2024-07)
+- `lightweight-graph-rag` — Lightweight GraphRAG (maturity 2, 2024-10)
+- `long-context-routing` — RAG vs. Long-Context Routing (maturity 2, 2024-07)
 
 Nodes homed elsewhere that also touch this region:
 - `dynamic-few-shot-selection` — Dynamic Few-Shot Selection (home: prompting-and-context-engineering)
@@ -160,7 +169,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - software-engineering: statecharts (Statecharts and State Machines; finite-state machines; workflow engines), test-driven-development (Test-Driven Development; TDD; regression testing), distributed-tracing (Distributed Tracing; spans; Dapper), language-server-protocol (Language Server Protocol; LSP)
 - inference-and-serving: autoregressive-decoding (Autoregressive Decoding; next-token generation; sampling), kv-cache (KV Cache; key-value cache; incremental decoding), paged-attention (PagedAttention; paged KV cache), continuous-batching (Continuous Batching; in-flight batching; iteration-level scheduling), speculative-decoding (Speculative Decoding; assisted generation; draft-and-verify), weight-quantization (Weight Quantization; INT8; INT4; FP8; GPTQ; AWQ), kv-cache-quantization (KV Cache Quantization; KIVI; compressed KV cache), prompt-caching (Prompt Caching; prefix caching; RadixAttention), constrained-decoding (Constrained Decoding; grammar-constrained generation; guided decoding; JSON mode), model-routing (Model Routing and Cascades; LLM routing; FrugalGPT; model cascades), prefill-decode-disaggregation (Prefill-Decode Disaggregation; disaggregated serving; split-level inference), local-inference (Local and On-Device Inference; llama.cpp; edge inference)
 - prompting-and-context-engineering: zero-shot-prompting (Zero-Shot Prompting; direct prompting; instruction prompting), few-shot-prompting (Few-Shot Prompting; in-context learning; ICL), system-prompts (System Prompts; system messages; custom instructions; developer messages), prompt-templating (Prompt Templating; prompt templates), prompt-chaining (Prompt Chaining; LLM chains; pipelines of prompts; AI chains), structured-outputs (Structured Outputs; JSON outputs; schema-constrained outputs), context-compaction (Context Compaction; prompt compression; summarization of history), context-engineering (Context Engineering; context management), automatic-prompt-optimization (Automatic Prompt Optimization; APO; APE; prompt search), declarative-prompt-compilation (Declarative Prompt Compilation; DSPy; LM programs), zero-shot-cot (Zero-Shot Chain-of-Thought; zero-shot CoT; Let's think step by step), dynamic-few-shot-selection (Dynamic Few-Shot Selection; example selection; prompt retrieval; kNN prompting; KATE), decomposed-prompting (Decomposed Prompting; DECOMP; task decomposition prompting), textual-gradients (Textual Gradients; TextGrad; textual gradient descent), context-ordering (Context Ordering; position engineering; context reordering; lost-in-the-middle mitigation), progressive-disclosure (Progressive Disclosure; just-in-time context; lazy-loaded context)
-- retrieval-and-knowledge: text-embeddings (Text Embeddings; embedding models; sentence embeddings), dense-retrieval (Dense Retrieval; vector search; semantic search; DPR), retrieval-augmented-generation (Retrieval-Augmented Generation; RAG; naive RAG), chunking-strategies (Chunking Strategies; text splitting; semantic chunking), hybrid-search (Hybrid Search; sparse + dense retrieval; reciprocal rank fusion), cross-encoder-reranking (Cross-Encoder Reranking; rerankers; retrieve-and-rerank; multi-stage retrieval), query-rewriting (Query Rewriting and HyDE; query expansion; HyDE), contextual-retrieval (Contextual Retrieval; contextual chunking), graph-rag (GraphRAG; knowledge-graph RAG), self-rag (Self-RAG; self-reflective RAG), corrective-rag (Corrective RAG; CRAG), agentic-rag (Agentic RAG; agentic search; iterative retrieval)
+- retrieval-and-knowledge: text-embeddings (Text Embeddings; embedding models; sentence embeddings), dense-retrieval (Dense Retrieval; vector search; semantic search; DPR), retrieval-augmented-generation (Retrieval-Augmented Generation; RAG; naive RAG), chunking-strategies (Chunking Strategies; text splitting; semantic chunking), hybrid-search (Hybrid Search; sparse + dense retrieval; reciprocal rank fusion), cross-encoder-reranking (Cross-Encoder Reranking; rerankers; retrieve-and-rerank; multi-stage retrieval), query-rewriting (Query Rewriting and HyDE; query expansion; HyDE; Rewrite-Retrieve-Read), contextual-retrieval (Contextual Retrieval; contextual chunking), graph-rag (GraphRAG; knowledge-graph RAG), self-rag (Self-RAG; self-reflective RAG), corrective-rag (Corrective RAG; CRAG), agentic-rag (Agentic RAG; agentic search; iterative retrieval), parent-document-retrieval (Parent-Document Retrieval; small-to-big retrieval; ParentDocumentRetriever; sentence-window retrieval; auto-merging retrieval), late-interaction (Late Interaction; ColBERT; multi-vector retrieval; MaxSim), learned-sparse-retrieval (Learned Sparse Retrieval; SPLADE; neural sparse retrieval), propositional-chunking (Propositional Chunking; Dense X Retrieval; proposition indexing), late-chunking (Late Chunking; post-embedding chunking), active-retrieval (Active Retrieval; FLARE; forward-looking active retrieval), speculative-rag (Speculative RAG; draft-then-verify RAG), lightweight-graph-rag (Lightweight GraphRAG; LightRAG; LazyGraphRAG), long-context-routing (RAG vs. Long-Context Routing; Self-Route; Pre-Route)
 - agents-and-orchestration: mrkl-systems (MRKL Systems; modular reasoning; neuro-symbolic routing), tool-learning (Tool Learning; Toolformer; self-taught tool use), function-calling (Function Calling; tool use; tool calling), react-agent-loop (ReAct Agent Loop; reason and act; agent loop), workflow-state-machines (Workflow Graphs and State Machines; graph-based agents; agent workflows), model-context-protocol (Model Context Protocol; MCP), agent-memory (Agent Memory; long-term memory; episodic memory; MemGPT; structured note-taking), multi-agent-systems (Multi-Agent Systems; orchestrator-worker; subagents; agent teams), coding-agents (Coding Agents; software engineering agents; SWE-agent), computer-use-agents (Computer-Use Agents; GUI agents; browser agents), deep-research-agents (Deep Research Agents; research agents), agent-skills (Agent Skills; skills; packaged procedures), decision-models (Decision Models; System One models; typed decision models; calibrated classifiers for agents), semantic-routing (Semantic Routing; embedding-based intent routing; Semantic Router), mcp-code-execution (Code Execution with MCP; Code Mode; tools as code APIs), long-running-agent-harness (Long-Running Agent Harnesses; multi-session agents; initializer agent pattern; progress files), context-aware-mcp (Context-Aware MCP; CA-MCP; shared context store)
 - planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; search-based decoding), reflexion (Self-Reflection; Reflexion; self-critique; self-refine; evaluator-optimizer), process-reward-models (Process Reward Models; PRMs; step-level verifiers; process supervision), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling; search against verifiers), reasoning-models (Reasoning Models; thinking models; extended thinking; o1-class models), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning), program-aided-reasoning (Program-Aided Reasoning; PAL; Program of Thoughts; PoT; program-aided language models), reasoning-via-planning (Reasoning via Planning; RAP; MCTS over reasoning), graph-of-thoughts (Graph of Thoughts; GoT), step-back-prompting (Step-Back Prompting; abstraction prompting), language-agent-tree-search (Language Agent Tree Search; LATS), math-shepherd (Automatic Process Supervision; Math-Shepherd; Monte Carlo step labels), quiet-star (Quiet-STaR; learned internal rationales; think before speaking), latent-reasoning (Latent Reasoning; Coconut; Chain of Continuous Thought; continuous thought), cot-monitoring (CoT Monitoring; CoT faithfulness; chain-of-thought monitorability; reasoning trace monitoring)
 - adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling), direct-preference-optimization (Direct Preference Optimization; DPO; KTO; ORPO; IPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT)
@@ -181,11 +190,20 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - Hybrid Search: Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods (Cormack et al., SIGIR 2009)
 - Cross-Encoder Reranking: Passage Re-ranking with BERT (Nogueira & Cho) — arXiv:1901.04085
 - Query Rewriting and HyDE: Precise Zero-Shot Dense Retrieval without Relevance Labels (Gao et al.) — arXiv:2212.10496
-- Contextual Retrieval: Introducing Contextual Retrieval (Anthropic) — https://www.anthropic.com/news/contextual-retrieval
+- Contextual Retrieval: Introducing Contextual Retrieval (Anthropic) — https://www.anthropic.com/engineering/contextual-retrieval
 - GraphRAG: From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al.) — arXiv:2404.16130
 - Self-RAG: Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (Asai et al.) — arXiv:2310.11511
 - Corrective RAG: Corrective Retrieval Augmented Generation (Yan et al.) — arXiv:2401.15884
 - Agentic RAG: Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG (Singh et al.) — arXiv:2501.09136
+- Parent-Document Retrieval: parent document retriever (LangChain pull request #8941) — https://github.com/langchain-ai/langchain/pull/8941
+- Late Interaction: ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT (Khattab & Zaharia) — arXiv:2004.12832
+- Learned Sparse Retrieval: SPLADE: Sparse Lexical and Expansion Model for First Stage Ranking (Formal et al.) — arXiv:2107.05720
+- Propositional Chunking: Dense X Retrieval: What Retrieval Granularity Should We Use? (Chen et al.) — arXiv:2312.06648
+- Late Chunking: Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models (Günther et al.) — arXiv:2409.04701
+- Active Retrieval: Active Retrieval Augmented Generation (Jiang et al.) — arXiv:2305.06983
+- Speculative RAG: Speculative RAG: Enhancing Retrieval Augmented Generation through Drafting (Wang et al.) — arXiv:2407.08223
+- Lightweight GraphRAG: LightRAG: Simple and Fast Retrieval-Augmented Generation (Guo et al.) — arXiv:2410.05779
+- RAG vs. Long-Context Routing: Retrieval Augmented Generation or Long-Context LLMs? A Comprehensive Study and Hybrid Approach (Li et al.) — arXiv:2407.16833
 
 ## Reference: cross-region edges touching this region
 - agent-memory --applies--> retrieval-augmented-generation
@@ -202,10 +220,14 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - graph-rag --combines--> knowledge-graphs
 - hybrid-search --combines--> bm25
 - indirect-prompt-injection --applies--> retrieval-augmented-generation
+- learned-sparse-retrieval --applies--> pretrained-language-models
+- learned-sparse-retrieval --extends--> bm25
+- long-context-routing --applies--> model-routing
 - rag-evaluation --applies--> retrieval-augmented-generation
 - retrieval-augmented-generation --combines--> pretrained-language-models
 - retrieval-augmented-generation --extends--> open-domain-qa
 - semantic-routing --applies--> text-embeddings
+- speculative-rag --applies--> speculative-decoding
 - step-back-prompting --combines--> retrieval-augmented-generation
 - text-embeddings --specializes--> pretrained-language-models
 - visual-document-retrieval --applies--> dense-retrieval

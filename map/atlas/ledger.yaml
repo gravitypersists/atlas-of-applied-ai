@@ -176,4 +176,13 @@ settlements:
   - {id: quiet-star, x: 2753.5, y: 2685.2, settled: "2026-10-08"}
   - {id: latent-reasoning, x: 3031.4, y: 2739.2, settled: "2026-10-08"}
   - {id: cot-monitoring, x: 3042, y: 2442.1, settled: "2026-10-08"}
+  - {id: parent-document-retrieval, x: 3098.6, y: 1834.7, settled: "2026-10-08"}
+  - {id: late-interaction, x: 2903.2, y: 2182.7, settled: "2026-10-08"}
+  - {id: learned-sparse-retrieval, x: 3049.3, y: 1987, settled: "2026-10-08"}
+  - {id: propositional-chunking, x: 2699.7, y: 1989.2, settled: "2026-10-08"}
+  - {id: late-chunking, x: 2711.1, y: 2089.2, settled: "2026-10-08"}
+  - {id: active-retrieval, x: 3225.3, y: 2122.7, settled: "2026-10-08"}
+  - {id: speculative-rag, x: 3249.4, y: 2047.1, settled: "2026-10-08"}
+  - {id: lightweight-graph-rag, x: 3155.3, y: 2285.9, settled: "2026-10-08"}
+  - {id: long-context-routing, x: 3301.3, y: 2178.2, settled: "2026-10-08"}
 retired: []

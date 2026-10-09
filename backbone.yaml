@@ -107,6 +107,14 @@ regions:
       - Evidence on when long context replaces retrieval and when it doesn't
       - Agentic search (grep/filesystem-style retrieval by agents) vs. index-based RAG
       - Graph-based retrieval beyond GraphRAG, and its real production footprint
+    overview: "Retrieval and Knowledge covers how AI systems bring outside facts into the model's context, so answers rest on your documents rather than on what the model memorized. It grew out of classical search (BM25 keyword ranking) and neural embeddings, and took its modern shape in 2020 with retrieval-augmented generation (RAG): find relevant passages, put them in the prompt, generate.\n\nThe basic pipeline of chunk, embed and retrieve fails in predictable ways, and most of the region is fixes for them. Chunks lose their surrounding context, so contextual retrieval, late chunking and parent-document retrieval put it back. A single embedding vector blurs exact terms and fine detail, so production systems combine keyword and vector search, rerank candidates with a cross-encoder, and sometimes keep one vector per token (late interaction). Bad retrieval poisons the answer, so newer designs grade what they retrieved, retrieve again mid-answer, or hand search to an agent that issues its own queries, including grep and file reads over code.\n\nTwo debates shape the region today. Million-token context windows did not make retrieval obsolete: models get distracted by irrelevant material in long contexts, and sending everything costs far more per query, so systems increasingly choose between retrieval and long context per question. Graph-based retrieval answers global, multi-hop questions that passage search can't, but full GraphRAG indexing is expensive, and lighter variants defer most of the work to query time. Landmarks worth knowing: embeddings and dense retrieval, RAG, hybrid search with reranking, contextual retrieval, and agentic RAG."
+    learning_path:
+    - {kind: talk, title: "Stanford CS25: V3 I Retrieval Augmented Language Models", by: "Douwe Kiela (Stanford CS25)", year: 2024, url: "https://www.youtube.com/watch?v=mE7IDf2SmJg", why: "One of the RAG paper's authors explains why a model's frozen weights go stale and make things up, and how pairing it with a retriever addresses both. A good map of the whole region before the details."}
+    - {kind: blog, title: "Embeddings: What they are and why they matter", by: "Simon Willison", year: 2023, url: "https://simonwillison.net/2023/Oct/23/embeddings/", why: "A plain-language walk through what an embedding is and how similarity search over embeddings works, with runnable examples. This is the building block under dense retrieval."}
+    - {kind: talk, title: "Beyond the Basics of Retrieval for Augmenting Generation (w/ Ben Clavié)", by: "Ben Clavié (Mastering LLMs conference, hosted by Hamel Husain)", year: 2024, url: "https://www.youtube.com/watch?v=0nA5QG3087g", why: "Lays out the production baseline step by step: keyword search alongside embeddings, a cross-encoder reranker on top, and where late-interaction models fit. Explains why a single vector search is rarely enough."}
+    - {kind: blog, title: "Contextual Retrieval in AI Systems", by: "Anthropic", year: 2024, url: "https://www.anthropic.com/engineering/contextual-retrieval", why: "Measures how much each layer of the baseline helps (BM25 plus embeddings, then reranking) and adds one cheap fix: prefixing each chunk with a short note on where it came from before indexing."}
+    - {kind: blog, title: "Long Context RAG Performance of LLMs", by: "Databricks", year: 2024, url: "https://www.databricks.com/blog/long-context-rag-performance-llms", why: "Tests whether stuffing more retrieved text into long-context models keeps helping. Most models peak and then decline, which is the practical answer to 'do we still need retrieval?'"}
+    - {kind: talk, title: "The unreasonable effectiveness of BM25 for agentic search — Jo Kristian Bergum, Hornet.dev", by: "Jo Kristian Bergum (AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=fZH97QHHYjY", why: "When an agent writes its own search queries, they get longer and more specific, and plain keyword search becomes a strong tool again. A useful counterweight as retrieval moves inside agent loops."}
   - id: agents-and-orchestration
     kind: applied
     name: Agents and Orchestration
@@ -1129,6 +1137,7 @@ nodes:
     aliases: [embedding models, sentence embeddings]
     region: retrieval-and-knowledge
     desc: Models that map text to vectors so that semantically similar texts are close together.
+    summary: "An embedding model turns a piece of text into a list of numbers (a vector) so that texts with similar meaning end up close together. This lets software compare texts by meaning rather than by shared words, and it is the base layer of almost every semantic search and RAG system."
     parents:
       - {id: pretrained-language-models, rel: specializes, why: "Fine-tunes pretrained encoders to produce comparable sentence vectors.", src: "Sentence-BERT (Reimers & Gurevych 2019)"}
     maturity: 5
@@ -1136,12 +1145,18 @@ nodes:
     date: "2019-08"
     ref: {title: "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks (Reimers & Gurevych)", arxiv: "1908.10084"}
     examples: [OpenAI text-embedding-3, Voyage, BGE, Nomic]
+    resources:
+      - {kind: blog, title: "Embeddings: What they are and why they matter", by: "Simon Willison", year: 2023, url: "https://simonwillison.net/2023/Oct/23/embeddings/"}
+      - {kind: talk, title: "\"Embeddings: What they are and why they matter\" - Simon Willison (PyBay 2023)", by: "Simon Willison (PyBay)", year: 2023, url: "https://www.youtube.com/watch?v=snKTqb10vWQ"}
+      - {kind: blog, title: "What are embeddings?", by: "Vicki Boykis", year: 2023, url: "https://vickiboykis.com/what_are_embeddings/"}
+      - {kind: paper, title: "MTEB: Massive Text Embedding Benchmark", by: "Niklas Muennighoff, Nouamane Tazi, Loïc Magne, Nils Reimers", year: 2022, url: "https://arxiv.org/abs/2210.07316"}
     status: repaired
   - id: dense-retrieval
     name: Dense Retrieval
     aliases: [vector search, semantic search, DPR]
     region: retrieval-and-knowledge
     desc: Retrieving documents by embedding queries and passages into a shared vector space and searching by similarity.
+    summary: "Dense retrieval finds documents by embedding the question and every passage into the same vector space and returning the passages nearest the question. Approximate nearest-neighbour indexes make this fast over millions of passages; it is what a vector database does, and it catches paraphrases that keyword search misses."
     parents:
       - {id: text-embeddings, rel: applies, why: "Uses learned embeddings as the retrieval representation.", src: "Dense Passage Retrieval (Karpukhin et al. 2020)"}
       - {id: approximate-nearest-neighbor-search, rel: combines, why: "Depends on ANN indexes to search at scale.", src: "Dense Passage Retrieval (Karpukhin et al. 2020)"}
@@ -1151,12 +1166,17 @@ nodes:
     date: "2020-04"
     ref: {title: "Dense Passage Retrieval for Open-Domain Question Answering (Karpukhin et al.)", arxiv: "2004.04906"}
     examples: [Pinecone, Weaviate, pgvector]
+    resources:
+      - {kind: docs, title: "Semantic Search — Sentence Transformers documentation", by: "Sentence Transformers (Hugging Face)", year: 2024, url: "https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html"}
+      - {kind: talk, title: "Stanford XCS224U: NLU I Information Retrieval, Part 4: Neural IR I Spring 2023", by: "Christopher Potts (Stanford XCS224U)", year: 2023, url: "https://www.youtube.com/watch?v=EDVqG86AT0Q"}
+      - {kind: paper, title: "BEIR: A Heterogenous Benchmark for Zero-shot Evaluation of Information Retrieval Models", by: "Nandan Thakur et al.", year: 2021, url: "https://arxiv.org/abs/2104.08663"}
     status: repaired
   - id: retrieval-augmented-generation
     name: Retrieval-Augmented Generation
     aliases: [RAG, naive RAG]
     region: retrieval-and-knowledge
     desc: Retrieving relevant passages and placing them in the model's context so generation is grounded in external knowledge.
+    summary: "RAG looks up passages relevant to a question and puts them in the model's prompt, so the answer is based on your documents instead of only on what the model memorized in training. It is the default way to ground an application in private or fresh data, and the answer is only as good as what retrieval finds."
     parents:
       - {id: open-domain-qa, rel: extends, why: "Replaces the extractive reader with a generative model.", src: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al. 2020)"}
       - {id: dense-retrieval, rel: combines, why: "Uses dense retrieval as the retriever.", src: "Lewis et al. 2020"}
@@ -1166,12 +1186,18 @@ nodes:
     date: "2020-05"
     ref: {title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al.)", arxiv: "2005.11401"}
     examples: [LlamaIndex, LangChain, Haystack]
+    resources:
+      - {kind: blog, title: "Patterns for Building LLM-based Systems & Products", by: "Eugene Yan", year: 2023, url: "https://eugeneyan.com/writing/llm-patterns/"}
+      - {kind: talk, title: "Stanford CS25: V3 I Retrieval Augmented Language Models", by: "Douwe Kiela (Stanford CS25)", year: 2024, url: "https://www.youtube.com/watch?v=mE7IDf2SmJg"}
+      - {kind: talk, title: "RAG Agents in Prod: 10 Lessons We Learned — Douwe Kiela, creator of RAG", by: "Douwe Kiela (AI Engineer)", year: 2025, url: "https://www.youtube.com/watch?v=kPL-6-9MVyA"}
+      - {kind: paper, title: "Retrieval-Augmented Generation for Large Language Models: A Survey", by: "Yunfan Gao et al.", year: 2023, url: "https://arxiv.org/abs/2312.10997"}
     status: repaired
   - id: chunking-strategies
     name: Chunking Strategies
     aliases: [text splitting, semantic chunking]
     region: retrieval-and-knowledge
     desc: Splitting documents into passages sized and bounded for embedding and retrieval.
+    summary: "Documents are too long to embed and retrieve whole, so they are split into passages first. Chunk size and boundaries matter more than they look: small chunks match precisely but lose context, large ones keep context but blur the match. Splitting on structure (headings, paragraphs) usually beats fixed character counts."
     parents:
       - {id: retrieval-augmented-generation, rel: applies, why: "Required preprocessing for passage-level retrieval.", src: "RAG framework practice (2022)"}
     maturity: 4
@@ -1179,12 +1205,17 @@ nodes:
     date: "2022"
     ref: {title: "LangChain text splitters documentation"}
     examples: [RecursiveCharacterTextSplitter, Unstructured]
+    resources:
+      - {kind: blog, title: "Chunking Strategies for LLM Applications", by: "Pinecone", year: 2023, url: "https://www.pinecone.io/learn/chunking-strategies/"}
+      - {kind: talk, title: "The 5 Levels Of Text Splitting For Retrieval", by: "Greg Kamradt (YouTube)", year: 2024, url: "https://www.youtube.com/watch?v=8OJC21T2SL4"}
+      - {kind: blog, title: "Evaluating Chunking Strategies for Retrieval", by: "Brandon Smith, Anton Troynikov (Chroma)", year: 2024, url: "https://www.trychroma.com/research/evaluating-chunking"}
     status: repaired
   - id: hybrid-search
     name: Hybrid Search
     aliases: [sparse + dense retrieval, reciprocal rank fusion]
     region: retrieval-and-knowledge
     desc: Combining lexical and vector retrieval, typically fusing rankings, to catch both exact terms and semantic matches.
+    summary: "Hybrid search runs keyword search (BM25) and vector search side by side and merges the two result lists, usually with reciprocal rank fusion. Keywords catch exact names, codes and rare terms that embeddings blur; vectors catch paraphrases. It is the recommended production baseline."
     parents:
       - {id: bm25, rel: combines, why: "Contributes exact-term matching.", src: "Reciprocal Rank Fusion (Cormack et al. 2009)"}
       - {id: dense-retrieval, rel: combines, why: "Contributes semantic matching.", src: "Reciprocal Rank Fusion (Cormack et al. 2009)"}
@@ -1193,12 +1224,17 @@ nodes:
     date: "2022"
     ref: {title: "Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods (Cormack et al., SIGIR 2009)"}
     examples: [Weaviate hybrid, Elasticsearch, Vespa]
+    resources:
+      - {kind: blog, title: "Hybrid Search Explained", by: "Weaviate", year: 2023, url: "https://weaviate.io/blog/hybrid-search-explained"}
+      - {kind: docs, title: "Reciprocal rank fusion", by: "Elastic", year: 2024, url: "https://www.elastic.co/docs/reference/elasticsearch/rest-apis/reciprocal-rank-fusion"}
+      - {kind: talk, title: "Haystack EU 2023 - Jo Kristian Bergum: Navigating Neural Search: Avoiding Common Pitfalls", by: "Jo Kristian Bergum (Haystack EU)", year: 2023, url: "https://www.youtube.com/watch?v=PrBtxqARY9U"}
     status: kept
   - id: cross-encoder-reranking
     name: Cross-Encoder Reranking
     aliases: [rerankers, retrieve-and-rerank, multi-stage retrieval]
     region: retrieval-and-knowledge
     desc: Rescoring a candidate set by passing query and document jointly through a transformer for a precise relevance score.
+    summary: "A fast first-stage search pulls a few dozen to a few hundred candidates, then a cross-encoder reads the question and each candidate together and scores how relevant it is. Reading them jointly is much more accurate than comparing separate vectors, but too slow to run over a whole corpus, so it is used only on the shortlist."
     parents:
       - {id: pretrained-language-models, rel: applies, why: "Uses a pretrained transformer as a relevance scorer.", src: "Passage Re-ranking with BERT (Nogueira & Cho 2019)"}
       - {id: bm25, rel: extends, why: "Introduced as a second stage over first-stage lexical retrieval.", src: "Passage Re-ranking with BERT (Nogueira & Cho 2019)"}
@@ -1207,12 +1243,18 @@ nodes:
     date: "2019-01"
     ref: {title: "Passage Re-ranking with BERT (Nogueira & Cho)", arxiv: "1901.04085"}
     examples: [Cohere Rerank, BGE-Reranker, Voyage rerank]
+    resources:
+      - {kind: blog, title: "Rerankers and Two-Stage Retrieval", by: "James Briggs (Pinecone)", year: 2023, url: "https://www.pinecone.io/learn/series/rag/rerankers/"}
+      - {kind: talk, title: "Beyond the Basics of Retrieval for Augmenting Generation (w/ Ben Clavié)", by: "Ben Clavié (Mastering LLMs conference, hosted by Hamel Husain)", year: 2024, url: "https://www.youtube.com/watch?v=0nA5QG3087g"}
+      - {kind: docs, title: "Cross-Encoders — Sentence Transformers documentation", by: "Sentence Transformers (Hugging Face)", year: 2024, url: "https://www.sbert.net/examples/cross_encoder/applications/README.html"}
+      - {kind: paper, title: "Document Ranking with a Pretrained Sequence-to-Sequence Model", by: "Rodrigo Nogueira, Zhiying Jiang, Jimmy Lin", year: 2020, url: "https://arxiv.org/abs/2003.06713"}
     status: repaired
   - id: query-rewriting
     name: Query Rewriting and HyDE
-    aliases: [query expansion, HyDE]
+    aliases: [query expansion, HyDE, Rewrite-Retrieve-Read]
     region: retrieval-and-knowledge
     desc: Using a model to rewrite, expand, or answer hypothetically before retrieval, improving recall for short or vague queries.
+    summary: "The model rewrites the user's question before searching: expanding it, splitting it, or (HyDE) writing a hypothetical answer and searching for passages that look like it. This helps when questions are short, vague, or worded differently from the documents, at the cost of an extra model call before retrieval."
     parents:
       - {id: dense-retrieval, rel: extends, why: "Changes the query representation fed to the retriever.", src: "Precise Zero-Shot Dense Retrieval without Relevance Labels (Gao et al. 2022)"}
     maturity: 3
@@ -1220,26 +1262,37 @@ nodes:
     date: "2022-12"
     ref: {title: "Precise Zero-Shot Dense Retrieval without Relevance Labels (Gao et al.)", arxiv: "2212.10496"}
     examples: [LlamaIndex query transforms]
+    resources:
+      - {kind: blog, title: "Query Transformations", by: "LangChain", year: 2023, url: "https://www.langchain.com/blog/query-transformations"}
+      - {kind: talk, title: "RAG from scratch: Part 9 (Query Translation -- HyDE)", by: "Lance Martin (LangChain)", year: 2024, url: "https://www.youtube.com/watch?v=SaDzIVkYqyY"}
+      - {kind: paper, title: "Query Rewriting for Retrieval-Augmented Large Language Models", by: "Xinbei Ma et al.", year: 2023, url: "https://arxiv.org/abs/2305.14283"}
+      - {kind: paper, title: "Query2doc: Query Expansion with Large Language Models", by: "Liang Wang, Nan Yang, Furu Wei", year: 2023, url: "https://arxiv.org/abs/2303.07678"}
     status: repaired
   - id: contextual-retrieval
     name: Contextual Retrieval
     aliases: [contextual chunking]
     region: retrieval-and-knowledge
     desc: Prepending model-generated document context to each chunk before embedding and indexing, reducing retrieval failures from orphaned chunks.
+    summary: "Before indexing, a model writes a sentence or two placing each chunk in its document (\"this is from Acme's Q3 2024 report, on revenue\") and prepends it to the chunk. Chunks that said only \"it grew 15%\" become findable again. Anthropic reported far fewer retrieval failures when combined with hybrid search and reranking; prompt caching keeps the indexing cost down."
     parents:
       - {id: chunking-strategies, rel: extends, why: "Restores document context lost by chunking.", src: "Introducing Contextual Retrieval (Anthropic 2024)"}
       - {id: hybrid-search, rel: applies, why: "Applied to both embedding and BM25 indexes.", src: "Introducing Contextual Retrieval (Anthropic 2024)"}
     maturity: 3
     maturity_note: Widely copied pattern; relies on prompt caching for cost.
     date: "2024-09"
-    ref: {title: "Introducing Contextual Retrieval (Anthropic)", url: "https://www.anthropic.com/news/contextual-retrieval"}
+    ref: {title: "Introducing Contextual Retrieval (Anthropic)", url: "https://www.anthropic.com/engineering/contextual-retrieval"}
     examples: [Anthropic cookbook]
+    resources:
+      - {kind: code, title: "claude-cookbooks/capabilities/contextual-embeddings/guide.ipynb", by: "Anthropic", year: 2024, url: "https://github.com/anthropics/claude-cookbooks/blob/main/capabilities/contextual-embeddings/guide.ipynb"}
+      - {kind: talk, title: "Build Contextual Retrieval with Anthropic and Pinecone", by: "Alex Albert, Arjun Patel (Pinecone webinar)", year: 2024, url: "https://www.youtube.com/watch?v=u-ocR-2P_YA"}
+      - {kind: docs, title: "Prompt caching - Claude Platform Docs", by: "Anthropic", year: 2024, url: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"}
     status: repaired
   - id: graph-rag
     name: GraphRAG
     aliases: [knowledge-graph RAG]
     region: retrieval-and-knowledge
     desc: Using models to extract an entity graph from a corpus, cluster it into communities, and summarize them to answer global questions.
+    summary: "GraphRAG has a model extract entities and relationships from a corpus into a knowledge graph, groups the graph into communities, and summarizes each one ahead of time. That lets it answer global questions (\"what are the main themes across these reports?\") that passage search cannot. The up-front extraction and summarization is expensive, which limits production use."
     parents:
       - {id: retrieval-augmented-generation, rel: combines, why: "Keeps retrieval-then-generate structure.", src: "From Local to Global (Edge et al. 2024)"}
       - {id: knowledge-graphs, rel: combines, why: "Builds and traverses a knowledge graph automatically.", src: "From Local to Global (Edge et al. 2024)"}
@@ -1247,13 +1300,19 @@ nodes:
     maturity_note: High interest; indexing cost limits production use.
     date: "2024-04"
     ref: {title: "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al.)", arxiv: "2404.16130"}
-    examples: [Microsoft GraphRAG, LightRAG]
+    examples: [Microsoft GraphRAG, Neo4j GraphRAG]
+    resources:
+      - {kind: blog, title: "GraphRAG: Unlocking LLM discovery on narrative private data", by: "Microsoft Research (Jonathan Larson, Steven Truitt)", year: 2024, url: "https://www.microsoft.com/en-us/research/blog/graphrag-unlocking-llm-discovery-on-narrative-private-data/"}
+      - {kind: docs, title: "Welcome - GraphRAG", by: "Microsoft", year: 2024, url: "https://microsoft.github.io/graphrag/"}
+      - {kind: talk, title: "GraphRAG methods to create optimized LLM context windows for Retrieval — Jonathan Larson, Microsoft", by: "Jonathan Larson (AI Engineer World's Fair)", year: 2025, url: "https://www.youtube.com/watch?v=c5qJHr3DnT4"}
+      - {kind: paper, title: "Graph Retrieval-Augmented Generation: A Survey", by: "Boci Peng et al.", year: 2024, url: "https://arxiv.org/abs/2408.08921"}
     status: repaired
   - id: self-rag
     name: Self-RAG
     aliases: [self-reflective RAG]
     region: retrieval-and-knowledge
     desc: Training a model to decide when to retrieve and to critique its own generations with reflection tokens.
+    summary: "Self-RAG trains the model itself to decide when it needs to retrieve, whether what it retrieved is relevant, and whether its own answer is supported, by emitting special reflection tokens. It needs a fine-tuned model, so its ideas mostly live on in prompt-based and agentic retrieval rather than in the original form."
     parents:
       - {id: retrieval-augmented-generation, rel: extends, why: "Makes retrieval adaptive and self-critiqued.", src: "Self-RAG (Asai et al. 2023)"}
     maturity: 2
@@ -1261,12 +1320,17 @@ nodes:
     date: "2023-10"
     ref: {title: "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (Asai et al.)", arxiv: "2310.11511"}
     examples: [Self-RAG checkpoints]
+    resources:
+      - {kind: talk, title: "Akari Asai: Self-reflective Language Models with Retrieval (2023-10-26)", by: "Akari Asai (UMass Machine Learning & Friends Lunch)", year: 2023, url: "https://www.youtube.com/watch?v=bVz8Ua1VVsE"}
+      - {kind: code, title: "Self-RAG: Learning to Retrieve, Generate and Critique through Self-Reflection (project page, models and code)", by: "Akari Asai et al.", year: 2023, url: "https://selfrag.github.io/"}
+      - {kind: talk, title: "Self-reflective RAG with LangGraph: Self-RAG and CRAG", by: "Lance Martin (LangChain)", year: 2024, url: "https://www.youtube.com/watch?v=pbAd8O1Lvm4"}
     status: repaired
   - id: corrective-rag
     name: Corrective RAG
     aliases: [CRAG]
     region: retrieval-and-knowledge
     desc: Grading retrieved documents and falling back to web search or refinement when retrieval quality is low.
+    summary: "Corrective RAG adds a grader between retrieval and generation. If the retrieved documents look relevant it trims them to the useful parts; if they look wrong it throws them out and searches the web instead; if unsure it uses both. It is a common template pattern, with limited evidence of broad production use."
     parents:
       - {id: retrieval-augmented-generation, rel: extends, why: "Adds a retrieval evaluator and corrective actions.", src: "Corrective Retrieval Augmented Generation (Yan et al. 2024)"}
     maturity: 2
@@ -1274,6 +1338,10 @@ nodes:
     date: "2024-01"
     ref: {title: "Corrective Retrieval Augmented Generation (Yan et al.)", arxiv: "2401.15884"}
     examples: [LangGraph CRAG template]
+    resources:
+      - {kind: blog, title: "Self-Reflective RAG with LangGraph", by: "LangChain", year: 2024, url: "https://www.langchain.com/blog/agentic-rag-with-langgraph"}
+      - {kind: talk, title: "Building Corrective RAG from scratch with open-source, local LLMs", by: "Lance Martin (LangChain)", year: 2024, url: "https://www.youtube.com/watch?v=E2shqsYwxck"}
+      - {kind: code, title: "HuskyInSalt/CRAG: Corrective Retrieval Augmented Generation", by: "Shi-Qi Yan et al.", year: 2024, url: "https://github.com/HuskyInSalt/CRAG"}
     status: repaired
   - id: agentic-rag
     name: Agentic RAG
@@ -1281,6 +1349,7 @@ nodes:
     region: retrieval-and-knowledge
     also: [agents-and-orchestration]
     desc: Letting an agent plan queries, choose sources and tools, and iterate retrieval until it has enough to answer.
+    summary: "Instead of one fixed retrieval step, an agent decides what to search for, which source or tool to use (vector index, SQL, web, or grep and file reads over a codebase), reads the results, and searches again until it has enough to answer. It handles multi-step questions that a single lookup misses, at the cost of more latency and model calls. Coding agents often skip the index entirely and search files directly."
     parents:
       - {id: retrieval-augmented-generation, rel: combines, why: "Retrieval remains the core goal.", src: "Agentic RAG survey (Singh et al. 2025)"}
       - {id: react-agent-loop, rel: combines, why: "Wraps retrieval in an agent loop.", src: "Agentic RAG survey (Singh et al. 2025)"}
@@ -1290,7 +1359,194 @@ nodes:
     date: "2024"
     ref: {title: "Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG (Singh et al.)", arxiv: "2501.09136"}
     examples: [LlamaIndex agents, agentic file search in coding agents]
+    resources:
+      - {kind: blog, title: "What Is Agentic RAG? From LLM RAG to AI Agents", by: "Weaviate", year: 2024, url: "https://weaviate.io/blog/what-is-agentic-rag"}
+      - {kind: docs, title: "Build a custom RAG agent with LangGraph", by: "LangChain", year: 2025, url: "https://docs.langchain.com/oss/python/langgraph/agentic-rag"}
+      - {kind: talk, title: "Agentic Search for Context Engineering — Leonie Monigatti, Elastic", by: "Leonie Monigatti (AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=ynJyIKwjonM"}
+      - {kind: paper, title: "Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning", by: "Bowen Jin et al.", year: 2025, url: "https://arxiv.org/abs/2503.09516"}
     status: repaired
+
+  # ---- deep dive (2026-10-09, Gemini run, reviewed): detail layer unless noted ----
+  - id: parent-document-retrieval
+    name: Parent-Document Retrieval
+    aliases: [small-to-big retrieval, ParentDocumentRetriever, sentence-window retrieval, auto-merging retrieval]
+    region: retrieval-and-knowledge
+    desc: Indexing small chunks for precise matching but handing the model the larger parent section each match came from.
+    summary: "Search small, return big. Documents are split twice: small chunks are embedded and searched because they match precisely, and when one matches, the system returns the larger section it came from so the model has enough context to answer. It separates the unit you search from the unit you read, and is one of the most common upgrades to a basic RAG pipeline."
+    parents:
+      - {id: chunking-strategies, rel: extends, why: "Decouples the unit of retrieval from the unit passed to generation.", src: "LangChain ParentDocumentRetriever (2023)"}
+    maturity: 3
+    maturity_note: Built into the major RAG frameworks and widely used; the right chunk and parent sizes are still tuned per corpus.
+    date: "2023-08"
+    ref: {title: "parent document retriever (LangChain pull request #8941)", url: "https://github.com/langchain-ai/langchain/pull/8941"}
+    examples: [LangChain ParentDocumentRetriever, LlamaIndex auto-merging retriever, LlamaIndex sentence-window retrieval]
+    resources:
+      - {kind: docs, title: "Auto Merging Retriever", by: "LlamaIndex", year: 2024, url: "https://developers.llamaindex.ai/python/framework/integrations/retrievers/auto_merging_retriever/"}
+      - {kind: tutorial, title: "Advanced RAG 02 - Parent Document Retriever", by: "Sam Witteveen (YouTube)", year: 2023, url: "https://www.youtube.com/watch?v=wQEl0GGxPcM"}
+      - {kind: tutorial, title: "Building and Evaluating Advanced RAG", by: "Jerry Liu, Anupam Datta (DeepLearning.AI)", year: 2023, url: "https://www.deeplearning.ai/courses/building-evaluating-advanced-rag"}
+      - {kind: paper, title: "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval", by: "Parth Sarthi et al.", year: 2024, url: "https://arxiv.org/abs/2401.18059"}
+    status: added
+  - id: late-interaction
+    name: Late Interaction
+    aliases: [ColBERT, multi-vector retrieval, MaxSim]
+    region: retrieval-and-knowledge
+    desc: Encoding queries and documents into one vector per token and scoring by summing each query token's best match (MaxSim), approaching cross-encoder accuracy at near bi-encoder speed.
+    summary: "Ordinary vector search squeezes a whole passage into one vector, which blurs detail. Late interaction keeps one vector per token, and scores a passage by finding, for each word of the question, its best-matching word in the passage and adding those scores up. It comes close to a reranker's accuracy while still searching a precomputed index; the cost is a much larger index, which compression (ColBERTv2, PLAID) has cut down."
+    parents:
+      - {id: dense-retrieval, rel: extends, why: "Keeps a vector per token instead of pooling each passage into one.", src: "ColBERT (Khattab & Zaharia 2020)"}
+      - {id: cross-encoder-reranking, rel: extends, why: "Delays query-document interaction until after independent encoding, keeping much of a cross-encoder's precision while documents can be pre-indexed.", src: "ColBERT (Khattab & Zaharia 2020)"}
+    maturity: 3
+    maturity_note: Supported natively by Vespa, Qdrant and others and used in production, but single-vector search remains the default; index size is the main cost.
+    date: "2020-04"
+    ref: {title: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT (Khattab & Zaharia)", arxiv: "2004.12832"}
+    examples: [ColBERTv2, RAGatouille, Jina-ColBERT, Vespa, Qdrant multivectors]
+    resources:
+      - {kind: blog, title: "What is ColBERT and Late Interaction and Why They Matter in Search?", by: "Han Xiao (Jina AI)", year: 2024, url: "https://jina.ai/news/what-is-colbert-and-late-interaction-and-why-they-matter-in-search/"}
+      - {kind: blog, title: "Announcing the Vespa ColBERT embedder", by: "Jo Kristian Bergum (Vespa)", year: 2024, url: "https://blog.vespa.ai/announcing-colbert-embedder-in-vespa/"}
+      - {kind: talk, title: "Programming Foundation Models with DSPy / Multivector Semantic Search with ColBERT - Omar Khattab", by: "Omar Khattab (Cohere)", year: 2024, url: "https://www.youtube.com/watch?v=Y94tw4eDHW0"}
+      - {kind: paper, title: "ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction", by: "Keshav Santhanam, Omar Khattab et al.", year: 2021, url: "https://arxiv.org/abs/2112.01488"}
+    status: added
+  - id: learned-sparse-retrieval
+    name: Learned Sparse Retrieval
+    aliases: [SPLADE, neural sparse retrieval]
+    region: retrieval-and-knowledge
+    layer: detail
+    desc: Using a transformer to produce sparse term-weight vectors over the vocabulary, learning term importance and adding related terms, so retrieval still runs on an inverted index.
+    summary: "Keyword search with learned weights. A transformer reads a passage and outputs a weight for each vocabulary word, including related words that never appear in the text, so a passage about \"cars\" can match \"automobile\". The output is still a sparse list of terms, so it runs on the same inverted indexes as BM25, and it is often the sparse half of a hybrid search setup."
+    parents:
+      - {id: bm25, rel: extends, why: "Replaces hand-set term weights with learned weights and expansion terms while keeping the inverted index.", src: "SPLADE (Formal et al. 2021)"}
+      - {id: pretrained-language-models, rel: applies, why: "Uses a pretrained masked-language-model head to score vocabulary terms.", src: "SPLADE (Formal et al. 2021)"}
+      - {id: dense-retrieval, rel: applies, why: "Trains with the dense retrievers' contrastive first-stage recipe but outputs sparse vocabulary weights.", src: "SPLADE v2 (Formal et al. 2021)", confidence: medium}
+    maturity: 3
+    maturity_note: Shipped in search engines (Elastic ELSER, OpenSearch neural sparse) and embedding models with sparse outputs; less common than dense vectors.
+    date: "2021-07"
+    ref: {title: "SPLADE: Sparse Lexical and Expansion Model for First Stage Ranking (Formal et al.)", arxiv: "2107.05720"}
+    examples: [SPLADE, Elastic ELSER, OpenSearch neural sparse search, BGE-M3 sparse]
+    resources:
+      - {kind: blog, title: "SPLADE for Sparse Vector Search Explained", by: "James Briggs (Pinecone)", year: 2023, url: "https://www.pinecone.io/learn/splade/"}
+      - {kind: docs, title: "ELSER | Elastic Docs", by: "Elastic", year: 2024, url: "https://www.elastic.co/docs/explore-analyze/machine-learning/nlp/ml-nlp-elser"}
+      - {kind: paper, title: "SPLADE v2: Sparse Lexical and Expansion Model for Information Retrieval", by: "Thibault Formal et al.", year: 2021, url: "https://arxiv.org/abs/2109.10086"}
+    status: added
+  - id: propositional-chunking
+    name: Propositional Chunking
+    aliases: [Dense X Retrieval, proposition indexing]
+    region: retrieval-and-knowledge
+    layer: detail
+    desc: Using a model to rewrite documents into short, self-contained factual statements (propositions) and indexing those instead of fixed-size passages.
+    summary: "A model rewrites each document into a list of standalone facts (\"Acme's Q3 revenue grew 15%\"), and those facts are what gets indexed. Each one is short and names what it is about, so searches for specific facts match more precisely. Indexing needs a model call per passage, and it suits fact-dense text better than narrative."
+    parents:
+      - {id: chunking-strategies, rel: specializes, why: "Chooses chunk boundaries by meaning (one fact per unit) rather than by length.", src: "Dense X Retrieval (Chen et al. 2023)"}
+    maturity: 2
+    maturity_note: Clear gains on factoid retrieval in the paper; indexing cost and weak fit for narrative text limit adoption.
+    date: "2023-12"
+    ref: {title: "Dense X Retrieval: What Retrieval Granularity Should We Use? (Chen et al.)", arxiv: "2312.06648"}
+    examples: [LangChain propositional-retrieval template, LlamaIndex DenseXRetrievalPack]
+    resources:
+      - {kind: talk, title: "The 5 Levels Of Text Splitting For Retrieval", by: "Greg Kamradt (YouTube)", year: 2024, url: "https://www.youtube.com/watch?v=8OJC21T2SL4"}
+      - {kind: code, title: "langchain/templates/propositional-retrieval", by: "LangChain", year: 2023, url: "https://github.com/langchain-ai/langchain/tree/v0.1.0/templates/propositional-retrieval"}
+      - {kind: code, title: "chentong0/factoid-wiki: Dense X Retrieval: What Retrieval Granularity Should We Use?", by: "Tong Chen et al.", year: 2023, url: "https://github.com/chentong0/factoid-wiki"}
+    status: added
+  - id: late-chunking
+    name: Late Chunking
+    aliases: [post-embedding chunking]
+    region: retrieval-and-knowledge
+    layer: detail
+    desc: Running a long-context embedding model over the whole document first, then pooling the contextualized token vectors into chunk embeddings.
+    summary: "Read the whole document, then cut it up. A long-context embedding model processes the full document at once, so every token's vector already reflects the surrounding text, and only then are those vectors averaged into per-chunk embeddings. Chunks that say \"it\" or \"the company\" keep their meaning, without the model call per chunk that contextual retrieval needs."
+    parents:
+      - {id: chunking-strategies, rel: extends, why: "Moves chunking after encoding so chunk embeddings keep document context.", src: "Late Chunking (Günther et al. 2024)"}
+      - {id: text-embeddings, rel: applies, why: "Requires long-context embedding models and access to their token-level outputs.", src: "Late Chunking (Günther et al. 2024)"}
+    maturity: 2
+    maturity_note: Available in Jina's embedding API and a few vector-database integrations; needs a long-context embedding model that exposes token vectors.
+    date: "2024-09"
+    ref: {title: "Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models (Günther et al.)", arxiv: "2409.04701"}
+    examples: [Jina Embeddings v3 late chunking]
+    resources:
+      - {kind: blog, title: "Late Chunking in Long-Context Embedding Models", by: "Jina AI", year: 2024, url: "https://jina.ai/news/late-chunking-in-long-context-embedding-models/"}
+      - {kind: blog, title: "Late Chunking: Balancing Precision and Cost in Long Context Retrieval", by: "Weaviate", year: 2024, url: "https://weaviate.io/blog/late-chunking"}
+      - {kind: talk, title: "Late chunking improves context recall in RAG pipelines", by: "Weaviate (YouTube)", year: 2024, url: "https://www.youtube.com/watch?v=buzWGXOydD8"}
+      - {kind: code, title: "jina-ai/late-chunking: Code for explaining and evaluating late chunking (chunked pooling)", by: "Jina AI", year: 2024, url: "https://github.com/jina-ai/late-chunking"}
+    status: added
+  - id: active-retrieval
+    name: Active Retrieval
+    aliases: [FLARE, forward-looking active retrieval]
+    region: retrieval-and-knowledge
+    layer: detail
+    desc: Retrieving repeatedly during generation, triggered when the model's confidence in its upcoming sentence drops, using that draft sentence as the query.
+    summary: "Look things up while writing, not just at the start. The model drafts its next sentence; if it is unsure of any words in it, it uses the draft as a search query, retrieves, and rewrites the sentence from what it found. This suits long answers whose information needs change as they go, at the cost of many retrieval rounds."
+    parents:
+      - {id: retrieval-augmented-generation, rel: extends, why: "Turns retrieval from a single step before generation into a repeated, confidence-triggered step during it.", src: "Active Retrieval Augmented Generation (Jiang et al. 2023)"}
+    maturity: 2
+    maturity_note: Influential research pattern; latency and the need for token probabilities limit direct use, and agentic RAG absorbs the idea.
+    date: "2023-05"
+    ref: {title: "Active Retrieval Augmented Generation (Jiang et al.)", arxiv: "2305.06983"}
+    examples: [FLARE]
+    resources:
+      - {kind: talk, title: "Active Retrieval Augmented Generation (FLARE) Explained!", by: "Weaviate (YouTube)", year: 2023, url: "https://www.youtube.com/watch?v=IVYwLLDABzI"}
+      - {kind: code, title: "jzbjyb/FLARE: Forward-Looking Active REtrieval-augmented generation (FLARE)", by: "Zhengbao Jiang et al.", year: 2023, url: "https://github.com/jzbjyb/FLARE"}
+      - {kind: paper, title: "Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity", by: "Soyeong Jeong et al.", year: 2024, url: "https://arxiv.org/abs/2403.14403"}
+      - {kind: paper, title: "DRAGIN: Dynamic Retrieval Augmented Generation based on the Information Needs of Large Language Models", by: "Weihang Su et al.", year: 2024, url: "https://arxiv.org/abs/2403.10081"}
+    status: added
+  - id: speculative-rag
+    name: Speculative RAG
+    aliases: [draft-then-verify RAG]
+    region: retrieval-and-knowledge
+    also: [inference-and-serving]
+    layer: detail
+    desc: A small model drafts several answers in parallel from different subsets of the retrieved documents, and a larger model picks the best-supported draft.
+    summary: "A small, fast model writes several draft answers at once, each from a different slice of the retrieved documents, and a larger model checks the drafts and picks the best one. The large model never has to read every document, which cuts latency and can improve accuracy. It borrows the draft-and-verify idea from speculative decoding."
+    parents:
+      - {id: retrieval-augmented-generation, rel: extends, why: "Splits retrieved evidence across parallel drafts verified by a larger model.", src: "Speculative RAG (Wang et al. 2024)"}
+      - {id: speculative-decoding, rel: applies, why: "Lifts the small-model-drafts, large-model-verifies pattern from tokens to whole answers.", src: "Speculative RAG (Wang et al. 2024)", confidence: medium}
+    maturity: 1
+    maturity_note: Research results; little sign of production use.
+    date: "2024-07"
+    ref: {title: "Speculative RAG: Enhancing Retrieval Augmented Generation through Drafting (Wang et al.)", arxiv: "2407.08223"}
+    resources:
+      - {kind: blog, title: "Speculative RAG: Enhancing retrieval augmented generation through drafting", by: "Google Research", year: 2024, url: "https://research.google/blog/speculative-rag-enhancing-retrieval-augmented-generation-through-drafting/"}
+      - {kind: talk, title: "Speculative RAG: Enhancing Retrieval Augmented Generation through Drafting Explained", by: "Zilong Wang (Unify paper session)", year: 2024, url: "https://www.youtube.com/watch?v=VW5GdH8AsGE"}
+    status: added
+  - id: lightweight-graph-rag
+    name: Lightweight GraphRAG
+    aliases: [LightRAG, LazyGraphRAG]
+    region: retrieval-and-knowledge
+    layer: detail
+    desc: Graph-based retrieval that skips GraphRAG's up-front community summarization, using a flatter entity graph and doing most of the model work at query time.
+    summary: "Full GraphRAG summarizes the whole graph before anyone asks a question, which makes indexing very expensive. Lighter variants extract a simpler entity graph and do most of the work only when a query arrives: LightRAG searches entities and relationships at two levels, and Microsoft's LazyGraphRAG defers summarization entirely. Indexing costs drop to roughly those of vector RAG while keeping much of the multi-hop benefit."
+    parents:
+      - {id: graph-rag, rel: specializes, why: "Keeps the entity graph but drops or defers the expensive community summaries.", src: "LightRAG (Guo et al. 2024)"}
+    maturity: 2
+    maturity_note: Popular open-source implementations and early production use; claims of near-GraphRAG quality come mostly from the authors.
+    date: "2024-10"
+    ref: {title: "LightRAG: Simple and Fast Retrieval-Augmented Generation (Guo et al.)", arxiv: "2410.05779"}
+    examples: [LightRAG, Microsoft LazyGraphRAG]
+    resources:
+      - {kind: blog, title: "LazyGraphRAG: Setting a new standard for quality and cost", by: "Microsoft Research", year: 2024, url: "https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/"}
+      - {kind: talk, title: "GraphRAG methods to create optimized LLM context windows for Retrieval — Jonathan Larson, Microsoft", by: "Jonathan Larson (AI Engineer World's Fair)", year: 2025, url: "https://www.youtube.com/watch?v=c5qJHr3DnT4"}
+      - {kind: code, title: "HKUDS/LightRAG: LightRAG: Simple and Fast Retrieval-Augmented Generation", by: "HKU Data Intelligence Lab", year: 2024, url: "https://github.com/HKUDS/LightRAG"}
+      - {kind: code, title: "gusye1234/nano-graphrag: A simple, easy-to-hack GraphRAG implementation", by: "gusye1234 (GitHub)", year: 2024, url: "https://github.com/gusye1234/nano-graphrag"}
+    status: added
+  - id: long-context-routing
+    name: RAG vs. Long-Context Routing
+    aliases: [Self-Route, Pre-Route]
+    region: retrieval-and-knowledge
+    also: [inference-and-serving]
+    layer: detail
+    desc: Deciding per query whether to answer from retrieved chunks or by passing whole documents to a long-context model.
+    summary: "Long context windows didn't replace retrieval: models get distracted by irrelevant text, and sending whole documents costs far more per question. Routing picks per question. Self-Route tries RAG first and falls back to the full documents only when the model says it can't answer; later routers predict the right path up front from the question and documents."
+    parents:
+      - {id: retrieval-augmented-generation, rel: extends, why: "Adds a per-query choice between retrieval and reading whole documents.", src: "Retrieval Augmented Generation or Long-Context LLMs? (Li et al. 2024)"}
+      - {id: model-routing, rel: applies, why: "Applies cost-aware routing to the choice of context strategy instead of model.", src: "Retrieval Augmented Generation or Long-Context LLMs? (Li et al. 2024)", confidence: medium}
+    maturity: 2
+    maturity_note: Clear cost savings in studies; production systems mostly route by hand-written rules.
+    date: "2024-07"
+    ref: {title: "Retrieval Augmented Generation or Long-Context LLMs? A Comprehensive Study and Hybrid Approach (Li et al.)", arxiv: "2407.16833"}
+    examples: [Self-Route, Pre-Route]
+    resources:
+      - {kind: blog, title: "Long Context RAG Performance of LLMs", by: "Databricks", year: 2024, url: "https://www.databricks.com/blog/long-context-rag-performance-llms"}
+      - {kind: talk, title: "RAG for long context LLMs", by: "Lance Martin (LangChain)", year: 2024, url: "https://www.youtube.com/watch?v=SsHUNfhF32s"}
+      - {kind: paper, title: "In Defense of RAG in the Era of Long-Context Language Models", by: "Tan Yu, Anbang Xu, Rama Akkiraju", year: 2024, url: "https://arxiv.org/abs/2409.01666"}
+    status: added
 
   # ======================= APPLIED: agents-and-orchestration =======================
   - id: mrkl-systems
