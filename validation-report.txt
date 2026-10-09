@@ -1,5 +1,5 @@
-nodes: 152  edges: 211  cross-region edges: 89  external ancestors: 15
-status: {'kept': 8, 'added': 68, 'repaired': 76}  layers: {'core': 143, 'detail': 9}  with resources: 32
+nodes: 158  edges: 223  cross-region edges: 92  external ancestors: 16
+status: {'kept': 8, 'added': 74, 'repaired': 76}  layers: {'core': 144, 'detail': 14}  with resources: 46
 per region:
   root    information-retrieval                3
   root    deep-learning-nlp                    8
@@ -18,7 +18,7 @@ per region:
   applied data-and-synthetic-data              8
   applied evaluation-and-observability         9
   applied safety-security-and-governance       12
-  applied ai-product-and-interaction-design    8
+  applied ai-product-and-interaction-design    14
   applied multimodal-applied                   9
 errors: 0
 warnings: 0

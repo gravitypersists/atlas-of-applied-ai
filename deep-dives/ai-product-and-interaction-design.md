@@ -1,6 +1,6 @@
 # Deep dive: AI Product and Interaction Design
 
-Backbone v0.2 · 8 anchors · 12 cross-region edges
+Backbone v0.2 · 14 anchors · 15 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -35,6 +35,12 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `human-in-the-loop-approval` — Human-in-the-Loop Approval (maturity 4, 2023)
 - `generative-ui` — Generative UI (maturity 3, 2024-03)
 - `canvas-artifacts` — Canvases and Artifacts (maturity 3, 2024-06)
+- `reasoning-trace-display` — Reasoning Trace Display (maturity 3, 2024-09)
+- `plan-preview` — Plan Preview (maturity 3, 2024-04)
+- `agent-action-trace` — Agent Action Trace (maturity 3, 2023)
+- `mid-run-steering` — Mid-Run Steering (maturity 2, 2026-04)
+- `trust-calibration` — Trust Calibration (maturity 2, 2024-07)
+- `voice-turn-taking` — Turn-Taking and Barge-In (maturity 3, 2024-10)
 
 Nodes homed elsewhere that also touch this region:
 - none
@@ -49,7 +55,9 @@ Nodes homed elsewhere that also touch this region:
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- none
+- Background / asynchronous agent delegation (assign a task, get a PR or report back)
+- Checkpoints, rewind and collaborative repair ("The Collaboration Gap in Human-AI Work") (arXiv:2604.18096)
+- Impact previews and staged execution for consequential agent actions
 
 ## Output
 
@@ -155,23 +163,30 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - data-and-synthetic-data: self-instruct (Self-Instruct; synthetic instruction generation), evol-instruct (Evol-Instruct; instruction evolution), synthetic-textbook-data (Synthetic Pretraining Data; textbook-quality data; synthetic corpora), human-instruction-datasets (Crowdsourced Instruction Data; human-written demonstrations; OpenAssistant), llm-annotation (LLM-Assisted Annotation; LLM labeling; model-as-annotator), data-deduplication (Data Deduplication; near-duplicate removal; MinHash dedup), data-decontamination (Data Decontamination; test-set leakage prevention), data-quality-filtering (Data Quality Filtering; corpus curation; classifier-based filtering)
 - evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing), llm-tracing (LLM Tracing; LLM observability; agent traces), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring)
 - safety-security-and-governance: prompt-injection (Prompt Injection; instruction injection), indirect-prompt-injection (Indirect Prompt Injection; data poisoning of context; tool-output injection), jailbreaks (Jailbreaks; adversarial prompts; GCG), red-teaming (AI Red Teaming; adversarial testing), guardrails (Guardrails and Safety Classifiers; input/output filters; content moderation; Llama Guard), injection-defenses (Prompt Injection Defenses; instruction hierarchy; spotlighting; injection detection), agent-sandboxing (Agent Sandboxing and Permissions; secure code execution; tool permissions; least-privilege agents), interpretability (Mechanistic Interpretability; circuits; interpretability), sparse-autoencoders (Sparse Autoencoders; SAEs; dictionary learning; monosemantic features), representation-engineering (Representation Engineering; RepE; activation steering), circuit-breakers (Circuit Breakers; representation rerouting), model-documentation (Model and System Cards; model cards; system cards; transparency documentation)
-- ai-product-and-interaction-design: human-ai-interaction-guidelines (Human-AI Interaction Guidelines; HAI guidelines; AI UX principles), chat-interfaces (Chat Interfaces; conversational UI; chat assistants), streaming-responses (Streaming Responses; token streaming; server-sent events), copilots (Copilots and Inline Assistance; inline completion; AI pair programming), citation-ux (Citation and Grounding UX; source attribution; inline citations), human-in-the-loop-approval (Human-in-the-Loop Approval; HITL; tool confirmation; permission prompts), generative-ui (Generative UI; server-driven UI from models), canvas-artifacts (Canvases and Artifacts; side-by-side editing; artifacts; canvas)
+- ai-product-and-interaction-design: human-ai-interaction-guidelines (Human-AI Interaction Guidelines; HAI guidelines; AI UX principles), chat-interfaces (Chat Interfaces; conversational UI; chat assistants), streaming-responses (Streaming Responses; token streaming; server-sent events), copilots (Copilots and Inline Assistance; inline completion; AI pair programming), citation-ux (Citation and Grounding UX; source attribution; inline citations), human-in-the-loop-approval (Human-in-the-Loop Approval; HITL; tool confirmation; permission prompts; interrupts; agent breakpoints), generative-ui (Generative UI; server-driven UI from models), canvas-artifacts (Canvases and Artifacts; side-by-side editing; artifacts; canvas), reasoning-trace-display (Reasoning Trace Display; thinking UI; thought summaries; reasoning visualization), plan-preview (Plan Preview; plan mode; plan approval; intent preview), agent-action-trace (Agent Action Trace; activity feed; tool call display; action log), mid-run-steering (Mid-Run Steering; active execution participation; mid-flight intervention; agent steering), trust-calibration (Trust Calibration; appropriate reliance; uncertainty display; confidence indicators; overreliance mitigation), voice-turn-taking (Turn-Taking and Barge-In; barge-in; voice interruption handling; semantic VAD; endpointing)
 - multimodal-applied: contrastive-image-text-pretraining (Contrastive Image-Text Pretraining; CLIP; joint embeddings), vision-language-models (Vision-Language Models; VLMs; multimodal LLMs), document-understanding (Document Understanding; PDF parsing; OCR-free parsing; layout understanding), visual-document-retrieval (Visual Document Retrieval; ColPali; page-image retrieval), speech-recognition (Speech Recognition; ASR; speech-to-text; Whisper), realtime-voice (Realtime Voice Agents; speech-to-speech; voice mode), diffusion-models (Diffusion Models; DDPM; denoising diffusion), text-to-image (Text-to-Image Generation; latent diffusion; image generation), video-generation (Video Generation; text-to-video)
 
 ---
 
 ## Reference: seed sources for this region
 Key references currently attached to the anchors (from the backbone runs; arXiv ids spot-checked, not exhaustively verified):
-- Human-AI Interaction Guidelines: Guidelines for Human-AI Interaction (Amershi et al., CHI 2019)
+- Human-AI Interaction Guidelines: Guidelines for Human-AI Interaction (Amershi et al., CHI 2019) — https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/
 - Chat Interfaces: Introducing ChatGPT (OpenAI, November 2022)
 - Streaming Responses: OpenAI API streaming support
-- Copilots and Inline Assistance: Evaluating Large Language Models Trained on Code (Chen et al.) — arXiv:2107.03374
+- Copilots and Inline Assistance: Introducing GitHub Copilot: your AI pair programmer (GitHub, June 2021) — https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/
 - Citation and Grounding UX: Perplexity AI launch (December 2022)
-- Human-in-the-Loop Approval: LangGraph human-in-the-loop documentation
-- Generative UI: Introducing AI SDK 3.0 with Generative UI support (Vercel, 2024)
-- Canvases and Artifacts: Claude 3.5 Sonnet launch with Artifacts (Anthropic, June 2024)
+- Human-in-the-Loop Approval: LangGraph interrupts documentation (LangChain) — https://docs.langchain.com/oss/python/langgraph/interrupts
+- Generative UI: Introducing AI SDK 3.0 with Generative UI support (Vercel, 2024) — https://vercel.com/blog/ai-sdk-3-generative-ui
+- Canvases and Artifacts: Introducing Claude 3.5 Sonnet, with Artifacts (Anthropic, June 2024) — https://www.anthropic.com/news/claude-3-5-sonnet
+- Reasoning Trace Display: Learning to reason with LLMs (OpenAI, September 2024)
+- Plan Preview: Copilot Workspace (GitHub Next, April 2024) — https://githubnext.com/projects/copilot-workspace/
+- Agent Action Trace: Agentic UX Patterns: A Practical Guide to Designing AI That Acts (Ali Tajer) — https://alitajer.com/blog/agentic-ux-patterns
+- Mid-Run Steering: Auditing and Controlling AI Agent Actions in Spreadsheets (Microsoft Research, 2026) — https://www.microsoft.com/en-us/research/publication/auditing-and-controlling-ai-agent-actions-in-spreadsheets/
+- Trust Calibration: A Survey of AI Reliance (Eckhardt et al.) — arXiv:2408.03948
+- Turn-Taking and Barge-In: Introducing the Realtime API (OpenAI, October 2024)
 
 ## Reference: cross-region edges touching this region
+- agent-action-trace --applies--> react-agent-loop
 - canvas-artifacts --applies--> direct-manipulation
 - chat-interfaces --applies--> rlhf
 - chat-interfaces --extends--> conversational-agents
@@ -183,4 +198,6 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - human-ai-interaction-guidelines --extends--> mixed-initiative-interaction
 - human-in-the-loop-approval --applies--> function-calling
 - human-in-the-loop-approval --applies--> mixed-initiative-interaction
+- reasoning-trace-display --applies--> reasoning-models
 - streaming-responses --applies--> autoregressive-decoding
+- voice-turn-taking --applies--> realtime-voice

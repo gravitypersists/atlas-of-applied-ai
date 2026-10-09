@@ -161,4 +161,10 @@ settlements:
   - {id: mcp-code-execution, x: 3065.8, y: 1251.2, settled: "2026-10-08"}
   - {id: long-running-agent-harness, x: 2833, y: 1505.2, settled: "2026-10-08"}
   - {id: context-aware-mcp, x: 2575.2, y: 1235.8, settled: "2026-10-08"}
+  - {id: reasoning-trace-display, x: 3054.4, y: 1709.2, settled: "2026-10-08"}
+  - {id: plan-preview, x: 2959.2, y: 1523.2, settled: "2026-10-08"}
+  - {id: agent-action-trace, x: 3016.7, y: 1622.9, settled: "2026-10-08"}
+  - {id: trust-calibration, x: 3327, y: 1305.1, settled: "2026-10-08"}
+  - {id: voice-turn-taking, x: 3873.1, y: 1566.8, settled: "2026-10-08"}
+  - {id: mid-run-steering, x: 3268, y: 1254.7, settled: "2026-10-08"}
 retired: []

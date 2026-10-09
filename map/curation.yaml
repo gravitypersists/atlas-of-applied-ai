@@ -23,7 +23,16 @@ survey:
     # The Painted Isles: room for sea between the islands.
     multimodal-applied: {scale: 1.6, shift: [170, 0], jitter: 45}   # jitter: seeded nudge so spacing isn't too even
 
+# Symbol tier overrides (SPEC.md §4.7).
+nodes:
+  # The Agora's deep dive (2026-10-09) gave Streaming Responses two children, outscoring Chat Interfaces.
+  # Chat stays the capital: it is the region's defining surface. Exactly one capital per region.
+  chat-interfaces: {tier: capital}
+  streaming-responses: {tier: town}
+
 # Title anchors (world units). Pinned when a new landmark pushes a neighbouring title into a clash.
 regions:
   # The Whispering Coast's title moved north for Zero-Shot CoT (2026-10-09) and crowded this one.
   agents-and-orchestration: {label: [2762, 1518]}
+  # Reasoning Trace Display (2026-10-09) settled under The Agora's title; moved east to clear it.
+  ai-product-and-interaction-design: {label: [3250, 1690]}

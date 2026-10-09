@@ -192,6 +192,14 @@ regions:
       - Interaction patterns for agents (delegation, background work, approvals, handoff)
       - Trust calibration, uncertainty display, and error recovery
       - Evidence from HCI research on what actually helps users
+    overview: "AI Product and Interaction Design is about how AI reaches people: the screens, conversations and controls that sit between a model and its user. It grew out of HCI work on mixed-initiative systems, and Microsoft's 2019 guidelines for human-AI interaction still frame the basics: set expectations, explain behavior, make correction cheap.\n\nThe modern era began with two surfaces. Copilots (2021) put suggestions inline where users already work, and chat (2022) made a message thread the default way to talk to a model. Streaming made replies feel fast, and citations let users check grounded answers. Chat's linear thread is a poor place to build something, so canvases and artifacts moved the work product into an editable pane beside the conversation, and generative UI lets the model answer with interface components instead of prose.\n\nAgents shifted the focus from what the model says to what it does. Approval gates pause before consequential actions, plan previews let users fix a plan before work starts, and action traces show what actually happened. Recent studies find that reviewing only an agent's final result misses errors made early in the run, which is pushing products toward step-level visibility and steering. Reasoning models added a visible thinking panel, which helps users follow along but is not a faithful explanation of how the answer was reached.\n\nLandmarks worth knowing: the human-AI interaction guidelines, chat, copilots, citations, and human-in-the-loop approval. The open problem is trust calibration: getting users to rely on AI when it is right and check it when it is not, as outputs become longer, more autonomous and harder to verify."
+    learning_path:
+    - {kind: blog, title: "Guidelines for human-AI interaction design", by: "Microsoft Research (Saleema Amershi et al.)", year: 2019, url: "https://www.microsoft.com/en-us/research/blog/guidelines-for-human-ai-interaction-design/", why: "The 18 tested guidelines (set expectations, support correction, explain behavior, adapt over time) give a checklist that still applies to every pattern later in this region."}
+    - {kind: blog, title: "Why Chatbots Are Not the Future of Interfaces", by: "Amelia Wattenberger", year: 2023, url: "https://wattenberger.com/thoughts/boo-chatbots/", why: "Explains what a bare text box hides from users (what the tool can do, how to ask) and why most AI features need more structure than chat."}
+    - {kind: talk, title: "Generative Interfaces Beyond Chat", by: "Linus Lee (LLMs in Production Conference)", year: 2023, url: "https://www.youtube.com/watch?v=rd-J3hmycQs", why: "Shows concrete alternatives to chat, with the model's output turned into things the user can see, point at and edit directly."}
+    - {kind: blog, title: "Agentic UX Patterns: A Practical Guide to Designing AI That Acts", by: "Ali Tajer", year: 2026, url: "https://alitajer.com/blog/agentic-ux-patterns", why: "Covers the shift from answering to acting: plan previews, approvals, live action traces, and pause, stop and take-over controls, each with when to use it."}
+    - {kind: talk, title: "AI Agent UX Patterns: Lessons From 1000 Startups", by: "Jonas Braadbaart (aiGrunn)", year: 2024, url: "https://www.youtube.com/watch?v=3kiTAGa7VFI", why: "A survey of how shipped agent products actually present their work to users, and which of those patterns hold up."}
+    - {kind: paper, title: "Overreliance on AI: Literature Review", by: "Samir Passi, Mihaela Vorvoreanu (Microsoft)", year: 2022, url: "https://www.microsoft.com/en-us/research/publication/overreliance-on-ai-literature-review/", why: "Explains why people accept wrong AI output and which interface choices (explanations, uncertainty, friction) help them check it instead."}
   - id: multimodal-applied
     kind: applied
     name: Multimodal
@@ -2302,19 +2310,25 @@ nodes:
     aliases: [HAI guidelines, AI UX principles]
     region: ai-product-and-interaction-design
     desc: Validated design guidelines for AI systems — set expectations, support correction, explain behavior, adapt over time.
+    summary: "Eighteen design rules from Microsoft Research, tested with practitioners, for AI that behaves unpredictably: say what the system can do and how well, show why it acted, make it easy to correct or dismiss, and adapt over time. Most later trust, citation and approval patterns trace back to these guidelines."
     parents:
       - {id: mixed-initiative-interaction, rel: extends, why: "Codifies mixed-initiative principles into testable guidelines.", src: "Guidelines for Human-AI Interaction (Amershi et al. 2019)"}
     maturity: 4
     maturity_note: Widely cited baseline for AI product design.
     date: "2019-05"
-    ref: {title: "Guidelines for Human-AI Interaction (Amershi et al., CHI 2019)"}
+    ref: {title: "Guidelines for Human-AI Interaction (Amershi et al., CHI 2019)", url: "https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/"}
     examples: [Microsoft HAX Toolkit, Google People + AI Guidebook]
+    resources:
+      - {kind: docs, title: "People + AI Guidebook", by: "Google PAIR", year: 2021, url: "https://pair.withgoogle.com/guidebook/"}
+      - {kind: docs, title: "Microsoft HAX Toolkit", by: "Microsoft", year: 2021, url: "https://www.microsoft.com/en-us/haxtoolkit/"}
+      - {kind: talk, title: "Tutorial: Create human-centered AI with the Human-AI eXperience (HAX) Toolkit", by: "Saleema Amershi, Mihaela Vorvoreanu (Microsoft Research)", year: 2022, url: "https://www.youtube.com/watch?v=PNoGW3KkEAs"}
     status: added
   - id: chat-interfaces
     name: Chat Interfaces
     aliases: [conversational UI, chat assistants]
     region: ai-product-and-interaction-design
     desc: Turn-based conversational interfaces to general-purpose models, the dominant surface for AI products.
+    summary: "The turn-based message thread most people meet AI through: you type, the model replies, and the history is the context. It became the default product surface with ChatGPT in 2022. It works well for questions and quick tasks, but long or evolving outputs get lost in the scroll, which is why canvases and generative UI grew out of it."
     parents:
       - {id: conversational-agents, rel: extends, why: "Revives dialogue interfaces with general-purpose models.", src: "Introducing ChatGPT (OpenAI 2022)"}
       - {id: rlhf, rel: applies, why: "Made practical by RLHF-tuned conversational models.", src: "Introducing ChatGPT (OpenAI 2022)"}
@@ -2323,6 +2337,11 @@ nodes:
     date: "2022-11"
     ref: {title: "Introducing ChatGPT (OpenAI, November 2022)"}
     examples: [ChatGPT, Claude, Gemini]
+    resources:
+      - {kind: blog, title: "Why Chatbots Are Not the Future of Interfaces", by: "Amelia Wattenberger", year: 2023, url: "https://wattenberger.com/thoughts/boo-chatbots/"}
+      - {kind: blog, title: "AI: First New UI Paradigm in 60 Years", by: "Jakob Nielsen (Nielsen Norman Group)", year: 2023, url: "https://www.nngroup.com/articles/ai-paradigm/"}
+      - {kind: talk, title: "Generative Interfaces Beyond Chat", by: "Linus Lee (LLMs in Production Conference)", year: 2023, url: "https://www.youtube.com/watch?v=rd-J3hmycQs"}
+      - {kind: blog, title: "Language Model Sketchbook, or Why I Hate Chatbots", by: "Maggie Appleton", year: 2023, url: "https://maggieappleton.com/lm-sketchbook"}
     status: added
   - id: streaming-responses
     name: Streaming Responses
@@ -2330,6 +2349,7 @@ nodes:
     region: ai-product-and-interaction-design
     also: [inference-and-serving]
     desc: Showing tokens as they are generated to cut perceived latency and let users interrupt early.
+    summary: "Shows the answer token by token as the model generates it, instead of waiting for the whole reply. The total time is the same, but the first words arrive in under a second, so the wait feels much shorter and users can stop a reply that is going wrong. Every chat product does this, usually over server-sent events."
     parents:
       - {id: autoregressive-decoding, rel: applies, why: "Exposes token-by-token generation to the interface.", src: "OpenAI API streaming (2020)"}
     maturity: 5
@@ -2337,20 +2357,29 @@ nodes:
     date: "2020"
     ref: {title: "OpenAI API streaming support"}
     examples: [Vercel AI SDK, SSE streaming APIs]
+    resources:
+      - {kind: docs, title: "Streaming", by: "Vercel (AI SDK)", year: 2024, url: "https://ai-sdk.dev/docs/foundations/streaming"}
+      - {kind: docs, title: "Streaming messages", by: "Anthropic", year: 2024, url: "https://platform.claude.com/docs/en/build-with-claude/streaming"}
     status: repaired
   - id: copilots
     name: Copilots and Inline Assistance
     aliases: [inline completion, AI pair programming]
     region: ai-product-and-interaction-design
     desc: AI suggestions embedded directly in a user's working context, accepted or rejected with low friction.
+    summary: "AI suggestions placed directly where you are already working, such as grey ghost text in a code editor that one keystroke accepts and continued typing dismisses. Because ignoring a suggestion costs nothing, the model can be wrong often and still be useful. GitHub Copilot (2021) set the pattern, and writing and office tools copied it."
     parents:
       - {id: mixed-initiative-interaction, rel: applies, why: "System takes initiative with suggestions; the user keeps control.", src: "GitHub Copilot (2021)"}
       - {id: pretrained-language-models, rel: applies, why: "Code- and text-trained models power the suggestions.", src: "Evaluating Large Language Models Trained on Code (Chen et al. 2021)"}
     maturity: 5
     maturity_note: Established pattern across editors and productivity tools.
     date: "2021-06"
-    ref: {title: "Evaluating Large Language Models Trained on Code (Chen et al.)", arxiv: "2107.03374"}
+    ref: {title: "Introducing GitHub Copilot: your AI pair programmer (GitHub, June 2021)", url: "https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/"}
     examples: [GitHub Copilot, Cursor Tab, inline writing assistants]
+    resources:
+      - {kind: paper, title: "Evaluating Large Language Models Trained on Code", by: "Chen et al. (OpenAI)", year: 2021, url: "https://arxiv.org/abs/2107.03374"}
+      - {kind: paper, title: "Productivity Assessment of Neural Code Completion", by: "Ziegler et al. (GitHub)", year: 2022, url: "https://arxiv.org/abs/2205.06537"}
+      - {kind: paper, title: "Grounded Copilot: How Programmers Interact with Code-Generating Models", by: "Barke, James, Polikarpova", year: 2022, url: "https://arxiv.org/abs/2206.15000"}
+      - {kind: talk, title: "The AI Evolution: Mario Rodriguez, GitHub", by: "Mario Rodriguez (GitHub, AI Engineer Summit)", year: 2023, url: "https://www.youtube.com/watch?v=yLa3i3rAdEE"}
     status: added
   - id: citation-ux
     name: Citation and Grounding UX
@@ -2358,6 +2387,7 @@ nodes:
     region: ai-product-and-interaction-design
     also: [retrieval-and-knowledge]
     desc: Linking claims in a response to the sources they came from so users can verify them.
+    summary: "Links each claim in an answer to the source it came from, so users can check it instead of taking it on trust. It is how retrieval shows up in the interface: footnotes, inline markers, or source cards beside the answer. Citations only help if they are accurate, and a confident link to a source that does not support the claim can mislead more than no link at all."
     parents:
       - {id: retrieval-augmented-generation, rel: applies, why: "Surfaces retrieved sources in the interface.", src: "Perplexity launch (2022)"}
       - {id: human-ai-interaction-guidelines, rel: applies, why: "Implements 'make clear why the system did what it did'.", src: "Guidelines for Human-AI Interaction (2019)", confidence: medium}
@@ -2366,49 +2396,199 @@ nodes:
     date: "2022-12"
     ref: {title: "Perplexity AI launch (December 2022)"}
     examples: [Perplexity, Claude citations, Gemini grounding]
+    resources:
+      - {kind: paper, title: "WebGPT: Browser-assisted question-answering with human feedback", by: "Nakano et al. (OpenAI)", year: 2021, url: "https://arxiv.org/abs/2112.09332"}
+      - {kind: paper, title: "Evaluating Verifiability in Generative Search Engines", by: "Liu, Zhang, Liang (Stanford)", year: 2023, url: "https://arxiv.org/abs/2304.09848"}
+      - {kind: docs, title: "Citations", by: "Anthropic", year: 2025, url: "https://platform.claude.com/docs/en/build-with-claude/citations"}
     status: repaired
   - id: human-in-the-loop-approval
     name: Human-in-the-Loop Approval
-    aliases: [HITL, tool confirmation, permission prompts]
+    aliases: [HITL, tool confirmation, permission prompts, interrupts, agent breakpoints]
     region: ai-product-and-interaction-design
     also: [agents-and-orchestration]
     desc: Agents pause before consequential actions and ask the user to approve, edit, or reject them.
+    summary: "Before an agent does something consequential, such as sending an email, running a command or spending money, it pauses and asks the user to approve, edit or reject the action. Frameworks implement this as an interrupt that saves the agent's state and resumes it after the answer, even days later. The design question is which actions need a gate: too many prompts and users approve without reading."
     parents:
       - {id: mixed-initiative-interaction, rel: applies, why: "Keeps the human as decision-maker at key points.", src: "Principles of Mixed-Initiative User Interfaces (1999)"}
       - {id: function-calling, rel: applies, why: "Approval gates tool calls before execution.", src: "Industry practice (2023)"}
     maturity: 4
     maturity_note: Essential for agents taking real actions.
     date: "2023"
-    ref: {title: "LangGraph human-in-the-loop documentation"}
+    ref: {title: "LangGraph interrupts documentation (LangChain)", url: "https://docs.langchain.com/oss/python/langgraph/interrupts"}
     examples: [LangGraph interrupts, Claude Code permission prompts]
+    resources:
+      - {kind: docs, title: "Human-in-the-loop", by: "OpenAI (Agents SDK)", year: 2025, url: "https://openai.github.io/openai-agents-python/human_in_the_loop/"}
+      - {kind: docs, title: "Configure permissions", by: "Anthropic (Claude Code)", year: 2025, url: "https://code.claude.com/docs/en/permissions"}
+      - {kind: talk, title: "Ambient Agents and the New Agent Inbox ft. Harrison Chase", by: "Harrison Chase (LangChain), Sequoia Capital", year: 2025, url: "https://www.youtube.com/watch?v=egSh4TxS5go"}
+      - {kind: paper, title: "Magentic-UI: Towards Human-in-the-loop Agentic Systems", by: "Mozannar et al. (Microsoft Research)", year: 2025, url: "https://arxiv.org/abs/2507.22358"}
     status: repaired
   - id: generative-ui
     name: Generative UI
     aliases: [server-driven UI from models]
     region: ai-product-and-interaction-design
     desc: Models emit structured payloads the front end renders as interactive components instead of plain text.
+    summary: "Instead of answering in text, the model picks or fills an interface component, such as a flight picker, chart or form, and the front end renders it. Usually the model makes a tool call with structured arguments and your code maps it to a component, so the UI stays under your control. Generated interfaces can look polished while failing basic usability and accessibility checks, so they need the same review as hand-built ones."
     parents:
       - {id: structured-outputs, rel: applies, why: "Structured output drives component rendering.", src: "Vercel AI SDK 3.0 (2024)"}
       - {id: direct-manipulation, rel: applies, why: "Returns manipulable interface elements instead of prose.", src: "Vercel AI SDK 3.0 (2024)", confidence: medium}
     maturity: 3
     maturity_note: Adopted in products; patterns still forming.
     date: "2024-03"
-    ref: {title: "Introducing AI SDK 3.0 with Generative UI support (Vercel, 2024)"}
+    ref: {title: "Introducing AI SDK 3.0 with Generative UI support (Vercel, 2024)", url: "https://vercel.com/blog/ai-sdk-3-generative-ui"}
     examples: [Vercel AI SDK, MCP UI, OpenAI Apps SDK]
+    resources:
+      - {kind: docs, title: "Generative User Interfaces", by: "Vercel (AI SDK)", year: 2024, url: "https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces"}
+      - {kind: blog, title: "Generative UI: A rich, custom, visual interactive user experience for any prompt", by: "Yaniv Leviathan et al. (Google Research)", year: 2025, url: "https://research.google/blog/generative-ui-a-rich-custom-visual-interactive-user-experience-for-any-prompt/"}
+      - {kind: talk, title: "Bringing React Components to AI", by: "Vercel", year: 2024, url: "https://www.youtube.com/watch?v=br2d_ha7alw"}
     status: repaired
   - id: canvas-artifacts
     name: Canvases and Artifacts
     aliases: [side-by-side editing, artifacts, canvas]
     region: ai-product-and-interaction-design
     desc: A persistent, editable work object beside the conversation that the user and model revise together.
+    summary: "Moves the thing being made, such as a document, piece of code or small app, out of the chat thread into a persistent pane beside it. You and the model both edit the same object, ask for changes to a selected part, and keep versions, instead of re-generating the whole output in each reply. Claude Artifacts (2024) and ChatGPT Canvas made this standard."
     parents:
       - {id: direct-manipulation, rel: applies, why: "Users edit the work product directly.", src: "Claude Artifacts (2024)"}
       - {id: chat-interfaces, rel: extends, why: "Moves output out of the chat stream into a shared object.", src: "ChatGPT Canvas (2024)"}
     maturity: 3
     maturity_note: Shipping in major assistants; conventions still settling.
     date: "2024-06"
-    ref: {title: "Claude 3.5 Sonnet launch with Artifacts (Anthropic, June 2024)"}
+    ref: {title: "Introducing Claude 3.5 Sonnet, with Artifacts (Anthropic, June 2024)", url: "https://www.anthropic.com/news/claude-3-5-sonnet"}
     examples: [Claude artifacts, ChatGPT Canvas, Gemini Canvas]
+    resources:
+      - {kind: blog, title: "Everything I built with Claude Artifacts this week", by: "Simon Willison", year: 2024, url: "https://simonwillison.net/2024/Oct/21/claude-artifacts/"}
+      - {kind: docs, title: "What are artifacts and how do I use them?", by: "Anthropic (Claude Help Center)", year: 2024, url: "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them"}
+      - {kind: talk, title: "Turn ideas into interactive artifacts", by: "Anthropic", year: 2025, url: "https://www.youtube.com/watch?v=iSn77jvjojA"}
+      - {kind: blog, title: "Malleable software in the age of LLMs", by: "Geoffrey Litt", year: 2023, url: "https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming"}
+    status: added
+
+  # ---- deep dive (2026-10-09) ----
+  - id: reasoning-trace-display
+    name: Reasoning Trace Display
+    aliases: [thinking UI, thought summaries, reasoning visualization]
+    region: ai-product-and-interaction-design
+    also: [planning-and-reasoning]
+    desc: Showing a reasoning model's intermediate thinking, raw or summarized, in a collapsible region streamed separately from the final answer.
+    summary: "Reasoning models think before they answer, and products show that thinking in a collapsible \"Thinking\" panel, either raw or summarized. It makes long waits bearable and lets users spot a wrong turn early. It is not a faithful explanation: the visible trace can be a plausible story rather than the actual cause of the answer, and a tidy trace makes people trust the answer more than they should."
+    parents:
+      - {id: reasoning-models, rel: applies, why: "Surfaces the thinking tokens that reasoning models generate before answering.", src: "Learning to reason with LLMs (OpenAI 2024)"}
+      - {id: streaming-responses, rel: extends, why: "Streams thinking tokens as a separate channel from answer tokens.", src: "ReTrace (Felder et al. 2025)", confidence: medium}
+      - {id: human-ai-interaction-guidelines, rel: applies, why: "Answers 'make clear why the system did what it did', with the caveat that the trace may not be the real reason.", src: "ReTrace (Felder et al. 2025)", confidence: medium}
+    maturity: 3
+    maturity_note: Every major assistant shows some form of it; raw versus summarized traces and how much to show are still unsettled.
+    date: "2024-09"
+    ref: {title: "Learning to reason with LLMs (OpenAI, September 2024)"}
+    examples: [ChatGPT thinking summaries, Claude extended thinking, DeepSeek DeepThink, ReTrace]
+    resources:
+      - {kind: blog, title: "Claude's extended thinking", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/news/visible-extended-thinking"}
+      - {kind: docs, title: "Extended thinking", by: "Anthropic", year: 2025, url: "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"}
+      - {kind: paper, title: "ReTrace: Interactive Visualizations for Reasoning Traces of Large Reasoning Models", by: "Felder et al.", year: 2025, url: "https://arxiv.org/abs/2511.11187"}
+    status: added
+  - id: plan-preview
+    name: Plan Preview
+    aliases: [plan mode, plan approval, intent preview]
+    region: ai-product-and-interaction-design
+    also: [agents-and-orchestration]
+    layer: detail
+    desc: The agent shows its intended steps, tools and assumptions for the user to edit or approve before it starts executing.
+    summary: "Before a long or risky task, the agent writes out what it plans to do, and you edit or approve the plan before any work starts. Misunderstandings get caught when they cost a sentence to fix rather than an hour of wasted work. A plan made up front cannot anticipate everything the agent will find, so it complements approvals during the run rather than replacing them."
+    parents:
+      - {id: human-in-the-loop-approval, rel: extends, why: "Moves the approval gate from single actions to the whole plan, before execution.", src: "Agentic UX Patterns (Tajer)"}
+    maturity: 3
+    maturity_note: Standard in coding and research agents; how detailed plans should be is still unsettled.
+    date: "2024-04"
+    ref: {title: "Copilot Workspace (GitHub Next, April 2024)", url: "https://githubnext.com/projects/copilot-workspace/"}
+    examples: [Copilot Workspace, Gemini Deep Research plan, Claude Code plan mode, Cursor plan mode, Devin]
+    resources:
+      - {kind: blog, title: "Agentic UX Patterns: A Practical Guide to Designing AI That Acts", by: "Ali Tajer", year: 2026, url: "https://alitajer.com/blog/agentic-ux-patterns"}
+      - {kind: docs, title: "Common workflows (plan mode)", by: "Anthropic (Claude Code)", year: 2025, url: "https://code.claude.com/docs/en/common-workflows"}
+      - {kind: talk, title: "How to use Copilot Workspace | Full Demo", by: "GitHub", year: 2024, url: "https://www.youtube.com/watch?v=bsfE9c2pRD0"}
+      - {kind: blog, title: "Gemini: Try Deep Research and Gemini 2.0 Flash Experimental", by: "Google", year: 2024, url: "https://blog.google/products-and-platforms/products/gemini/google-gemini-deep-research/"}
+    status: added
+  - id: agent-action-trace
+    name: Agent Action Trace
+    aliases: [activity feed, tool call display, action log]
+    region: ai-product-and-interaction-design
+    also: [agents-and-orchestration]
+    layer: detail
+    desc: A user-facing, live record of each tool an agent calls, with its inputs and results, as it runs.
+    summary: "A running feed of what the agent is actually doing: which tool it called, with what inputs, and what came back. It shows the user what changed in the world, which is harder to fake than a description of the agent's thinking, and it is where people notice a wrong step. It is the user-facing cousin of the developer traces in observability tools."
+    parents:
+      - {id: react-agent-loop, rel: applies, why: "Renders each act and observe step of the agent loop to the user.", src: "Agentic UX Patterns (Tajer)", confidence: medium}
+      - {id: human-ai-interaction-guidelines, rel: applies, why: "Implements 'make clear why the system did what it did' for agents that act.", src: "Guidelines for Human-AI Interaction (Amershi et al. 2019)", confidence: medium}
+    maturity: 3
+    maturity_note: Every agent product shows tool activity; how much detail to show, and when to collapse it, is still forming.
+    date: "2023"
+    ref: {title: "Agentic UX Patterns: A Practical Guide to Designing AI That Acts (Ali Tajer)", url: "https://alitajer.com/blog/agentic-ux-patterns"}
+    examples: [ChatGPT agent activity, Claude Code tool output, Cursor agent panel]
+    resources:
+      - {kind: blog, title: "Building effective agents", by: "Anthropic", year: 2024, url: "https://www.anthropic.com/engineering/building-effective-agents"}
+      - {kind: docs, title: "Chatbot Tool Usage", by: "Vercel (AI SDK)", year: 2025, url: "https://ai-sdk.dev/docs/ai-sdk-ui/chatbot-tool-usage"}
+      - {kind: talk, title: "AI Agent UX Patterns: Lessons From 1000 Startups", by: "Jonas Braadbaart (aiGrunn)", year: 2024, url: "https://www.youtube.com/watch?v=3kiTAGa7VFI"}
+    status: added
+  - id: mid-run-steering
+    name: Mid-Run Steering
+    aliases: [active execution participation, mid-flight intervention, agent steering]
+    region: ai-product-and-interaction-design
+    also: [agents-and-orchestration]
+    layer: detail
+    desc: Users inspect and redirect an agent step by step while it runs, rather than reviewing only the final result.
+    summary: "Instead of reviewing a long agent run only at the end, the user follows it step by step and corrects course while it works. A Microsoft Research study of spreadsheet agents found that end-of-run review misses errors buried in early steps, while step-level participation caught them and left users understanding the result. It costs attention, so it fits work where a late-found mistake is expensive."
+    parents:
+      - {id: human-in-the-loop-approval, rel: extends, why: "Turns occasional approval gates into continuous, step-level participation.", src: "Auditing and Controlling AI Agent Actions in Spreadsheets (Microsoft Research 2026)"}
+      - {id: agent-action-trace, rel: extends, why: "Steering needs a step-level view of what the agent has done.", src: "Auditing and Controlling AI Agent Actions in Spreadsheets (Microsoft Research 2026)", confidence: medium}
+    maturity: 2
+    maturity_note: Evidence comes from recent studies; most products offer only interrupt-and-redirect.
+    date: "2026-04"
+    ref: {title: "Auditing and Controlling AI Agent Actions in Spreadsheets (Microsoft Research, 2026)", url: "https://www.microsoft.com/en-us/research/publication/auditing-and-controlling-ai-agent-actions-in-spreadsheets/"}
+    examples: [Claude Code message queueing, Codex steering]
+    resources:
+      - {kind: blog, title: "Magentic-UI, an experimental human-centered web agent", by: "Microsoft Research", year: 2025, url: "https://www.microsoft.com/en-us/research/blog/magentic-ui-an-experimental-human-centered-web-agent/"}
+      - {kind: paper, title: "Cocoa: Co-Planning and Co-Execution with AI Agents", by: "Feng et al.", year: 2024, url: "https://arxiv.org/abs/2412.10999"}
+      - {kind: talk, title: "Claude Code & the evolution of agentic coding — Boris Cherny, Anthropic", by: "Boris Cherny (Anthropic, AI Engineer)", year: 2025, url: "https://www.youtube.com/watch?v=Lue8K2jqfKk"}
+    status: added
+  - id: trust-calibration
+    name: Trust Calibration
+    aliases: [appropriate reliance, uncertainty display, confidence indicators, overreliance mitigation]
+    region: ai-product-and-interaction-design
+    layer: detail
+    desc: Designing interfaces so users rely on AI output when it is right and check it when it is not, through uncertainty display, framing and friction.
+    summary: "The goal is appropriate reliance: users accept the AI's output when it is right and catch it when it is wrong. Too much trust (automation bias) lets errors through, and too little wastes the tool. Levers include showing uncertainty, framing what the system is good at, and adding friction where mistakes are costly. Research shows simple, intuitive uncertainty cues help, while complex statistical displays tend to be ignored."
+    parents:
+      - {id: human-ai-interaction-guidelines, rel: extends, why: "Moves from setting expectations to measuring and shaping how much users rely on the system.", src: "A Survey of AI Reliance (Eckhardt et al. 2024)"}
+      - {id: "external:trust-in-automation", rel: applies, why: "Applies the human-factors theory of calibrated trust in automation to AI products.", src: "A Survey of AI Reliance (Eckhardt et al. 2024)", confidence: medium}
+    maturity: 2
+    maturity_note: Well studied in HCI, but production products rarely go beyond disclaimers and citations.
+    date: "2024-07"
+    ref: {title: "A Survey of AI Reliance (Eckhardt et al.)", arxiv: "2408.03948"}
+    examples: [confidence indicators, low-confidence highlighting, review checklists]
+    resources:
+      - {kind: paper, title: "Overreliance on AI: Literature Review", by: "Samir Passi, Mihaela Vorvoreanu (Microsoft)", year: 2022, url: "https://www.microsoft.com/en-us/research/publication/overreliance-on-ai-literature-review/"}
+      - {kind: talk, title: "Fostering appropriate reliance on AI", by: "Mihaela Vorvoreanu (Microsoft Research Forum)", year: 2024, url: "https://www.microsoft.com/en-us/research/articles/fostering-appropriate-reliance-on-ai/"}
+      - {kind: docs, title: "Explainability + Trust (People + AI Guidebook)", by: "Google PAIR", year: 2021, url: "https://pair.withgoogle.com/chapter/explainability-trust/"}
+      - {kind: paper, title: "Evaluating the Impact of Uncertainty Visualization on Model Reliance", by: "Zhao et al. (IEEE TVCG)", year: 2023, url: "https://jieqiongzhao.github.io/assets/data/uncertainty2023.pdf"}
+    status: added
+  - id: voice-turn-taking
+    name: Turn-Taking and Barge-In
+    aliases: [barge-in, voice interruption handling, semantic VAD, endpointing]
+    region: ai-product-and-interaction-design
+    also: [multimodal-applied]
+    layer: detail
+    desc: Deciding when a voice user has finished speaking and stopping generation the moment they interrupt, over a full-duplex audio connection.
+    summary: "In a voice conversation the system has to judge when you have finished speaking and stop talking the moment you interrupt. Older assistants waited for a fixed silence, which cut people off mid-thought or left awkward gaps. Realtime speech models listen while they speak, and semantic turn detection uses what you said, not just the pause, to decide whether it is their turn."
+    parents:
+      - {id: realtime-voice, rel: applies, why: "Full-duplex speech-to-speech models make interruption and fast turn-taking possible.", src: "Introducing the Realtime API (OpenAI 2024)"}
+      - {id: streaming-responses, rel: extends, why: "Barge-in is stop-on-interrupt for streamed audio instead of streamed text.", src: "OpenAI Realtime API guide", confidence: medium}
+    maturity: 3
+    maturity_note: Expected in voice agents since 2024; semantic turn detection is newer and still tuned per product.
+    date: "2024-10"
+    ref: {title: "Introducing the Realtime API (OpenAI, October 2024)"}
+    examples: [ChatGPT Advanced Voice Mode, OpenAI semantic VAD, LiveKit turn detector]
+    resources:
+      - {kind: docs, title: "Getting started with the Realtime API", by: "OpenAI", year: 2025, url: "https://developers.openai.com/api/docs/guides/realtime"}
+      - {kind: blog, title: "Using a transformer to improve end of turn detection", by: "LiveKit", year: 2024, url: "https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection"}
+      - {kind: talk, title: "Fix AI Voice Interruptions with Semantic Turn Detection", by: "LiveKit", year: 2026, url: "https://www.youtube.com/watch?v=XbrlOY4Z-Ow"}
+      - {kind: paper, title: "Moshi: a speech-text foundation model for real-time dialogue", by: "Défossez et al. (Kyutai)", year: 2024, url: "https://arxiv.org/abs/2410.00037"}
     status: added
 
   # ======================= APPLIED: multimodal-applied =======================
