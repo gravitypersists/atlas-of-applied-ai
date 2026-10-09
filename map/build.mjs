@@ -10,6 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
+import * as Terrain from "./terrain.mjs";
 import {
   forceSimulation, forceLink, forceManyBody, forceCollide, forceX, forceY,
 } from "d3-force";
@@ -20,6 +21,8 @@ const PATHS = {
   backbone: path.join(ROOT, "backbone.json"),
   curation: path.join(HERE, "curation.yaml"),
   ledger: path.join(HERE, "atlas", "ledger.yaml"),
+  terrain: path.join(HERE, "atlas", "terrain.json"),
+  previewDir: path.join(HERE, ".preview"),
   mapJson: path.join(HERE, "public", "map.json"),
 };
 
@@ -430,12 +433,24 @@ function render(model, curation) {
     };
   });
 
+  const colors = regionPalette(bb);
+  for (const t of territories) Object.assign(t, colors.get(t.id));
+
+  let geometry = {};
+  if (ledger.world.sea_level == null) {
+    console.warn("warning: no sea level yet; run `node build.mjs sea --sweep`, then `sea --set <level>`");
+  } else {
+    const terrain = buildTerrain(model, ledger);
+    geometry = terrainGeometry(terrain, territories);
+  }
+
   const out = {
     version: 1,
     built: ledger.world.surveyed,
     bounds: ledger.world.bounds,
-    stage: "survey-debug",
+    stage: ledger.world.accepted ? "accepted" : "survey-draft",
     oldWorld: curation.old_world ?? { title: "The Old World", subtitle: "Ancestral Disciplines" },
+    ...geometry,
     territories,
     landmarks,
     routes: edges.filter((e) => placed.has(e.source) && placed.has(e.target)).map((e) => ({ from: e.source, to: e.target, cross: e.cross })),
@@ -443,6 +458,162 @@ function render(model, curation) {
   fs.writeFileSync(PATHS.mapJson, JSON.stringify(out, null, 1) + "\n");
   console.log(`wrote ${path.relative(ROOT, PATHS.mapJson)}: ${landmarks.length} landmarks, ${out.routes.length} routes`);
   return out;
+}
+
+// ---------------------------------------------------------------- terrain (SPEC §4.1–4.2, §4.5–4.6)
+// Muted territory tints (fills) and stronger inks (symbols). Root provinces share a sepia family.
+const ROOT_COLORS = [
+  ["#e3d3b4", "#8c6d46"], ["#ddcaa6", "#7a5c3a"], ["#e6d6b6", "#9a7b4f"], ["#d9c7a8", "#6e5a43"],
+  ["#e8d9bd", "#a08060"], ["#dfcdb0", "#857055"], ["#dbc8aa", "#76624a"], ["#e4d2b3", "#93785a"],
+];
+const APPLIED_COLORS = [
+  ["#c9d9de", "#4f7a8c"], ["#e3c9d3", "#8c4f6d"], ["#d3dfc4", "#6d8c4f"], ["#ecd5bd", "#b0773c"],
+  ["#d0d1e6", "#5b5fa0"], ["#c4e0da", "#3c9a8a"], ["#e8c9c4", "#a05b5b"], ["#d9cfe6", "#7f6aa8"],
+  ["#cde0c8", "#4c8f4c"], ["#ead0df", "#b05a8c"], ["#c6d9e8", "#2f7fb0"],
+];
+function regionPalette(bb) {
+  const m = new Map();
+  bb.regions.filter((r) => r.kind === "root").forEach((r, i) => m.set(r.id, { tint: ROOT_COLORS[i % 8][0], ink: ROOT_COLORS[i % 8][1] }));
+  bb.regions.filter((r) => r.kind !== "root").forEach((r, i) => m.set(r.id, { tint: APPLIED_COLORS[i % 11][0], ink: APPLIED_COLORS[i % 11][1] }));
+  return m;
+}
+
+const placedOf = (ledger) => new Map(ledger.settlements.filter((s) => !ledger.retired?.includes(s.id)).map((s) => [s.id, s]));
+
+function loadTerrain(grid) {
+  if (!fs.existsSync(PATHS.terrain)) return null;
+  const t = JSON.parse(fs.readFileSync(PATHS.terrain, "utf8"));
+  if (t.width !== grid.width || t.height !== grid.height) fail("terrain.json grid does not match the ledger's bounds and cell size");
+  const n = t.width * t.height;
+  return { ...t, land: Terrain.rleDecode(t.land, n), owner: Terrain.rleDecode(t.owner, n) };
+}
+
+// Elevation → land (high-water mark once accepted) → coverage guarantee → claims → invariants.
+function buildTerrain(model, ledger, { write = true, level = ledger.world.sea_level } = {}) {
+  const world = ledger.world;
+  const grid = Terrain.makeGrid(world);
+  const placed = placedOf(ledger);
+  const inputs = Terrain.terrainInputs(model, placed);
+  // Before the survey is accepted, terrain is a draft and regenerated from scratch every build.
+  const previous = world.accepted ? loadTerrain(grid) : null;
+  if (previous && level > previous.sea_level) fail(`sea level may only fall (was ${previous.sea_level}, now ${level})`);
+
+  // Guarantee: every landmark sits on land. Raise uplift where needed, at most 3 passes.
+  const boost = new Map();
+  let E, land, missing = [];
+  for (let pass = 0; pass <= 3; pass++) {
+    E = Terrain.elevation(grid, { ...inputs, seed: world.seed }, boost);
+    land = Terrain.threshold(E, level);
+    if (previous) for (let k = 0; k < land.length; k++) land[k] |= previous.land[k];
+    missing = inputs.landmarks.filter((l) => !land[Terrain.cellOf(grid, l.x, l.y)]);
+    if (!missing.length) break;
+    if (pass === 3) fail(`landmarks still at sea after 3 repair passes: ${missing.map((l) => l.id).join(", ")}`);
+    for (const l of missing) boost.set(l.id, (boost.get(l.id) ?? 0) + Terrain.TERRAIN.repairBoost);
+  }
+
+  const regions = previous ? [...previous.regions] : [];
+  for (const r of model.bb.regions) if (!regions.includes(r.id)) regions.push(r.id);
+  const sources = inputs.landmarks.map((l) => ({ cell: Terrain.cellOf(grid, l.x, l.y), region: regions.indexOf(l.region) }));
+  const owner = Terrain.claim(grid, land, previous?.owner, sources);
+
+  if (previous) {
+    for (let k = 0; k < land.length; k++) {
+      if (previous.land[k] && !land[k]) fail("invariant: a land cell sank");
+      if (previous.owner[k] !== 255 && owner[k] !== previous.owner[k]) fail("invariant: a territory claim changed owner");
+    }
+  }
+
+  const terrain = { grid, E, land, owner, regions, level, repaired: [...boost.keys()], inputs };
+  if (write) {
+    const grown = previous ? land.reduce((a, v, k) => a + (v && !previous.land[k] ? 1 : 0), 0) : null;
+    fs.writeFileSync(PATHS.terrain, JSON.stringify({
+      width: grid.width, height: grid.height, cell: grid.cell, sea_level: level, regions,
+      land: Terrain.rleEncode(land), owner: Terrain.rleEncode(owner),
+    }) + "\n");
+    const landCells = land.reduce((a, v) => a + v, 0);
+    console.log(`terrain: ${(100 * landCells / land.length).toFixed(1)}% land at sea level ${level}` +
+      (grown !== null ? `, ${grown} cells grown` : " (draft: regenerated)") +
+      (terrain.repaired.length ? `, uplift raised for ${terrain.repaired.join(", ")}` : ""));
+  }
+  return terrain;
+}
+
+// Coast, shallows, and territory fills as SVG paths in world units.
+function terrainGeometry(terrain, territories) {
+  const { grid, E, land, owner, regions, level } = terrain;
+  const shallowsField = Float32Array.from(E, (e, k) => (land[k] ? 1 : e > level - Terrain.TERRAIN.shallowsBelow ? 0.75 : 0));
+  const geometry = {
+    coast: Terrain.contourPath(grid, land, 0.5),
+    shallows: Terrain.contourPath(grid, shallowsField, 0.5, 2.5),
+  };
+  for (const t of territories) {
+    const idx = regions.indexOf(t.id);
+    const mask = Uint8Array.from(owner, (o) => (o === idx ? 1 : 0));
+    t.fill = mask.some((v) => v) ? Terrain.contourPath(grid, mask, 0.5) : null;
+  }
+  return geometry;
+}
+
+// `sea --sweep`: landmass statistics per candidate sea level, plus a preview SVG for each.
+function seaSweep(model, ledger, levels) {
+  const grid = Terrain.makeGrid(ledger.world);
+  const placed = placedOf(ledger);
+  const inputs = Terrain.terrainInputs(model, placed);
+  const E = Terrain.elevation(grid, { ...inputs, seed: ledger.world.seed });
+  const isRoot = (r) => model.regionById.get(r).kind === "root";
+  fs.mkdirSync(PATHS.previewDir, { recursive: true });
+  console.log("level  land%  landmasses  at-sea  outpost-islets  ocean-bridged  joined (applied regions sharing a landmass)");
+  for (const level of levels) {
+    const land = Terrain.threshold(E, level);
+    const { label, sizes } = Terrain.components(grid, land);
+    const masses = sizes.filter((n) => n >= Terrain.TERRAIN.minLandmassCells).length;
+    const comp = new Map(inputs.landmarks.map((l) => [l.id, label[Terrain.cellOf(grid, l.x, l.y)]]));
+    const atSea = inputs.landmarks.filter((l) => comp.get(l.id) < 0).length;
+    const byComp = new Map();
+    for (const l of inputs.landmarks) {
+      const c = comp.get(l.id);
+      if (c < 0) continue;
+      if (!byComp.has(c)) byComp.set(c, []);
+      byComp.get(c).push(l);
+    }
+    const islets = inputs.landmarks.filter((l) => l.maturity <= 2 && comp.get(l.id) >= 0 && byComp.get(comp.get(l.id)).length === 1).length;
+    const bridged = [...byComp.values()].some((ls) => ls.some((l) => isRoot(l.region)) && ls.some((l) => !isRoot(l.region)));
+    const groups = [...byComp.values()]
+      .map((ls) => [...new Set(ls.filter((l) => !isRoot(l.region)).map((l) => l.region.split("-")[0]))])
+      .filter((g) => g.length > 1).map((g) => g.join("+"));
+    const landPct = (100 * land.reduce((a, v) => a + v, 0) / land.length).toFixed(1);
+    console.log(`${String(level).padEnd(6)} ${landPct.padStart(5)}  ${String(masses).padStart(10)}  ${String(atSea).padStart(6)}  ${String(islets).padStart(14)}  ${String(bridged).padStart(13)}  ${groups.join("  ") || "—"}`);
+    writeSeaPreview(model, grid, E, land, level, inputs, path.join(PATHS.previewDir, `sea-${level}.svg`));
+  }
+  console.log(`previews in ${path.relative(ROOT, PATHS.previewDir)}/`);
+}
+
+function writeSeaPreview(model, grid, E, land, level, inputs, file) {
+  const colors = regionPalette(model.bb);
+  const coast = Terrain.contourPath(grid, land, 0.5);
+  const shallows = Terrain.contourPath(grid, Float32Array.from(E, (e, k) => (land[k] ? 1 : e > level - Terrain.TERRAIN.shallowsBelow ? 0.75 : 0)), 0.5, 2.5);
+  const W = grid.width * grid.cell, H = grid.height * grid.cell;
+  const parts = [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${grid.x0} ${grid.y0 - (W - H) / 2} ${W} ${W}" width="${W / 2}" height="${W / 2}" font-family="Georgia, serif">`,
+    `<rect x="${grid.x0}" y="${grid.y0 - (W - H) / 2}" width="${W}" height="${W}" fill="#ffffff"/>`,
+    `<rect x="${grid.x0}" y="${grid.y0}" width="${W}" height="${H}" fill="#cfdcd8"/>`,
+    `<path d="${shallows}" fill="#dfe8e3"/>`,
+    `<path d="${coast}" fill="#efe6d2" stroke="#3b2f20" stroke-width="3"/>`,
+    ...inputs.landmarks.map((l) => `<circle cx="${l.x}" cy="${l.y}" r="${l.maturity <= 2 ? 9 : 7}" fill="${l.maturity <= 2 ? "#efe6d2" : colors.get(l.region).ink}" stroke="${colors.get(l.region).ink}" stroke-width="3"/>`),
+    `<text x="${grid.x0 + 40}" y="${grid.y0 + 90}" font-size="72" fill="#3b2f20">sea level ${level}</text>`,
+    "</svg>",
+  ];
+  fs.writeFileSync(file, parts.join("\n"));
+}
+
+function setSeaLevel(ledger, level) {
+  if (!Number.isFinite(level)) fail("usage: sea --set <level>");
+  if (ledger.world.accepted && ledger.world.sea_level != null && level > ledger.world.sea_level) {
+    fail(`the survey is accepted; sea level may only fall (currently ${ledger.world.sea_level})`);
+  }
+  ledger.world.sea_level = level;
+  writeLedger(ledger);
+  console.log(`sea level set to ${level}`);
 }
 
 // ---------------------------------------------------------------- debug preview
@@ -502,8 +673,20 @@ const preview = previewIdx >= 0 ? args[previewIdx + 1] : null;
 const model = loadBackbone();
 const curation = readYaml(PATHS.curation, {});
 
+const argAfter = (flag) => { const i = args.indexOf(flag); return i >= 0 ? args[i + 1] : null; };
+
 if (cmd === "survey") survey(model, curation, { redo: args.includes("--redo") });
-else if (cmd !== "settle") fail(`unknown command: ${cmd}`);
+else if (cmd === "sea") {
+  const ledger = readYaml(PATHS.ledger, null);
+  if (!ledger) fail("No ledger yet. Run `node build.mjs survey` first.");
+  if (args.includes("--sweep")) {
+    const levels = (argAfter("--levels") ?? "0.3,0.4,0.5,0.6,0.7,0.8").split(",").map(Number);
+    seaSweep(model, ledger, levels);
+    process.exit(0);
+  }
+  if (argAfter("--set") == null) fail("usage: sea --sweep [--levels a,b,c] | sea --set <level>");
+  setSeaLevel(ledger, Number(argAfter("--set")));
+} else if (cmd !== "settle") fail(`unknown command: ${cmd}`);
 
 const map = render(model, curation);
 if (preview) writePreview(model, map, preview);

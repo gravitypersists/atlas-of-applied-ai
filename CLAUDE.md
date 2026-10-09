@@ -15,11 +15,13 @@ python3 make_guides.py   # regenerate deep-dives/*.md (incl. deep-dives/README.m
 # map (Node 22; run `npm install` in map/ once)
 node map/build.mjs                     # settle: render map/public/map.json from the ledger
 node map/build.mjs survey --redo       # re-run the founding survey (only while world.accepted is false)
+node map/build.mjs sea --sweep         # landmass stats per sea level; previews in map/.preview/
+node map/build.mjs sea --set 0.4       # set the sea level (only lower, once the survey is accepted)
 node map/build.mjs --preview out.svg   # also write a static debug SVG
 python3 map/serve.py 8000              # dev server with no-cache headers
 ```
 
-The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` is the permanent geography: once the survey is accepted, existing entries never change, and new nodes are only appended.
+The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`.
 
 After any edit to `backbone.yaml`, run both scripts. `validate.py` must report 0 errors.
 

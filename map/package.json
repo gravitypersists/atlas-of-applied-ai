@@ -8,7 +8,10 @@
     "survey": "node build.mjs survey"
   },
   "dependencies": {
+    "d3-array": "^3.2.4",
+    "d3-contour": "^4.0.2",
     "d3-force": "^3.0.0",
+    "d3-geo": "^3.1.1",
     "js-yaml": "^4.1.0"
   }
 }

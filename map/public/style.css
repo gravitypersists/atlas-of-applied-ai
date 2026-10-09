@@ -1,6 +1,7 @@
 :root {
   --parchment: #efe6d2;
-  --sea: #d9e3e0;
+  --sea: #cfdcd8;
+  --shallows: #dfe8e3;
   --ink: #3b2f20;
   --ink-soft: #8a7a60;
   --route: #a8977a;
@@ -30,10 +31,17 @@ html, body {
 }
 #map:active { cursor: grabbing; }
 
-.world { fill: var(--parchment); }
+/* Terrain is drawn in world units; strokes stay a constant screen width. */
+.terrain path { vector-effect: non-scaling-stroke; }
+.shallows { fill: var(--shallows); }
+.land { fill: var(--parchment); }
+.territory { fill-opacity: 0.55; stroke: var(--ink-soft); stroke-width: 0.75; stroke-dasharray: 3 3; stroke-opacity: 0.6; }
+.coast { fill: none; stroke: var(--ink); stroke-width: 1.5; }
 
-.route { stroke: var(--route); stroke-width: 1.2; fill: none; }
+/* Lineage routes: debug overlay, toggled with "l" until selection arrives. */
+.route { display: none; stroke: var(--route); stroke-width: 1.2; fill: none; }
 .route.cross { stroke-dasharray: 4 4; opacity: 0.45; }
+#map.show-routes .route { display: inline; }
 
 .landmark circle { stroke: var(--parchment); stroke-width: 1; }
 .landmark.outpost circle { fill: var(--parchment); stroke-width: 2; }

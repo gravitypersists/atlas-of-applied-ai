@@ -54,7 +54,8 @@ python3 validate.py && node map/build.mjs              # settle: the normal buil
 node map/build.mjs settle --dry-run                     # report what would be settled or grown, write nothing
 node map/build.mjs survey                               # one-time founding survey (refuses if a ledger exists)
 node map/build.mjs survey --redo                        # only before the survey is accepted: discard and resurvey
-node map/build.mjs sea --sweep                          # report landmass counts across candidate sea levels
+node map/build.mjs sea --sweep [--levels 0.3,0.4,0.5]   # landmass stats per sea level; preview SVGs in map/.preview/
+node map/build.mjs sea --set 0.4                        # set sea level (only lower, once accepted)
 python3 map/serve.py 8000                               # view (no-cache dev server)
 ```
 
@@ -123,10 +124,10 @@ Curation never touches settled geography. The `survey` block only shapes the fou
   "shallows": "M…Z",             // SVG path: contour slightly below sea level (hints at near-connections)
   "territories": [{
     "id": "retrieval-and-knowledge", "title": "The Archive Reach", "subtitle": "Retrieval and Knowledge",
-    "tint": "#d9c9a3", "fill": "M…Z",         // owned land cells as a path
+    "tint": "#d9c9a3", "ink": "#6d8c4f",      // territory fill colour; symbol and label colour
+    "fill": "M…Z",                            // owned land cells as a path; drawn with a dashed outline, which forms the borders
     "label": [x, y], "group": "applied"       // "old-world" for root provinces
   }],
-  "borders": "M…",               // internal territory borders (dashed)
   "oldWorld": {"title": "The Old World", "subtitle": "Ancestral Disciplines", "label": [x, y]},
   "landmarks": [{
     "id": "graph-rag", "name": "GraphRAG", "region": "retrieval-and-knowledge",
@@ -154,30 +155,34 @@ The build is deterministic: the same inputs always produce byte-identical output
 E is evaluated on the terrain grid. It is never stored, because it's recomputed from the ledger and backbone each build.
 
 ```
-E(p) = Σ uplift(node, p) + Σ ridge(edge, p) + bedrock(p) − basin(p)
+E(p) = 1 − exp(−(Σ uplift(node, p) + Σ ridge(edge, p))) + bedrock(p) − basin(p)
 ```
+
+The saturating sum keeps dense interiors near 1, so coasts form where influence fades out and the bedrock noise is large enough to shape them. It stays monotonic: more uplift never lowers E. Constants live in `TERRAIN` at the top of `map/terrain.mjs`.
 
 - **Settlement uplift.**
   - Shape: a Gaussian bump `h · exp(−d²/2σ²)`.
   - Height and spread: `h` and `σ` grow with maturity, and they also grow with the node's maturity rank across the whole backbone. Rank keeps the 4–5 skew from flattening everything.
   - Root nodes get a modest bonus, so the Old World reads as a solid continent.
-  - Organic shape: distance `d` is measured in a domain-warped space, `p + A·noise(p)`, which makes shapes irregular.
+  - Organic shape: distance `d` is measured in a domain-warped space, `p + A·fbm(p)` with several octaves, which makes shapes irregular.
 - **Lineage ridge.**
   - Which edges: every edge where both endpoints are maturity ≥ 3 and on the same side of the ocean. Edges between the Old World and the New World raise no ridge, so the ocean stays open.
   - Shape: a ridge along the parent→child segment, with height following a smoothed profile `r · exp(−dist_to_segment²/2w²)`.
   - Height: for cross-region edges, `r` scales with the number of edges between that region pair, normalized by the strongest pair. Strong connections clear sea level and weak ones don't.
   - In-region edges use a constant `r`, which keeps each territory internally contiguous.
-- **Bedrock.** Low-amplitude seeded fBm. It's what gives coasts their raggedness.
+- **Bedrock.** Seeded fBm at two scales: a broad one that pushes land out into peninsulas and pulls it back into bays independently of the landmarks, and a fine one (`detail`) that gives coasts their raggedness, coves, and small rocks.
 - **Basin.** A smooth falloff in the outer margin of `bounds`, so the world ends in sea.
 
-Every term is non-negative except basin, which is fixed per location. Adding nodes, raising maturity, or adding edges can therefore only raise E.
+Uplift and ridges are non-negative, and bedrock and basin are fixed per location. Adding nodes, raising maturity, or adding edges can therefore only raise E.
 
 ### 4.2 Land and claims
+
+While the survey is a draft (`world.accepted: false`), `terrain.json` is regenerated from scratch on every build, so sea level and terrain constants can be tuned freely. Once the survey is accepted, the previous `terrain.json` is the high-water mark and every rule below applies.
 
 Each build:
 1. Compute E.
 2. Set `newLand = E > sea_level AND NOT land`, then `land |= newLand`. This is the high-water mark.
-3. **Guarantee:** every non-outpost landmark's cell must be land. If one isn't, add uplift at that node until it is (up to 3 passes), then fail and name the node.
+3. **Guarantee:** every landmark's cell must be land. For an outpost, that land is usually its own islet. If one isn't, add uplift at that node until it is (up to 3 passes), then fail and name the node.
 4. **Claims:** each `newLand` cell is owned by the region of its nearest landmark, measured by distance through land (BFS over land cells from all landmarks). That way claims don't jump across water. Cells that already had an owner keep it.
 5. **Invariant checks.** Fail the build if any of the following happened:
    - a land bit flipped 1→0
@@ -230,15 +235,15 @@ Nodes that have disappeared from the backbone move to `retired`. Their entry sta
 
 ### 4.5 Sea level (`sea --sweep`)
 
-This prints a table of candidate sea levels. For each level it shows the number of landmasses (connected land components above a minimum area), the land fraction, which region pairs are joined, and how many outposts sit on islets. It also writes a small preview PNG per level to the scratch directory.
+This prints a table of candidate sea levels. For each level it shows the land fraction, the number of landmasses (connected land components above `minLandmassCells`), the landmarks at sea before the guarantee repairs them, the outposts on islets of their own, whether any landmass bridges the ocean between the worlds, and which applied regions share a landmass. It also writes a preview SVG per level to `map/.preview/` (gitignored).
 
 `sea_level` is set in the ledger once, at survey time. Afterwards it may only be lowered.
 
 ### 4.6 Coastline geometry
 
 - Contour the land mask with `d3-contour` at 0.5, after a small blur so cell edges don't show, to get `coast`.
-- Contour E at `sea_level − δ`, unioned with land, to get `shallows`.
-- Territory fills come from contouring each region's owner mask. Borders are the boundaries between owner masks inside land.
+- Contour E at `sea_level − shallowsBelow`, unioned with land, to get `shallows`.
+- Territory fills come from contouring each region's owner mask. The viewer draws them with a dashed outline under the solid coast, so the dashes show only where two territories meet.
 - Paths are simplified to a tolerance of `cell / 2`.
 
 ### 4.7 Symbol tiers
