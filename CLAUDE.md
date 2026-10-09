@@ -59,6 +59,8 @@ The map gives these fields meaning, so treat them carefully:
 
 ## Deep-dive workflow (from README.md)
 
+Follow `MERGING.md` when merging a deep-research report: it has the review checklist, the separate resources pass, and the map checks.
+
 1. Run a guide's research prompt (`deep-dives/<region>.md`) in a deep-research tool.
 2. Parse the output's Section 2 (nodes) into YAML, merge it into `backbone.yaml`, and run `validate.py`. Keep existing anchors' parents unless a change is argued for (deep-research runs tend to drop cross-region edges), check new nodes against existing names and aliases in every region, and spot-check refs. Section 1's overview and learning path go on the region.
 3. Section 3 (backbone amendments) gets human review before any structural change is accepted. Don't apply it automatically.
