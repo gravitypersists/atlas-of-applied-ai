@@ -20,14 +20,10 @@ LEADS = {
         ("Mixture-of-Depths (dynamic per-token compute)", "2404.02258"),
         ("RoPE and context-length extension", "2104.09864"),
     ],
-    "agents-and-orchestration": [
-        ("Semantic routing (embedding-based intent routing to sub-agents)", None),
-        ("Language Agent Tree Search (LATS)", "2310.04406"),
-        ("Context-Aware MCP / shared-context-store MCP variants (claimed 2026 paper — verify it exists)", None),
-    ],
     "planning-and-reasoning": [
         ("Quiet-STaR (learned internal rationales)", "2403.09629"),
         ("CoT-Pass@k and evaluating reasoning-trace correctness under RLVR (verify source)", None),
+        ("Language Agent Tree Search (LATS) — new node, or an alias of tree-of-thoughts?", "2310.04406"),
     ],
     "adaptation-and-post-training": [
         ("KTO (binary-feedback preference optimization)", "2402.01306"),
@@ -36,6 +32,7 @@ LEADS = {
     ],
     "evaluation-and-observability": [
         ("MT-Bench and judge-bias studies", "2306.05685"),
+        ("Static context-quality scoring for agents (ProofAgent-Harness, \"The Context Fails First\")", "2607.14275"),
     ],
 }
 

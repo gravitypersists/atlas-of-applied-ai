@@ -198,6 +198,57 @@
         "Tool-use lineage from MRKL and Toolformer through function calling to MCP and skills",
         "Agent harness design (loops, subagents, memory, long-horizon task management)",
         "Where production systems sit on the workflow-to-autonomy spectrum in 2026"
+      ],
+      "overview": "Agents and Orchestration covers models that act: calling tools, running in loops, remembering across sessions, and working with other agents. It began with routing. MRKL sent parts of a request to calculators and APIs, Toolformer trained models to decide when to call tools themselves, and function calling made that a standard API: the model returns a structured call, your code runs it. ReAct wrapped this in the basic agent loop of think, act, observe, repeat.\n\nFully autonomous loops proved expensive and unpredictable in production, so most deployed systems moved back toward workflows: control flow written in code, with the model called only where judgment is needed. Autonomy survives where tasks are open-ended and the environment is safe to explore, above all in coding agents, which now run for hours across many context windows using progress files, memory, and subagents.\n\nProtocols turned tools into shared infrastructure. MCP lets one server work with any client, Agent Skills package know-how an agent loads on demand, and code execution keeps bulky tool results out of the context window. Landmarks worth knowing: function calling, the ReAct loop, workflow graphs, MCP, and coding agents. The direction of travel is toward bounded, well-instrumented agents rather than unconstrained autonomy.",
+      "learning_path": [
+        {
+          "kind": "blog",
+          "title": "LLM Powered Autonomous Agents",
+          "by": "Lilian Weng",
+          "year": 2023,
+          "url": "https://lilianweng.github.io/posts/2023-06-23-agent/",
+          "why": "One map of the whole field (planning, memory, tool use) with the papers behind each part, so the later readings have somewhere to land."
+        },
+        {
+          "kind": "talk",
+          "title": "LLM Agents: History & Overview (UC Berkeley CS294-196)",
+          "by": "Shunyu Yao (Berkeley RDI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=RM6ZArd2nVc",
+          "why": "The ReAct author explains how agents grew out of reasoning plus acting, which is the loop every later system still runs."
+        },
+        {
+          "kind": "blog",
+          "title": "Building effective agents",
+          "by": "Anthropic",
+          "year": 2024,
+          "url": "https://www.anthropic.com/engineering/building-effective-agents",
+          "why": "Separates workflows (control flow in code) from agents (the model chooses the steps) and names the common patterns, which is the main design choice you will face in practice."
+        },
+        {
+          "kind": "blog",
+          "title": "Writing effective tools for AI agents—using AI agents",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/writing-tools-for-agents",
+          "why": "Most agent failures trace back to tool design, and this covers naming, scoping, response size and how to evaluate tools."
+        },
+        {
+          "kind": "talk",
+          "title": "Building Agents with Model Context Protocol - Full Workshop",
+          "by": "Mahesh Murag (Anthropic, AI Engineer Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=kQmXtrmQ5Zg",
+          "why": "Shows how tools become shared infrastructure through MCP, walking through servers, clients and how an agent uses them."
+        },
+        {
+          "kind": "blog",
+          "title": "Effective harnesses for long-running agents",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+          "why": "Shows what changes when a task outlasts one context window: progress files, feature lists, one tested increment per session."
+        }
       ]
     },
     {
@@ -3060,6 +3111,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "Architectures that route parts of a query from an LLM to discrete expert modules such as calculators, APIs, and databases.",
+      "summary": "An early architecture where a language model acts as a router, sending parts of a request to dedicated modules such as a calculator, an API, or a database instead of answering everything itself. It set the pattern that exact work goes to exact tools.",
       "parents": [
         {
           "id": "expert-systems",
@@ -3085,6 +3137,29 @@
       "examples": [
         "early LangChain agents"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Jurassic-X: Crossing the neuro-symbolic chasm with the MRKL system",
+          "by": "AI21 Labs",
+          "year": 2022,
+          "url": "https://www.ai21.com/blog/jurassic-x-crossing-the-neuro-symbolic-chasm-with-the-mrkl-system/"
+        },
+        {
+          "kind": "blog",
+          "title": "LLM Powered Autonomous Agents",
+          "by": "Lilian Weng",
+          "year": 2023,
+          "url": "https://lilianweng.github.io/posts/2023-06-23-agent/"
+        },
+        {
+          "kind": "paper",
+          "title": "Augmented Language Models: a Survey",
+          "by": "Grégoire Mialon et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2302.07842"
+        }
+      ],
       "status": "added"
     },
     {
@@ -3096,6 +3171,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "Training models to decide when and how to call tools by inserting API calls into their own training data.",
+      "summary": "Training a model to decide for itself when to call a tool and with what arguments. Toolformer inserted candidate API calls into training text and kept only the ones whose results helped predict what came next. Tool use is now trained into every frontier model.",
       "parents": [
         {
           "id": "mrkl-systems",
@@ -3120,6 +3196,36 @@
       "examples": [
         "tool-use training data in frontier models"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "LLM Powered Autonomous Agents",
+          "by": "Lilian Weng",
+          "year": 2023,
+          "url": "https://lilianweng.github.io/posts/2023-06-23-agent/"
+        },
+        {
+          "kind": "paper",
+          "title": "Tool Learning with Foundation Models",
+          "by": "Yujia Qin et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2304.08354"
+        },
+        {
+          "kind": "paper",
+          "title": "Gorilla: Large Language Model Connected with Massive APIs",
+          "by": "Shishir G. Patil et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2305.15334"
+        },
+        {
+          "kind": "paper",
+          "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs",
+          "by": "Yujia Qin et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2307.16789"
+        }
+      ],
       "status": "added"
     },
     {
@@ -3131,6 +3237,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "A model emits a structured call matching a declared schema; the host executes it and returns the result to the model.",
+      "summary": "The model replies with a structured call, a function name plus arguments matching a schema you declared, instead of prose. Your code runs the function and sends the result back. It is the basic primitive every agent is built on.",
       "parents": [
         {
           "id": "tool-learning",
@@ -3149,12 +3256,43 @@
       "maturity_note": "Core primitive of every major model API.",
       "date": "2023-06",
       "ref": {
-        "title": "Function calling and other API updates (OpenAI, June 2023)"
+        "title": "Function calling and other API updates (OpenAI, June 2023)",
+        "url": "https://openai.com/index/function-calling-and-other-api-updates/"
       },
       "examples": [
         "OpenAI tools",
         "Anthropic tool use",
         "Gemini function calling"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Tool use with Claude",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
+        },
+        {
+          "kind": "blog",
+          "title": "Writing effective tools for AI agents—using AI agents",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/writing-tools-for-agents"
+        },
+        {
+          "kind": "talk",
+          "title": "Function Calling is All You Need — Full Workshop",
+          "by": "Ilan Bigio (OpenAI, AI Engineer Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=KUEmEb71vzQ"
+        },
+        {
+          "kind": "blog",
+          "title": "Berkeley Function Calling Leaderboard",
+          "by": "Gorilla team, UC Berkeley",
+          "year": 2024,
+          "url": "https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html"
+        }
       ],
       "status": "repaired"
     },
@@ -3170,6 +3308,7 @@
         "planning-and-reasoning"
       ],
       "desc": "Interleaving reasoning traces with actions and observations in a loop until the task is done.",
+      "summary": "The basic agent loop: the model reasons about what to do, takes an action with a tool, reads the result, and repeats until the task is done. Nearly every agent framework is a variant of it.",
       "parents": [
         {
           "id": "chain-of-thought",
@@ -3196,6 +3335,36 @@
         "LangChain agents",
         "most agent SDKs"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+          "by": "Google Research",
+          "year": 2022,
+          "url": "https://research.google/blog/react-synergizing-reasoning-and-acting-in-language-models/"
+        },
+        {
+          "kind": "tutorial",
+          "title": "A simple Python implementation of the ReAct pattern for LLMs",
+          "by": "Simon Willison",
+          "year": 2023,
+          "url": "https://til.simonwillison.net/llms/python-react-pattern"
+        },
+        {
+          "kind": "talk",
+          "title": "LLM Agents: History & Overview (UC Berkeley CS294-196)",
+          "by": "Shunyu Yao (Berkeley RDI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=RM6ZArd2nVc"
+        },
+        {
+          "kind": "paper",
+          "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+          "by": "Noah Shinn et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2303.11366"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -3207,6 +3376,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "Orchestrating LLM calls as explicit graphs of states and transitions in code, with the model deciding only where it must.",
+      "summary": "Writing the control flow in code, as a graph of steps and transitions, and calling the model only at the points that need judgment. Common shapes are chains, routers, parallel fan-out, orchestrator and workers, and generate-then-evaluate loops. Most production systems sit here rather than handing the model full control.",
       "parents": [
         {
           "id": "statecharts",
@@ -3241,6 +3411,36 @@
         "Inngest",
         "Mastra"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "LangGraph",
+          "by": "LangChain",
+          "year": 2024,
+          "url": "https://www.langchain.com/blog/langgraph"
+        },
+        {
+          "kind": "blog",
+          "title": "How to think about agent frameworks",
+          "by": "Harrison Chase (LangChain)",
+          "year": 2025,
+          "url": "https://www.langchain.com/blog/how-to-think-about-agent-frameworks"
+        },
+        {
+          "kind": "talk",
+          "title": "How We Build Effective Agents",
+          "by": "Barry Zhang (Anthropic, AI Engineer Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=D7_ipDqhtwk"
+        },
+        {
+          "kind": "talk",
+          "title": "12-Factor Agents: Patterns of reliable LLM applications",
+          "by": "Dex Horthy (HumanLayer, AI Engineer World's Fair)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=8kMaTybvDUw"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -3251,6 +3451,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "An open JSON-RPC protocol for connecting AI applications to tools, data, and prompts through interchangeable servers.",
+      "summary": "An open protocol for plugging tools and data into AI applications. A server exposes its tools, resources, and prompt templates once, and any compatible client can use them, instead of every app writing its own connector for every service. The design borrows from the Language Server Protocol used by code editors.",
       "parents": [
         {
           "id": "function-calling",
@@ -3278,6 +3479,29 @@
         "VS Code",
         "ChatGPT connectors"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Introducing the Model Context Protocol",
+          "by": "Anthropic",
+          "year": 2024,
+          "url": "https://www.anthropic.com/news/model-context-protocol"
+        },
+        {
+          "kind": "docs",
+          "title": "Architecture overview - Model Context Protocol",
+          "by": "Model Context Protocol",
+          "year": 2025,
+          "url": "https://modelcontextprotocol.io/docs/learn/architecture"
+        },
+        {
+          "kind": "talk",
+          "title": "Building Agents with Model Context Protocol - Full Workshop",
+          "by": "Mahesh Murag (Anthropic, AI Engineer Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=kQmXtrmQ5Zg"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -3294,6 +3518,7 @@
         "retrieval-and-knowledge"
       ],
       "desc": "Persisting information across turns and sessions — transcripts, extracted facts, notes — and bringing it back into context when relevant.",
+      "summary": "Letting an agent keep information across turns and sessions, such as transcripts, extracted facts, or its own notes, and bring it back into context when it becomes relevant. MemGPT framed this like an operating system paging data between a small working context and larger external storage. Designs still vary widely.",
       "parents": [
         {
           "id": "retrieval-augmented-generation",
@@ -3323,6 +3548,36 @@
         "NOTES.md progress files",
         "Claude memory tool"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Memory for agents",
+          "by": "Harrison Chase (LangChain)",
+          "year": 2024,
+          "url": "https://www.langchain.com/blog/memory-for-agents"
+        },
+        {
+          "kind": "blog",
+          "title": "Memory Blocks: The Key to Agentic Context Management",
+          "by": "Letta",
+          "year": 2025,
+          "url": "https://www.letta.com/blog/memory-blocks/"
+        },
+        {
+          "kind": "talk",
+          "title": "Stateful Agents — Full Workshop",
+          "by": "Charles Packer (Letta, AI Engineer Summit)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=E0k9Ppq6yXY"
+        },
+        {
+          "kind": "paper",
+          "title": "Cognitive Architectures for Language Agents",
+          "by": "Theodore R. Sumers et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2309.02427"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -3335,6 +3590,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "Several agents with distinct roles or contexts that delegate, collaborate, or debate to complete a task.",
+      "summary": "Several agents with separate roles or context windows working on one task: an orchestrator splits the work and delegates it to subagents, or agents review and debate each other's output. Orchestrator-and-subagent setups run in production; free-form agent swarms remain unreliable.",
       "parents": [
         {
           "id": "react-agent-loop",
@@ -3362,6 +3618,36 @@
         "CrewAI",
         "Claude Code subagents"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "How we built our multi-agent research system",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+        },
+        {
+          "kind": "blog",
+          "title": "Don't Build Multi-Agents",
+          "by": "Walden Yan (Cognition)",
+          "year": 2025,
+          "url": "https://cognition.com/blog/dont-build-multi-agents"
+        },
+        {
+          "kind": "paper",
+          "title": "Why Do Multi-Agent LLM Systems Fail?",
+          "by": "Mert Cemri et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2503.13657"
+        },
+        {
+          "kind": "paper",
+          "title": "Large Language Model based Multi-Agents: A Survey of Progress and Challenges",
+          "by": "Taicheng Guo et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2402.01680"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -3373,6 +3659,7 @@
       ],
       "region": "agents-and-orchestration",
       "desc": "Agents with shell, file system, and test access that make and verify changes to codebases.",
+      "summary": "Agents that work inside a codebase with a shell, file access, and the test suite, so they can make changes and check them. SWE-agent showed that designing the tool interface for the agent matters as much as the model. They are now everyday developer tooling.",
       "parents": [
         {
           "id": "react-agent-loop",
@@ -3400,6 +3687,36 @@
         "Cursor agent",
         "OpenHands"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Best practices for Claude Code",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://code.claude.com/docs/en/best-practices"
+        },
+        {
+          "kind": "blog",
+          "title": "Designing agentic loops",
+          "by": "Simon Willison",
+          "year": 2025,
+          "url": "https://simonwillison.net/2025/Sep/30/designing-agentic-loops/"
+        },
+        {
+          "kind": "talk",
+          "title": "Claude Code & the evolution of agentic coding",
+          "by": "Boris Cherny (Anthropic, AI Engineer World's Fair)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=Lue8K2jqfKk"
+        },
+        {
+          "kind": "paper",
+          "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+          "by": "Carlos E. Jimenez et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2310.06770"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -3414,6 +3731,7 @@
         "multimodal-applied"
       ],
       "desc": "Agents that perceive screens and operate graphical interfaces with mouse and keyboard actions.",
+      "summary": "Agents that look at screenshots and operate a graphical interface with mouse clicks and keystrokes, so they can use software that has no API. They ship in products, but reliability still limits unattended use.",
       "parents": [
         {
           "id": "react-agent-loop",
@@ -3432,12 +3750,43 @@
       "maturity_note": "Shipping in products; reliability still limits unattended use.",
       "date": "2024-10",
       "ref": {
-        "title": "Introducing computer use (Anthropic, October 2024)"
+        "title": "Introducing computer use (Anthropic, October 2024)",
+        "url": "https://www.anthropic.com/news/3-5-models-and-computer-use"
       },
       "examples": [
         "Claude computer use",
         "OpenAI Operator",
         "browser agents"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Developing a computer use model",
+          "by": "Anthropic",
+          "year": 2024,
+          "url": "https://www.anthropic.com/news/developing-computer-use"
+        },
+        {
+          "kind": "docs",
+          "title": "Computer use tool",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool"
+        },
+        {
+          "kind": "paper",
+          "title": "OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments",
+          "by": "Tianbao Xie et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.07972"
+        },
+        {
+          "kind": "paper",
+          "title": "GUI Agents: A Survey",
+          "by": "Dang Nguyen et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2412.13501"
+        }
       ],
       "status": "repaired"
     },
@@ -3452,6 +3801,7 @@
         "retrieval-and-knowledge"
       ],
       "desc": "Long-running agents that plan, search many sources, read, and synthesize a cited report.",
+      "summary": "Agents that take an open question, plan searches, read many sources over minutes or hours, and write a cited report. They are often built as an orchestrator with parallel search subagents. Every major assistant ships one; quality varies.",
       "parents": [
         {
           "id": "agentic-rag",
@@ -3472,12 +3822,42 @@
       "date": "2024-12",
       "ref": {
         "title": "How we built our multi-agent research system (Anthropic)",
-        "url": "https://www.anthropic.com/engineering/built-multi-agent-research-system"
+        "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
       },
       "examples": [
         "Gemini Deep Research",
         "OpenAI deep research",
         "Claude Research"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Open-source DeepResearch – Freeing our search agents",
+          "by": "Hugging Face",
+          "year": 2025,
+          "url": "https://huggingface.co/blog/open-deep-research"
+        },
+        {
+          "kind": "blog",
+          "title": "Open Deep Research",
+          "by": "LangChain",
+          "year": 2025,
+          "url": "https://www.langchain.com/blog/open-deep-research"
+        },
+        {
+          "kind": "talk",
+          "title": "How OpenAI Built its Groundbreaking Deep Research Product",
+          "by": "Isa Fulford (OpenAI) on Sequoia Capital's Training Data",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=jFZ9hJKJKtw"
+        },
+        {
+          "kind": "paper",
+          "title": "Deep Research Agents: A Systematic Examination And Roadmap",
+          "by": "Yuxuan Huang et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2506.18096"
+        }
       ],
       "status": "added"
     },
@@ -3493,6 +3873,7 @@
         "prompting-and-context-engineering"
       ],
       "desc": "Packaging instructions, scripts, and resources as folders an agent loads on demand, disclosing detail progressively to save context.",
+      "summary": "Folders of instructions, scripts, and reference files that an agent loads only when a task calls for them. At startup the agent sees just each skill's name and one-line description, so it can carry hundreds of skills at little context cost. Skills complement tool protocols: tools say what an agent can do, skills say how to do a job.",
       "parents": [
         {
           "id": "progressive-disclosure",
@@ -3519,6 +3900,36 @@
         "Claude skills",
         "AGENTS.md conventions"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Agent Skills",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
+        },
+        {
+          "kind": "blog",
+          "title": "Claude Skills are awesome, maybe a bigger deal than MCP",
+          "by": "Simon Willison",
+          "year": 2025,
+          "url": "https://simonwillison.net/2025/Oct/16/claude-skills/"
+        },
+        {
+          "kind": "talk",
+          "title": "Don't Build Agents, Build Skills Instead",
+          "by": "Barry Zhang & Mahesh Murag (Anthropic, AI Engineer)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=CEvIs9y1uog"
+        },
+        {
+          "kind": "docs",
+          "title": "Agent Skills Overview",
+          "by": "agentskills.io",
+          "year": 2025,
+          "url": "https://agentskills.io/home"
+        }
+      ],
       "status": "added"
     },
     {
@@ -3535,6 +3946,7 @@
         "prompting-and-context-engineering"
       ],
       "desc": "Small models that answer typed questions about an input (pick one, score it, yes or no) with calibrated probabilities in a single pass instead of generating text; the fast decision layer agents use to route, classify, escalate, and decide when to defer to a human.",
+      "summary": "Small models that answer a typed question about an input (pick one option, give a score, or say yes or no) with calibrated probabilities in one pass, instead of generating text. Agents use them as a fast, cheap layer to route, classify, escalate, and decide when to hand off to a human. They can only return a valid option, so output is never malformed, though the chosen option can still be wrong.",
       "parents": [
         {
           "id": "constrained-decoding",
@@ -3573,6 +3985,248 @@
         "Jev (TypeSafe AI)",
         "Clef and Clef-flash (Cloudflare)"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "clef (Cloudflare) · Workers AI docs",
+          "by": "Cloudflare",
+          "year": 2026,
+          "url": "https://developers.cloudflare.com/workers-ai/models/clef/"
+        },
+        {
+          "kind": "blog",
+          "title": "A deep dive into Clef, Cloudflare's decision model",
+          "by": "Flavio Copes",
+          "year": 2026,
+          "url": "https://flaviocopes.com/clef/"
+        },
+        {
+          "kind": "paper",
+          "title": "General Decision Models: Benchmarking and Insights Beyond Jev",
+          "by": "Feiyu Duan et al.",
+          "year": 2026,
+          "url": "https://arxiv.org/abs/2610.03935"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "semantic-routing",
+      "name": "Semantic Routing",
+      "aliases": [
+        "embedding-based intent routing",
+        "Semantic Router"
+      ],
+      "region": "agents-and-orchestration",
+      "layer": "detail",
+      "desc": "Choosing a tool, prompt, or sub-agent by comparing the query's embedding with example utterances for each route, with no LLM call.",
+      "summary": "Picks where a request should go by comparing its embedding with example phrases for each route, instead of asking an LLM to decide. It takes milliseconds and costs almost nothing, so it often sits in front of an agent as a first-pass router. It handles clear-cut intents well and ambiguous ones poorly.",
+      "parents": [
+        {
+          "id": "mrkl-systems",
+          "rel": "specializes",
+          "why": "A MRKL-style router implemented with embedding similarity instead of a model call.",
+          "src": "Semantic Router (Aurelio AI 2023)",
+          "confidence": "medium"
+        },
+        {
+          "id": "text-embeddings",
+          "rel": "applies",
+          "why": "Routes by cosine similarity between the query and each route's example utterances.",
+          "src": "Semantic Router (Aurelio AI 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "A common cheap pre-filter in front of agents and chatbots; less necessary as LLM routing gets cheaper.",
+      "date": "2023-10",
+      "ref": {
+        "title": "Semantic Router (Aurelio AI)",
+        "url": "https://github.com/aurelio-labs/semantic-router"
+      },
+      "examples": [
+        "Aurelio Semantic Router"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Semantic Router: Introduction",
+          "by": "Aurelio AI",
+          "year": 2024,
+          "url": "https://docs.aurelio.ai/docs/semantic-router/get-started/introduction"
+        },
+        {
+          "kind": "talk",
+          "title": "NEW AI Framework - Steerable Chatbots with Semantic Router",
+          "by": "James Briggs",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=ro312jDqAh0"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "mcp-code-execution",
+      "name": "Code Execution with MCP",
+      "aliases": [
+        "Code Mode",
+        "tools as code APIs"
+      ],
+      "region": "agents-and-orchestration",
+      "layer": "detail",
+      "desc": "Presenting tools to an agent as a code API it calls from a sandbox, so intermediate results are filtered in code and only what matters returns to the context window.",
+      "summary": "Instead of calling tools one at a time and reading every result, the agent writes a short program against the tools and runs it in a sandbox. Large intermediate results, such as a 10,000-row spreadsheet, stay in the sandbox and only the filtered answer comes back, which saves tokens and round trips.",
+      "parents": [
+        {
+          "id": "model-context-protocol",
+          "rel": "extends",
+          "why": "Exposes MCP servers as a code API the agent programs against, rather than as individual tool calls.",
+          "src": "Code Mode: the better way to use MCP (Cloudflare 2025)"
+        },
+        {
+          "id": "progressive-disclosure",
+          "rel": "applies",
+          "why": "Tool definitions are read from the file system when needed instead of loaded up front.",
+          "src": "Code execution with MCP (Anthropic 2025)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Introduced in late 2025 by Cloudflare and Anthropic; adoption is early.",
+      "date": "2025-09",
+      "ref": {
+        "title": "Code Mode: the better way to use MCP (Cloudflare)",
+        "url": "https://blog.cloudflare.com/code-mode/"
+      },
+      "examples": [
+        "Cloudflare Code Mode",
+        "Claude Agent SDK"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Code execution with MCP: building more efficient AI agents",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/code-execution-with-mcp"
+        },
+        {
+          "kind": "blog",
+          "title": "Introducing advanced tool use on the Claude Developer Platform",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/engineering/advanced-tool-use"
+        },
+        {
+          "kind": "paper",
+          "title": "Executable Code Actions Elicit Better LLM Agents",
+          "by": "Xingyao Wang et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2402.01030"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "long-running-agent-harness",
+      "name": "Long-Running Agent Harnesses",
+      "aliases": [
+        "multi-session agents",
+        "initializer agent pattern",
+        "progress files"
+      ],
+      "region": "agents-and-orchestration",
+      "layer": "detail",
+      "desc": "Harness patterns for tasks spanning many context windows - a first session writes a feature list and progress file, and each later session reads them, makes one tested increment, commits, and updates the notes.",
+      "summary": "How to keep an agent productive on a task too big for one context window. A first session sets up the environment and writes the plan down, as a feature checklist and a progress file; each later session reads that state, makes one tested increment, commits it, and updates the notes. Written state and git history, not a bigger window, carry the work forward.",
+      "parents": [
+        {
+          "id": "coding-agents",
+          "rel": "extends",
+          "why": "Stretches a single coding-agent session into many coordinated ones.",
+          "src": "Effective harnesses for long-running agents (Anthropic 2025)"
+        },
+        {
+          "id": "agent-memory",
+          "rel": "applies",
+          "why": "Progress files and git history are the memory that carries state between sessions.",
+          "src": "Effective harnesses for long-running agents (Anthropic 2025)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Used in shipping coding agents; patterns published in late 2025 and still settling.",
+      "date": "2025-11",
+      "ref": {
+        "title": "Effective harnesses for long-running agents (Anthropic)",
+        "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+      },
+      "examples": [
+        "Claude Agent SDK",
+        "Claude Code"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Building a C compiler with a team of parallel Claudes",
+          "by": "Anthropic",
+          "year": 2026,
+          "url": "https://www.anthropic.com/engineering/building-c-compiler"
+        },
+        {
+          "kind": "blog",
+          "title": "Building agents with the Claude Agent SDK",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://claude.com/resources/articles/building-agents-with-the-claude-agent-sdk"
+        },
+        {
+          "kind": "talk",
+          "title": "Claude Agent SDK [Full Workshop]",
+          "by": "Thariq Shihipar (Anthropic, AI Engineer)",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=TqC1qOfiVcQ"
+        },
+        {
+          "kind": "paper",
+          "title": "Measuring AI Ability to Complete Long Software Tasks",
+          "by": "Thomas Kwa et al. (METR)",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2503.14499"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "context-aware-mcp",
+      "name": "Context-Aware MCP",
+      "aliases": [
+        "CA-MCP",
+        "shared context store"
+      ],
+      "region": "agents-and-orchestration",
+      "layer": "detail",
+      "desc": "Adds a shared context store that MCP servers read and write, so servers coordinate on multi-step tasks without every intermediate state passing through the LLM.",
+      "summary": "A research extension to MCP in which tool servers share a common memory. The model sets up the plan, then servers read and write intermediate state in the shared store and coordinate among themselves, which cut LLM calls on travel-planning benchmarks. It is one paper so far, not a standard.",
+      "parents": [
+        {
+          "id": "model-context-protocol",
+          "rel": "extends",
+          "why": "Adds a stateful shared context layer to otherwise stateless MCP servers.",
+          "src": "Enhancing MCP with Context-Aware Server Collaboration (Jayanti & Han 2026)"
+        },
+        {
+          "id": "multi-agent-systems",
+          "rel": "combines",
+          "why": "A blackboard-style shared store lets servers coordinate like agents without a central relay.",
+          "src": "Enhancing MCP with Context-Aware Server Collaboration (Jayanti & Han 2026)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "A single 2026 research paper; no production adoption yet.",
+      "date": "2026-01",
+      "ref": {
+        "title": "Enhancing Model Context Protocol (MCP) with Context-Aware Server Collaboration (Jayanti & Han)",
+        "arxiv": "2601.11595"
+      },
       "status": "added"
     },
     {
@@ -3712,7 +4366,8 @@
       "aliases": [
         "Reflexion",
         "self-critique",
-        "self-refine"
+        "self-refine",
+        "evaluator-optimizer"
       ],
       "region": "planning-and-reasoning",
       "also": [

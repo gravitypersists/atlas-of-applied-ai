@@ -157,4 +157,8 @@ settlements:
   - {id: textual-gradients, x: 2031.2, y: 1353.7, settled: "2026-10-08"}
   - {id: context-ordering, x: 2284.7, y: 1802.9, settled: "2026-10-08"}
   - {id: progressive-disclosure, x: 2364.9, y: 1618, settled: "2026-10-08"}
+  - {id: semantic-routing, x: 2792.4, y: 1771.3, settled: "2026-10-08"}
+  - {id: mcp-code-execution, x: 3065.8, y: 1251.2, settled: "2026-10-08"}
+  - {id: long-running-agent-harness, x: 2833, y: 1505.2, settled: "2026-10-08"}
+  - {id: context-aware-mcp, x: 2575.2, y: 1235.8, settled: "2026-10-08"}
 retired: []

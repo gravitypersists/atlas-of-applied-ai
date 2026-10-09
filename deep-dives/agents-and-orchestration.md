@@ -1,6 +1,6 @@
 # Deep dive: Agents and Orchestration
 
-Backbone v0.2 · 13 anchors · 20 cross-region edges
+Backbone v0.2 · 17 anchors · 22 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -44,6 +44,10 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `deep-research-agents` — Deep Research Agents (maturity 3, 2024-12)
 - `agent-skills` — Agent Skills (maturity 2, 2025-10)
 - `decision-models` — Decision Models (maturity 2, 2026-09)
+- `semantic-routing` — Semantic Routing (maturity 3, 2023-10)
+- `mcp-code-execution` — Code Execution with MCP (maturity 2, 2025-09)
+- `long-running-agent-harness` — Long-Running Agent Harnesses (maturity 3, 2025-11)
+- `context-aware-mcp` — Context-Aware MCP (maturity 1, 2026-01)
 
 Nodes homed elsewhere that also touch this region:
 - `model-routing` — Model Routing and Cascades (home: inference-and-serving)
@@ -68,9 +72,7 @@ Nodes homed elsewhere that also touch this region:
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- Semantic routing (embedding-based intent routing to sub-agents)
-- Language Agent Tree Search (LATS) (arXiv:2310.04406)
-- Context-Aware MCP / shared-context-store MCP variants (claimed 2026 paper — verify it exists)
+- none
 
 ## Output
 
@@ -170,8 +172,8 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - inference-and-serving: autoregressive-decoding (Autoregressive Decoding; next-token generation; sampling), kv-cache (KV Cache; key-value cache; incremental decoding), paged-attention (PagedAttention; paged KV cache), continuous-batching (Continuous Batching; in-flight batching; iteration-level scheduling), speculative-decoding (Speculative Decoding; assisted generation; draft-and-verify), weight-quantization (Weight Quantization; INT8; INT4; FP8; GPTQ; AWQ), kv-cache-quantization (KV Cache Quantization; KIVI; compressed KV cache), prompt-caching (Prompt Caching; prefix caching; RadixAttention), constrained-decoding (Constrained Decoding; grammar-constrained generation; guided decoding; JSON mode), model-routing (Model Routing and Cascades; LLM routing; FrugalGPT; model cascades), prefill-decode-disaggregation (Prefill-Decode Disaggregation; disaggregated serving; split-level inference), local-inference (Local and On-Device Inference; llama.cpp; edge inference)
 - prompting-and-context-engineering: zero-shot-prompting (Zero-Shot Prompting; direct prompting; instruction prompting), few-shot-prompting (Few-Shot Prompting; in-context learning; ICL), system-prompts (System Prompts; system messages; custom instructions; developer messages), prompt-templating (Prompt Templating; prompt templates), prompt-chaining (Prompt Chaining; LLM chains; pipelines of prompts; AI chains), structured-outputs (Structured Outputs; JSON outputs; schema-constrained outputs), context-compaction (Context Compaction; prompt compression; summarization of history), context-engineering (Context Engineering; context management), automatic-prompt-optimization (Automatic Prompt Optimization; APO; APE; prompt search), declarative-prompt-compilation (Declarative Prompt Compilation; DSPy; LM programs), zero-shot-cot (Zero-Shot Chain-of-Thought; zero-shot CoT; Let's think step by step), dynamic-few-shot-selection (Dynamic Few-Shot Selection; example selection; prompt retrieval; kNN prompting; KATE), decomposed-prompting (Decomposed Prompting; DECOMP; task decomposition prompting), textual-gradients (Textual Gradients; TextGrad; textual gradient descent), context-ordering (Context Ordering; position engineering; context reordering; lost-in-the-middle mitigation), progressive-disclosure (Progressive Disclosure; just-in-time context; lazy-loaded context)
 - retrieval-and-knowledge: text-embeddings (Text Embeddings; embedding models; sentence embeddings), dense-retrieval (Dense Retrieval; vector search; semantic search; DPR), retrieval-augmented-generation (Retrieval-Augmented Generation; RAG; naive RAG), chunking-strategies (Chunking Strategies; text splitting; semantic chunking), hybrid-search (Hybrid Search; sparse + dense retrieval; reciprocal rank fusion), cross-encoder-reranking (Cross-Encoder Reranking; rerankers; retrieve-and-rerank; multi-stage retrieval), query-rewriting (Query Rewriting and HyDE; query expansion; HyDE), contextual-retrieval (Contextual Retrieval; contextual chunking), graph-rag (GraphRAG; knowledge-graph RAG), self-rag (Self-RAG; self-reflective RAG), corrective-rag (Corrective RAG; CRAG), agentic-rag (Agentic RAG; agentic search; iterative retrieval)
-- agents-and-orchestration: mrkl-systems (MRKL Systems; modular reasoning; neuro-symbolic routing), tool-learning (Tool Learning; Toolformer; self-taught tool use), function-calling (Function Calling; tool use; tool calling), react-agent-loop (ReAct Agent Loop; reason and act; agent loop), workflow-state-machines (Workflow Graphs and State Machines; graph-based agents; agent workflows), model-context-protocol (Model Context Protocol; MCP), agent-memory (Agent Memory; long-term memory; episodic memory; MemGPT; structured note-taking), multi-agent-systems (Multi-Agent Systems; orchestrator-worker; subagents; agent teams), coding-agents (Coding Agents; software engineering agents; SWE-agent), computer-use-agents (Computer-Use Agents; GUI agents; browser agents), deep-research-agents (Deep Research Agents; research agents), agent-skills (Agent Skills; skills; packaged procedures), decision-models (Decision Models; System One models; typed decision models; calibrated classifiers for agents)
-- planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; LATS), reflexion (Self-Reflection; Reflexion; self-critique; self-refine), process-reward-models (Process Reward Models; PRMs; step-level verifiers), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling), reasoning-models (Reasoning Models; thinking models; extended thinking), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning)
+- agents-and-orchestration: mrkl-systems (MRKL Systems; modular reasoning; neuro-symbolic routing), tool-learning (Tool Learning; Toolformer; self-taught tool use), function-calling (Function Calling; tool use; tool calling), react-agent-loop (ReAct Agent Loop; reason and act; agent loop), workflow-state-machines (Workflow Graphs and State Machines; graph-based agents; agent workflows), model-context-protocol (Model Context Protocol; MCP), agent-memory (Agent Memory; long-term memory; episodic memory; MemGPT; structured note-taking), multi-agent-systems (Multi-Agent Systems; orchestrator-worker; subagents; agent teams), coding-agents (Coding Agents; software engineering agents; SWE-agent), computer-use-agents (Computer-Use Agents; GUI agents; browser agents), deep-research-agents (Deep Research Agents; research agents), agent-skills (Agent Skills; skills; packaged procedures), decision-models (Decision Models; System One models; typed decision models; calibrated classifiers for agents), semantic-routing (Semantic Routing; embedding-based intent routing; Semantic Router), mcp-code-execution (Code Execution with MCP; Code Mode; tools as code APIs), long-running-agent-harness (Long-Running Agent Harnesses; multi-session agents; initializer agent pattern; progress files), context-aware-mcp (Context-Aware MCP; CA-MCP; shared context store)
+- planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; LATS), reflexion (Self-Reflection; Reflexion; self-critique; self-refine; evaluator-optimizer), process-reward-models (Process Reward Models; PRMs; step-level verifiers), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling), reasoning-models (Reasoning Models; thinking models; extended thinking), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning)
 - adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling), direct-preference-optimization (Direct Preference Optimization; DPO; KTO; ORPO; IPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT)
 - data-and-synthetic-data: self-instruct (Self-Instruct; synthetic instruction generation), evol-instruct (Evol-Instruct; instruction evolution), synthetic-textbook-data (Synthetic Pretraining Data; textbook-quality data; synthetic corpora), human-instruction-datasets (Crowdsourced Instruction Data; human-written demonstrations; OpenAssistant), llm-annotation (LLM-Assisted Annotation; LLM labeling; model-as-annotator), data-deduplication (Data Deduplication; near-duplicate removal; MinHash dedup), data-decontamination (Data Decontamination; test-set leakage prevention), data-quality-filtering (Data Quality Filtering; corpus curation; classifier-based filtering)
 - evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing), llm-tracing (LLM Tracing; LLM observability; agent traces), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring)
@@ -185,17 +187,21 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 Key references currently attached to the anchors (from the backbone runs; arXiv ids spot-checked, not exhaustively verified):
 - MRKL Systems: MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning (Karpas et al.) — arXiv:2205.00445
 - Tool Learning: Toolformer: Language Models Can Teach Themselves to Use Tools (Schick et al.) — arXiv:2302.04761
-- Function Calling: Function calling and other API updates (OpenAI, June 2023)
+- Function Calling: Function calling and other API updates (OpenAI, June 2023) — https://openai.com/index/function-calling-and-other-api-updates/
 - ReAct Agent Loop: ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al.) — arXiv:2210.03629
 - Workflow Graphs and State Machines: Building effective agents (Anthropic, December 2024) — https://www.anthropic.com/engineering/building-effective-agents
 - Model Context Protocol: Model Context Protocol specification — https://modelcontextprotocol.io
 - Agent Memory: MemGPT: Towards LLMs as Operating Systems (Packer et al.) — arXiv:2310.08560
 - Multi-Agent Systems: AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation (Wu et al.) — arXiv:2308.08155
 - Coding Agents: SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering (Yang et al.) — arXiv:2405.15793
-- Computer-Use Agents: Introducing computer use (Anthropic, October 2024)
-- Deep Research Agents: How we built our multi-agent research system (Anthropic) — https://www.anthropic.com/engineering/built-multi-agent-research-system
+- Computer-Use Agents: Introducing computer use (Anthropic, October 2024) — https://www.anthropic.com/news/3-5-models-and-computer-use
+- Deep Research Agents: How we built our multi-agent research system (Anthropic) — https://www.anthropic.com/engineering/multi-agent-research-system
 - Agent Skills: Equipping agents for the real world with Agent Skills (Anthropic) — https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
 - Decision Models: Introducing Clef: our open-source decision models, and new RL fine-tuning platform (Cloudflare) — https://blog.cloudflare.com/clef-decision-models/
+- Semantic Routing: Semantic Router (Aurelio AI) — https://github.com/aurelio-labs/semantic-router
+- Code Execution with MCP: Code Mode: the better way to use MCP (Cloudflare) — https://blog.cloudflare.com/code-mode/
+- Long-Running Agent Harnesses: Effective harnesses for long-running agents (Anthropic) — https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+- Context-Aware MCP: Enhancing Model Context Protocol (MCP) with Context-Aware Server Collaboration (Jayanti & Han) — arXiv:2601.11595
 
 ## Reference: cross-region edges touching this region
 - agent-memory --applies--> retrieval-augmented-generation
@@ -210,11 +216,13 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - deep-research-agents --extends--> agentic-rag
 - function-calling --combines--> structured-outputs
 - human-in-the-loop-approval --applies--> function-calling
+- mcp-code-execution --applies--> progressive-disclosure
 - model-context-protocol --applies--> language-server-protocol
 - mrkl-systems --applies--> expert-systems
 - mrkl-systems --combines--> pretrained-language-models
 - react-agent-loop --combines--> chain-of-thought
 - reflexion --extends--> react-agent-loop
+- semantic-routing --applies--> text-embeddings
 - tool-learning --applies--> few-shot-prompting
 - workflow-state-machines --applies--> statecharts
 - workflow-state-machines --extends--> prompt-chaining
