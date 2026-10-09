@@ -73,6 +73,20 @@ const CONFIG = {
   },
 };
 
+// Settlement of new landmarks (SPEC §4.4). World units.
+const SETTLE = {
+  radius: 170,              // first search radius around the parents' centroid; doubles up to 3 times
+  step: 14,                 // candidate spacing (jittered grid)
+  minSpacing: 62,           // hard minimum distance to any landmark (survey p10 nearest neighbour is ~80)
+  comfortSpacing: 95,       // soft crowding penalty below this
+  coastBand: 70,            // non-frontier nodes prefer land within this distance of the coast
+  shoreWater: 36,           // ...or water at most this far out (land will grow to meet them)
+  islet: [80, 190],         // frontier nodes settle offshore at this water distance: far enough that
+  isletIdeal: 110,          // their own small rise stays a separate islet until they mature
+  territoryPenalty: 300,    // water facing another region's shore
+  basinMargin: 0.1,         // never settle in the outer margin of the world
+};
+
 const MATURITY_LABEL = { 1: "Research", 2: "Emerging", 3: "Maturing", 4: "Established", 5: "Foundational" };
 
 // ---------------------------------------------------------------- utilities
@@ -347,6 +361,16 @@ function fitToBounds(points) {
 
 function writeLedger(ledger) {
   const w = ledger.world;
+  // Invariant: once accepted, existing settlements are an unchanged prefix of the new list.
+  if (w.accepted && fs.existsSync(PATHS.ledger)) {
+    const before = readYaml(PATHS.ledger, {}).settlements ?? [];
+    before.forEach((b, i) => {
+      const a = ledger.settlements[i];
+      if (!a || a.id !== b.id || a.x !== b.x || a.y !== b.y || a.settled !== b.settled) fail(`invariant: settled landmark ${b.id} would change`);
+    });
+    const retiredBefore = readYaml(PATHS.ledger, {}).retired ?? [];
+    if (retiredBefore.some((id, i) => ledger.retired[i] !== id)) fail("invariant: the retired list may only grow");
+  }
   const lines = [
     "# Applied AI Engineering Atlas: the permanent geography ledger.",
     "# Append-only. Positions here never change once settled (see SPEC.md §3.2).",
@@ -402,11 +426,9 @@ function render(model, curation) {
   const ledger = readYaml(PATHS.ledger, null);
   if (!ledger) fail("No ledger yet. Run `node build.mjs survey` first.");
   const { bb, byId, regionById, edges, children } = model;
-  const placed = new Map(ledger.settlements.map((s) => [s.id, s]));
+  const placed = placedOf(ledger);
   const unplaced = bb.nodes.filter((n) => !placed.has(n.id));
-  if (unplaced.length) {
-    console.warn(`warning: ${unplaced.length} backbone node(s) not in the ledger (settlement arrives in milestone 3): ${unplaced.map((n) => n.id).join(", ")}`);
-  }
+  if (unplaced.length) fail(`not settled: ${unplaced.map((n) => n.id).join(", ")}`);
 
   const landmarks = bb.nodes.filter((n) => placed.has(n.id)).map((n) => {
     const s = placed.get(n.id);
@@ -489,7 +511,7 @@ function loadTerrain(grid) {
 }
 
 // Elevation → land (high-water mark once accepted) → coverage guarantee → claims → invariants.
-function buildTerrain(model, ledger, { write = true, level = ledger.world.sea_level } = {}) {
+function buildTerrain(model, ledger, { write = true, quiet = false, level = ledger.world.sea_level } = {}) {
   const world = ledger.world;
   const grid = Terrain.makeGrid(world);
   const placed = placedOf(ledger);
@@ -531,7 +553,10 @@ function buildTerrain(model, ledger, { write = true, level = ledger.world.sea_le
       land: Terrain.rleEncode(land), owner: Terrain.rleEncode(owner),
     }) + "\n");
     const landCells = land.reduce((a, v) => a + v, 0);
-    console.log(`terrain: ${(100 * landCells / land.length).toFixed(1)}% land at sea level ${level}` +
+    const masses = Terrain.components(grid, land).sizes.filter((n) => n >= Terrain.TERRAIN.minLandmassCells).length;
+    const before = previous ? Terrain.components(grid, previous.land).sizes.filter((n) => n >= Terrain.TERRAIN.minLandmassCells).length : null;
+    console.log(`terrain: ${(100 * landCells / land.length).toFixed(1)}% land at sea level ${level}, ${masses} landmasses` +
+      (before !== null && before !== masses ? ` (was ${before})` : "") +
       (grown !== null ? `, ${grown} cells grown` : " (draft: regenerated)") +
       (terrain.repaired.length ? `, uplift raised for ${terrain.repaired.join(", ")}` : ""));
   }
@@ -616,6 +641,115 @@ function setSeaLevel(ledger, level) {
   console.log(`sea level set to ${level}`);
 }
 
+// ---------------------------------------------------------------- settlement (SPEC §4.4)
+// Places backbone nodes that aren't in the ledger yet, retires ledger entries that left the backbone,
+// and appends both to the ledger. Existing positions are never touched.
+function settle(model, ledger, { dryRun = false } = {}) {
+  const { bb, byId, regionById } = model;
+  const isRoot = (regionId) => regionById.get(regionId).kind === "root";
+  const inLedger = new Set(ledger.settlements.map((s) => s.id));
+  const retiring = ledger.settlements.map((s) => s.id).filter((id) => !byId.has(id) && !ledger.retired.includes(id));
+  const pending = bb.nodes.filter((n) => !inLedger.has(n.id));
+  const report = { settled: [], retired: retiring, warnings: [] };
+  if (!pending.length && !retiring.length) return report;
+  if (ledger.world.sea_level == null) fail("set a sea level (`sea --set`) before settling new landmarks");
+
+  const terrain = buildTerrain(model, ledger, { write: false, quiet: true });
+  const { grid, land, owner, regions } = terrain;
+  const field = Terrain.coastField(grid, land, owner);
+
+  // Current landmarks (retired ones still reserve their position).
+  const pos = new Map(ledger.settlements.map((s) => [s.id, { x: s.x, y: s.y, region: byId.get(s.id)?.region ?? null }]));
+  const rootXs = [...pos.values()].filter((p) => p.region && isRoot(p.region)).map((p) => p.x);
+  const appliedXs = [...pos.values()].filter((p) => p.region && !isRoot(p.region)).map((p) => p.x);
+  const divide = (Math.max(...rootXs) + Math.min(...appliedXs)) / 2; // the ocean between the worlds
+
+  // Parents first: settle in rounds, each taking nodes whose in-backbone parents are all placed.
+  const order = [];
+  let remaining = [...pending];
+  while (remaining.length) {
+    const ready = remaining.filter((n) => (n.parents ?? []).every((p) => !byId.has(p.id) || pos.has(p.id) || order.includes(byId.get(p.id))));
+    const take = ready.length ? ready : [remaining[0]]; // a cycle can't happen (validate.py), but never hang
+    order.push(...take);
+    remaining = remaining.filter((n) => !take.includes(n));
+  }
+
+  const [bx0, by0, bx1, by1] = ledger.world.bounds;
+  const mx = (bx1 - bx0) * SETTLE.basinMargin, my = (by1 - by0) * SETTLE.basinMargin;
+  for (const n of order) {
+    const regionIdx = regions.indexOf(n.region);
+    const root = isRoot(n.region);
+    const parents = (n.parents ?? []).filter((p) => pos.has(p.id) && pos.get(p.id).region && isRoot(pos.get(p.id).region) === root).map((p) => pos.get(p.id));
+    const kin = parents.length ? parents : [...pos.values()].filter((p) => p.region === n.region);
+    if (!kin.length) fail(`cannot settle ${n.id}: no placed parents in its world and no landmarks in ${n.region}. Place it by hand in the ledger.`);
+    const cx = kin.reduce((a, p) => a + p.x, 0) / kin.length, cy = kin.reduce((a, p) => a + p.y, 0) / kin.length;
+    const rng = rngFor(ledger.world.seed, `settle:${n.id}`);
+
+    let best = null;
+    for (let attempt = 0; attempt < 4 && !best; attempt++) {
+      const R = SETTLE.radius * 2 ** attempt;
+      for (let gy = -R; gy <= R; gy += SETTLE.step) for (let gx = -R; gx <= R; gx += SETTLE.step) {
+        const x = cx + gx + (rng() - 0.5) * SETTLE.step, y = cy + gy + (rng() - 0.5) * SETTLE.step;
+        const dc = Math.hypot(x - cx, y - cy);
+        if (dc > R) continue;
+        if (x < bx0 + mx || x > bx1 - mx || y < by0 + my || y > by1 - my) continue;
+        if (root ? x >= divide : x <= divide) continue;
+        let nearest = Infinity;
+        for (const p of pos.values()) nearest = Math.min(nearest, Math.hypot(p.x - x, p.y - y));
+        if (nearest < SETTLE.minSpacing) continue;
+        const k = Terrain.cellOf(grid, x, y), d = field.dist[k], near = field.nearOwner[k];
+        let penalty = Math.max(0, SETTLE.comfortSpacing - nearest) * 2;
+        if (near !== 255 && near !== regionIdx) {
+          if (d >= 0) continue; // never inside another region's territory
+          penalty += SETTLE.territoryPenalty;
+        }
+        if (n.maturity <= 2) {
+          if (d >= 0) continue;
+          const w = -d;
+          if (w > SETTLE.islet[1]) continue;
+          if (w < SETTLE.islet[0]) continue;
+          penalty += Math.abs(w - SETTLE.isletIdeal) * 0.5;
+        } else if (d >= 0) {
+          penalty += Math.max(0, d - SETTLE.coastBand) * 1.5;
+        } else {
+          if (-d > SETTLE.shoreWater) continue;
+          penalty += -d * 3;
+        }
+        const score = dc + penalty;
+        if (!best || score < best.score) best = { x: round1(x), y: round1(y), score, water: d < 0, nearest };
+      }
+    }
+    if (!best) fail(`no acceptable site for ${n.id} near its parents. Place it by hand in the ledger.`);
+    pos.set(n.id, { x: best.x, y: best.y, region: n.region });
+    const neighbour = [...pos.entries()].filter(([id]) => id !== n.id)
+      .map(([id, p]) => ({ id, d: Math.hypot(p.x - best.x, p.y - best.y) })).sort((a, b) => a.d - b.d)[0];
+    report.settled.push({ id: n.id, x: best.x, y: best.y, region: n.region, offshore: best.water, near: neighbour.id });
+  }
+
+  // A settled landmark whose cell another region owns has likely changed region since it was placed.
+  if (ledger.world.accepted) {
+    for (const s of ledger.settlements) {
+      const node = byId.get(s.id);
+      if (!node) continue;
+      const o = owner[Terrain.cellOf(grid, s.x, s.y)];
+      if (o !== 255 && regions[o] !== node.region) report.warnings.push(`${s.id} now belongs to ${node.region} but sits in ${regions[o]} territory`);
+    }
+  }
+
+  ledger.settlements.push(...report.settled.map(({ id, x, y }) => ({ id, x, y, settled: bb.meta.date })));
+  ledger.retired.push(...retiring);
+  if (!dryRun) writeLedger(ledger);
+  return report;
+}
+
+function printSettleReport(report, dryRun) {
+  const verb = dryRun ? "would settle" : "settled";
+  for (const s of report.settled) console.log(`${verb} ${s.id} (${s.region}) at ${s.x}, ${s.y}: ${s.offshore ? "offshore" : "on the coast"}, near ${s.near}`);
+  for (const id of report.retired) console.log(`${dryRun ? "would retire" : "retired"} ${id}: no longer in the backbone; its position and land are kept`);
+  for (const w of report.warnings) console.warn(`warning: ${w}`);
+  if (!report.settled.length && !report.retired.length) console.log("settle: nothing new");
+}
+
 // ---------------------------------------------------------------- debug preview
 const DEBUG_PALETTE = [
   "#8c6d46", "#7a5c3a", "#9a7b4f", "#6e5a43", "#a08060", "#857055", "#76624a", "#93785a", // roots: sepia family
@@ -686,7 +820,14 @@ else if (cmd === "sea") {
   }
   if (argAfter("--set") == null) fail("usage: sea --sweep [--levels a,b,c] | sea --set <level>");
   setSeaLevel(ledger, Number(argAfter("--set")));
-} else if (cmd !== "settle") fail(`unknown command: ${cmd}`);
+} else if (cmd === "settle") {
+  const ledger = readYaml(PATHS.ledger, null);
+  if (!ledger) fail("No ledger yet. Run `node build.mjs survey` first.");
+  ledger.retired ??= [];
+  const dryRun = args.includes("--dry-run");
+  printSettleReport(settle(model, ledger, { dryRun }), dryRun);
+  if (dryRun) process.exit(0);
+} else fail(`unknown command: ${cmd}`);
 
 const map = render(model, curation);
 if (preview) writePreview(model, map, preview);

@@ -81,7 +81,7 @@ world:
   cell: 4                              # world units per terrain grid cell; fixed at survey
   sea_level: 0.42                      # may only ever be lowered
   surveyed: "2026-10-08"
-settlements:                           # append-only; order = settlement order
+settlements:                           # append-only; order = settlement order; settled = backbone meta.date
   - {id: bm25, x: 812.4, y: 1430.0, settled: "2026-10-08"}
   - {id: graph-rag, x: 1904.2, y: 655.8, settled: "2026-10-08"}
 retired: []                            # ids removed from the backbone; their positions stay reserved, their land stays
@@ -162,9 +162,9 @@ The saturating sum keeps dense interiors near 1, so coasts form where influence 
 
 - **Settlement uplift.**
   - Shape: a Gaussian bump `h · exp(−d²/2σ²)`.
-  - Height and spread: `h` and `σ` grow with maturity, and they also grow with the node's maturity rank across the whole backbone. Rank keeps the 4–5 skew from flattening everything.
+  - Height and spread: `h` and `σ` grow with maturity, plus a fixed per-tier bonus (`tierBonus`) that steepens tiers 4–5 so the skew toward mature nodes doesn't flatten everything. Uplift depends only on the node's own data, so adding or removing other nodes never changes it.
   - Root nodes get a modest bonus, so the Old World reads as a solid continent.
-  - Organic shape: distance `d` is measured in a domain-warped space, `p + A·fbm(p)` with several octaves, which makes shapes irregular.
+  - Organic shape: distance is measured in a domain-warped space, `d = |warp(p) − warp(node)|` with `warp(p) = p + A·fbm(p)` over several octaves. Warping the landmark's own position as well keeps every bump peaked exactly on its landmark while its outline stays irregular. Ridges warp their endpoints the same way.
 - **Lineage ridge.**
   - Which edges: every edge where both endpoints are maturity ≥ 3 and on the same side of the ocean. Edges between the Old World and the New World raise no ridge, so the ocean stays open.
   - Shape: a ridge along the parent→child segment, with height following a smoothed profile `r · exp(−dist_to_segment²/2w²)`.
@@ -218,20 +218,27 @@ Set `ATLAS_DEBUG=1` to print each region body's final and target position.
 
 ### 4.4 Settlement (`settle`, every build)
 
-For each backbone node that isn't in the ledger, in backbone file order:
-1. **Candidates.** Sample a seeded Poisson-disk set of sites within radius `R` of the centroid of its parents that are already in the ledger. If it has no placed parents, use its region's territory centroid instead.
+Constants live in `SETTLE` in `map/build.mjs`. New nodes are settled parents first, then in backbone file order. Each one is placed against the terrain as it stood before this build, plus the nodes settled earlier in the same build.
+
+For each backbone node that isn't in the ledger:
+1. **Candidates.** A seeded, jittered grid of sites within radius `R` of the centroid of its placed parents *in the same world*. Oceanic parents are ignored, as in the survey. If it has none, the centroid of its region's landmarks is used instead. If the region has no landmarks either, the build fails and asks for a hand placement.
 2. **Score each site.** Lower is better. Then choose the best site.
    - distance to the parent centroid
-   - a crowding penalty that applies inside `minSpacing` of any landmark, which is a hard reject
-   - a territory penalty if the cell is owned by another region
+   - a hard reject within `minSpacing` of any landmark, and a soft crowding penalty out to `comfortSpacing`
+   - a hard reject in the outer `basinMargin` of the world
+   - a hard reject on land owned by another region, and a penalty for water facing another region's shore
    - a hard reject for sites on the wrong side of the ocean
    - a site-type penalty, which depends on maturity:
-     - maturity 1–2: the site must be water, near the coast, and facing away from other regions' land
-     - maturity ≥ 3: the site should be on land within `coastBand` of the coast, or in shallow water next to it
+     - maturity 1–2: the site must be water between `islet[0]` and `islet[1]` from the coast, ideally `isletIdeal`. That's far enough that the node's own small rise stays a separate islet until it matures.
+     - maturity ≥ 3: land, penalized beyond `coastBand` inland, or water at most `shoreWater` out, since land will grow to meet it
+   - Coast distances come from a two-pass chamfer distance transform (`coastField` in `map/terrain.mjs`), within a few percent of true Euclidean distance.
 3. If no site is acceptable, double `R` and try again, up to 3 times. If that still fails, the build fails and names the node.
-4. Append `{id, x, y, settled: today}` to the ledger. The node's uplift and ridges grow land in step 4.2.
+4. Append `{id, x, y, settled}` to the ledger, where `settled` is the backbone's `meta.date` (the edition). Using the build date would break determinism. The node's uplift and ridges then grow land in step 4.2.
+5. `settle --dry-run` prints what would be settled or retired and writes nothing.
 
-Nodes that have disappeared from the backbone move to `retired`. Their entry stays and their land stays. A node whose `region` changes keeps its position, and the build prints a warning for human review.
+Nodes that have disappeared from the backbone move to `retired`. Their entry stays and still reserves its position, and their land stays. A node whose `region` changes keeps its position. Once the survey is accepted, the build warns when a landmark sits in another region's territory, for human review.
+
+**Ledger invariant.** Once the survey is accepted, `writeLedger` refuses to write unless the existing settlements are an unchanged prefix of the new list and the retired list only grows.
 
 ### 4.5 Sea level (`sea --sweep`)
 

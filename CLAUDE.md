@@ -13,7 +13,8 @@ python3 validate.py      # check backbone.yaml; writes backbone.json + validatio
 python3 make_guides.py   # regenerate deep-dives/*.md (incl. deep-dives/README.md) from backbone.yaml
 
 # map (Node 22; run `npm install` in map/ once)
-node map/build.mjs                     # settle: render map/public/map.json from the ledger
+node map/build.mjs                     # settle new backbone nodes into the ledger, grow terrain, render map/public/map.json
+node map/build.mjs settle --dry-run    # show what would be settled or retired; writes nothing
 node map/build.mjs survey --redo       # re-run the founding survey (only while world.accepted is false)
 node map/build.mjs sea --sweep         # landmass stats per sea level; previews in map/.preview/
 node map/build.mjs sea --set 0.4       # set the sea level (only lower, once the survey is accepted)

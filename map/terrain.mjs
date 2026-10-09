@@ -11,7 +11,9 @@ export const TERRAIN = {
     sigmaPerMaturity: 8,
     heightBase: 0.55,
     heightPerMaturity: 0.09,
-    rankBonus: 0.25,        // + this × global maturity rank (counters the 4–5 skew)
+    // Extra height per maturity tier, steepening the top tiers to counter the 4–5 skew. A fixed table
+    // (not a rank across the backbone) so a node's uplift depends only on its own data.
+    tierBonus: { 1: 0, 2: 0, 3: 0.02, 4: 0.07, 5: 0.15 },
     rootBonus: 1.15,        // Old World landmarks stand a little higher and broader
   },
   ridge: {
@@ -67,12 +69,16 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
   const { width, height, cell, wx, wy } = grid;
   const E = new Float32Array(width * height);
 
-  // Domain warp, sampled once per cell.
+  // Domain warp, sampled once per cell. Landmarks and ridge ends are warped the same way, so every
+  // bump peaks exactly on its landmark while its outline is still distorted.
+  const warp = (x, y) => [
+    x + T.warp.amplitude * fbm(x / T.warp.scale, y / T.warp.scale, seed + 11, T.warp.octaves),
+    y + T.warp.amplitude * fbm(x / T.warp.scale, y / T.warp.scale, seed + 23, T.warp.octaves),
+  ];
   const qx = new Float32Array(width * height), qy = new Float32Array(width * height);
   for (let j = 0; j < height; j++) for (let i = 0; i < width; i++) {
-    const k = j * width + i, x = wx(i), y = wy(j);
-    qx[k] = x + T.warp.amplitude * fbm(x / T.warp.scale, y / T.warp.scale, seed + 11, T.warp.octaves);
-    qy[k] = y + T.warp.amplitude * fbm(x / T.warp.scale, y / T.warp.scale, seed + 23, T.warp.octaves);
+    const k = j * width + i;
+    [qx[k], qy[k]] = warp(wx(i), wy(j));
   }
   const reach = (r) => Math.ceil((r + T.warp.amplitude) / cell);
   const span = (x, y, r) => ({
@@ -82,20 +88,22 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
 
   for (const l of landmarks) {
     const s = l.sigma, h = l.height + (boost.get(l.id) ?? 0), r = 3 * s;
+    const [lx, ly] = warp(l.x, l.y);
     const { i0, i1, j0, j1 } = span(l.x, l.y, r);
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
-      const k = j * width + i, dx = qx[k] - l.x, dy = qy[k] - l.y, d2 = dx * dx + dy * dy;
+      const k = j * width + i, dx = qx[k] - lx, dy = qy[k] - ly, d2 = dx * dx + dy * dy;
       if (d2 < r * r) E[k] += h * Math.exp(-d2 / (2 * s * s));
     }
   }
 
   const w = T.ridge.width;
   for (const rd of ridges) {
-    const { ax, ay, bx, by, height: h } = rd;
+    const { height: h } = rd;
     const { i0, i1, j0, j1 } = {
-      i0: Math.min(span(ax, ay, 3 * w).i0, span(bx, by, 3 * w).i0), i1: Math.max(span(ax, ay, 3 * w).i1, span(bx, by, 3 * w).i1),
-      j0: Math.min(span(ax, ay, 3 * w).j0, span(bx, by, 3 * w).j0), j1: Math.max(span(ax, ay, 3 * w).j1, span(bx, by, 3 * w).j1),
+      i0: Math.min(span(rd.ax, rd.ay, 3 * w).i0, span(rd.bx, rd.by, 3 * w).i0), i1: Math.max(span(rd.ax, rd.ay, 3 * w).i1, span(rd.bx, rd.by, 3 * w).i1),
+      j0: Math.min(span(rd.ax, rd.ay, 3 * w).j0, span(rd.bx, rd.by, 3 * w).j0), j1: Math.max(span(rd.ax, rd.ay, 3 * w).j1, span(rd.bx, rd.by, 3 * w).j1),
     };
+    const [ax, ay] = warp(rd.ax, rd.ay), [bx, by] = warp(rd.bx, rd.by);
     const vx = bx - ax, vy = by - ay, len2 = vx * vx + vy * vy || 1;
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
       const k = j * width + i;
@@ -127,14 +135,12 @@ export function terrainInputs(model, placed) {
   const { bb, byId, regionById, edges } = model;
   const isRoot = (r) => regionById.get(r).kind === "root";
   const nodes = bb.nodes.filter((n) => placed.has(n.id));
-  const sorted = [...nodes].sort((a, b) => a.maturity - b.maturity);
-  const rank = new Map(nodes.map((n) => [n.id, sorted.findIndex((m) => m.maturity === n.maturity) / Math.max(1, sorted.length - 1)]));
   const landmarks = nodes.map((n) => {
     const p = placed.get(n.id), root = isRoot(n.region) ? T.uplift.rootBonus : 1;
     return {
       id: n.id, x: p.x, y: p.y, region: n.region, maturity: n.maturity,
       sigma: (T.uplift.sigmaBase + T.uplift.sigmaPerMaturity * n.maturity) * root,
-      height: (T.uplift.heightBase + T.uplift.heightPerMaturity * n.maturity + T.uplift.rankBonus * rank.get(n.id)) * root,
+      height: (T.uplift.heightBase + T.uplift.heightPerMaturity * n.maturity + T.uplift.tierBonus[n.maturity]) * root,
     };
   });
 
@@ -282,4 +288,50 @@ function simplify(ring, tol) {
   }
   const out = ring.filter((_, k) => keep[k]);
   return out.length >= 4 ? out : ring;
+}
+
+// ---------------------------------------------------------------- coast distance (for settlement)
+// Signed distance to the coast in world units (positive inland, negative at sea), plus the owner of
+// the nearest land for every cell (a water cell inherits the owner of the shore it faces).
+// Two-pass chamfer transform (steps 1 and √2): within a few percent of true Euclidean distance.
+export function coastField(grid, land, owner) {
+  const { width, height, cell } = grid;
+  const n = land.length;
+  const dist = new Float32Array(n).fill(Infinity);
+  const nearOwner = new Uint8Array(n).fill(255);
+  const at = (i, j) => j * width + i;
+  // Seeds: cells on either side of the coastline (distance 0).
+  for (let j = 0; j < height; j++) for (let i = 0; i < width; i++) {
+    const k = at(i, j);
+    for (const [di, dj] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+      const ii = i + di, jj = j + dj;
+      if (ii < 0 || jj < 0 || ii >= width || jj >= height) continue;
+      const q = at(ii, jj);
+      if (land[q] !== land[k]) {
+        dist[k] = 0;
+        nearOwner[k] = land[k] ? owner[k] : (owner[q] !== 255 ? owner[q] : nearOwner[k]);
+      }
+    }
+  }
+  // Propagate within each side only, so land distances measure to the sea and vice versa.
+  const D = Math.SQRT2;
+  const forward = [[-1, -1, D], [0, -1, 1], [1, -1, D], [-1, 0, 1]];
+  const backward = [[1, 1, D], [0, 1, 1], [-1, 1, D], [1, 0, 1]];
+  const pass = (offsets, j0, j1, dj, i0, i1, di) => {
+    for (let j = j0; j !== j1; j += dj) for (let i = i0; i !== i1; i += di) {
+      const k = at(i, j);
+      for (const [oi, oj, w] of offsets) {
+        const ii = i + oi, jj = j + oj;
+        if (ii < 0 || jj < 0 || ii >= width || jj >= height) continue;
+        const q = at(ii, jj);
+        if (land[q] !== land[k] || dist[q] + w >= dist[k]) continue;
+        dist[k] = dist[q] + w;
+        nearOwner[k] = land[k] ? owner[k] : nearOwner[q];
+      }
+    }
+  };
+  pass(forward, 0, height, 1, 0, width, 1);
+  pass(backward, height - 1, -1, -1, width - 1, -1, -1);
+  for (let k = 0; k < n; k++) dist[k] = (land[k] ? 1 : -1) * (Number.isFinite(dist[k]) ? dist[k] : 0) * cell;
+  return { dist, nearOwner };
 }
