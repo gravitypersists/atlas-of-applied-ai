@@ -23,7 +23,8 @@ The report's own self-check is not reliable; it claimed "no duplicates" and "res
 ## 3. Merge
 
 - Insert new nodes after the region's last anchor under a `# ---- deep dive (<date>) ----` comment, with `status: added`.
-- Give every anchor in the region a `summary` (plain language, 2–3 sentences, no hype).
+- Give every anchor in the region a `summary` (plain language, 2–3 sentences, no hype). The panel shows the summary *instead of* `desc`, so the summary must carry everything the desc says.
+- Keep each panel field in its own role (SPEC §5.3): `maturity_note` explains the maturity, not the technique; `examples` are short names of tools or products (plain text, no URLs yet); the `ref` already appears as the first "Learn more" entry, so `resources` never repeat it.
 - Region: `overview` from Section 1, edited for plain language. Leave `learning_path` for step 4.
 - Remove the region's entries from `LEADS` in `make_guides.py` once the run has evaluated them.
 - Run `python3 validate.py` (0 errors, 0 warnings), then `python3 make_guides.py`.

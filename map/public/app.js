@@ -260,26 +260,42 @@ function init(map) {
     return t.title ? `${t.title} · ${t.subtitle}` : t.subtitle;
   }
 
-  // "Learn more" and "Start here" entries: a kind tag, the linked title, then who and when, and an
-  // optional line on what the reader gets from it.
-  const KIND_LABEL = { paper: "Paper", talk: "Talk", blog: "Blog", docs: "Docs", tutorial: "Tutorial", code: "Code" };
+  // "Learn more" and "Start here" entries: a kind tag in its own column, then the linked title, who
+  // and when, and an optional line on what the reader gets from it.
+  const KIND_LABEL = { source: "Source", paper: "Paper", talk: "Talk", blog: "Blog", docs: "Docs", tutorial: "Tutorial", code: "Code" };
   function resourceItem(r) {
     const li = document.createElement("li");
     const kind = document.createElement("span"); kind.className = `kind kind-${r.kind}`; kind.textContent = KIND_LABEL[r.kind] ?? r.kind;
-    const a = document.createElement("a"); a.href = r.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = r.title;
-    const head = document.createElement("div"); head.className = "res-head"; head.append(kind, a);
-    li.append(head);
+    const body = document.createElement("div"); body.className = "res-body";
+    const title = document.createElement(r.url ? "a" : "span"); title.className = "res-title"; title.textContent = r.title;
+    if (r.url) { title.href = r.url; title.target = "_blank"; title.rel = "noopener"; }
+    body.append(title);
     const by = [r.by, r.year].filter(Boolean).join(", ");
-    if (by) { const p = document.createElement("div"); p.className = "res-by"; p.textContent = by; li.append(p); }
-    if (r.why) { const p = document.createElement("p"); p.className = "why"; p.textContent = r.why; li.append(p); }
+    if (by) { const p = document.createElement("div"); p.className = "res-by"; p.textContent = by; body.append(p); }
+    if (r.why) { const p = document.createElement("p"); p.className = "why"; p.textContent = r.why; body.append(p); }
+    li.append(kind, body);
     return li;
   }
   function fillResources(listId, sectionId, items) {
     el(listId).replaceChildren(...(items ?? []).map(resourceItem));
     el(sectionId).hidden = !(items ?? []).length;
   }
+  // Footer rows scroll sideways: the mouse wheel scrolls them too, and a faded edge shows there's more.
+  function fadeEdges(row) {
+    row.classList.toggle("more-left", row.scrollLeft > 1);
+    row.classList.toggle("more-right", row.scrollLeft + row.clientWidth < row.scrollWidth - 1);
+  }
+  for (const id of ["panel-parents", "panel-children"]) {
+    const row = el(id);
+    row.addEventListener("scroll", () => fadeEdges(row), { passive: true });
+    row.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || row.scrollWidth <= row.clientWidth) return;
+      e.preventDefault();
+      row.scrollLeft += e.deltaY;
+    }, { passive: false });
+  }
   // Sections that belong to only one of the two panel kinds.
-  const LANDMARK_ONLY = ["panel-meta", "panel-note", "panel-examples", "panel-parents-section", "panel-children-section", "panel-learn-section", "panel-cite", "panel-source"];
+  const LANDMARK_ONLY = ["panel-meta", "panel-examples", "panel-learn-section", "panel-lineage-section", "panel-nav"];
   const REGION_ONLY = ["panel-path-section", "panel-members-section"];
   const openPanel = () => {
     const panel = el("panel");
@@ -288,10 +304,10 @@ function init(map) {
   };
 
   function renderRegionPanel(t) {
-    for (const id of [...LANDMARK_ONLY, "panel-summary"]) el(id).hidden = true;
+    for (const id of LANDMARK_ONLY) el(id).hidden = true;
+    for (const id of REGION_ONLY) el(id).hidden = false;
     el("panel-where").textContent = t.title ? `Region · ${t.subtitle}` : "Region";
     el("panel-name").textContent = t.title ?? t.subtitle;
-    el("panel-desc").hidden = true;
     el("panel-summary").textContent = t.about ?? "";
     el("panel-summary").hidden = !t.about;
     fillResources("panel-path", "panel-path-section", t.learningPath);
@@ -310,57 +326,71 @@ function init(map) {
   function renderPanel(l) {
     for (const id of REGION_ONLY) el(id).hidden = true;
     el("panel-meta").hidden = false;
-    el("panel-desc").hidden = false;
+    el("panel-nav").hidden = false;
     el("panel-where").textContent = placeName(l);
     el("panel-name").textContent = l.name;
     el("panel-maturity").textContent = l.maturityLabel;
     el("panel-maturity").dataset.maturity = l.maturity;
     el("panel-date").textContent = yearOf(l.date) ? `c. ${yearOf(l.date)}` : "";
-    // The plain-language summary leads when there is one; the technical description follows it.
-    el("panel-summary").textContent = l.summary ?? "";
-    el("panel-summary").hidden = !l.summary;
-    el("panel-desc").textContent = l.desc ?? "";
-    el("panel-desc").classList.toggle("secondary", !!l.summary);
     el("panel-note").textContent = l.maturityNote ?? "";
     el("panel-note").hidden = !l.maturityNote;
+    // The plain-language summary supersedes the shorter technical description when there is one.
+    const about = l.summary ?? l.desc ?? "";
+    el("panel-summary").textContent = about;
+    el("panel-summary").hidden = !about;
 
+    // Examples are names only (no links yet), so they read as a line of text, not as buttons.
     const ex = el("panel-examples");
-    ex.replaceChildren(...(l.examples ?? []).map((e) => chip(e)));
-    ex.hidden = !(l.examples ?? []).length;
+    ex.replaceChildren();
+    if (l.examples?.length) {
+      const label = document.createElement("span"); label.className = "label"; label.textContent = "In practice: ";
+      ex.append(label, l.examples.join(", "));
+    }
+    ex.hidden = !l.examples?.length;
 
-    const parents = el("panel-parents");
-    parents.replaceChildren(
-      ...l.parents.map((p) => {
-        const li = document.createElement("li");
-        li.append(chip(byId.get(p.id)?.name ?? p.id, p.id));
-        if (p.why) { const w = document.createElement("p"); w.className = "why"; w.textContent = p.why; li.append(w); }
-        return li;
-      }),
+    // Learn more leads with the node's own source, then the curated resources.
+    const source = l.ref?.title ? [{ kind: "source", title: l.ref.title, url: l.ref.href }] : [];
+    fillResources("panel-learn", "panel-learn-section", [...source, ...(l.resources ?? [])]);
+
+    // Lineage in the body explains each parent; the footer below is just for walking the graph.
+    const explained = [
+      ...l.parents.map((p) => ({ name: byId.get(p.id)?.name ?? p.id, id: p.id, why: p.why })),
+      ...l.external.map((x) => ({ name: x.name.replace(/-/g, " "), why: x.why })),
+    ].filter((p) => p.why);
+    el("panel-lineage").replaceChildren(...explained.map((p) => {
+      const li = document.createElement("li");
+      const name = document.createElement(p.id ? "button" : "span");
+      name.className = p.id ? "link" : "beyond";
+      name.textContent = p.name;
+      if (p.id) name.onclick = () => select(p.id);
+      else name.title = "Beyond the map's edge: an ancestor not charted yet";
+      const why = document.createElement("p"); why.className = "why"; why.textContent = p.why;
+      li.append(name, why);
+      return li;
+    }));
+    el("panel-lineage-section").hidden = !explained.length;
+
+    // The footer keeps a fixed height and place, so its chips don't move as the reader walks the graph.
+    const navChips = (rowId, chips) => {
+      const row = el(rowId);
+      if (!chips.length) { const none = document.createElement("span"); none.className = "nav-none"; none.textContent = "none charted"; chips = [none]; }
+      row.replaceChildren(...chips);
+      row.scrollLeft = 0;
+    };
+    navChips("panel-parents", [
+      ...l.parents.map((p) => chip(byId.get(p.id)?.name ?? p.id, p.id)),
       ...l.external.map((x) => {
-        const li = document.createElement("li");
         const c = chip(x.name.replace(/-/g, " "));
         c.classList.add("beyond");
         c.title = "Beyond the map's edge: an ancestor not charted yet";
-        li.append(c);
-        if (x.why) { const w = document.createElement("p"); w.className = "why"; w.textContent = x.why; li.append(w); }
-        return li;
+        return c;
       }),
-    );
-    el("panel-parents-section").hidden = !l.parents.length && !l.external.length;
-
-    el("panel-children").replaceChildren(...l.children.map((id) => chip(byId.get(id)?.name ?? id, id)));
-    el("panel-children-section").hidden = !l.children.length;
-
-    fillResources("panel-learn", "panel-learn-section", l.resources);
-
-    // The citation always shows; the link only when the source has one (many classic papers don't).
-    el("panel-cite").textContent = l.ref?.title ?? "";
-    el("panel-cite").hidden = !l.ref?.title;
-    const src = el("panel-source");
-    src.hidden = !l.ref?.href;
-    if (l.ref?.href) src.href = l.ref.href;
+    ]);
+    navChips("panel-children", l.children.map((id) => chip(byId.get(id)?.name ?? id, id)));
 
     openPanel();
+    fadeEdges(el("panel-parents"));
+    fadeEdges(el("panel-children"));
   }
 
   // ---------------------------------------------------------------- search (SPEC §5.4)

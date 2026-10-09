@@ -353,17 +353,16 @@ When a landmark is selected:
 - related landmarks get a halo and their labels are forced on
 - everything else dims to about 60%
 
-**Panel contents:**
+**Panel contents** (a scrolling body over a fixed lineage footer):
 1. The territory title and subtitle as a small header, then the name.
-2. A maturity pill (e.g. "Emerging"), plus "c. 2024" in muted text.
-3. The plain-language summary when there is one, then the description (smaller and muted when it follows a summary), then the maturity note in italics.
-4. Example chips.
-5. **Built on:** parent chips, each with its `why` underneath. External ancestors appear as non-clickable "beyond the map" chips.
-6. **Led to:** child chips.
-7. **Learn more:** the node's `resources`, each a kind tag (Paper, Talk, Blog, Docs, Tutorial, Code), the linked title, and author and year.
-8. The citation (`ref.title`), then "Read the source ↗" when the source has a link. Classic papers often have no link, and their citation still shows.
+2. A maturity pill (e.g. "Emerging") and "c. 2024" in muted text, with the maturity note in small italics directly beneath, since it explains the maturity.
+3. The plain-language `summary`, or the `desc` when there is no summary. The summary supersedes the desc; the two are never shown together.
+4. **In practice:** the `examples` as a plain comma-separated line. They're names without links, so they aren't styled as buttons.
+5. **Learn more:** the node's `ref` first, tagged Source (linked when it has an href; classic papers often don't), then its `resources`. Each entry is a two-column grid: the kind tag (Source, Paper, Talk, Blog, Docs, Tutorial, Code) alone on the left, and the title, author and year, and optional `why` aligned on the right.
+6. **Lineage:** each parent (and external ancestor) that has a `why`, as a link with its `why` beneath.
+7. **Footer** (fixed height, pinned to the panel's bottom so its chips don't move as the reader walks the graph): a **Built on** row of parent chips and a **Led to** row of child chips. Each row is one line that scrolls sideways (the mouse wheel scrolls it too) and fades at the edge where more chips continue. An empty row reads "none charted". External ancestors appear as non-clickable dashed "beyond the map" chips.
 
-**Region panel.** Clicking an applied territory title (at z0–z1), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle", the title, the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style.
+**Region panel.** Clicking an applied territory title (at z0–z1), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle", the title, the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
 
 **Chip behavior:** clicking a chip flies there (600ms, eased, to at least z1) and selects that landmark.
 
