@@ -1,0 +1,97 @@
+:root {
+  --parchment: #efe6d2;
+  --sea: #d9e3e0;
+  --ink: #3b2f20;
+  --ink-soft: #8a7a60;
+  --route: #a8977a;
+  --panel: #f7f1e3;
+  --title-font: "IM Fell English SC", Georgia, serif;
+  --body-font: "EB Garamond", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--sea);
+  color: var(--ink);
+  font-family: var(--body-font);
+}
+
+#map {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  cursor: grab;
+  touch-action: none;
+}
+#map:active { cursor: grabbing; }
+
+.world { fill: var(--parchment); }
+
+.route { stroke: var(--route); stroke-width: 1.2; fill: none; }
+.route.cross { stroke-dasharray: 4 4; opacity: 0.45; }
+
+.landmark circle { stroke: var(--parchment); stroke-width: 1; }
+.landmark.outpost circle { fill: var(--parchment); stroke-width: 2; }
+
+.landmark text {
+  font-size: 12px;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--parchment);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  transition: opacity 150ms;
+}
+
+.territory-label {
+  font-family: var(--title-font);
+  text-anchor: middle;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+  transition: opacity 150ms;
+}
+.territory-label .title { font-size: 20px; }
+.territory-label .subtitle { font-family: var(--body-font); font-style: italic; font-size: 12px; letter-spacing: 0.02em; }
+.territory-label.old-world .title { font-size: 14px; }
+
+/* Debug semantic zoom: placeholders until tiers and minZoom arrive (milestone 4). */
+#map.z0 .landmark text { opacity: 0; }
+#map.z0 .territory-label.old-world { opacity: 0.6; }
+#map.z2 .territory-label { opacity: 0.25; }
+
+.controls {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.controls button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ink-soft);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--ink);
+  font: 600 18px/1 var(--body-font);
+  cursor: pointer;
+}
+.controls button:hover { background: var(--parchment); }
+
+.cartouche {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  padding: 8px 12px;
+  border: 1px solid var(--ink-soft);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  pointer-events: none;
+}
+.cartouche-title { font-family: var(--title-font); font-size: 15px; letter-spacing: 0.06em; }
+.cartouche-sub { font-size: 12px; font-style: italic; color: var(--ink-soft); }

@@ -1,0 +1,6241 @@
+{
+ "version": 1,
+ "built": "2026-10-08",
+ "bounds": [
+  0,
+  0,
+  4800,
+  3000
+ ],
+ "stage": "survey-debug",
+ "oldWorld": {
+  "title": "The Old World",
+  "subtitle": "Ancestral Disciplines"
+ },
+ "territories": [
+  {
+   "id": "information-retrieval",
+   "title": null,
+   "subtitle": "Information Retrieval",
+   "group": "old-world",
+   "label": [
+    1157.1,
+    1129.9
+   ]
+  },
+  {
+   "id": "deep-learning-nlp",
+   "title": null,
+   "subtitle": "Deep Learning and NLP",
+   "group": "old-world",
+   "label": [
+    1378.1,
+    1473.6
+   ]
+  },
+  {
+   "id": "symbolic-ai-planning",
+   "title": null,
+   "subtitle": "Symbolic AI and Planning",
+   "group": "old-world",
+   "label": [
+    780.3,
+    1886
+   ]
+  },
+  {
+   "id": "reinforcement-learning",
+   "title": null,
+   "subtitle": "Reinforcement Learning",
+   "group": "old-world",
+   "label": [
+    1044.3,
+    1682.6
+   ]
+  },
+  {
+   "id": "knowledge-representation",
+   "title": null,
+   "subtitle": "Knowledge Representation",
+   "group": "old-world",
+   "label": [
+    1001.1,
+    1388.3
+   ]
+  },
+  {
+   "id": "human-computer-interaction",
+   "title": null,
+   "subtitle": "Human-Computer Interaction",
+   "group": "old-world",
+   "label": [
+    745.6,
+    1559
+   ]
+  },
+  {
+   "id": "systems-security",
+   "title": null,
+   "subtitle": "Software and Systems Security",
+   "group": "old-world",
+   "label": [
+    1329.3,
+    1851.2
+   ]
+  },
+  {
+   "id": "software-engineering",
+   "title": null,
+   "subtitle": "Software Engineering and Operations",
+   "group": "old-world",
+   "label": [
+    732.2,
+    1213.1
+   ]
+  },
+  {
+   "id": "inference-and-serving",
+   "title": null,
+   "subtitle": "Inference and Serving",
+   "group": "applied",
+   "label": [
+    3498.4,
+    1879.1
+   ]
+  },
+  {
+   "id": "prompting-and-context-engineering",
+   "title": null,
+   "subtitle": "Prompting and Context Engineering",
+   "group": "applied",
+   "label": [
+    2174.2,
+    1616.8
+   ]
+  },
+  {
+   "id": "retrieval-and-knowledge",
+   "title": null,
+   "subtitle": "Retrieval and Knowledge",
+   "group": "applied",
+   "label": [
+    2981.9,
+    1991.8
+   ]
+  },
+  {
+   "id": "agents-and-orchestration",
+   "title": null,
+   "subtitle": "Agents and Orchestration",
+   "group": "applied",
+   "label": [
+    2673.8,
+    1547.1
+   ]
+  },
+  {
+   "id": "planning-and-reasoning",
+   "title": null,
+   "subtitle": "Planning and Reasoning",
+   "group": "applied",
+   "label": [
+    2469.4,
+    1968.4
+   ]
+  },
+  {
+   "id": "adaptation-and-post-training",
+   "title": null,
+   "subtitle": "Adaptation and Post-Training",
+   "group": "applied",
+   "label": [
+    2735.3,
+    1015.8
+   ]
+  },
+  {
+   "id": "data-and-synthetic-data",
+   "title": null,
+   "subtitle": "Data and Synthetic Data",
+   "group": "applied",
+   "label": [
+    2324.6,
+    1164.2
+   ]
+  },
+  {
+   "id": "evaluation-and-observability",
+   "title": null,
+   "subtitle": "Evaluation and Observability",
+   "group": "applied",
+   "label": [
+    3620.4,
+    1383.1
+   ]
+  },
+  {
+   "id": "safety-security-and-governance",
+   "title": null,
+   "subtitle": "Safety, Security and Governance",
+   "group": "applied",
+   "label": [
+    3280.9,
+    981.5
+   ]
+  },
+  {
+   "id": "ai-product-and-interaction-design",
+   "title": null,
+   "subtitle": "AI Product and Interaction Design",
+   "group": "applied",
+   "label": [
+    3159.7,
+    1518.3
+   ]
+  },
+  {
+   "id": "multimodal-applied",
+   "title": null,
+   "subtitle": "Multimodal",
+   "group": "applied",
+   "label": [
+    4003.7,
+    1704.9
+   ]
+  }
+ ],
+ "landmarks": [
+  {
+   "id": "bm25",
+   "name": "BM25",
+   "region": "information-retrieval",
+   "x": 1090.8,
+   "y": 1123.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Decades of deployment; default lexical scorer in search engines.",
+   "desc": "Probabilistic ranking function scoring documents by term frequency and inverse document frequency; the standard lexical search baseline.",
+   "date": "1994",
+   "aliases": [
+    "Okapi BM25",
+    "sparse retrieval",
+    "TF-IDF ranking"
+   ],
+   "examples": [
+    "Lucene",
+    "Elasticsearch",
+    "OpenSearch"
+   ],
+   "ref": {
+    "title": "Okapi at TREC-3 (Robertson et al.)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "open-domain-qa",
+    "dense-retrieval",
+    "hybrid-search",
+    "cross-encoder-reranking"
+   ]
+  },
+  {
+   "id": "approximate-nearest-neighbor-search",
+   "name": "Approximate Nearest Neighbor Search",
+   "region": "information-retrieval",
+   "x": 1195.3,
+   "y": 1083.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard infrastructure in every vector store.",
+   "desc": "Index structures that find near neighbors in high-dimensional vector spaces quickly at slight accuracy cost; the engine inside vector databases.",
+   "date": "2016-03",
+   "aliases": [
+    "ANN",
+    "HNSW",
+    "vector indexing"
+   ],
+   "examples": [
+    "FAISS",
+    "hnswlib",
+    "pgvector",
+    "Qdrant"
+   ],
+   "ref": {
+    "title": "Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs (Malkov & Yashunin)",
+    "href": "https://arxiv.org/abs/1603.09320"
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "dense-retrieval"
+   ]
+  },
+  {
+   "id": "open-domain-qa",
+   "name": "Open-Domain Question Answering",
+   "region": "information-retrieval",
+   "x": 1185.2,
+   "y": 1183.3,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Mature research paradigm, largely absorbed into RAG.",
+   "desc": "Answering questions by retrieving passages from a large corpus and reading them with a neural model; the direct architectural ancestor of RAG.",
+   "date": "2017-04",
+   "aliases": [
+    "retriever-reader QA",
+    "DrQA"
+   ],
+   "examples": [
+    "DrQA"
+   ],
+   "ref": {
+    "title": "Reading Wikipedia to Answer Open-Domain Questions (Chen et al.)",
+    "href": "https://arxiv.org/abs/1704.00051"
+   },
+   "parents": [
+    {
+     "id": "bm25",
+     "rel": "applies",
+     "why": "Early systems used lexical retrieval to select passages for a neural reader."
+    }
+   ],
+   "external": [],
+   "children": [
+    "retrieval-augmented-generation"
+   ]
+  },
+  {
+   "id": "attention-mechanism",
+   "name": "Attention Mechanism",
+   "region": "deep-learning-nlp",
+   "x": 1448,
+   "y": 1524.8,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Prerequisite for the transformer.",
+   "desc": "Lets a network weight different parts of its input dynamically when producing each output.",
+   "date": "2014-09",
+   "aliases": [
+    "neural attention"
+   ],
+   "examples": [
+    "seq2seq with attention"
+   ],
+   "ref": {
+    "title": "Neural Machine Translation by Jointly Learning to Align and Translate (Bahdanau et al.)",
+    "href": "https://arxiv.org/abs/1409.0473"
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "transformer-architecture"
+   ]
+  },
+  {
+   "id": "sequence-to-sequence-learning",
+   "name": "Sequence-to-Sequence Learning",
+   "region": "deep-learning-nlp",
+   "x": 1356,
+   "y": 1472.9,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Foundational framing for translation and generation.",
+   "desc": "Training networks to map an input sequence to an output sequence end to end.",
+   "date": "2014-09",
+   "aliases": [
+    "seq2seq",
+    "encoder-decoder"
+   ],
+   "examples": [
+    "T5",
+    "BART"
+   ],
+   "ref": {
+    "title": "Sequence to Sequence Learning with Neural Networks (Sutskever et al.)",
+    "href": "https://arxiv.org/abs/1409.3215"
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "transformer-architecture",
+    "speech-recognition"
+   ]
+  },
+  {
+   "id": "transformer-architecture",
+   "name": "Transformer",
+   "region": "deep-learning-nlp",
+   "x": 1240.9,
+   "y": 1435.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Universal architecture for foundation models.",
+   "desc": "Architecture built entirely on self-attention, dispensing with recurrence; the basis of all modern LLMs.",
+   "date": "2017-06",
+   "aliases": [
+    "transformers"
+   ],
+   "examples": [
+    "GPT",
+    "BERT",
+    "Llama"
+   ],
+   "ref": {
+    "title": "Attention Is All You Need (Vaswani et al.)",
+    "href": "https://arxiv.org/abs/1706.03762"
+   },
+   "parents": [
+    {
+     "id": "attention-mechanism",
+     "rel": "extends",
+     "why": "Uses self-attention as the sole sequence-mixing operation."
+    },
+    {
+     "id": "sequence-to-sequence-learning",
+     "rel": "replaces",
+     "why": "Replaces recurrent encoder-decoders for sequence transduction."
+    }
+   ],
+   "external": [],
+   "children": [
+    "pretrained-language-models",
+    "weight-quantization",
+    "interpretability",
+    "contrastive-image-text-pretraining",
+    "document-understanding",
+    "video-generation"
+   ]
+  },
+  {
+   "id": "pretrained-language-models",
+   "name": "Pretrained Language Models",
+   "region": "deep-learning-nlp",
+   "x": 1346.2,
+   "y": 1344.6,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "The substrate of applied AI engineering.",
+   "desc": "Transformers pretrained on large text corpora with a language-modeling objective, then used directly or adapted; the base every applied technique builds on.",
+   "date": "2018-06",
+   "aliases": [
+    "LLMs",
+    "foundation models",
+    "generative pretraining"
+   ],
+   "examples": [
+    "GPT series",
+    "Claude",
+    "Gemini",
+    "Llama"
+   ],
+   "ref": {
+    "title": "Improving Language Understanding by Generative Pre-Training (Radford et al.)",
+    "href": "https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf"
+   },
+   "parents": [
+    {
+     "id": "transformer-architecture",
+     "rel": "applies",
+     "why": "Applies the transformer to large-scale unsupervised language modeling."
+    }
+   ],
+   "external": [],
+   "children": [
+    "autoregressive-decoding",
+    "zero-shot-prompting",
+    "context-compaction",
+    "text-embeddings",
+    "retrieval-augmented-generation",
+    "cross-encoder-reranking",
+    "mrkl-systems",
+    "scratchpads",
+    "llm-plus-p",
+    "copilots",
+    "vision-language-models",
+    "realtime-voice"
+   ]
+  },
+  {
+   "id": "transfer-learning-fine-tuning",
+   "name": "Transfer Learning and Fine-Tuning",
+   "region": "deep-learning-nlp",
+   "x": 1452,
+   "y": 1417.9,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard practice across deep learning.",
+   "desc": "Adapting a model pretrained on one task or corpus to a new task by continuing training on targeted data.",
+   "date": "2018-01",
+   "aliases": [
+    "fine-tuning",
+    "ULMFiT"
+   ],
+   "examples": [
+    "Hugging Face Trainer"
+   ],
+   "ref": {
+    "title": "Universal Language Model Fine-tuning for Text Classification (Howard & Ruder)",
+    "href": "https://arxiv.org/abs/1801.06146"
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "supervised-fine-tuning",
+    "parameter-efficient-fine-tuning"
+   ]
+  },
+  {
+   "id": "knowledge-distillation",
+   "name": "Knowledge Distillation",
+   "region": "deep-learning-nlp",
+   "x": 1362.8,
+   "y": 1578.3,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Long-established compression technique.",
+   "desc": "Training a smaller student model to match the outputs of a larger teacher.",
+   "date": "2015-03",
+   "aliases": [
+    "teacher-student training"
+   ],
+   "examples": [
+    "DistilBERT"
+   ],
+   "ref": {
+    "title": "Distilling the Knowledge in a Neural Network (Hinton et al.)",
+    "href": "https://arxiv.org/abs/1503.02531"
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "llm-distillation"
+   ]
+  },
+  {
+   "id": "mixture-of-experts",
+   "name": "Mixture of Experts",
+   "region": "deep-learning-nlp",
+   "x": 1537.8,
+   "y": 1479.4,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard approach for frontier and large open models; has serving implications.",
+   "desc": "Replaces dense layers with many expert subnetworks and a router that activates a few per token, scaling parameters without proportional compute.",
+   "date": "2017-01",
+   "aliases": [
+    "MoE",
+    "sparse MoE"
+   ],
+   "examples": [
+    "Mixtral",
+    "DeepSeek-V3",
+    "Qwen MoE"
+   ],
+   "ref": {
+    "title": "Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer (Shazeer et al.)",
+    "href": "https://arxiv.org/abs/1701.06538"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "adaptive-mixtures-of-local-experts",
+     "why": "Scales the 1991 mixture-of-experts idea with sparse gating inside deep networks."
+    }
+   ],
+   "children": [
+    "model-routing"
+   ]
+  },
+  {
+   "id": "state-space-models",
+   "name": "State-Space Models",
+   "region": "deep-learning-nlp",
+   "x": 1281.5,
+   "y": 1535.1,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Shipping in hybrid models; not yet a default choice.",
+   "desc": "Sequence models derived from control theory with linear-time scaling in sequence length, used alone or in hybrids with attention.",
+   "date": "2021-10",
+   "aliases": [
+    "SSMs",
+    "S4",
+    "Mamba",
+    "linear-time sequence models"
+   ],
+   "examples": [
+    "Mamba",
+    "Jamba",
+    "Nemotron-H"
+   ],
+   "ref": {
+    "title": "Efficiently Modeling Long Sequences with Structured State Spaces (Gu et al.)",
+    "href": "https://arxiv.org/abs/2111.00396"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "control-theory-state-space",
+     "why": "Turns continuous state-space equations into trainable sequence layers."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "heuristic-search",
+   "name": "Heuristic Search",
+   "region": "symbolic-ai-planning",
+   "x": 772.5,
+   "y": 1940.6,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Textbook foundation of AI planning.",
+   "desc": "Searching a space of states guided by an estimate of distance to the goal.",
+   "date": "1968",
+   "aliases": [
+    "A*",
+    "best-first search",
+    "state-space search"
+   ],
+   "examples": [
+    "A*",
+    "MCTS variants"
+   ],
+   "ref": {
+    "title": "A Formal Basis for the Heuristic Determination of Minimum Cost Paths (Hart, Nilsson & Raphael)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "strips-planning",
+    "tree-of-thoughts"
+   ]
+  },
+  {
+   "id": "strips-planning",
+   "name": "STRIPS Planning",
+   "region": "symbolic-ai-planning",
+   "x": 787.5,
+   "y": 1836.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Historical foundation of symbolic planning.",
+   "desc": "Planning with explicit states, goals, and actions defined by preconditions and effects.",
+   "date": "1971",
+   "aliases": [
+    "classical planning"
+   ],
+   "examples": [
+    "classical planners"
+   ],
+   "ref": {
+    "title": "STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving (Fikes & Nilsson)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "heuristic-search",
+     "rel": "applies",
+     "why": "Plans are found by searching the state space defined by action models."
+    }
+   ],
+   "external": [],
+   "children": [
+    "pddl"
+   ]
+  },
+  {
+   "id": "pddl",
+   "name": "PDDL",
+   "region": "symbolic-ai-planning",
+   "x": 693.1,
+   "y": 1870.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Established standard; the interface for LLM+planner hybrids.",
+   "desc": "Standard language for describing planning domains and problems so general-purpose solvers can find plans.",
+   "date": "1998",
+   "aliases": [
+    "Planning Domain Definition Language"
+   ],
+   "examples": [
+    "Fast Downward",
+    "VAL"
+   ],
+   "ref": {
+    "title": "PDDL — The Planning Domain Definition Language (McDermott et al.)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "strips-planning",
+     "rel": "extends",
+     "why": "Generalizes STRIPS-style action descriptions into a shared standard."
+    }
+   ],
+   "external": [],
+   "children": [
+    "llm-plus-p"
+   ]
+  },
+  {
+   "id": "expert-systems",
+   "name": "Expert Systems",
+   "region": "symbolic-ai-planning",
+   "x": 868.2,
+   "y": 1896.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Historical; ideas persist in routing and tool modules.",
+   "desc": "Systems that encode domain expertise as explicit rules and route problems through them; an ancestor of modular neuro-symbolic architectures.",
+   "date": "1976",
+   "aliases": [
+    "rule-based systems",
+    "production systems"
+   ],
+   "examples": [
+    "MYCIN",
+    "CLIPS"
+   ],
+   "ref": {
+    "title": "Computer-Based Medical Consultations: MYCIN (Shortliffe)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "mrkl-systems"
+   ]
+  },
+  {
+   "id": "markov-decision-process",
+   "name": "Markov Decision Process",
+   "region": "reinforcement-learning",
+   "x": 989.9,
+   "y": 1709.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Theoretical foundation of RL.",
+   "desc": "Formal model of sequential decision making with states, actions, transitions, and rewards.",
+   "date": "1957",
+   "aliases": [
+    "MDP"
+   ],
+   "examples": [
+    "Gymnasium environments"
+   ],
+   "ref": {
+    "title": "A Markovian Decision Process (Bellman)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "policy-gradient-methods"
+   ]
+  },
+  {
+   "id": "policy-gradient-methods",
+   "name": "Policy Gradient Methods",
+   "region": "reinforcement-learning",
+   "x": 1048,
+   "y": 1617.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Mathematical basis of LLM RL fine-tuning.",
+   "desc": "Optimizing a parameterized policy directly by gradient ascent on expected reward.",
+   "date": "1999",
+   "aliases": [
+    "REINFORCE",
+    "actor-critic"
+   ],
+   "examples": [
+    "Stable Baselines3",
+    "TRL"
+   ],
+   "ref": {
+    "title": "Policy Gradient Methods for Reinforcement Learning with Function Approximation (Sutton et al.)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "markov-decision-process",
+     "rel": "applies",
+     "why": "Optimizes policies defined over MDPs."
+    }
+   ],
+   "external": [],
+   "children": [
+    "ppo",
+    "reasoning-models",
+    "rlhf"
+   ]
+  },
+  {
+   "id": "ppo",
+   "name": "Proximal Policy Optimization",
+   "region": "reinforcement-learning",
+   "x": 1094.9,
+   "y": 1721.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Default RL optimizer behind classic RLHF.",
+   "desc": "A policy-gradient algorithm that clips updates to stay near the previous policy, giving stable training.",
+   "date": "2017-07",
+   "aliases": [
+    "PPO"
+   ],
+   "examples": [
+    "TRL PPOTrainer",
+    "OpenRLHF"
+   ],
+   "ref": {
+    "title": "Proximal Policy Optimization Algorithms (Schulman et al.)",
+    "href": "https://arxiv.org/abs/1707.06347"
+   },
+   "parents": [
+    {
+     "id": "policy-gradient-methods",
+     "rel": "specializes",
+     "why": "A clipped-objective policy-gradient method."
+    }
+   ],
+   "external": [],
+   "children": [
+    "rlvr",
+    "grpo"
+   ]
+  },
+  {
+   "id": "semantic-networks",
+   "name": "Semantic Networks",
+   "region": "knowledge-representation",
+   "x": 952.7,
+   "y": 1374.4,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Historical foundation of graph-structured knowledge.",
+   "desc": "Representing concepts as nodes and relations as labeled edges.",
+   "date": "1968",
+   "aliases": [
+    "ontologies",
+    "frames"
+   ],
+   "examples": [
+    "WordNet",
+    "OWL ontologies"
+   ],
+   "ref": {
+    "title": "Semantic Memory (Quillian)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "knowledge-graphs"
+   ]
+  },
+  {
+   "id": "knowledge-graphs",
+   "name": "Knowledge Graphs",
+   "region": "knowledge-representation",
+   "x": 1049.4,
+   "y": 1402.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Established enterprise and web infrastructure.",
+   "desc": "Large graphs of entities and typed relationships used to store and query structured knowledge.",
+   "date": "2012-05",
+   "aliases": [
+    "property graphs"
+   ],
+   "examples": [
+    "Wikidata",
+    "Neo4j"
+   ],
+   "ref": {
+    "title": "Introducing the Knowledge Graph: things, not strings (Singhal, Google)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "semantic-networks",
+     "rel": "extends",
+     "why": "Scales semantic-network ideas to web-scale entity graphs."
+    }
+   ],
+   "external": [],
+   "children": [
+    "graph-rag"
+   ]
+  },
+  {
+   "id": "conversational-agents",
+   "name": "Conversational Agents",
+   "region": "human-computer-interaction",
+   "x": 710.9,
+   "y": 1610.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Long-standing interaction paradigm.",
+   "desc": "Programs that interact with people through natural-language dialogue.",
+   "date": "1966",
+   "aliases": [
+    "chatbots",
+    "dialogue systems"
+   ],
+   "examples": [
+    "ELIZA",
+    "voice assistants"
+   ],
+   "ref": {
+    "title": "ELIZA — A Computer Program for the Study of Natural Language Communication (Weizenbaum)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "chat-interfaces"
+   ]
+  },
+  {
+   "id": "direct-manipulation",
+   "name": "Direct Manipulation",
+   "region": "human-computer-interaction",
+   "x": 712.3,
+   "y": 1501,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Foundational UI principle.",
+   "desc": "Interfaces where users act on visible objects with immediate, reversible feedback.",
+   "date": "1983",
+   "aliases": [
+    "WYSIWYG"
+   ],
+   "examples": [
+    "GUIs",
+    "canvas editors"
+   ],
+   "ref": {
+    "title": "Direct Manipulation: A Step Beyond Programming Languages (Shneiderman)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "mixed-initiative-interaction",
+    "generative-ui",
+    "canvas-artifacts"
+   ]
+  },
+  {
+   "id": "mixed-initiative-interaction",
+   "name": "Mixed-Initiative Interaction",
+   "region": "human-computer-interaction",
+   "x": 813.7,
+   "y": 1565.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Established HCI framework, newly central with LLM assistants.",
+   "desc": "Designing systems where the user and an automated agent each take initiative, with the system weighing when to act, ask, or defer.",
+   "date": "1999",
+   "aliases": [
+    "human-AI collaboration",
+    "intelligent assistance"
+   ],
+   "examples": [
+    "copilots",
+    "agent approval flows"
+   ],
+   "ref": {
+    "title": "Principles of Mixed-Initiative User Interfaces (Horvitz, CHI 1999)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "direct-manipulation",
+     "rel": "combines",
+     "why": "Unifies direct-manipulation interfaces with automated agents."
+    }
+   ],
+   "external": [],
+   "children": [
+    "prompt-chaining",
+    "human-ai-interaction-guidelines",
+    "copilots",
+    "human-in-the-loop-approval"
+   ]
+  },
+  {
+   "id": "least-privilege",
+   "name": "Least Privilege",
+   "region": "systems-security",
+   "x": 1277.5,
+   "y": 1817.3,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Core security design principle.",
+   "desc": "Every component should operate with only the permissions it needs.",
+   "date": "1975",
+   "aliases": [
+    "principle of least authority"
+   ],
+   "examples": [
+    "capability systems",
+    "IAM scoping"
+   ],
+   "ref": {
+    "title": "The Protection of Information in Computer Systems (Saltzer & Schroeder)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "sandboxing-and-isolation",
+    "agent-sandboxing"
+   ]
+  },
+  {
+   "id": "sandboxing-and-isolation",
+   "name": "Sandboxing and Isolation",
+   "region": "systems-security",
+   "x": 1382.7,
+   "y": 1826.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Essential infrastructure.",
+   "desc": "Running untrusted code in restricted environments that cannot affect the host.",
+   "date": "1996",
+   "aliases": [
+    "containerization",
+    "secure execution"
+   ],
+   "examples": [
+    "gVisor",
+    "Firecracker",
+    "Docker"
+   ],
+   "ref": {
+    "title": "A Secure Environment for Untrusted Helper Applications (Goldberg et al., USENIX Security 1996)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "least-privilege",
+     "rel": "applies",
+     "why": "Enforces minimal authority on untrusted code."
+    }
+   ],
+   "external": [],
+   "children": [
+    "agent-sandboxing"
+   ]
+  },
+  {
+   "id": "injection-attacks",
+   "name": "Injection Attacks",
+   "region": "systems-security",
+   "x": 1327.6,
+   "y": 1910.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Classic, well-understood vulnerability class.",
+   "desc": "Attacks where untrusted data is interpreted as instructions because data and control share a channel.",
+   "date": "1998",
+   "aliases": [
+    "SQL injection",
+    "code injection"
+   ],
+   "examples": [
+    "SQL injection",
+    "XSS"
+   ],
+   "ref": {
+    "title": "NT Web Technology Vulnerabilities (rain.forest.puppy, Phrack 54) — early public SQL injection write-up",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "prompt-injection"
+   ]
+  },
+  {
+   "id": "statecharts",
+   "name": "Statecharts and State Machines",
+   "region": "software-engineering",
+   "x": 672,
+   "y": 1170.7,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard modeling technique.",
+   "desc": "Modeling system behavior as explicit states and transitions, including hierarchy and concurrency.",
+   "date": "1987",
+   "aliases": [
+    "finite-state machines",
+    "workflow engines"
+   ],
+   "examples": [
+    "XState",
+    "AWS Step Functions",
+    "Temporal"
+   ],
+   "ref": {
+    "title": "Statecharts: A Visual Formalism for Complex Systems (Harel)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "workflow-state-machines"
+   ]
+  },
+  {
+   "id": "test-driven-development",
+   "name": "Test-Driven Development",
+   "region": "software-engineering",
+   "x": 691,
+   "y": 1274.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Established engineering practice.",
+   "desc": "Writing tests that define expected behavior before or alongside the code, and gating changes on them.",
+   "date": "2002",
+   "aliases": [
+    "TDD",
+    "regression testing"
+   ],
+   "examples": [
+    "pytest",
+    "Jest",
+    "CI pipelines"
+   ],
+   "ref": {
+    "title": "Test-Driven Development: By Example (Beck)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "agent-benchmarks",
+    "eval-driven-development"
+   ]
+  },
+  {
+   "id": "distributed-tracing",
+   "name": "Distributed Tracing",
+   "region": "software-engineering",
+   "x": 794.3,
+   "y": 1252.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard observability infrastructure.",
+   "desc": "Recording the causal tree of operations across services so latency and failures can be attributed.",
+   "date": "2010",
+   "aliases": [
+    "spans",
+    "Dapper"
+   ],
+   "examples": [
+    "OpenTelemetry",
+    "Jaeger"
+   ],
+   "ref": {
+    "title": "Dapper, a Large-Scale Distributed Systems Tracing Infrastructure (Sigelman et al., Google)",
+    "href": null
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "llm-tracing"
+   ]
+  },
+  {
+   "id": "language-server-protocol",
+   "name": "Language Server Protocol",
+   "region": "software-engineering",
+   "x": 771.3,
+   "y": 1154.6,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Ubiquitous editor standard; explicit inspiration for MCP.",
+   "desc": "A JSON-RPC protocol that decouples editors from language tooling, solving an N×M integration problem.",
+   "date": "2016-06",
+   "aliases": [
+    "LSP"
+   ],
+   "examples": [
+    "VS Code",
+    "Neovim LSP"
+   ],
+   "ref": {
+    "title": "Language Server Protocol (Microsoft)",
+    "href": "https://microsoft.github.io/language-server-protocol/"
+   },
+   "parents": [],
+   "external": [],
+   "children": [
+    "model-context-protocol"
+   ]
+  },
+  {
+   "id": "autoregressive-decoding",
+   "name": "Autoregressive Decoding",
+   "region": "inference-and-serving",
+   "x": 3495.6,
+   "y": 1770.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "The baseline execution pattern of every generative model.",
+   "desc": "Generating text one token at a time, each conditioned on everything generated so far, using a sampling strategy.",
+   "date": "2018-06",
+   "aliases": [
+    "next-token generation",
+    "sampling"
+   ],
+   "examples": [
+    "vLLM",
+    "llama.cpp",
+    "Hugging Face generate"
+   ],
+   "ref": {
+    "title": "Improving Language Understanding by Generative Pre-Training (Radford et al.)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "pretrained-language-models",
+     "rel": "applies",
+     "why": "The generation loop for causal language models."
+    }
+   ],
+   "external": [],
+   "children": [
+    "kv-cache",
+    "continuous-batching",
+    "speculative-decoding",
+    "constrained-decoding",
+    "streaming-responses"
+   ]
+  },
+  {
+   "id": "kv-cache",
+   "name": "KV Cache",
+   "region": "inference-and-serving",
+   "x": 3586.8,
+   "y": 1944.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Non-negotiable serving infrastructure.",
+   "desc": "Storing attention keys and values from earlier tokens so each decoding step avoids recomputation; its memory footprint dominates serving design.",
+   "date": "2019-11",
+   "aliases": [
+    "key-value cache",
+    "incremental decoding"
+   ],
+   "examples": [
+    "TensorRT-LLM",
+    "vLLM"
+   ],
+   "ref": {
+    "title": "Fast Transformer Decoding: One Write-Head is All You Need (Shazeer)",
+    "href": "https://arxiv.org/abs/1911.02150"
+   },
+   "parents": [
+    {
+     "id": "autoregressive-decoding",
+     "rel": "extends",
+     "why": "Memoizes attention state across decoding steps."
+    }
+   ],
+   "external": [],
+   "children": [
+    "paged-attention",
+    "kv-cache-quantization",
+    "prompt-caching",
+    "prefill-decode-disaggregation"
+   ]
+  },
+  {
+   "id": "paged-attention",
+   "name": "PagedAttention",
+   "region": "inference-and-serving",
+   "x": 3413.4,
+   "y": 1836.8,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Dominant memory-management approach in serving engines.",
+   "desc": "Stores the KV cache in non-contiguous fixed-size blocks, like OS virtual memory, cutting fragmentation and raising batch sizes.",
+   "date": "2023-09",
+   "aliases": [
+    "paged KV cache"
+   ],
+   "examples": [
+    "vLLM"
+   ],
+   "ref": {
+    "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention (Kwon et al.)",
+    "href": "https://arxiv.org/abs/2309.06180"
+   },
+   "parents": [
+    {
+     "id": "kv-cache",
+     "rel": "extends",
+     "why": "Applies virtual-memory paging to KV cache storage."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "continuous-batching",
+   "name": "Continuous Batching",
+   "region": "inference-and-serving",
+   "x": 3492.1,
+   "y": 1884.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Required for production-scale serving.",
+   "desc": "Scheduling at the level of decoding steps so new requests join and finished ones leave a batch continuously.",
+   "date": "2022-07",
+   "aliases": [
+    "in-flight batching",
+    "iteration-level scheduling"
+   ],
+   "examples": [
+    "vLLM",
+    "TGI",
+    "TensorRT-LLM"
+   ],
+   "ref": {
+    "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models (Yu et al., OSDI 2022)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "autoregressive-decoding",
+     "rel": "extends",
+     "why": "Schedules per decoding iteration rather than per request."
+    }
+   ],
+   "external": [],
+   "children": [
+    "prefill-decode-disaggregation"
+   ]
+  },
+  {
+   "id": "speculative-decoding",
+   "name": "Speculative Decoding",
+   "region": "inference-and-serving",
+   "x": 3488.6,
+   "y": 1976.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Broadly integrated into serving engines; variants (Medusa, EAGLE) still evolving.",
+   "desc": "A small draft model or head proposes several tokens that the target model verifies in parallel, reducing latency without changing outputs.",
+   "date": "2022-11",
+   "aliases": [
+    "assisted generation",
+    "draft-and-verify"
+   ],
+   "examples": [
+    "EAGLE",
+    "Medusa",
+    "vLLM speculative decoding"
+   ],
+   "ref": {
+    "title": "Fast Inference from Transformers via Speculative Decoding (Leviathan et al.)",
+    "href": "https://arxiv.org/abs/2211.17192"
+   },
+   "parents": [
+    {
+     "id": "autoregressive-decoding",
+     "rel": "extends",
+     "why": "Breaks the strictly serial decode loop with parallel verification."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "weight-quantization",
+   "name": "Weight Quantization",
+   "region": "inference-and-serving",
+   "x": 3668.7,
+   "y": 1860.8,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard for local and cost-sensitive serving.",
+   "desc": "Storing weights at lower numerical precision to cut memory and bandwidth with minimal quality loss.",
+   "date": "2022-08",
+   "aliases": [
+    "INT8",
+    "INT4",
+    "FP8",
+    "GPTQ",
+    "AWQ"
+   ],
+   "examples": [
+    "GPTQ",
+    "AWQ",
+    "GGUF",
+    "bitsandbytes"
+   ],
+   "ref": {
+    "title": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale (Dettmers et al.)",
+    "href": "https://arxiv.org/abs/2208.07339"
+   },
+   "parents": [
+    {
+     "id": "transformer-architecture",
+     "rel": "applies",
+     "why": "Applies low-precision numerics to transformer weight matrices."
+    }
+   ],
+   "external": [],
+   "children": [
+    "kv-cache-quantization",
+    "local-inference"
+   ]
+  },
+  {
+   "id": "kv-cache-quantization",
+   "name": "KV Cache Quantization",
+   "region": "inference-and-serving",
+   "x": 3623.7,
+   "y": 1774.8,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Supported in major engines; methods still competing.",
+   "desc": "Storing cached keys and values at reduced precision to fit longer contexts and larger batches in memory.",
+   "date": "2024-02",
+   "aliases": [
+    "KIVI",
+    "compressed KV cache"
+   ],
+   "examples": [
+    "vLLM FP8 KV cache",
+    "KIVI"
+   ],
+   "ref": {
+    "title": "KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache (Liu et al.)",
+    "href": "https://arxiv.org/abs/2402.02750"
+   },
+   "parents": [
+    {
+     "id": "kv-cache",
+     "rel": "specializes",
+     "why": "Targets the KV cache's memory footprint specifically."
+    },
+    {
+     "id": "weight-quantization",
+     "rel": "applies",
+     "why": "Applies quantization to activation state rather than weights."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "prompt-caching",
+   "name": "Prompt Caching",
+   "region": "inference-and-serving",
+   "x": 3347.4,
+   "y": 1887.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Offered by major API providers; shapes how prompts are structured.",
+   "desc": "Reusing the computed KV cache for shared prompt prefixes across requests, cutting prefill cost and latency.",
+   "date": "2023-12",
+   "aliases": [
+    "prefix caching",
+    "RadixAttention"
+   ],
+   "examples": [
+    "Anthropic prompt caching",
+    "OpenAI prompt caching",
+    "SGLang"
+   ],
+   "ref": {
+    "title": "SGLang: Efficient Execution of Structured Language Model Programs (Zheng et al.)",
+    "href": "https://arxiv.org/abs/2312.07104"
+   },
+   "parents": [
+    {
+     "id": "kv-cache",
+     "rel": "extends",
+     "why": "Turns the KV cache into a long-lived, shared asset across requests."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "constrained-decoding",
+   "name": "Constrained Decoding",
+   "region": "inference-and-serving",
+   "x": 3330.2,
+   "y": 1797.4,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Backs the structured-output features of major APIs.",
+   "desc": "Masking invalid tokens at each decoding step so output is guaranteed to match a grammar or schema.",
+   "date": "2022-01",
+   "aliases": [
+    "grammar-constrained generation",
+    "guided decoding",
+    "JSON mode"
+   ],
+   "examples": [
+    "Outlines",
+    "llguidance",
+    "XGrammar"
+   ],
+   "ref": {
+    "title": "Synchromesh: Reliable Code Generation from Pre-trained Language Models (Poesia et al.)",
+    "href": "https://arxiv.org/abs/2201.11227"
+   },
+   "parents": [
+    {
+     "id": "autoregressive-decoding",
+     "rel": "extends",
+     "why": "Restricts the sampling step to tokens valid under a grammar."
+    }
+   ],
+   "external": [],
+   "children": [
+    "structured-outputs"
+   ]
+  },
+  {
+   "id": "model-routing",
+   "name": "Model Routing and Cascades",
+   "region": "inference-and-serving",
+   "x": 3544.6,
+   "y": 2038.5,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "In production at cost-sensitive companies; techniques still unsettled.",
+   "desc": "Sending each request to the cheapest model likely to handle it well, or escalating through a cascade of models.",
+   "date": "2023-05",
+   "aliases": [
+    "LLM routing",
+    "FrugalGPT",
+    "model cascades"
+   ],
+   "examples": [
+    "RouteLLM",
+    "OpenRouter auto-routing"
+   ],
+   "ref": {
+    "title": "FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance (Chen et al.)",
+    "href": "https://arxiv.org/abs/2305.05176"
+   },
+   "parents": [
+    {
+     "id": "mixture-of-experts",
+     "rel": "applies",
+     "why": "Lifts learned routing from experts within a model to whole models."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "prefill-decode-disaggregation",
+   "name": "Prefill-Decode Disaggregation",
+   "region": "inference-and-serving",
+   "x": 3415.7,
+   "y": 1935.9,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Adopted by large-scale providers; becoming standard in open engines.",
+   "desc": "Running the compute-bound prefill phase and the memory-bound decode phase on separate hardware pools, transferring KV state between them.",
+   "date": "2024-01",
+   "aliases": [
+    "disaggregated serving",
+    "split-level inference"
+   ],
+   "examples": [
+    "NVIDIA Dynamo",
+    "llm-d",
+    "Mooncake"
+   ],
+   "ref": {
+    "title": "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized LLM Serving (Zhong et al.)",
+    "href": "https://arxiv.org/abs/2401.09670"
+   },
+   "parents": [
+    {
+     "id": "continuous-batching",
+     "rel": "extends",
+     "why": "Separates the two phases continuous batching interleaves on one device."
+    },
+    {
+     "id": "kv-cache",
+     "rel": "applies",
+     "why": "Requires moving KV cache between prefill and decode workers."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "local-inference",
+   "name": "Local and On-Device Inference",
+   "region": "inference-and-serving",
+   "x": 3573.6,
+   "y": 1841.7,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Mature tooling and a large user base.",
+   "desc": "Running models on consumer hardware or devices, relying on quantization and efficient kernels.",
+   "date": "2023-03",
+   "aliases": [
+    "llama.cpp",
+    "edge inference"
+   ],
+   "examples": [
+    "llama.cpp",
+    "Ollama",
+    "LM Studio",
+    "MLX"
+   ],
+   "ref": {
+    "title": "llama.cpp (Gerganov)",
+    "href": "https://github.com/ggml-org/llama.cpp"
+   },
+   "parents": [
+    {
+     "id": "weight-quantization",
+     "rel": "applies",
+     "why": "Quantization makes models fit consumer memory."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "zero-shot-prompting",
+   "name": "Zero-Shot Prompting",
+   "region": "prompting-and-context-engineering",
+   "x": 2218.3,
+   "y": 1480.6,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Baseline interaction mode for instruction-tuned models.",
+   "desc": "Asking a model to perform a task from instructions alone, with no examples.",
+   "date": "2019-02",
+   "aliases": [
+    "direct prompting",
+    "instruction prompting"
+   ],
+   "examples": [
+    "any chat interface"
+   ],
+   "ref": {
+    "title": "Language Models are Unsupervised Multitask Learners (Radford et al.)",
+    "href": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+   },
+   "parents": [
+    {
+     "id": "pretrained-language-models",
+     "rel": "applies",
+     "why": "Uses a pretrained model's latent task knowledge directly."
+    }
+   ],
+   "external": [],
+   "children": [
+    "few-shot-prompting",
+    "system-prompts",
+    "prompt-templating",
+    "prompt-chaining",
+    "automatic-prompt-optimization",
+    "llm-annotation",
+    "llm-as-a-judge",
+    "prompt-injection"
+   ]
+  },
+  {
+   "id": "few-shot-prompting",
+   "name": "Few-Shot Prompting",
+   "region": "prompting-and-context-engineering",
+   "x": 2045.9,
+   "y": 1648.3,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard steering technique.",
+   "desc": "Including example input-output pairs in the prompt to condition format and behavior.",
+   "date": "2020-05",
+   "aliases": [
+    "in-context learning",
+    "ICL"
+   ],
+   "examples": [
+    "prompt templates with examples"
+   ],
+   "ref": {
+    "title": "Language Models are Few-Shot Learners (Brown et al.)",
+    "href": "https://arxiv.org/abs/2005.14165"
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "extends",
+     "why": "Adds demonstrations to instructions."
+    }
+   ],
+   "external": [],
+   "children": [
+    "structured-outputs",
+    "tool-learning",
+    "chain-of-thought",
+    "self-instruct"
+   ]
+  },
+  {
+   "id": "system-prompts",
+   "name": "System Prompts",
+   "region": "prompting-and-context-engineering",
+   "x": 2114.3,
+   "y": 1740.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Built into every major chat API.",
+   "desc": "A privileged, persistent instruction block that defines role, constraints, and behavior for a conversation.",
+   "date": "2023-03",
+   "aliases": [
+    "system messages",
+    "custom instructions"
+   ],
+   "examples": [
+    "Chat Completions",
+    "Claude Messages API"
+   ],
+   "ref": {
+    "title": "Introducing ChatGPT and Whisper APIs (OpenAI, March 2023)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "specializes",
+     "why": "A persistent, privileged form of instruction."
+    }
+   ],
+   "external": [],
+   "children": [
+    "context-engineering"
+   ]
+  },
+  {
+   "id": "prompt-templating",
+   "name": "Prompt Templating",
+   "region": "prompting-and-context-engineering",
+   "x": 2028.1,
+   "y": 1546.4,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Ubiquitous in LLM applications.",
+   "desc": "Separating fixed prompt structure from variable data using templating, so prompts can be versioned and reused.",
+   "date": "2022-10",
+   "aliases": [
+    "prompt templates"
+   ],
+   "examples": [
+    "Jinja2",
+    "LangChain PromptTemplate",
+    "Prompty"
+   ],
+   "ref": {
+    "title": "LangChain initial release (Chase, October 2022)",
+    "href": "https://github.com/langchain-ai/langchain"
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "applies",
+     "why": "Turns hand-written prompts into reusable software artifacts."
+    }
+   ],
+   "external": [
+    {
+     "name": "template-engines",
+     "why": "Reuses standard text templating from web development."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "prompt-chaining",
+   "name": "Prompt Chaining",
+   "region": "prompting-and-context-engineering",
+   "x": 2124,
+   "y": 1561.4,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Foundational pattern behind most LLM workflows.",
+   "desc": "Decomposing a task into a fixed sequence of LLM calls, each consuming the previous call's output.",
+   "date": "2021-10",
+   "aliases": [
+    "LLM chains",
+    "pipelines of prompts"
+   ],
+   "examples": [
+    "LangChain LCEL",
+    "workflow builders"
+   ],
+   "ref": {
+    "title": "AI Chains: Transparent and Controllable Human-AI Interaction by Chaining Large Language Model Prompts (Wu et al.)",
+    "href": "https://arxiv.org/abs/2110.01691"
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "extends",
+     "why": "Composes multiple prompts into a pipeline."
+    },
+    {
+     "id": "mixed-initiative-interaction",
+     "rel": "applies",
+     "why": "Originated as an HCI technique for transparent, controllable human-AI collaboration."
+    }
+   ],
+   "external": [],
+   "children": [
+    "declarative-prompt-compilation",
+    "workflow-state-machines"
+   ]
+  },
+  {
+   "id": "structured-outputs",
+   "name": "Structured Outputs",
+   "region": "prompting-and-context-engineering",
+   "x": 2317.9,
+   "y": 1554.6,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard for connecting models to code.",
+   "desc": "Getting models to emit machine-readable data matching a schema, through prompting, validation, or constrained decoding.",
+   "date": "2022",
+   "aliases": [
+    "JSON outputs",
+    "schema-constrained outputs"
+   ],
+   "examples": [
+    "Instructor",
+    "Pydantic AI",
+    "OpenAI Structured Outputs"
+   ],
+   "ref": {
+    "title": "Efficient Guided Generation for Large Language Models (Willard & Louf)",
+    "href": "https://arxiv.org/abs/2307.09702"
+   },
+   "parents": [
+    {
+     "id": "few-shot-prompting",
+     "rel": "extends",
+     "why": "Demonstrations of the target format were the original technique."
+    },
+    {
+     "id": "constrained-decoding",
+     "rel": "combines",
+     "why": "Grammar-constrained decoding makes schema adherence guaranteed."
+    }
+   ],
+   "external": [],
+   "children": [
+    "function-calling",
+    "generative-ui"
+   ]
+  },
+  {
+   "id": "context-compaction",
+   "name": "Context Compaction",
+   "region": "prompting-and-context-engineering",
+   "x": 2218.9,
+   "y": 1722.4,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Common in agent harnesses; techniques still forming.",
+   "desc": "Compressing, summarizing, or pruning context so long tasks fit within the window without losing what matters.",
+   "date": "2023-10",
+   "aliases": [
+    "prompt compression",
+    "summarization of history"
+   ],
+   "examples": [
+    "LLMLingua",
+    "agent harness auto-compaction"
+   ],
+   "ref": {
+    "title": "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models (Jiang et al.)",
+    "href": "https://arxiv.org/abs/2310.05736"
+   },
+   "parents": [
+    {
+     "id": "pretrained-language-models",
+     "rel": "applies",
+     "why": "Uses language models to compress text for other model calls."
+    }
+   ],
+   "external": [],
+   "children": [
+    "context-engineering",
+    "agent-memory"
+   ]
+  },
+  {
+   "id": "context-engineering",
+   "name": "Context Engineering",
+   "region": "prompting-and-context-engineering",
+   "x": 2303.5,
+   "y": 1659.2,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Widely adopted term and practice; best practices still forming.",
+   "desc": "Curating the entire set of tokens a model sees — instructions, tools, retrieved data, history, memory — as a finite resource, especially for long-running agents.",
+   "date": "2025-09",
+   "aliases": [
+    "context management"
+   ],
+   "examples": [
+    "agent harnesses",
+    "AGENTS.md / CLAUDE.md files"
+   ],
+   "ref": {
+    "title": "Effective context engineering for AI agents (Anthropic)",
+    "href": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+   },
+   "parents": [
+    {
+     "id": "system-prompts",
+     "rel": "extends",
+     "why": "Generalizes prompt writing to managing all context state."
+    },
+    {
+     "id": "context-compaction",
+     "rel": "combines",
+     "why": "Compaction is one of its core long-horizon techniques."
+    },
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "combines",
+     "why": "Just-in-time retrieval of context is part of the discipline."
+    }
+   ],
+   "external": [],
+   "children": [
+    "agent-skills"
+   ]
+  },
+  {
+   "id": "automatic-prompt-optimization",
+   "name": "Automatic Prompt Optimization",
+   "region": "prompting-and-context-engineering",
+   "x": 2222.4,
+   "y": 1599.7,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Moving into production pipelines.",
+   "desc": "Using models and search to generate, score, and refine prompts against a dataset instead of tuning them by hand.",
+   "date": "2022-11",
+   "aliases": [
+    "APO",
+    "APE",
+    "prompt search"
+   ],
+   "examples": [
+    "TextGrad",
+    "Promptfoo",
+    "GEPA"
+   ],
+   "ref": {
+    "title": "Large Language Models Are Human-Level Prompt Engineers (Zhou et al.)",
+    "href": "https://arxiv.org/abs/2211.01910"
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "applies",
+     "why": "Uses LLM generation to propose instructions."
+    }
+   ],
+   "external": [],
+   "children": [
+    "declarative-prompt-compilation"
+   ]
+  },
+  {
+   "id": "declarative-prompt-compilation",
+   "name": "Declarative Prompt Compilation",
+   "region": "prompting-and-context-engineering",
+   "x": 2149,
+   "y": 1655.2,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Real adoption; still a minority approach.",
+   "desc": "Writing LM pipelines as declarative modules with signatures, then compiling prompts and few-shot examples automatically with optimizers.",
+   "date": "2023-10",
+   "aliases": [
+    "DSPy",
+    "LM programs"
+   ],
+   "examples": [
+    "DSPy"
+   ],
+   "ref": {
+    "title": "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines (Khattab et al.)",
+    "href": "https://arxiv.org/abs/2310.03714"
+   },
+   "parents": [
+    {
+     "id": "automatic-prompt-optimization",
+     "rel": "extends",
+     "why": "Turns prompt optimization into a programming model."
+    },
+    {
+     "id": "prompt-chaining",
+     "rel": "extends",
+     "why": "Optimizes multi-stage pipelines rather than single prompts."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "text-embeddings",
+   "name": "Text Embeddings",
+   "region": "retrieval-and-knowledge",
+   "x": 2900.3,
+   "y": 2079.8,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Bedrock of semantic search.",
+   "desc": "Models that map text to vectors so that semantically similar texts are close together.",
+   "date": "2019-08",
+   "aliases": [
+    "embedding models",
+    "sentence embeddings"
+   ],
+   "examples": [
+    "OpenAI text-embedding-3",
+    "Voyage",
+    "BGE",
+    "Nomic"
+   ],
+   "ref": {
+    "title": "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks (Reimers & Gurevych)",
+    "href": "https://arxiv.org/abs/1908.10084"
+   },
+   "parents": [
+    {
+     "id": "pretrained-language-models",
+     "rel": "specializes",
+     "why": "Fine-tunes pretrained encoders to produce comparable sentence vectors."
+    }
+   ],
+   "external": [],
+   "children": [
+    "dense-retrieval"
+   ]
+  },
+  {
+   "id": "dense-retrieval",
+   "name": "Dense Retrieval",
+   "region": "retrieval-and-knowledge",
+   "x": 2993.8,
+   "y": 2018.4,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard mechanism of vector databases.",
+   "desc": "Retrieving documents by embedding queries and passages into a shared vector space and searching by similarity.",
+   "date": "2020-04",
+   "aliases": [
+    "vector search",
+    "semantic search",
+    "DPR"
+   ],
+   "examples": [
+    "Pinecone",
+    "Weaviate",
+    "pgvector"
+   ],
+   "ref": {
+    "title": "Dense Passage Retrieval for Open-Domain Question Answering (Karpukhin et al.)",
+    "href": "https://arxiv.org/abs/2004.04906"
+   },
+   "parents": [
+    {
+     "id": "text-embeddings",
+     "rel": "applies",
+     "why": "Uses learned embeddings as the retrieval representation."
+    },
+    {
+     "id": "approximate-nearest-neighbor-search",
+     "rel": "combines",
+     "why": "Depends on ANN indexes to search at scale."
+    },
+    {
+     "id": "bm25",
+     "rel": "replaces",
+     "why": "Positioned as a learned replacement for sparse retrieval."
+    }
+   ],
+   "external": [],
+   "children": [
+    "retrieval-augmented-generation",
+    "hybrid-search",
+    "query-rewriting",
+    "visual-document-retrieval"
+   ]
+  },
+  {
+   "id": "retrieval-augmented-generation",
+   "name": "Retrieval-Augmented Generation",
+   "region": "retrieval-and-knowledge",
+   "x": 3083.3,
+   "y": 1920.2,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "The default pattern for grounding applications.",
+   "desc": "Retrieving relevant passages and placing them in the model's context so generation is grounded in external knowledge.",
+   "date": "2020-05",
+   "aliases": [
+    "RAG",
+    "naive RAG"
+   ],
+   "examples": [
+    "LlamaIndex",
+    "LangChain",
+    "Haystack"
+   ],
+   "ref": {
+    "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al.)",
+    "href": "https://arxiv.org/abs/2005.11401"
+   },
+   "parents": [
+    {
+     "id": "open-domain-qa",
+     "rel": "extends",
+     "why": "Replaces the extractive reader with a generative model."
+    },
+    {
+     "id": "dense-retrieval",
+     "rel": "combines",
+     "why": "Uses dense retrieval as the retriever."
+    },
+    {
+     "id": "pretrained-language-models",
+     "rel": "combines",
+     "why": "Uses a pretrained generator."
+    }
+   ],
+   "external": [],
+   "children": [
+    "context-engineering",
+    "chunking-strategies",
+    "graph-rag",
+    "self-rag",
+    "corrective-rag",
+    "agentic-rag",
+    "agent-memory",
+    "rag-evaluation",
+    "indirect-prompt-injection",
+    "citation-ux"
+   ]
+  },
+  {
+   "id": "chunking-strategies",
+   "name": "Chunking Strategies",
+   "region": "retrieval-and-knowledge",
+   "x": 2962.1,
+   "y": 1911.1,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Well understood; variants still evolving.",
+   "desc": "Splitting documents into passages sized and bounded for embedding and retrieval.",
+   "date": "2022",
+   "aliases": [
+    "text splitting",
+    "semantic chunking"
+   ],
+   "examples": [
+    "RecursiveCharacterTextSplitter",
+    "Unstructured"
+   ],
+   "ref": {
+    "title": "LangChain text splitters documentation",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "applies",
+     "why": "Required preprocessing for passage-level retrieval."
+    }
+   ],
+   "external": [],
+   "children": [
+    "contextual-retrieval"
+   ]
+  },
+  {
+   "id": "hybrid-search",
+   "name": "Hybrid Search",
+   "region": "retrieval-and-knowledge",
+   "x": 3010.4,
+   "y": 1822.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Recommended production baseline.",
+   "desc": "Combining lexical and vector retrieval, typically fusing rankings, to catch both exact terms and semantic matches.",
+   "date": "2022",
+   "aliases": [
+    "sparse + dense retrieval",
+    "reciprocal rank fusion"
+   ],
+   "examples": [
+    "Weaviate hybrid",
+    "Elasticsearch",
+    "Vespa"
+   ],
+   "ref": {
+    "title": "Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods (Cormack et al., SIGIR 2009)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "bm25",
+     "rel": "combines",
+     "why": "Contributes exact-term matching."
+    },
+    {
+     "id": "dense-retrieval",
+     "rel": "combines",
+     "why": "Contributes semantic matching."
+    }
+   ],
+   "external": [],
+   "children": [
+    "contextual-retrieval"
+   ]
+  },
+  {
+   "id": "cross-encoder-reranking",
+   "name": "Cross-Encoder Reranking",
+   "region": "retrieval-and-knowledge",
+   "x": 2982.6,
+   "y": 2121.1,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard in high-accuracy retrieval.",
+   "desc": "Rescoring a candidate set by passing query and document jointly through a transformer for a precise relevance score.",
+   "date": "2019-01",
+   "aliases": [
+    "rerankers",
+    "retrieve-and-rerank",
+    "multi-stage retrieval"
+   ],
+   "examples": [
+    "Cohere Rerank",
+    "BGE-Reranker",
+    "Voyage rerank"
+   ],
+   "ref": {
+    "title": "Passage Re-ranking with BERT (Nogueira & Cho)",
+    "href": "https://arxiv.org/abs/1901.04085"
+   },
+   "parents": [
+    {
+     "id": "pretrained-language-models",
+     "rel": "applies",
+     "why": "Uses a pretrained transformer as a relevance scorer."
+    },
+    {
+     "id": "bm25",
+     "rel": "extends",
+     "why": "Introduced as a second stage over first-stage lexical retrieval."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "query-rewriting",
+   "name": "Query Rewriting and HyDE",
+   "region": "retrieval-and-knowledge",
+   "x": 3096.1,
+   "y": 2032.5,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Common in advanced pipelines; adds latency.",
+   "desc": "Using a model to rewrite, expand, or answer hypothetically before retrieval, improving recall for short or vague queries.",
+   "date": "2022-12",
+   "aliases": [
+    "query expansion",
+    "HyDE"
+   ],
+   "examples": [
+    "LlamaIndex query transforms"
+   ],
+   "ref": {
+    "title": "Precise Zero-Shot Dense Retrieval without Relevance Labels (Gao et al.)",
+    "href": "https://arxiv.org/abs/2212.10496"
+   },
+   "parents": [
+    {
+     "id": "dense-retrieval",
+     "rel": "extends",
+     "why": "Changes the query representation fed to the retriever."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "contextual-retrieval",
+   "name": "Contextual Retrieval",
+   "region": "retrieval-and-knowledge",
+   "x": 2918.6,
+   "y": 1829.9,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Widely copied pattern; relies on prompt caching for cost.",
+   "desc": "Prepending model-generated document context to each chunk before embedding and indexing, reducing retrieval failures from orphaned chunks.",
+   "date": "2024-09",
+   "aliases": [
+    "contextual chunking"
+   ],
+   "examples": [
+    "Anthropic cookbook"
+   ],
+   "ref": {
+    "title": "Introducing Contextual Retrieval (Anthropic)",
+    "href": "https://www.anthropic.com/news/contextual-retrieval"
+   },
+   "parents": [
+    {
+     "id": "chunking-strategies",
+     "rel": "extends",
+     "why": "Restores document context lost by chunking."
+    },
+    {
+     "id": "hybrid-search",
+     "rel": "applies",
+     "why": "Applied to both embedding and BM25 indexes."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "graph-rag",
+   "name": "GraphRAG",
+   "region": "retrieval-and-knowledge",
+   "x": 3033.5,
+   "y": 2187.3,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "High interest; indexing cost limits production use.",
+   "desc": "Using models to extract an entity graph from a corpus, cluster it into communities, and summarize them to answer global questions.",
+   "date": "2024-04",
+   "aliases": [
+    "knowledge-graph RAG"
+   ],
+   "examples": [
+    "Microsoft GraphRAG",
+    "LightRAG"
+   ],
+   "ref": {
+    "title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al.)",
+    "href": "https://arxiv.org/abs/2404.16130"
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "combines",
+     "why": "Keeps retrieval-then-generate structure."
+    },
+    {
+     "id": "knowledge-graphs",
+     "rel": "combines",
+     "why": "Builds and traverses a knowledge graph automatically."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "self-rag",
+   "name": "Self-RAG",
+   "region": "retrieval-and-knowledge",
+   "x": 2847.4,
+   "y": 1888.2,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Influential research; patterns absorbed into agentic RAG.",
+   "desc": "Training a model to decide when to retrieve and to critique its own generations with reflection tokens.",
+   "date": "2023-10",
+   "aliases": [
+    "self-reflective RAG"
+   ],
+   "examples": [
+    "Self-RAG checkpoints"
+   ],
+   "ref": {
+    "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (Asai et al.)",
+    "href": "https://arxiv.org/abs/2310.11511"
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "extends",
+     "why": "Makes retrieval adaptive and self-critiqued."
+    }
+   ],
+   "external": [],
+   "children": [
+    "agentic-rag"
+   ]
+  },
+  {
+   "id": "corrective-rag",
+   "name": "Corrective RAG",
+   "region": "retrieval-and-knowledge",
+   "x": 3065.4,
+   "y": 2110.1,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Common in templates; limited evidence of broad production use.",
+   "desc": "Grading retrieved documents and falling back to web search or refinement when retrieval quality is low.",
+   "date": "2024-01",
+   "aliases": [
+    "CRAG"
+   ],
+   "examples": [
+    "LangGraph CRAG template"
+   ],
+   "ref": {
+    "title": "Corrective Retrieval Augmented Generation (Yan et al.)",
+    "href": "https://arxiv.org/abs/2401.15884"
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "extends",
+     "why": "Adds a retrieval evaluator and corrective actions."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "agentic-rag",
+   "name": "Agentic RAG",
+   "region": "retrieval-and-knowledge",
+   "x": 2888.7,
+   "y": 1979.9,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "In enterprise production; agentic search increasingly replaces fixed pipelines.",
+   "desc": "Letting an agent plan queries, choose sources and tools, and iterate retrieval until it has enough to answer.",
+   "date": "2024",
+   "aliases": [
+    "agentic search",
+    "iterative retrieval"
+   ],
+   "examples": [
+    "LlamaIndex agents",
+    "agentic file search in coding agents"
+   ],
+   "ref": {
+    "title": "Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG (Singh et al.)",
+    "href": "https://arxiv.org/abs/2501.09136"
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "combines",
+     "why": "Retrieval remains the core goal."
+    },
+    {
+     "id": "react-agent-loop",
+     "rel": "combines",
+     "why": "Wraps retrieval in an agent loop."
+    },
+    {
+     "id": "self-rag",
+     "rel": "extends",
+     "why": "Generalizes adaptive, self-critiqued retrieval."
+    }
+   ],
+   "external": [],
+   "children": [
+    "deep-research-agents"
+   ]
+  },
+  {
+   "id": "mrkl-systems",
+   "name": "MRKL Systems",
+   "region": "agents-and-orchestration",
+   "x": 2749.7,
+   "y": 1524.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Concept absorbed into standard tool use.",
+   "desc": "Architectures that route parts of a query from an LLM to discrete expert modules such as calculators, APIs, and databases.",
+   "date": "2022-05",
+   "aliases": [
+    "modular reasoning",
+    "neuro-symbolic routing"
+   ],
+   "examples": [
+    "early LangChain agents"
+   ],
+   "ref": {
+    "title": "MRKL Systems: A modular, neuro-symbolic architecture that combines large language models, external knowledge sources and discrete reasoning (Karpas et al.)",
+    "href": "https://arxiv.org/abs/2205.00445"
+   },
+   "parents": [
+    {
+     "id": "expert-systems",
+     "rel": "applies",
+     "why": "Revives modular expert routing with an LLM as the router."
+    },
+    {
+     "id": "pretrained-language-models",
+     "rel": "combines",
+     "why": "The language model handles understanding and routing."
+    }
+   ],
+   "external": [],
+   "children": [
+    "tool-learning",
+    "react-agent-loop"
+   ]
+  },
+  {
+   "id": "tool-learning",
+   "name": "Tool Learning",
+   "region": "agents-and-orchestration",
+   "x": 2696.6,
+   "y": 1615.7,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Tool use is now trained into every frontier model.",
+   "desc": "Training models to decide when and how to call tools by inserting API calls into their own training data.",
+   "date": "2023-02",
+   "aliases": [
+    "Toolformer",
+    "self-taught tool use"
+   ],
+   "examples": [
+    "tool-use training data in frontier models"
+   ],
+   "ref": {
+    "title": "Toolformer: Language Models Can Teach Themselves to Use Tools (Schick et al.)",
+    "href": "https://arxiv.org/abs/2302.04761"
+   },
+   "parents": [
+    {
+     "id": "mrkl-systems",
+     "rel": "extends",
+     "why": "Learns tool invocation rather than hand-routing."
+    },
+    {
+     "id": "few-shot-prompting",
+     "rel": "applies",
+     "why": "Uses few-shot prompting to annotate candidate API calls."
+    }
+   ],
+   "external": [],
+   "children": [
+    "function-calling"
+   ]
+  },
+  {
+   "id": "function-calling",
+   "name": "Function Calling",
+   "region": "agents-and-orchestration",
+   "x": 2575.8,
+   "y": 1441.3,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Core primitive of every major model API.",
+   "desc": "A model emits a structured call matching a declared schema; the host executes it and returns the result to the model.",
+   "date": "2023-06",
+   "aliases": [
+    "tool use",
+    "tool calling"
+   ],
+   "examples": [
+    "OpenAI tools",
+    "Anthropic tool use",
+    "Gemini function calling"
+   ],
+   "ref": {
+    "title": "Function calling and other API updates (OpenAI, June 2023)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "tool-learning",
+     "rel": "extends",
+     "why": "Productizes trained tool use as an API contract."
+    },
+    {
+     "id": "structured-outputs",
+     "rel": "combines",
+     "why": "Calls are schema-conformant structured output."
+    }
+   ],
+   "external": [],
+   "children": [
+    "model-context-protocol",
+    "coding-agents",
+    "agent-sandboxing",
+    "human-in-the-loop-approval"
+   ]
+  },
+  {
+   "id": "react-agent-loop",
+   "name": "ReAct Agent Loop",
+   "region": "agents-and-orchestration",
+   "x": 2584.3,
+   "y": 1645,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "The canonical agent loop.",
+   "desc": "Interleaving reasoning traces with actions and observations in a loop until the task is done.",
+   "date": "2022-10",
+   "aliases": [
+    "reason and act",
+    "agent loop"
+   ],
+   "examples": [
+    "LangChain agents",
+    "most agent SDKs"
+   ],
+   "ref": {
+    "title": "ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al.)",
+    "href": "https://arxiv.org/abs/2210.03629"
+   },
+   "parents": [
+    {
+     "id": "chain-of-thought",
+     "rel": "combines",
+     "why": "Supplies the reasoning half of the loop."
+    },
+    {
+     "id": "mrkl-systems",
+     "rel": "combines",
+     "why": "Supplies the acting half via external tools."
+    }
+   ],
+   "external": [],
+   "children": [
+    "agentic-rag",
+    "workflow-state-machines",
+    "multi-agent-systems",
+    "coding-agents",
+    "computer-use-agents",
+    "reflexion"
+   ]
+  },
+  {
+   "id": "workflow-state-machines",
+   "name": "Workflow Graphs and State Machines",
+   "region": "agents-and-orchestration",
+   "x": 2553,
+   "y": 1542.1,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Preferred production pattern for reliable agentic applications.",
+   "desc": "Orchestrating LLM calls as explicit graphs of states and transitions in code, with the model deciding only where it must.",
+   "date": "2024-01",
+   "aliases": [
+    "graph-based agents",
+    "agent workflows"
+   ],
+   "examples": [
+    "LangGraph",
+    "Temporal",
+    "Inngest",
+    "Mastra"
+   ],
+   "ref": {
+    "title": "Building effective agents (Anthropic, December 2024)",
+    "href": "https://www.anthropic.com/engineering/building-effective-agents"
+   },
+   "parents": [
+    {
+     "id": "statecharts",
+     "rel": "applies",
+     "why": "Applies state-machine modeling to LLM control flow."
+    },
+    {
+     "id": "prompt-chaining",
+     "rel": "extends",
+     "why": "Adds branching, cycles, and persistent state to fixed chains."
+    },
+    {
+     "id": "react-agent-loop",
+     "rel": "replaces",
+     "why": "Replaces model-driven control flow where reliability matters."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "model-context-protocol",
+   "name": "Model Context Protocol",
+   "region": "agents-and-orchestration",
+   "x": 2687.6,
+   "y": 1439.1,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Adopted across major clients and providers within a year of launch.",
+   "desc": "An open JSON-RPC protocol for connecting AI applications to tools, data, and prompts through interchangeable servers.",
+   "date": "2024-11",
+   "aliases": [
+    "MCP"
+   ],
+   "examples": [
+    "Claude",
+    "Cursor",
+    "VS Code",
+    "ChatGPT connectors"
+   ],
+   "ref": {
+    "title": "Model Context Protocol specification",
+    "href": "https://modelcontextprotocol.io"
+   },
+   "parents": [
+    {
+     "id": "function-calling",
+     "rel": "extends",
+     "why": "Standardizes how tools are described and invoked across hosts."
+    },
+    {
+     "id": "language-server-protocol",
+     "rel": "applies",
+     "why": "Explicitly modeled on LSP's approach to the N×M integration problem."
+    }
+   ],
+   "external": [],
+   "children": [
+    "agent-skills"
+   ]
+  },
+  {
+   "id": "agent-memory",
+   "name": "Agent Memory",
+   "region": "agents-and-orchestration",
+   "x": 2673.5,
+   "y": 1704.9,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Shipping in assistants; designs vary widely.",
+   "desc": "Persisting information across turns and sessions — transcripts, extracted facts, notes — and bringing it back into context when relevant.",
+   "date": "2023-10",
+   "aliases": [
+    "long-term memory",
+    "episodic memory",
+    "MemGPT"
+   ],
+   "examples": [
+    "Letta",
+    "Zep",
+    "mem0",
+    "assistant memory features"
+   ],
+   "ref": {
+    "title": "MemGPT: Towards LLMs as Operating Systems (Packer et al.)",
+    "href": "https://arxiv.org/abs/2310.08560"
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "applies",
+     "why": "Applies retrieval to an agent's own history."
+    },
+    {
+     "id": "context-compaction",
+     "rel": "combines",
+     "why": "Pages information in and out of the window."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "multi-agent-systems",
+   "name": "Multi-Agent Systems",
+   "region": "agents-and-orchestration",
+   "x": 2644.2,
+   "y": 1529.8,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Orchestrator-subagent patterns in production; free-form swarms still unreliable.",
+   "desc": "Several agents with distinct roles or contexts that delegate, collaborate, or debate to complete a task.",
+   "date": "2023-08",
+   "aliases": [
+    "orchestrator-worker",
+    "subagents",
+    "agent teams"
+   ],
+   "examples": [
+    "AutoGen",
+    "CrewAI",
+    "Claude Code subagents"
+   ],
+   "ref": {
+    "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation (Wu et al.)",
+    "href": "https://arxiv.org/abs/2308.08155"
+   },
+   "parents": [
+    {
+     "id": "react-agent-loop",
+     "rel": "extends",
+     "why": "Composes multiple agent loops with message passing."
+    }
+   ],
+   "external": [
+    {
+     "name": "classical-multi-agent-systems",
+     "why": "Revives distributed AI ideas with LLM agents."
+    }
+   ],
+   "children": [
+    "deep-research-agents"
+   ]
+  },
+  {
+   "id": "coding-agents",
+   "name": "Coding Agents",
+   "region": "agents-and-orchestration",
+   "x": 2779.4,
+   "y": 1432.1,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Mainstream developer tooling by 2025–2026.",
+   "desc": "Agents with shell, file system, and test access that make and verify changes to codebases.",
+   "date": "2024-05",
+   "aliases": [
+    "software engineering agents",
+    "SWE-agent"
+   ],
+   "examples": [
+    "Claude Code",
+    "Codex",
+    "Cursor agent",
+    "OpenHands"
+   ],
+   "ref": {
+    "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering (Yang et al.)",
+    "href": "https://arxiv.org/abs/2405.15793"
+   },
+   "parents": [
+    {
+     "id": "react-agent-loop",
+     "rel": "specializes",
+     "why": "An agent loop specialized to software environments."
+    },
+    {
+     "id": "function-calling",
+     "rel": "applies",
+     "why": "Acts through tools for editing, searching, and running code."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "computer-use-agents",
+   "name": "Computer-Use Agents",
+   "region": "agents-and-orchestration",
+   "x": 2867.1,
+   "y": 1584.8,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Shipping in products; reliability still limits unattended use.",
+   "desc": "Agents that perceive screens and operate graphical interfaces with mouse and keyboard actions.",
+   "date": "2024-10",
+   "aliases": [
+    "GUI agents",
+    "browser agents"
+   ],
+   "examples": [
+    "Claude computer use",
+    "OpenAI Operator",
+    "browser agents"
+   ],
+   "ref": {
+    "title": "Introducing computer use (Anthropic, October 2024)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "react-agent-loop",
+     "rel": "specializes",
+     "why": "An agent loop whose environment is a GUI."
+    },
+    {
+     "id": "vision-language-models",
+     "rel": "combines",
+     "why": "Requires visual understanding of screens."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "deep-research-agents",
+   "name": "Deep Research Agents",
+   "region": "agents-and-orchestration",
+   "x": 2788.6,
+   "y": 1613.4,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Shipping in all major assistants; quality varies.",
+   "desc": "Long-running agents that plan, search many sources, read, and synthesize a cited report.",
+   "date": "2024-12",
+   "aliases": [
+    "research agents"
+   ],
+   "examples": [
+    "Gemini Deep Research",
+    "OpenAI deep research",
+    "Claude Research"
+   ],
+   "ref": {
+    "title": "How we built our multi-agent research system (Anthropic)",
+    "href": "https://www.anthropic.com/engineering/built-multi-agent-research-system"
+   },
+   "parents": [
+    {
+     "id": "agentic-rag",
+     "rel": "extends",
+     "why": "Scales iterative retrieval to open-ended, multi-source research."
+    },
+    {
+     "id": "multi-agent-systems",
+     "rel": "applies",
+     "why": "Often implemented with orchestrator and parallel subagents."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "agent-skills",
+   "name": "Agent Skills",
+   "region": "agents-and-orchestration",
+   "x": 2485.9,
+   "y": 1492.4,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Recently introduced; adoption spreading across agent platforms.",
+   "desc": "Packaging instructions, scripts, and resources as folders an agent loads on demand, disclosing detail progressively to save context.",
+   "date": "2025-10",
+   "aliases": [
+    "skills",
+    "packaged procedures"
+   ],
+   "examples": [
+    "Claude skills",
+    "AGENTS.md conventions"
+   ],
+   "ref": {
+    "title": "Equipping agents for the real world with Agent Skills (Anthropic)",
+    "href": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills"
+   },
+   "parents": [
+    {
+     "id": "context-engineering",
+     "rel": "applies",
+     "why": "Progressive disclosure keeps context lean."
+    },
+    {
+     "id": "model-context-protocol",
+     "rel": "combines",
+     "why": "Complements tool protocols with procedural knowledge."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "scratchpads",
+   "name": "Scratchpads",
+   "region": "planning-and-reasoning",
+   "x": 2450.1,
+   "y": 1886.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Idea fully absorbed into chain-of-thought.",
+   "desc": "Training or prompting models to write intermediate computation steps before the final answer.",
+   "date": "2021-11",
+   "aliases": [
+    "intermediate computation"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "Show Your Work: Scratchpads for Intermediate Computation with Language Models (Nye et al.)",
+    "href": "https://arxiv.org/abs/2112.00114"
+   },
+   "parents": [
+    {
+     "id": "pretrained-language-models",
+     "rel": "applies",
+     "why": "Has the model emit intermediate steps as text."
+    }
+   ],
+   "external": [],
+   "children": [
+    "chain-of-thought"
+   ]
+  },
+  {
+   "id": "chain-of-thought",
+   "name": "Chain-of-Thought",
+   "region": "planning-and-reasoning",
+   "x": 2337,
+   "y": 1902.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Built into modern models and reasoning systems.",
+   "desc": "Eliciting intermediate reasoning steps before a final answer, improving performance on multi-step problems.",
+   "date": "2022-01",
+   "aliases": [
+    "CoT",
+    "step-by-step reasoning"
+   ],
+   "examples": [
+    "Let's think step by step"
+   ],
+   "ref": {
+    "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (Wei et al.)",
+    "href": "https://arxiv.org/abs/2201.11903"
+   },
+   "parents": [
+    {
+     "id": "few-shot-prompting",
+     "rel": "extends",
+     "why": "Adds rationales to few-shot demonstrations."
+    },
+    {
+     "id": "scratchpads",
+     "rel": "extends",
+     "why": "Generalizes scratchpads via prompting alone (contested lineage)."
+    }
+   ],
+   "external": [],
+   "children": [
+    "react-agent-loop",
+    "self-consistency",
+    "tree-of-thoughts",
+    "reasoning-models",
+    "llm-modulo"
+   ]
+  },
+  {
+   "id": "self-consistency",
+   "name": "Self-Consistency",
+   "region": "planning-and-reasoning",
+   "x": 2407.2,
+   "y": 2082.3,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard accuracy technique.",
+   "desc": "Sampling several reasoning paths and taking the most common answer.",
+   "date": "2022-03",
+   "aliases": [
+    "majority voting",
+    "best-of-n"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models (Wang et al.)",
+    "href": "https://arxiv.org/abs/2203.11171"
+   },
+   "parents": [
+    {
+     "id": "chain-of-thought",
+     "rel": "extends",
+     "why": "Aggregates multiple CoT samples."
+    }
+   ],
+   "external": [],
+   "children": [
+    "test-time-compute-scaling"
+   ]
+  },
+  {
+   "id": "tree-of-thoughts",
+   "name": "Tree Search over Reasoning",
+   "region": "planning-and-reasoning",
+   "x": 2418.1,
+   "y": 1982.3,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Expensive; mostly research and high-value async tasks.",
+   "desc": "Exploring a tree of partial reasoning states with evaluation, lookahead, and backtracking.",
+   "date": "2023-05",
+   "aliases": [
+    "Tree of Thoughts",
+    "ToT",
+    "LATS"
+   ],
+   "examples": [
+    "LATS"
+   ],
+   "ref": {
+    "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models (Yao et al.)",
+    "href": "https://arxiv.org/abs/2305.10601"
+   },
+   "parents": [
+    {
+     "id": "chain-of-thought",
+     "rel": "extends",
+     "why": "Expands a single chain into a searched tree."
+    },
+    {
+     "id": "heuristic-search",
+     "rel": "combines",
+     "why": "Brings classical search (BFS/DFS, MCTS) to generated thoughts."
+    }
+   ],
+   "external": [],
+   "children": [
+    "test-time-compute-scaling"
+   ]
+  },
+  {
+   "id": "reflexion",
+   "name": "Self-Reflection",
+   "region": "planning-and-reasoning",
+   "x": 2542.1,
+   "y": 1883.3,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Common pattern; gains depend heavily on feedback quality.",
+   "desc": "Having a model critique its own output or trajectory and retry with the critique in context.",
+   "date": "2023-03",
+   "aliases": [
+    "Reflexion",
+    "self-critique",
+    "self-refine"
+   ],
+   "examples": [
+    "critique-and-revise loops"
+   ],
+   "ref": {
+    "title": "Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn et al.)",
+    "href": "https://arxiv.org/abs/2303.11366"
+   },
+   "parents": [
+    {
+     "id": "react-agent-loop",
+     "rel": "extends",
+     "why": "Adds verbal self-feedback across agent trials."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "process-reward-models",
+   "name": "Process Reward Models",
+   "region": "planning-and-reasoning",
+   "x": 2470.1,
+   "y": 1797.1,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Influential; outcome-based verification has proven easier to scale.",
+   "desc": "Reward models that score each reasoning step rather than only the final answer, used to guide search and training.",
+   "date": "2023-05",
+   "aliases": [
+    "PRMs",
+    "step-level verifiers"
+   ],
+   "examples": [
+    "PRM800K"
+   ],
+   "ref": {
+    "title": "Let's Verify Step by Step (Lightman et al.)",
+    "href": "https://arxiv.org/abs/2305.20050"
+   },
+   "parents": [
+    {
+     "id": "rlhf",
+     "rel": "specializes",
+     "why": "A step-level variant of the learned reward model."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "test-time-compute-scaling",
+   "name": "Test-Time Compute Scaling",
+   "region": "planning-and-reasoning",
+   "x": 2578.4,
+   "y": 2017.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Reshaped how systems trade latency and cost for quality.",
+   "desc": "Spending more computation at inference — longer reasoning, more samples, search — to improve answers, with predictable returns.",
+   "date": "2024-08",
+   "aliases": [
+    "inference-time scaling"
+   ],
+   "examples": [
+    "reasoning effort settings",
+    "best-of-n with verifiers"
+   ],
+   "ref": {
+    "title": "Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters (Snell et al.)",
+    "href": "https://arxiv.org/abs/2408.03314"
+   },
+   "parents": [
+    {
+     "id": "self-consistency",
+     "rel": "extends",
+     "why": "Formalizes sampling-based gains as a scaling relationship."
+    },
+    {
+     "id": "tree-of-thoughts",
+     "rel": "extends",
+     "why": "Includes search-based allocation strategies."
+    }
+   ],
+   "external": [],
+   "children": [
+    "reasoning-models"
+   ]
+  },
+  {
+   "id": "reasoning-models",
+   "name": "Reasoning Models",
+   "region": "planning-and-reasoning",
+   "x": 2489.3,
+   "y": 2040.7,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Available from all major providers; standard for hard tasks.",
+   "desc": "Models trained with RL to produce long internal reasoning before answering, with controllable thinking budgets.",
+   "date": "2024-09",
+   "aliases": [
+    "thinking models",
+    "extended thinking"
+   ],
+   "examples": [
+    "OpenAI o-series",
+    "Claude extended thinking",
+    "DeepSeek-R1",
+    "Gemini thinking"
+   ],
+   "ref": {
+    "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+    "href": "https://arxiv.org/abs/2501.12948"
+   },
+   "parents": [
+    {
+     "id": "chain-of-thought",
+     "rel": "extends",
+     "why": "Internalizes long chains of thought through training."
+    },
+    {
+     "id": "test-time-compute-scaling",
+     "rel": "applies",
+     "why": "Turns extra inference compute into a native model capability."
+    },
+    {
+     "id": "policy-gradient-methods",
+     "rel": "applies",
+     "why": "Trained with large-scale RL."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "llm-plus-p",
+   "name": "LLM+P",
+   "region": "planning-and-reasoning",
+   "x": 2494.3,
+   "y": 2132.6,
+   "maturity": 1,
+   "maturityLabel": "Research",
+   "maturityNote": "Research prototypes; foundational for neuro-symbolic planning.",
+   "desc": "The LLM translates a natural-language problem into PDDL, a classical planner solves it, and the LLM translates the plan back.",
+   "date": "2023-04",
+   "aliases": [
+    "LLM-to-PDDL translation",
+    "LLM + classical planner"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "LLM+P: Empowering Large Language Models with Optimal Planning Proficiency (Liu et al.)",
+    "href": "https://arxiv.org/abs/2304.11477"
+   },
+   "parents": [
+    {
+     "id": "pddl",
+     "rel": "combines",
+     "why": "Uses PDDL and an off-the-shelf planner for correctness."
+    },
+    {
+     "id": "pretrained-language-models",
+     "rel": "combines",
+     "why": "Uses the LLM as translator between language and formal specification."
+    }
+   ],
+   "external": [],
+   "children": [
+    "llm-modulo"
+   ]
+  },
+  {
+   "id": "llm-modulo",
+   "name": "LLM-Modulo",
+   "region": "planning-and-reasoning",
+   "x": 2507.2,
+   "y": 1959.1,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Prototyped in planning domains; ideas echo in verifier-based agents.",
+   "desc": "LLMs generate candidate plans that a bank of external verifiers and critics checks, iterating until a plan passes.",
+   "date": "2024-02",
+   "aliases": [
+    "generate-test-critique",
+    "verifier-in-the-loop planning"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks (Kambhampati et al.)",
+    "href": "https://arxiv.org/abs/2402.01817"
+   },
+   "parents": [
+    {
+     "id": "llm-plus-p",
+     "rel": "extends",
+     "why": "Generalizes from translation to generate-and-verify with multiple critics."
+    },
+    {
+     "id": "chain-of-thought",
+     "rel": "combines",
+     "why": "Uses LLM reasoning to propose candidates."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "supervised-fine-tuning",
+   "name": "Supervised Fine-Tuning",
+   "region": "adaptation-and-post-training",
+   "x": 2776.3,
+   "y": 912.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard step in every model release.",
+   "desc": "Training a pretrained model on curated instruction-response pairs to follow instructions and adopt a format.",
+   "date": "2021-09",
+   "aliases": [
+    "SFT",
+    "instruction tuning"
+   ],
+   "examples": [
+    "TRL SFTTrainer",
+    "Axolotl",
+    "Unsloth"
+   ],
+   "ref": {
+    "title": "Finetuned Language Models Are Zero-Shot Learners (Wei et al.)",
+    "href": "https://arxiv.org/abs/2109.01652"
+   },
+   "parents": [
+    {
+     "id": "transfer-learning-fine-tuning",
+     "rel": "specializes",
+     "why": "Fine-tuning on instruction-following data."
+    }
+   ],
+   "external": [],
+   "children": [
+    "llm-distillation"
+   ]
+  },
+  {
+   "id": "parameter-efficient-fine-tuning",
+   "name": "Parameter-Efficient Fine-Tuning",
+   "region": "adaptation-and-post-training",
+   "x": 2653.4,
+   "y": 1044.7,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard for resource-constrained adaptation.",
+   "desc": "Fine-tuning only a small set of added or selected parameters, cutting memory and storage costs.",
+   "date": "2019-02",
+   "aliases": [
+    "PEFT",
+    "adapters"
+   ],
+   "examples": [
+    "Hugging Face PEFT"
+   ],
+   "ref": {
+    "title": "Parameter-Efficient Transfer Learning for NLP (Houlsby et al.)",
+    "href": "https://arxiv.org/abs/1902.00751"
+   },
+   "parents": [
+    {
+     "id": "transfer-learning-fine-tuning",
+     "rel": "specializes",
+     "why": "Restricts fine-tuning to a small parameter subset."
+    }
+   ],
+   "external": [],
+   "children": [
+    "low-rank-adaptation"
+   ]
+  },
+  {
+   "id": "low-rank-adaptation",
+   "name": "LoRA",
+   "region": "adaptation-and-post-training",
+   "x": 2727.5,
+   "y": 990.1,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Default open-source adaptation method.",
+   "desc": "Freezing base weights and training small low-rank update matrices injected into each layer.",
+   "date": "2021-06",
+   "aliases": [
+    "low-rank adaptation",
+    "QLoRA"
+   ],
+   "examples": [
+    "QLoRA",
+    "Unsloth",
+    "hosted fine-tuning APIs"
+   ],
+   "ref": {
+    "title": "LoRA: Low-Rank Adaptation of Large Language Models (Hu et al.)",
+    "href": "https://arxiv.org/abs/2106.09685"
+   },
+   "parents": [
+    {
+     "id": "parameter-efficient-fine-tuning",
+     "rel": "specializes",
+     "why": "Low-rank decomposition as the parameter-efficient mechanism."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "rlhf",
+   "name": "RLHF",
+   "region": "adaptation-and-post-training",
+   "x": 2833.8,
+   "y": 1014.8,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Established for frontier alignment; increasingly mixed with other methods.",
+   "desc": "Training a reward model on human preference comparisons, then optimizing the policy against it with RL.",
+   "date": "2017-06",
+   "aliases": [
+    "reinforcement learning from human feedback",
+    "reward modeling"
+   ],
+   "examples": [
+    "InstructGPT",
+    "OpenRLHF"
+   ],
+   "ref": {
+    "title": "Deep Reinforcement Learning from Human Preferences (Christiano et al.); applied to LLMs in InstructGPT (Ouyang et al. 2022)",
+    "href": "https://arxiv.org/abs/1706.03741"
+   },
+   "parents": [
+    {
+     "id": "policy-gradient-methods",
+     "rel": "applies",
+     "why": "Optimizes a policy against a learned reward."
+    }
+   ],
+   "external": [
+    {
+     "name": "preference-learning",
+     "why": "Learns a reward from pairwise human comparisons."
+    }
+   ],
+   "children": [
+    "process-reward-models",
+    "direct-preference-optimization",
+    "constitutional-ai",
+    "rlvr",
+    "jailbreaks",
+    "red-teaming",
+    "chat-interfaces"
+   ]
+  },
+  {
+   "id": "direct-preference-optimization",
+   "name": "Direct Preference Optimization",
+   "region": "adaptation-and-post-training",
+   "x": 2690.7,
+   "y": 878.2,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Widely used in open-model post-training.",
+   "desc": "Optimizing the model directly on preference pairs with a classification-style loss, removing the separate reward model and RL loop.",
+   "date": "2023-05",
+   "aliases": [
+    "DPO",
+    "KTO",
+    "ORPO",
+    "IPO"
+   ],
+   "examples": [
+    "TRL DPOTrainer"
+   ],
+   "ref": {
+    "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model (Rafailov et al.)",
+    "href": "https://arxiv.org/abs/2305.18290"
+   },
+   "parents": [
+    {
+     "id": "rlhf",
+     "rel": "replaces",
+     "why": "Achieves preference alignment without PPO or an explicit reward model."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "constitutional-ai",
+   "name": "Constitutional AI and RLAIF",
+   "region": "adaptation-and-post-training",
+   "x": 2741.1,
+   "y": 1072.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Core to at least one frontier lab; AI feedback widely used.",
+   "desc": "Using a model guided by written principles to critique, revise, and rank outputs, replacing much of the human preference labeling.",
+   "date": "2022-12",
+   "aliases": [
+    "RLAIF",
+    "AI feedback"
+   ],
+   "examples": [
+    "Claude training"
+   ],
+   "ref": {
+    "title": "Constitutional AI: Harmlessness from AI Feedback (Bai et al.)",
+    "href": "https://arxiv.org/abs/2212.08073"
+   },
+   "parents": [
+    {
+     "id": "rlhf",
+     "rel": "extends",
+     "why": "Replaces human preference labels with AI feedback guided by principles."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "rlvr",
+   "name": "RL with Verifiable Rewards",
+   "region": "adaptation-and-post-training",
+   "x": 2733,
+   "y": 1155.6,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Standard ingredient of reasoning-model training since 2025.",
+   "desc": "Keeping the RLHF objective but replacing the learned reward model with a programmatic verifier such as answer checks or unit tests.",
+   "date": "2024-11",
+   "aliases": [
+    "RLVR"
+   ],
+   "examples": [
+    "DeepSeek-R1-Zero",
+    "Open-R1",
+    "verifiers libraries"
+   ],
+   "ref": {
+    "title": "Tülu 3: Pushing Frontiers in Open Language Model Post-Training (Lambert et al.)",
+    "href": "https://arxiv.org/abs/2411.15124"
+   },
+   "parents": [
+    {
+     "id": "rlhf",
+     "rel": "extends",
+     "why": "Same KL-constrained RL objective with a verifier instead of a reward model."
+    },
+    {
+     "id": "ppo",
+     "rel": "applies",
+     "why": "Tülu 3 optimized RLVR with PPO."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "grpo",
+   "name": "Group Relative Policy Optimization",
+   "region": "adaptation-and-post-training",
+   "x": 2809.1,
+   "y": 1121.1,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Algorithm of choice for open reasoning RL after DeepSeek-R1.",
+   "desc": "A policy-gradient method that baselines each response against a group of samples for the same prompt, removing the value network.",
+   "date": "2024-02",
+   "aliases": [
+    "GRPO"
+   ],
+   "examples": [
+    "TRL GRPOTrainer",
+    "verl"
+   ],
+   "ref": {
+    "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models (Shao et al.)",
+    "href": "https://arxiv.org/abs/2402.03300"
+   },
+   "parents": [
+    {
+     "id": "ppo",
+     "rel": "specializes",
+     "why": "PPO-style objective with group-relative advantages instead of a critic."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "llm-distillation",
+   "name": "LLM Distillation",
+   "region": "adaptation-and-post-training",
+   "x": 2652.8,
+   "y": 952.7,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Pervasive for small and open models.",
+   "desc": "Fine-tuning smaller models on outputs and rationales generated by larger ones.",
+   "date": "2023-05",
+   "aliases": [
+    "reasoning distillation",
+    "distilled CoT"
+   ],
+   "examples": [
+    "DeepSeek-R1-Distill models"
+   ],
+   "ref": {
+    "title": "Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes (Hsieh et al.)",
+    "href": "https://arxiv.org/abs/2305.02301"
+   },
+   "parents": [
+    {
+     "id": "knowledge-distillation",
+     "rel": "applies",
+     "why": "Applies teacher-student training to generated text and rationales."
+    },
+    {
+     "id": "supervised-fine-tuning",
+     "rel": "applies",
+     "why": "Implemented as SFT on teacher outputs."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "self-instruct",
+   "name": "Self-Instruct",
+   "region": "data-and-synthetic-data",
+   "x": 2226.2,
+   "y": 1237.6,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Established technique behind many open instruction sets.",
+   "desc": "Bootstrapping instruction datasets by prompting a model to generate tasks, inputs, and outputs from a few seeds.",
+   "date": "2022-12",
+   "aliases": [
+    "synthetic instruction generation"
+   ],
+   "examples": [
+    "Alpaca data"
+   ],
+   "ref": {
+    "title": "Self-Instruct: Aligning Language Models with Self-Generated Instructions (Wang et al.)",
+    "href": "https://arxiv.org/abs/2212.10560"
+   },
+   "parents": [
+    {
+     "id": "few-shot-prompting",
+     "rel": "applies",
+     "why": "Uses few-shot prompts seeded with example tasks to generate new ones."
+    }
+   ],
+   "external": [],
+   "children": [
+    "evol-instruct",
+    "synthetic-textbook-data"
+   ]
+  },
+  {
+   "id": "evol-instruct",
+   "name": "Evol-Instruct",
+   "region": "data-and-synthetic-data",
+   "x": 2213.2,
+   "y": 1141.4,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Influential; one of many synthetic recipes.",
+   "desc": "Iteratively rewriting instructions to be harder or broader, producing more complex training data.",
+   "date": "2023-04",
+   "aliases": [
+    "instruction evolution"
+   ],
+   "examples": [
+    "WizardLM",
+    "WizardCoder"
+   ],
+   "ref": {
+    "title": "WizardLM: Empowering Large Language Models to Follow Complex Instructions (Xu et al.)",
+    "href": "https://arxiv.org/abs/2304.12244"
+   },
+   "parents": [
+    {
+     "id": "self-instruct",
+     "rel": "extends",
+     "why": "Evolves generated instructions for difficulty and diversity."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "synthetic-textbook-data",
+   "name": "Synthetic Pretraining Data",
+   "region": "data-and-synthetic-data",
+   "x": 2321.7,
+   "y": 1254.5,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Common in frontier and small-model training.",
+   "desc": "Generating large, high-quality synthetic corpora with strong models to pretrain or mid-train smaller ones.",
+   "date": "2023-06",
+   "aliases": [
+    "textbook-quality data",
+    "synthetic corpora"
+   ],
+   "examples": [
+    "phi models",
+    "Cosmopedia"
+   ],
+   "ref": {
+    "title": "Textbooks Are All You Need (Gunasekar et al.)",
+    "href": "https://arxiv.org/abs/2306.11644"
+   },
+   "parents": [
+    {
+     "id": "self-instruct",
+     "rel": "extends",
+     "why": "Scales model-generated data from instructions to full training corpora."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "human-instruction-datasets",
+   "name": "Crowdsourced Instruction Data",
+   "region": "data-and-synthetic-data",
+   "x": 2376.9,
+   "y": 1110.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Established, though increasingly supplemented by synthetic data.",
+   "desc": "Collecting instruction and conversation data written and rated by people.",
+   "date": "2023-04",
+   "aliases": [
+    "human-written demonstrations",
+    "OpenAssistant"
+   ],
+   "examples": [
+    "OpenAssistant",
+    "Dolly"
+   ],
+   "ref": {
+    "title": "OpenAssistant Conversations — Democratizing Large Language Model Alignment (Köpf et al.)",
+    "href": "https://arxiv.org/abs/2304.07327"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "crowdsourcing",
+     "why": "Applies crowdsourcing to conversational training data."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "llm-annotation",
+   "name": "LLM-Assisted Annotation",
+   "region": "data-and-synthetic-data",
+   "x": 2396.3,
+   "y": 1200.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Routine in data pipelines.",
+   "desc": "Using models to label or classify data in place of, or alongside, human annotators.",
+   "date": "2023-03",
+   "aliases": [
+    "LLM labeling",
+    "model-as-annotator"
+   ],
+   "examples": [
+    "Argilla",
+    "Label Studio LLM labeling"
+   ],
+   "ref": {
+    "title": "ChatGPT Outperforms Crowd-Workers for Text-Annotation Tasks (Gilardi et al.)",
+    "href": "https://arxiv.org/abs/2303.15056"
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "applies",
+     "why": "Annotation as a zero-shot classification task."
+    }
+   ],
+   "external": [],
+   "children": [
+    "data-quality-filtering"
+   ]
+  },
+  {
+   "id": "data-deduplication",
+   "name": "Data Deduplication",
+   "region": "data-and-synthetic-data",
+   "x": 2302.4,
+   "y": 1164.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Standard corpus hygiene.",
+   "desc": "Removing exact and near-duplicate documents from training corpora to improve quality and reduce memorization.",
+   "date": "2021-07",
+   "aliases": [
+    "near-duplicate removal",
+    "MinHash dedup"
+   ],
+   "examples": [
+    "datatrove",
+    "text-dedup"
+   ],
+   "ref": {
+    "title": "Deduplicating Training Data Makes Language Models Better (Lee et al.)",
+    "href": "https://arxiv.org/abs/2107.06499"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "minhash",
+     "why": "Uses locality-sensitive hashing for near-duplicate detection."
+    }
+   ],
+   "children": [
+    "data-quality-filtering"
+   ]
+  },
+  {
+   "id": "data-decontamination",
+   "name": "Data Decontamination",
+   "region": "data-and-synthetic-data",
+   "x": 2457.6,
+   "y": 1131.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Expected in serious releases; imperfectly practiced.",
+   "desc": "Removing training data that overlaps with evaluation benchmarks so scores reflect real capability.",
+   "date": "2020-05",
+   "aliases": [
+    "test-set leakage prevention"
+   ],
+   "examples": [
+    "n-gram overlap filters"
+   ],
+   "ref": {
+    "title": "Language Models are Few-Shot Learners, contamination analysis (Brown et al.)",
+    "href": "https://arxiv.org/abs/2005.14165"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "n-gram-overlap-detection",
+     "why": "Detects benchmark overlap by n-gram matching."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "data-quality-filtering",
+   "name": "Data Quality Filtering",
+   "region": "data-and-synthetic-data",
+   "x": 2302.6,
+   "y": 1072.4,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard in pretraining pipelines.",
+   "desc": "Selecting high-value training text with heuristics and model-based quality classifiers.",
+   "date": "2024-06",
+   "aliases": [
+    "corpus curation",
+    "classifier-based filtering"
+   ],
+   "examples": [
+    "FineWeb-Edu",
+    "DCLM",
+    "Dolma"
+   ],
+   "ref": {
+    "title": "The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale (Penedo et al.)",
+    "href": "https://arxiv.org/abs/2406.17557"
+   },
+   "parents": [
+    {
+     "id": "data-deduplication",
+     "rel": "extends",
+     "why": "Builds on deduplicated corpora with quality scoring."
+    },
+    {
+     "id": "llm-annotation",
+     "rel": "applies",
+     "why": "Trains quality classifiers on LLM-annotated samples."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "capability-benchmarks",
+   "name": "Capability Benchmarks",
+   "region": "evaluation-and-observability",
+   "x": 3652.8,
+   "y": 1269.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Universal, though saturation and contamination limit value.",
+   "desc": "Fixed datasets with reference answers used to compare model capabilities.",
+   "date": "2020-09",
+   "aliases": [
+    "static benchmarks",
+    "MMLU-style evals"
+   ],
+   "examples": [
+    "MMLU",
+    "GPQA",
+    "HLE"
+   ],
+   "ref": {
+    "title": "Measuring Massive Multitask Language Understanding (Hendrycks et al.)",
+    "href": "https://arxiv.org/abs/2009.03300"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "shared-task-benchmarks",
+     "why": "Continues NLP's tradition of shared benchmark datasets."
+    }
+   ],
+   "children": [
+    "long-context-evals",
+    "agent-benchmarks"
+   ]
+  },
+  {
+   "id": "long-context-evals",
+   "name": "Long-Context Evals",
+   "region": "evaluation-and-observability",
+   "x": 3622.2,
+   "y": 1361.6,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Cited with every long-context release; harder variants replacing NIAH.",
+   "desc": "Tests of whether models retrieve and use information placed at various depths in very long inputs.",
+   "date": "2023-11",
+   "aliases": [
+    "needle in a haystack",
+    "NIAH"
+   ],
+   "examples": [
+    "NIAH",
+    "RULER"
+   ],
+   "ref": {
+    "title": "Needle In A Haystack — Pressure Testing LLMs (Kamradt)",
+    "href": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack"
+   },
+   "parents": [
+    {
+     "id": "capability-benchmarks",
+     "rel": "specializes",
+     "why": "Benchmarks targeted at long-context recall and reasoning."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "agent-benchmarks",
+   "name": "Agent Benchmarks",
+   "region": "evaluation-and-observability",
+   "x": 3557.1,
+   "y": 1285.5,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Central to agent progress reporting; methodology still contested.",
+   "desc": "Evaluating agents by whether they complete tasks in real or simulated environments, judged by tests or state checks.",
+   "date": "2023-10",
+   "aliases": [
+    "SWE-bench",
+    "environment-based evals"
+   ],
+   "examples": [
+    "SWE-bench Verified",
+    "OSWorld",
+    "tau-bench",
+    "Terminal-Bench"
+   ],
+   "ref": {
+    "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues? (Jimenez et al.)",
+    "href": "https://arxiv.org/abs/2310.06770"
+   },
+   "parents": [
+    {
+     "id": "capability-benchmarks",
+     "rel": "specializes",
+     "why": "Benchmarks whose items are tasks in environments."
+    },
+    {
+     "id": "test-driven-development",
+     "rel": "applies",
+     "why": "Grades with fail-to-pass and pass-to-pass tests."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "llm-as-a-judge",
+   "name": "LLM-as-a-Judge",
+   "region": "evaluation-and-observability",
+   "x": 3520.9,
+   "y": 1382.3,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard for open-ended evaluation; reliability caveats well documented.",
+   "desc": "Using a strong model with a rubric to grade or compare outputs where exact answers don't exist.",
+   "date": "2023-06",
+   "aliases": [
+    "model-graded evals",
+    "autoevals"
+   ],
+   "examples": [
+    "MT-Bench",
+    "Ragas",
+    "LangSmith evaluators"
+   ],
+   "ref": {
+    "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al.)",
+    "href": "https://arxiv.org/abs/2306.05685"
+   },
+   "parents": [
+    {
+     "id": "zero-shot-prompting",
+     "rel": "applies",
+     "why": "Grading is posed as an instructed evaluation task."
+    }
+   ],
+   "external": [],
+   "children": [
+    "rag-evaluation",
+    "eval-driven-development",
+    "online-evaluation",
+    "guardrails"
+   ]
+  },
+  {
+   "id": "pairwise-preference-eval",
+   "name": "Pairwise Preference Evaluation",
+   "region": "evaluation-and-observability",
+   "x": 3705.1,
+   "y": 1351.3,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Widely cited; known biases toward style.",
+   "desc": "Comparing two anonymous responses side by side, by humans or judges, and aggregating into ratings.",
+   "date": "2023-05",
+   "aliases": [
+    "arena evals",
+    "Elo leaderboards"
+   ],
+   "examples": [
+    "LMArena",
+    "AlpacaEval"
+   ],
+   "ref": {
+    "title": "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference (Chiang et al.)",
+    "href": "https://arxiv.org/abs/2403.04132"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "elo-rating",
+     "why": "Aggregates pairwise votes with Elo/Bradley-Terry ratings."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "rag-evaluation",
+   "name": "RAG Evaluation",
+   "region": "evaluation-and-observability",
+   "x": 3504.4,
+   "y": 1484.3,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Common practice; metrics still debated.",
+   "desc": "Measuring retrieval quality and grounded answer faithfulness, often with model-graded metrics.",
+   "date": "2023-09",
+   "aliases": [
+    "faithfulness and context-relevance metrics",
+    "RAGAS"
+   ],
+   "examples": [
+    "Ragas",
+    "TruLens",
+    "DeepEval"
+   ],
+   "ref": {
+    "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation (Es et al.)",
+    "href": "https://arxiv.org/abs/2309.15217"
+   },
+   "parents": [
+    {
+     "id": "llm-as-a-judge",
+     "rel": "specializes",
+     "why": "Judges specialized to faithfulness and relevance."
+    },
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "applies",
+     "why": "Targets RAG pipeline components."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "eval-driven-development",
+   "name": "Eval-Driven Development",
+   "region": "evaluation-and-observability",
+   "x": 3585.2,
+   "y": 1463.2,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Mainstream in mature AI teams; tooling consolidating.",
+   "desc": "Gating prompt, model, and pipeline changes on eval suites run in CI, the way tests gate code.",
+   "date": "2023",
+   "aliases": [
+    "EDD",
+    "offline evals",
+    "prompt regression testing"
+   ],
+   "examples": [
+    "Braintrust",
+    "Promptfoo",
+    "LangSmith",
+    "Inspect"
+   ],
+   "ref": {
+    "title": "Demystifying evals for AI agents (Anthropic)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "test-driven-development",
+     "rel": "applies",
+     "why": "Carries test-first discipline to stochastic systems."
+    },
+    {
+     "id": "llm-as-a-judge",
+     "rel": "combines",
+     "why": "Uses model graders for open-ended cases."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "llm-tracing",
+   "name": "LLM Tracing",
+   "region": "evaluation-and-observability",
+   "x": 3673.7,
+   "y": 1437.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Expected in production systems.",
+   "desc": "Capturing nested spans for model calls, retrieval, and tool use to debug quality, latency, and cost.",
+   "date": "2023",
+   "aliases": [
+    "LLM observability",
+    "agent traces"
+   ],
+   "examples": [
+    "LangSmith",
+    "Langfuse",
+    "Arize Phoenix",
+    "OpenLLMetry"
+   ],
+   "ref": {
+    "title": "OpenTelemetry Semantic Conventions for Generative AI",
+    "href": "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+   },
+   "parents": [
+    {
+     "id": "distributed-tracing",
+     "rel": "applies",
+     "why": "Applies span-based tracing to LLM pipelines."
+    }
+   ],
+   "external": [],
+   "children": [
+    "online-evaluation"
+   ]
+  },
+  {
+   "id": "online-evaluation",
+   "name": "Online Evaluation and Monitoring",
+   "region": "evaluation-and-observability",
+   "x": 3762.2,
+   "y": 1412.3,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Growing practice; methods and tooling still forming.",
+   "desc": "Scoring live traffic with automated graders and user signals to catch regressions and drift after deployment.",
+   "date": "2024",
+   "aliases": [
+    "production evals",
+    "drift monitoring"
+   ],
+   "examples": [
+    "Langfuse",
+    "Arize",
+    "Braintrust online scoring"
+   ],
+   "ref": {
+    "title": "Langfuse / Arize documentation on online evaluation",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "llm-tracing",
+     "rel": "extends",
+     "why": "Runs evaluators over captured production traces."
+    },
+    {
+     "id": "llm-as-a-judge",
+     "rel": "applies",
+     "why": "Uses model graders on sampled traffic."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "prompt-injection",
+   "name": "Prompt Injection",
+   "region": "safety-security-and-governance",
+   "x": 3159.3,
+   "y": 1013.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Well-characterized threat; no complete fix.",
+   "desc": "Attacks in which text supplied by a user or third party is followed as instructions, overriding the developer's intent.",
+   "date": "2022-09",
+   "aliases": [
+    "instruction injection"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "Ignore Previous Prompt: Attack Techniques For Language Models (Perez & Ribeiro)",
+    "href": "https://arxiv.org/abs/2211.09527"
+   },
+   "parents": [
+    {
+     "id": "injection-attacks",
+     "rel": "applies",
+     "why": "The classic data-as-instructions flaw, where data and instructions share one channel."
+    },
+    {
+     "id": "zero-shot-prompting",
+     "rel": "applies",
+     "why": "Exploits instruction-following itself."
+    }
+   ],
+   "external": [],
+   "children": [
+    "indirect-prompt-injection",
+    "injection-defenses"
+   ]
+  },
+  {
+   "id": "indirect-prompt-injection",
+   "name": "Indirect Prompt Injection",
+   "region": "safety-security-and-governance",
+   "x": 3215.1,
+   "y": 1103.2,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "The central security problem for agents.",
+   "desc": "Injection delivered through retrieved documents, web pages, emails, or tool outputs rather than the user's own message.",
+   "date": "2023-02",
+   "aliases": [
+    "data poisoning of context",
+    "tool-output injection"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection (Greshake et al.)",
+    "href": "https://arxiv.org/abs/2302.12173"
+   },
+   "parents": [
+    {
+     "id": "prompt-injection",
+     "rel": "specializes",
+     "why": "Injection through third-party content."
+    },
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "applies",
+     "why": "Exploits content pulled into context."
+    }
+   ],
+   "external": [],
+   "children": [
+    "injection-defenses"
+   ]
+  },
+  {
+   "id": "jailbreaks",
+   "name": "Jailbreaks",
+   "region": "safety-security-and-governance",
+   "x": 3342.8,
+   "y": 990,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Well-studied attack class; arms race ongoing.",
+   "desc": "Inputs crafted to make a model violate its own safety training.",
+   "date": "2023-07",
+   "aliases": [
+    "adversarial prompts",
+    "GCG"
+   ],
+   "examples": [
+    "universal adversarial suffixes"
+   ],
+   "ref": {
+    "title": "Jailbroken: How Does LLM Safety Training Fail? (Wei et al.)",
+    "href": "https://arxiv.org/abs/2307.02483"
+   },
+   "parents": [
+    {
+     "id": "rlhf",
+     "rel": "counters",
+     "why": "Attacks the behaviors instilled by safety training."
+    }
+   ],
+   "external": [],
+   "children": [
+    "circuit-breakers"
+   ]
+  },
+  {
+   "id": "red-teaming",
+   "name": "AI Red Teaming",
+   "region": "safety-security-and-governance",
+   "x": 3305.8,
+   "y": 1087.9,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard pre-release practice at major labs.",
+   "desc": "Systematic adversarial testing by people and models to find harmful behaviors and vulnerabilities before release.",
+   "date": "2022-02",
+   "aliases": [
+    "adversarial testing"
+   ],
+   "examples": [
+    "PyRIT",
+    "garak",
+    "promptfoo red team"
+   ],
+   "ref": {
+    "title": "Red Teaming Language Models with Language Models (Perez et al.)",
+    "href": "https://arxiv.org/abs/2202.03286"
+   },
+   "parents": [
+    {
+     "id": "rlhf",
+     "rel": "counters",
+     "why": "Probes for failures of safety-trained behavior."
+    }
+   ],
+   "external": [
+    {
+     "name": "security-red-teaming",
+     "why": "Adapts adversarial testing from security practice."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "guardrails",
+   "name": "Guardrails and Safety Classifiers",
+   "region": "safety-security-and-governance",
+   "x": 3387.5,
+   "y": 1070.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Widely deployed in enterprise stacks.",
+   "desc": "Classifiers and rule layers that check inputs and outputs for policy violations, PII, or unsafe content.",
+   "date": "2023-12",
+   "aliases": [
+    "input/output filters",
+    "content moderation",
+    "Llama Guard"
+   ],
+   "examples": [
+    "Llama Guard",
+    "NeMo Guardrails",
+    "Presidio"
+   ],
+   "ref": {
+    "title": "Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations (Inan et al.)",
+    "href": "https://arxiv.org/abs/2312.06674"
+   },
+   "parents": [
+    {
+     "id": "llm-as-a-judge",
+     "rel": "applies",
+     "why": "Many guards are LLMs prompted or fine-tuned as classifiers."
+    }
+   ],
+   "external": [
+    {
+     "name": "content-moderation-classifiers",
+     "why": "Extends content moderation to model inputs and outputs."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "injection-defenses",
+   "name": "Prompt Injection Defenses",
+   "region": "safety-security-and-governance",
+   "x": 3226,
+   "y": 943,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Deployed in frontier models; known to be incomplete.",
+   "desc": "Training, prompting, and architectural measures that make models distinguish trusted instructions from untrusted data.",
+   "date": "2024-04",
+   "aliases": [
+    "instruction hierarchy",
+    "spotlighting",
+    "injection detection"
+   ],
+   "examples": [
+    "Lakera Guard",
+    "Prompt Shields",
+    "CaMeL-style designs"
+   ],
+   "ref": {
+    "title": "The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions (Wallace et al.)",
+    "href": "https://arxiv.org/abs/2404.13208"
+   },
+   "parents": [
+    {
+     "id": "prompt-injection",
+     "rel": "counters",
+     "why": "Mitigates injection."
+    },
+    {
+     "id": "indirect-prompt-injection",
+     "rel": "counters",
+     "why": "Mitigates injection via third-party content."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "agent-sandboxing",
+   "name": "Agent Sandboxing and Permissions",
+   "region": "safety-security-and-governance",
+   "x": 3123,
+   "y": 1103.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard for any agent that executes code.",
+   "desc": "Running agent actions in isolated environments with scoped credentials and explicit permission prompts to limit damage.",
+   "date": "2023",
+   "aliases": [
+    "secure code execution",
+    "tool permissions",
+    "least-privilege agents"
+   ],
+   "examples": [
+    "E2B",
+    "Daytona",
+    "Claude Code permissions",
+    "devcontainers"
+   ],
+   "ref": {
+    "title": "E2B — open-source cloud sandboxes for AI agents",
+    "href": "https://e2b.dev"
+   },
+   "parents": [
+    {
+     "id": "sandboxing-and-isolation",
+     "rel": "applies",
+     "why": "Applies isolation to LLM-generated code and actions."
+    },
+    {
+     "id": "least-privilege",
+     "rel": "applies",
+     "why": "Scopes tools and credentials to what a task needs."
+    },
+    {
+     "id": "function-calling",
+     "rel": "counters",
+     "why": "Contains the risks of models triggering real actions and code execution."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "interpretability",
+   "name": "Mechanistic Interpretability",
+   "region": "safety-security-and-governance",
+   "x": 3279.7,
+   "y": 812.7,
+   "maturity": 1,
+   "maturityLabel": "Research",
+   "maturityNote": "Primarily research; early engineering uses emerging.",
+   "desc": "Reverse-engineering the internal mechanisms of neural networks into human-understandable features and circuits.",
+   "date": "2021-12",
+   "aliases": [
+    "circuits",
+    "interpretability"
+   ],
+   "examples": [
+    "TransformerLens"
+   ],
+   "ref": {
+    "title": "A Mathematical Framework for Transformer Circuits (Elhage et al.)",
+    "href": "https://transformer-circuits.pub/2021/framework/index.html"
+   },
+   "parents": [
+    {
+     "id": "transformer-architecture",
+     "rel": "applies",
+     "why": "Studies transformer internals directly."
+    }
+   ],
+   "external": [],
+   "children": [
+    "sparse-autoencoders",
+    "representation-engineering"
+   ]
+  },
+  {
+   "id": "sparse-autoencoders",
+   "name": "Sparse Autoencoders",
+   "region": "safety-security-and-governance",
+   "x": 3303.6,
+   "y": 906.7,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Used by labs for analysis and steering; tooling emerging.",
+   "desc": "Decomposing model activations into many sparse, interpretable features.",
+   "date": "2023-10",
+   "aliases": [
+    "SAEs",
+    "dictionary learning",
+    "monosemantic features"
+   ],
+   "examples": [
+    "Gemma Scope",
+    "Neuronpedia"
+   ],
+   "ref": {
+    "title": "Towards Monosemanticity: Decomposing Language Models With Dictionary Learning (Bricken et al.)",
+    "href": "https://transformer-circuits.pub/2023/monosemantic-features"
+   },
+   "parents": [
+    {
+     "id": "interpretability",
+     "rel": "extends",
+     "why": "Scalable method for finding interpretable features."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "representation-engineering",
+   "name": "Representation Engineering",
+   "region": "safety-security-and-governance",
+   "x": 3385.1,
+   "y": 817.2,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Moving from research into defensive prototypes.",
+   "desc": "Reading and steering high-level concepts in activation space to monitor or control behavior without retraining.",
+   "date": "2023-10",
+   "aliases": [
+    "RepE",
+    "activation steering"
+   ],
+   "examples": [
+    "steering vectors"
+   ],
+   "ref": {
+    "title": "Representation Engineering: A Top-Down Approach to AI Transparency (Zou et al.)",
+    "href": "https://arxiv.org/abs/2310.01405"
+   },
+   "parents": [
+    {
+     "id": "interpretability",
+     "rel": "applies",
+     "why": "Top-down use of internal representations for control."
+    }
+   ],
+   "external": [],
+   "children": [
+    "circuit-breakers"
+   ]
+  },
+  {
+   "id": "circuit-breakers",
+   "name": "Circuit Breakers",
+   "region": "safety-security-and-governance",
+   "x": 3387,
+   "y": 909.2,
+   "maturity": 1,
+   "maturityLabel": "Research",
+   "maturityNote": "Research with limited deployment.",
+   "desc": "Training models so internal representations associated with harmful outputs are rerouted, interrupting generation.",
+   "date": "2024-06",
+   "aliases": [
+    "representation rerouting"
+   ],
+   "examples": [],
+   "ref": {
+    "title": "Improving Alignment and Robustness with Circuit Breakers (Zou et al.)",
+    "href": "https://arxiv.org/abs/2406.04313"
+   },
+   "parents": [
+    {
+     "id": "representation-engineering",
+     "rel": "applies",
+     "why": "Uses representation control as a safety mechanism."
+    },
+    {
+     "id": "jailbreaks",
+     "rel": "counters",
+     "why": "Designed to resist adversarial attacks."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "model-documentation",
+   "name": "Model and System Cards",
+   "region": "safety-security-and-governance",
+   "x": 3256.1,
+   "y": 1020.8,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Expected for major releases and referenced in regulation.",
+   "desc": "Standardized documentation of a model's intended use, evaluations, limitations, and safety testing.",
+   "date": "2018-10",
+   "aliases": [
+    "model cards",
+    "system cards",
+    "transparency documentation"
+   ],
+   "examples": [
+    "frontier system cards",
+    "Hugging Face model cards"
+   ],
+   "ref": {
+    "title": "Model Cards for Model Reporting (Mitchell et al.)",
+    "href": "https://arxiv.org/abs/1810.03993"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "datasheets-and-documentation",
+     "why": "Brings structured documentation practice to ML models."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "human-ai-interaction-guidelines",
+   "name": "Human-AI Interaction Guidelines",
+   "region": "ai-product-and-interaction-design",
+   "x": 3233.2,
+   "y": 1549.7,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Widely cited baseline for AI product design.",
+   "desc": "Validated design guidelines for AI systems — set expectations, support correction, explain behavior, adapt over time.",
+   "date": "2019-05",
+   "aliases": [
+    "HAI guidelines",
+    "AI UX principles"
+   ],
+   "examples": [
+    "Microsoft HAX Toolkit",
+    "Google People + AI Guidebook"
+   ],
+   "ref": {
+    "title": "Guidelines for Human-AI Interaction (Amershi et al., CHI 2019)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "mixed-initiative-interaction",
+     "rel": "extends",
+     "why": "Codifies mixed-initiative principles into testable guidelines."
+    }
+   ],
+   "external": [],
+   "children": [
+    "citation-ux"
+   ]
+  },
+  {
+   "id": "chat-interfaces",
+   "name": "Chat Interfaces",
+   "region": "ai-product-and-interaction-design",
+   "x": 3151.9,
+   "y": 1407.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "The default AI product surface.",
+   "desc": "Turn-based conversational interfaces to general-purpose models, the dominant surface for AI products.",
+   "date": "2022-11",
+   "aliases": [
+    "conversational UI",
+    "chat assistants"
+   ],
+   "examples": [
+    "ChatGPT",
+    "Claude",
+    "Gemini"
+   ],
+   "ref": {
+    "title": "Introducing ChatGPT (OpenAI, November 2022)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "conversational-agents",
+     "rel": "extends",
+     "why": "Revives dialogue interfaces with general-purpose models."
+    },
+    {
+     "id": "rlhf",
+     "rel": "applies",
+     "why": "Made practical by RLHF-tuned conversational models."
+    }
+   ],
+   "external": [],
+   "children": [
+    "canvas-artifacts"
+   ]
+  },
+  {
+   "id": "streaming-responses",
+   "name": "Streaming Responses",
+   "region": "ai-product-and-interaction-design",
+   "x": 3147.1,
+   "y": 1582.1,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Universal pattern for text generation products.",
+   "desc": "Showing tokens as they are generated to cut perceived latency and let users interrupt early.",
+   "date": "2020",
+   "aliases": [
+    "token streaming",
+    "server-sent events"
+   ],
+   "examples": [
+    "Vercel AI SDK",
+    "SSE streaming APIs"
+   ],
+   "ref": {
+    "title": "OpenAI API streaming support",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "autoregressive-decoding",
+     "rel": "applies",
+     "why": "Exposes token-by-token generation to the interface."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "copilots",
+   "name": "Copilots and Inline Assistance",
+   "region": "ai-product-and-interaction-design",
+   "x": 3228.9,
+   "y": 1457.7,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Established pattern across editors and productivity tools.",
+   "desc": "AI suggestions embedded directly in a user's working context, accepted or rejected with low friction.",
+   "date": "2021-06",
+   "aliases": [
+    "inline completion",
+    "AI pair programming"
+   ],
+   "examples": [
+    "GitHub Copilot",
+    "Cursor Tab",
+    "inline writing assistants"
+   ],
+   "ref": {
+    "title": "Evaluating Large Language Models Trained on Code (Chen et al.)",
+    "href": "https://arxiv.org/abs/2107.03374"
+   },
+   "parents": [
+    {
+     "id": "mixed-initiative-interaction",
+     "rel": "applies",
+     "why": "System takes initiative with suggestions; the user keeps control."
+    },
+    {
+     "id": "pretrained-language-models",
+     "rel": "applies",
+     "why": "Code- and text-trained models power the suggestions."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "citation-ux",
+   "name": "Citation and Grounding UX",
+   "region": "ai-product-and-interaction-design",
+   "x": 3208.7,
+   "y": 1638.4,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Expected in search and research products.",
+   "desc": "Linking claims in a response to the sources they came from so users can verify them.",
+   "date": "2022-12",
+   "aliases": [
+    "source attribution",
+    "inline citations"
+   ],
+   "examples": [
+    "Perplexity",
+    "Claude citations",
+    "Gemini grounding"
+   ],
+   "ref": {
+    "title": "Perplexity AI launch (December 2022)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "retrieval-augmented-generation",
+     "rel": "applies",
+     "why": "Surfaces retrieved sources in the interface."
+    },
+    {
+     "id": "human-ai-interaction-guidelines",
+     "rel": "applies",
+     "why": "Implements 'make clear why the system did what it did'."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "human-in-the-loop-approval",
+   "name": "Human-in-the-Loop Approval",
+   "region": "ai-product-and-interaction-design",
+   "x": 3080.2,
+   "y": 1464.8,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Essential for agents taking real actions.",
+   "desc": "Agents pause before consequential actions and ask the user to approve, edit, or reject them.",
+   "date": "2023",
+   "aliases": [
+    "HITL",
+    "tool confirmation",
+    "permission prompts"
+   ],
+   "examples": [
+    "LangGraph interrupts",
+    "Claude Code permission prompts"
+   ],
+   "ref": {
+    "title": "LangGraph human-in-the-loop documentation",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "mixed-initiative-interaction",
+     "rel": "applies",
+     "why": "Keeps the human as decision-maker at key points."
+    },
+    {
+     "id": "function-calling",
+     "rel": "applies",
+     "why": "Approval gates tool calls before execution."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "generative-ui",
+   "name": "Generative UI",
+   "region": "ai-product-and-interaction-design",
+   "x": 3070.9,
+   "y": 1547.8,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Adopted in products; patterns still forming.",
+   "desc": "Models emit structured payloads the front end renders as interactive components instead of plain text.",
+   "date": "2024-03",
+   "aliases": [
+    "server-driven UI from models"
+   ],
+   "examples": [
+    "Vercel AI SDK",
+    "MCP UI",
+    "OpenAI Apps SDK"
+   ],
+   "ref": {
+    "title": "Introducing AI SDK 3.0 with Generative UI support (Vercel, 2024)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "structured-outputs",
+     "rel": "applies",
+     "why": "Structured output drives component rendering."
+    },
+    {
+     "id": "direct-manipulation",
+     "rel": "applies",
+     "why": "Returns manipulable interface elements instead of prose."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "canvas-artifacts",
+   "name": "Canvases and Artifacts",
+   "region": "ai-product-and-interaction-design",
+   "x": 3156.3,
+   "y": 1499.1,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Shipping in major assistants; conventions still settling.",
+   "desc": "A persistent, editable work object beside the conversation that the user and model revise together.",
+   "date": "2024-06",
+   "aliases": [
+    "side-by-side editing",
+    "artifacts",
+    "canvas"
+   ],
+   "examples": [
+    "Claude artifacts",
+    "ChatGPT Canvas",
+    "Gemini Canvas"
+   ],
+   "ref": {
+    "title": "Claude 3.5 Sonnet launch with Artifacts (Anthropic, June 2024)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "direct-manipulation",
+     "rel": "applies",
+     "why": "Users edit the work product directly."
+    },
+    {
+     "id": "chat-interfaces",
+     "rel": "extends",
+     "why": "Moves output out of the chat stream into a shared object."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "contrastive-image-text-pretraining",
+   "name": "Contrastive Image-Text Pretraining",
+   "region": "multimodal-applied",
+   "x": 3966,
+   "y": 1616.6,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Foundational component of vision-language systems.",
+   "desc": "Training image and text encoders so matching pairs land close together in a shared embedding space.",
+   "date": "2021-02",
+   "aliases": [
+    "CLIP",
+    "joint embeddings"
+   ],
+   "examples": [
+    "CLIP",
+    "SigLIP"
+   ],
+   "ref": {
+    "title": "Learning Transferable Visual Models From Natural Language Supervision (Radford et al.)",
+    "href": "https://arxiv.org/abs/2103.00020"
+   },
+   "parents": [
+    {
+     "id": "transformer-architecture",
+     "rel": "applies",
+     "why": "Uses transformer encoders for both modalities."
+    }
+   ],
+   "external": [],
+   "children": [
+    "vision-language-models",
+    "text-to-image"
+   ]
+  },
+  {
+   "id": "vision-language-models",
+   "name": "Vision-Language Models",
+   "region": "multimodal-applied",
+   "x": 3880.3,
+   "y": 1686.5,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Standard capability of frontier APIs.",
+   "desc": "Language models that accept images (and often video) alongside text by projecting visual features into the model.",
+   "date": "2023-04",
+   "aliases": [
+    "VLMs",
+    "multimodal LLMs"
+   ],
+   "examples": [
+    "GPT-4o",
+    "Claude",
+    "Gemini",
+    "Qwen-VL"
+   ],
+   "ref": {
+    "title": "Visual Instruction Tuning (Liu et al.)",
+    "href": "https://arxiv.org/abs/2304.08485"
+   },
+   "parents": [
+    {
+     "id": "contrastive-image-text-pretraining",
+     "rel": "combines",
+     "why": "Uses pretrained vision encoders such as CLIP."
+    },
+    {
+     "id": "pretrained-language-models",
+     "rel": "combines",
+     "why": "Connects visual features to an LLM."
+    }
+   ],
+   "external": [],
+   "children": [
+    "computer-use-agents",
+    "visual-document-retrieval"
+   ]
+  },
+  {
+   "id": "document-understanding",
+   "name": "Document Understanding",
+   "region": "multimodal-applied",
+   "x": 3944.3,
+   "y": 1759.4,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Rapidly replacing legacy OCR in RAG ingestion.",
+   "desc": "Extracting text, tables, and structure from documents with vision models rather than brittle OCR pipelines.",
+   "date": "2021-11",
+   "aliases": [
+    "PDF parsing",
+    "OCR-free parsing",
+    "layout understanding"
+   ],
+   "examples": [
+    "Docling",
+    "Unstructured",
+    "Mistral OCR",
+    "Reducto"
+   ],
+   "ref": {
+    "title": "OCR-free Document Understanding Transformer (Kim et al.)",
+    "href": "https://arxiv.org/abs/2111.15664"
+   },
+   "parents": [
+    {
+     "id": "transformer-architecture",
+     "rel": "applies",
+     "why": "Reads page images end to end with transformers; VLMs now dominate this role."
+    }
+   ],
+   "external": [
+    {
+     "name": "ocr",
+     "why": "Replaces traditional OCR-plus-heuristics pipelines."
+    }
+   ],
+   "children": []
+  },
+  {
+   "id": "visual-document-retrieval",
+   "name": "Visual Document Retrieval",
+   "region": "multimodal-applied",
+   "x": 3864,
+   "y": 1782.2,
+   "maturity": 2,
+   "maturityLabel": "Emerging",
+   "maturityNote": "Promising; early production use.",
+   "desc": "Retrieving documents by embedding page images directly, skipping text extraction.",
+   "date": "2024-06",
+   "aliases": [
+    "ColPali",
+    "page-image retrieval"
+   ],
+   "examples": [
+    "ColPali",
+    "ColQwen"
+   ],
+   "ref": {
+    "title": "ColPali: Efficient Document Retrieval with Vision Language Models (Faysse et al.)",
+    "href": "https://arxiv.org/abs/2407.01449"
+   },
+   "parents": [
+    {
+     "id": "vision-language-models",
+     "rel": "specializes",
+     "why": "Uses VLM embeddings of page images."
+    },
+    {
+     "id": "dense-retrieval",
+     "rel": "applies",
+     "why": "Multi-vector dense retrieval over images."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "speech-recognition",
+   "name": "Speech Recognition",
+   "region": "multimodal-applied",
+   "x": 4030.1,
+   "y": 1792.7,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Commodity capability.",
+   "desc": "Transcribing spoken audio to text with large weakly supervised transformer models.",
+   "date": "2022-12",
+   "aliases": [
+    "ASR",
+    "speech-to-text",
+    "Whisper"
+   ],
+   "examples": [
+    "Whisper",
+    "Deepgram",
+    "AssemblyAI"
+   ],
+   "ref": {
+    "title": "Robust Speech Recognition via Large-Scale Weak Supervision (Radford et al.)",
+    "href": "https://arxiv.org/abs/2212.04356"
+   },
+   "parents": [
+    {
+     "id": "sequence-to-sequence-learning",
+     "rel": "applies",
+     "why": "Encoder-decoder audio-to-text modeling."
+    }
+   ],
+   "external": [],
+   "children": [
+    "realtime-voice"
+   ]
+  },
+  {
+   "id": "realtime-voice",
+   "name": "Realtime Voice Agents",
+   "region": "multimodal-applied",
+   "x": 4111.5,
+   "y": 1749.7,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "In production for support and assistants; latency and turn-taking still hard.",
+   "desc": "Low-latency spoken conversation with interruption handling, either end-to-end audio models or ASR-LLM-TTS pipelines.",
+   "date": "2024-05",
+   "aliases": [
+    "speech-to-speech",
+    "voice mode"
+   ],
+   "examples": [
+    "OpenAI Realtime API",
+    "Gemini Live",
+    "Pipecat",
+    "LiveKit Agents"
+   ],
+   "ref": {
+    "title": "Hello GPT-4o (OpenAI, May 2024)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "speech-recognition",
+     "rel": "combines",
+     "why": "Pipelines start from transcription; end-to-end models subsume it."
+    },
+    {
+     "id": "pretrained-language-models",
+     "rel": "combines",
+     "why": "An LLM drives the conversation."
+    }
+   ],
+   "external": [],
+   "children": []
+  },
+  {
+   "id": "diffusion-models",
+   "name": "Diffusion Models",
+   "region": "multimodal-applied",
+   "x": 4039.3,
+   "y": 1692.5,
+   "maturity": 5,
+   "maturityLabel": "Foundational",
+   "maturityNote": "Dominant approach to media generation.",
+   "desc": "Generative models that learn to reverse a gradual noising process, now standard for images, audio, and video.",
+   "date": "2020-06",
+   "aliases": [
+    "DDPM",
+    "denoising diffusion"
+   ],
+   "examples": [
+    "Stable Diffusion",
+    "Imagen",
+    "Flux"
+   ],
+   "ref": {
+    "title": "Denoising Diffusion Probabilistic Models (Ho et al.)",
+    "href": "https://arxiv.org/abs/2006.11239"
+   },
+   "parents": [],
+   "external": [
+    {
+     "name": "nonequilibrium-thermodynamics-generative-modeling",
+     "why": "Builds on early diffusion probabilistic models (Sohl-Dickstein et al. 2015)."
+    }
+   ],
+   "children": [
+    "text-to-image"
+   ]
+  },
+  {
+   "id": "text-to-image",
+   "name": "Text-to-Image Generation",
+   "region": "multimodal-applied",
+   "x": 4069.6,
+   "y": 1596.6,
+   "maturity": 4,
+   "maturityLabel": "Established",
+   "maturityNote": "Mature APIs and open models.",
+   "desc": "Generating images from text prompts, typically with latent diffusion guided by text encoders.",
+   "date": "2021-12",
+   "aliases": [
+    "latent diffusion",
+    "image generation"
+   ],
+   "examples": [
+    "Stable Diffusion",
+    "Midjourney",
+    "Imagen",
+    "gpt-image"
+   ],
+   "ref": {
+    "title": "High-Resolution Image Synthesis with Latent Diffusion Models (Rombach et al.)",
+    "href": "https://arxiv.org/abs/2112.10752"
+   },
+   "parents": [
+    {
+     "id": "diffusion-models",
+     "rel": "extends",
+     "why": "Runs diffusion in a compressed latent space with text conditioning."
+    },
+    {
+     "id": "contrastive-image-text-pretraining",
+     "rel": "combines",
+     "why": "Uses CLIP-style text encoders for conditioning."
+    }
+   ],
+   "external": [],
+   "children": [
+    "video-generation"
+   ]
+  },
+  {
+   "id": "video-generation",
+   "name": "Video Generation",
+   "region": "multimodal-applied",
+   "x": 4128,
+   "y": 1667.8,
+   "maturity": 3,
+   "maturityLabel": "Maturing",
+   "maturityNote": "Commercial APIs available; consistency and control still limited.",
+   "desc": "Generating video from text or images with diffusion transformers over spacetime patches.",
+   "date": "2024-02",
+   "aliases": [
+    "text-to-video"
+   ],
+   "examples": [
+    "Sora",
+    "Veo",
+    "Runway"
+   ],
+   "ref": {
+    "title": "Video generation models as world simulators (OpenAI, February 2024)",
+    "href": null
+   },
+   "parents": [
+    {
+     "id": "text-to-image",
+     "rel": "extends",
+     "why": "Extends image diffusion across time."
+    },
+    {
+     "id": "transformer-architecture",
+     "rel": "applies",
+     "why": "Uses diffusion transformers over spacetime patches."
+    }
+   ],
+   "external": [],
+   "children": []
+  }
+ ],
+ "routes": [
+  {
+   "from": "bm25",
+   "to": "open-domain-qa",
+   "cross": false
+  },
+  {
+   "from": "attention-mechanism",
+   "to": "transformer-architecture",
+   "cross": false
+  },
+  {
+   "from": "sequence-to-sequence-learning",
+   "to": "transformer-architecture",
+   "cross": false
+  },
+  {
+   "from": "transformer-architecture",
+   "to": "pretrained-language-models",
+   "cross": false
+  },
+  {
+   "from": "heuristic-search",
+   "to": "strips-planning",
+   "cross": false
+  },
+  {
+   "from": "strips-planning",
+   "to": "pddl",
+   "cross": false
+  },
+  {
+   "from": "markov-decision-process",
+   "to": "policy-gradient-methods",
+   "cross": false
+  },
+  {
+   "from": "policy-gradient-methods",
+   "to": "ppo",
+   "cross": false
+  },
+  {
+   "from": "semantic-networks",
+   "to": "knowledge-graphs",
+   "cross": false
+  },
+  {
+   "from": "direct-manipulation",
+   "to": "mixed-initiative-interaction",
+   "cross": false
+  },
+  {
+   "from": "least-privilege",
+   "to": "sandboxing-and-isolation",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "autoregressive-decoding",
+   "cross": true
+  },
+  {
+   "from": "autoregressive-decoding",
+   "to": "kv-cache",
+   "cross": false
+  },
+  {
+   "from": "kv-cache",
+   "to": "paged-attention",
+   "cross": false
+  },
+  {
+   "from": "autoregressive-decoding",
+   "to": "continuous-batching",
+   "cross": false
+  },
+  {
+   "from": "autoregressive-decoding",
+   "to": "speculative-decoding",
+   "cross": false
+  },
+  {
+   "from": "transformer-architecture",
+   "to": "weight-quantization",
+   "cross": true
+  },
+  {
+   "from": "kv-cache",
+   "to": "kv-cache-quantization",
+   "cross": false
+  },
+  {
+   "from": "weight-quantization",
+   "to": "kv-cache-quantization",
+   "cross": false
+  },
+  {
+   "from": "kv-cache",
+   "to": "prompt-caching",
+   "cross": false
+  },
+  {
+   "from": "autoregressive-decoding",
+   "to": "constrained-decoding",
+   "cross": false
+  },
+  {
+   "from": "mixture-of-experts",
+   "to": "model-routing",
+   "cross": true
+  },
+  {
+   "from": "continuous-batching",
+   "to": "prefill-decode-disaggregation",
+   "cross": false
+  },
+  {
+   "from": "kv-cache",
+   "to": "prefill-decode-disaggregation",
+   "cross": false
+  },
+  {
+   "from": "weight-quantization",
+   "to": "local-inference",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "zero-shot-prompting",
+   "cross": true
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "few-shot-prompting",
+   "cross": false
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "system-prompts",
+   "cross": false
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "prompt-templating",
+   "cross": false
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "prompt-chaining",
+   "cross": false
+  },
+  {
+   "from": "mixed-initiative-interaction",
+   "to": "prompt-chaining",
+   "cross": true
+  },
+  {
+   "from": "few-shot-prompting",
+   "to": "structured-outputs",
+   "cross": false
+  },
+  {
+   "from": "constrained-decoding",
+   "to": "structured-outputs",
+   "cross": true
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "context-compaction",
+   "cross": true
+  },
+  {
+   "from": "system-prompts",
+   "to": "context-engineering",
+   "cross": false
+  },
+  {
+   "from": "context-compaction",
+   "to": "context-engineering",
+   "cross": false
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "context-engineering",
+   "cross": true
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "automatic-prompt-optimization",
+   "cross": false
+  },
+  {
+   "from": "automatic-prompt-optimization",
+   "to": "declarative-prompt-compilation",
+   "cross": false
+  },
+  {
+   "from": "prompt-chaining",
+   "to": "declarative-prompt-compilation",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "text-embeddings",
+   "cross": true
+  },
+  {
+   "from": "text-embeddings",
+   "to": "dense-retrieval",
+   "cross": false
+  },
+  {
+   "from": "approximate-nearest-neighbor-search",
+   "to": "dense-retrieval",
+   "cross": true
+  },
+  {
+   "from": "bm25",
+   "to": "dense-retrieval",
+   "cross": true
+  },
+  {
+   "from": "open-domain-qa",
+   "to": "retrieval-augmented-generation",
+   "cross": true
+  },
+  {
+   "from": "dense-retrieval",
+   "to": "retrieval-augmented-generation",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "retrieval-augmented-generation",
+   "cross": true
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "chunking-strategies",
+   "cross": false
+  },
+  {
+   "from": "bm25",
+   "to": "hybrid-search",
+   "cross": true
+  },
+  {
+   "from": "dense-retrieval",
+   "to": "hybrid-search",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "cross-encoder-reranking",
+   "cross": true
+  },
+  {
+   "from": "bm25",
+   "to": "cross-encoder-reranking",
+   "cross": true
+  },
+  {
+   "from": "dense-retrieval",
+   "to": "query-rewriting",
+   "cross": false
+  },
+  {
+   "from": "chunking-strategies",
+   "to": "contextual-retrieval",
+   "cross": false
+  },
+  {
+   "from": "hybrid-search",
+   "to": "contextual-retrieval",
+   "cross": false
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "graph-rag",
+   "cross": false
+  },
+  {
+   "from": "knowledge-graphs",
+   "to": "graph-rag",
+   "cross": true
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "self-rag",
+   "cross": false
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "corrective-rag",
+   "cross": false
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "agentic-rag",
+   "cross": false
+  },
+  {
+   "from": "react-agent-loop",
+   "to": "agentic-rag",
+   "cross": true
+  },
+  {
+   "from": "self-rag",
+   "to": "agentic-rag",
+   "cross": false
+  },
+  {
+   "from": "expert-systems",
+   "to": "mrkl-systems",
+   "cross": true
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "mrkl-systems",
+   "cross": true
+  },
+  {
+   "from": "mrkl-systems",
+   "to": "tool-learning",
+   "cross": false
+  },
+  {
+   "from": "few-shot-prompting",
+   "to": "tool-learning",
+   "cross": true
+  },
+  {
+   "from": "tool-learning",
+   "to": "function-calling",
+   "cross": false
+  },
+  {
+   "from": "structured-outputs",
+   "to": "function-calling",
+   "cross": true
+  },
+  {
+   "from": "chain-of-thought",
+   "to": "react-agent-loop",
+   "cross": true
+  },
+  {
+   "from": "mrkl-systems",
+   "to": "react-agent-loop",
+   "cross": false
+  },
+  {
+   "from": "statecharts",
+   "to": "workflow-state-machines",
+   "cross": true
+  },
+  {
+   "from": "prompt-chaining",
+   "to": "workflow-state-machines",
+   "cross": true
+  },
+  {
+   "from": "react-agent-loop",
+   "to": "workflow-state-machines",
+   "cross": false
+  },
+  {
+   "from": "function-calling",
+   "to": "model-context-protocol",
+   "cross": false
+  },
+  {
+   "from": "language-server-protocol",
+   "to": "model-context-protocol",
+   "cross": true
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "agent-memory",
+   "cross": true
+  },
+  {
+   "from": "context-compaction",
+   "to": "agent-memory",
+   "cross": true
+  },
+  {
+   "from": "react-agent-loop",
+   "to": "multi-agent-systems",
+   "cross": false
+  },
+  {
+   "from": "react-agent-loop",
+   "to": "coding-agents",
+   "cross": false
+  },
+  {
+   "from": "function-calling",
+   "to": "coding-agents",
+   "cross": false
+  },
+  {
+   "from": "react-agent-loop",
+   "to": "computer-use-agents",
+   "cross": false
+  },
+  {
+   "from": "vision-language-models",
+   "to": "computer-use-agents",
+   "cross": true
+  },
+  {
+   "from": "agentic-rag",
+   "to": "deep-research-agents",
+   "cross": true
+  },
+  {
+   "from": "multi-agent-systems",
+   "to": "deep-research-agents",
+   "cross": false
+  },
+  {
+   "from": "context-engineering",
+   "to": "agent-skills",
+   "cross": true
+  },
+  {
+   "from": "model-context-protocol",
+   "to": "agent-skills",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "scratchpads",
+   "cross": true
+  },
+  {
+   "from": "few-shot-prompting",
+   "to": "chain-of-thought",
+   "cross": true
+  },
+  {
+   "from": "scratchpads",
+   "to": "chain-of-thought",
+   "cross": false
+  },
+  {
+   "from": "chain-of-thought",
+   "to": "self-consistency",
+   "cross": false
+  },
+  {
+   "from": "chain-of-thought",
+   "to": "tree-of-thoughts",
+   "cross": false
+  },
+  {
+   "from": "heuristic-search",
+   "to": "tree-of-thoughts",
+   "cross": true
+  },
+  {
+   "from": "react-agent-loop",
+   "to": "reflexion",
+   "cross": true
+  },
+  {
+   "from": "rlhf",
+   "to": "process-reward-models",
+   "cross": true
+  },
+  {
+   "from": "self-consistency",
+   "to": "test-time-compute-scaling",
+   "cross": false
+  },
+  {
+   "from": "tree-of-thoughts",
+   "to": "test-time-compute-scaling",
+   "cross": false
+  },
+  {
+   "from": "chain-of-thought",
+   "to": "reasoning-models",
+   "cross": false
+  },
+  {
+   "from": "test-time-compute-scaling",
+   "to": "reasoning-models",
+   "cross": false
+  },
+  {
+   "from": "policy-gradient-methods",
+   "to": "reasoning-models",
+   "cross": true
+  },
+  {
+   "from": "pddl",
+   "to": "llm-plus-p",
+   "cross": true
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "llm-plus-p",
+   "cross": true
+  },
+  {
+   "from": "llm-plus-p",
+   "to": "llm-modulo",
+   "cross": false
+  },
+  {
+   "from": "chain-of-thought",
+   "to": "llm-modulo",
+   "cross": false
+  },
+  {
+   "from": "transfer-learning-fine-tuning",
+   "to": "supervised-fine-tuning",
+   "cross": true
+  },
+  {
+   "from": "transfer-learning-fine-tuning",
+   "to": "parameter-efficient-fine-tuning",
+   "cross": true
+  },
+  {
+   "from": "parameter-efficient-fine-tuning",
+   "to": "low-rank-adaptation",
+   "cross": false
+  },
+  {
+   "from": "policy-gradient-methods",
+   "to": "rlhf",
+   "cross": true
+  },
+  {
+   "from": "rlhf",
+   "to": "direct-preference-optimization",
+   "cross": false
+  },
+  {
+   "from": "rlhf",
+   "to": "constitutional-ai",
+   "cross": false
+  },
+  {
+   "from": "rlhf",
+   "to": "rlvr",
+   "cross": false
+  },
+  {
+   "from": "ppo",
+   "to": "rlvr",
+   "cross": true
+  },
+  {
+   "from": "ppo",
+   "to": "grpo",
+   "cross": true
+  },
+  {
+   "from": "knowledge-distillation",
+   "to": "llm-distillation",
+   "cross": true
+  },
+  {
+   "from": "supervised-fine-tuning",
+   "to": "llm-distillation",
+   "cross": false
+  },
+  {
+   "from": "few-shot-prompting",
+   "to": "self-instruct",
+   "cross": true
+  },
+  {
+   "from": "self-instruct",
+   "to": "evol-instruct",
+   "cross": false
+  },
+  {
+   "from": "self-instruct",
+   "to": "synthetic-textbook-data",
+   "cross": false
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "llm-annotation",
+   "cross": true
+  },
+  {
+   "from": "data-deduplication",
+   "to": "data-quality-filtering",
+   "cross": false
+  },
+  {
+   "from": "llm-annotation",
+   "to": "data-quality-filtering",
+   "cross": false
+  },
+  {
+   "from": "capability-benchmarks",
+   "to": "long-context-evals",
+   "cross": false
+  },
+  {
+   "from": "capability-benchmarks",
+   "to": "agent-benchmarks",
+   "cross": false
+  },
+  {
+   "from": "test-driven-development",
+   "to": "agent-benchmarks",
+   "cross": true
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "llm-as-a-judge",
+   "cross": true
+  },
+  {
+   "from": "llm-as-a-judge",
+   "to": "rag-evaluation",
+   "cross": false
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "rag-evaluation",
+   "cross": true
+  },
+  {
+   "from": "test-driven-development",
+   "to": "eval-driven-development",
+   "cross": true
+  },
+  {
+   "from": "llm-as-a-judge",
+   "to": "eval-driven-development",
+   "cross": false
+  },
+  {
+   "from": "distributed-tracing",
+   "to": "llm-tracing",
+   "cross": true
+  },
+  {
+   "from": "llm-tracing",
+   "to": "online-evaluation",
+   "cross": false
+  },
+  {
+   "from": "llm-as-a-judge",
+   "to": "online-evaluation",
+   "cross": false
+  },
+  {
+   "from": "injection-attacks",
+   "to": "prompt-injection",
+   "cross": true
+  },
+  {
+   "from": "zero-shot-prompting",
+   "to": "prompt-injection",
+   "cross": true
+  },
+  {
+   "from": "prompt-injection",
+   "to": "indirect-prompt-injection",
+   "cross": false
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "indirect-prompt-injection",
+   "cross": true
+  },
+  {
+   "from": "rlhf",
+   "to": "jailbreaks",
+   "cross": true
+  },
+  {
+   "from": "rlhf",
+   "to": "red-teaming",
+   "cross": true
+  },
+  {
+   "from": "llm-as-a-judge",
+   "to": "guardrails",
+   "cross": true
+  },
+  {
+   "from": "prompt-injection",
+   "to": "injection-defenses",
+   "cross": false
+  },
+  {
+   "from": "indirect-prompt-injection",
+   "to": "injection-defenses",
+   "cross": false
+  },
+  {
+   "from": "sandboxing-and-isolation",
+   "to": "agent-sandboxing",
+   "cross": true
+  },
+  {
+   "from": "least-privilege",
+   "to": "agent-sandboxing",
+   "cross": true
+  },
+  {
+   "from": "function-calling",
+   "to": "agent-sandboxing",
+   "cross": true
+  },
+  {
+   "from": "transformer-architecture",
+   "to": "interpretability",
+   "cross": true
+  },
+  {
+   "from": "interpretability",
+   "to": "sparse-autoencoders",
+   "cross": false
+  },
+  {
+   "from": "interpretability",
+   "to": "representation-engineering",
+   "cross": false
+  },
+  {
+   "from": "representation-engineering",
+   "to": "circuit-breakers",
+   "cross": false
+  },
+  {
+   "from": "jailbreaks",
+   "to": "circuit-breakers",
+   "cross": false
+  },
+  {
+   "from": "mixed-initiative-interaction",
+   "to": "human-ai-interaction-guidelines",
+   "cross": true
+  },
+  {
+   "from": "conversational-agents",
+   "to": "chat-interfaces",
+   "cross": true
+  },
+  {
+   "from": "rlhf",
+   "to": "chat-interfaces",
+   "cross": true
+  },
+  {
+   "from": "autoregressive-decoding",
+   "to": "streaming-responses",
+   "cross": true
+  },
+  {
+   "from": "mixed-initiative-interaction",
+   "to": "copilots",
+   "cross": true
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "copilots",
+   "cross": true
+  },
+  {
+   "from": "retrieval-augmented-generation",
+   "to": "citation-ux",
+   "cross": true
+  },
+  {
+   "from": "human-ai-interaction-guidelines",
+   "to": "citation-ux",
+   "cross": false
+  },
+  {
+   "from": "mixed-initiative-interaction",
+   "to": "human-in-the-loop-approval",
+   "cross": true
+  },
+  {
+   "from": "function-calling",
+   "to": "human-in-the-loop-approval",
+   "cross": true
+  },
+  {
+   "from": "structured-outputs",
+   "to": "generative-ui",
+   "cross": true
+  },
+  {
+   "from": "direct-manipulation",
+   "to": "generative-ui",
+   "cross": true
+  },
+  {
+   "from": "direct-manipulation",
+   "to": "canvas-artifacts",
+   "cross": true
+  },
+  {
+   "from": "chat-interfaces",
+   "to": "canvas-artifacts",
+   "cross": false
+  },
+  {
+   "from": "transformer-architecture",
+   "to": "contrastive-image-text-pretraining",
+   "cross": true
+  },
+  {
+   "from": "contrastive-image-text-pretraining",
+   "to": "vision-language-models",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "vision-language-models",
+   "cross": true
+  },
+  {
+   "from": "transformer-architecture",
+   "to": "document-understanding",
+   "cross": true
+  },
+  {
+   "from": "vision-language-models",
+   "to": "visual-document-retrieval",
+   "cross": false
+  },
+  {
+   "from": "dense-retrieval",
+   "to": "visual-document-retrieval",
+   "cross": true
+  },
+  {
+   "from": "sequence-to-sequence-learning",
+   "to": "speech-recognition",
+   "cross": true
+  },
+  {
+   "from": "speech-recognition",
+   "to": "realtime-voice",
+   "cross": false
+  },
+  {
+   "from": "pretrained-language-models",
+   "to": "realtime-voice",
+   "cross": true
+  },
+  {
+   "from": "diffusion-models",
+   "to": "text-to-image",
+   "cross": false
+  },
+  {
+   "from": "contrastive-image-text-pretraining",
+   "to": "text-to-image",
+   "cross": false
+  },
+  {
+   "from": "text-to-image",
+   "to": "video-generation",
+   "cross": false
+  },
+  {
+   "from": "transformer-architecture",
+   "to": "video-generation",
+   "cross": true
+  }
+ ]
+}

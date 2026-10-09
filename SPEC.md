@@ -55,7 +55,7 @@ node map/build.mjs settle --dry-run                     # report what would be s
 node map/build.mjs survey                               # one-time founding survey (refuses if a ledger exists)
 node map/build.mjs survey --redo                        # only before the survey is accepted: discard and resurvey
 node map/build.mjs sea --sweep                          # report landmass counts across candidate sea levels
-python3 -m http.server -d map/public 8000               # view
+python3 map/serve.py 8000                               # view (no-cache dev server)
 ```
 
 ## 3. Data contracts
@@ -76,7 +76,7 @@ Applied regions get a `title`, which is the fun name. The existing `name` serves
 ```yaml
 world:
   seed: 7
-  bounds: [0, 0, 4000, 3000]           # world units; fixed at survey
+  bounds: [0, 0, 4800, 3000]           # world units; fixed at survey
   cell: 4                              # world units per terrain grid cell; fixed at survey
   sea_level: 0.42                      # may only ever be lowered
   surveyed: "2026-10-08"
@@ -101,6 +101,10 @@ retired: []                            # ids removed from the backbone; their po
 
 ```yaml
 old_world: {title: The Old World, subtitle: Ancestral Disciplines}
+survey:                                # read only by `survey`; inert once the survey is accepted
+  west_east:                           # 0 = west edge, 1 = east edge of the region's own world
+    deep-learning-nlp: 1.0
+    prompting-and-context-engineering: 0.0
 nodes:
   bm25: {label: left}                  # label side: right (default) | left | above | below
   react-agent-loop: {tier: capital}    # force a symbol tier
@@ -108,7 +112,7 @@ regions:
   retrieval-and-knowledge: {label: [1820, 700]}   # territory label position override
 ```
 
-Curation never touches geography. To move a landmark you edit the ledger, as described in 3.2.
+Curation never touches settled geography. The `survey` block only shapes the founding survey. To move a settled landmark you edit the ledger, as described in 3.2.
 
 ### 3.5 `map/public/map.json` (viewer contract)
 
@@ -156,10 +160,10 @@ E(p) = Σ uplift(node, p) + Σ ridge(edge, p) + bedrock(p) − basin(p)
 - **Settlement uplift.**
   - Shape: a Gaussian bump `h · exp(−d²/2σ²)`.
   - Height and spread: `h` and `σ` grow with maturity, and they also grow with the node's maturity rank across the whole backbone. Rank keeps the 4–5 skew from flattening everything.
-  - Root nodes get a modest bonus, so the Old World stands highest.
+  - Root nodes get a modest bonus, so the Old World reads as a solid continent.
   - Organic shape: distance `d` is measured in a domain-warped space, `p + A·noise(p)`, which makes shapes irregular.
 - **Lineage ridge.**
-  - Which edges: every edge where both endpoints are maturity ≥ 3.
+  - Which edges: every edge where both endpoints are maturity ≥ 3 and on the same side of the ocean. Edges between the Old World and the New World raise no ridge, so the ocean stays open.
   - Shape: a ridge along the parent→child segment, with height following a smoothed profile `r · exp(−dist_to_segment²/2w²)`.
   - Height: for cross-region edges, `r` scales with the number of edges between that region pair, normalized by the strongest pair. Strong connections clear sea level and weak ones don't.
   - In-region edges use a constant `r`, which keeps each territory internally contiguous.
@@ -183,18 +187,29 @@ Each build:
 
 ### 4.3 Founding survey (`survey`, runs once)
 
-1. **Region seeds.** A `d3-force` simulation over 19 region bodies (8 root and 11 applied):
-   - **link** between region pairs, with strength proportional to the cross-region edge count; applied regions also link to their `descends_from` roots
-   - **collide** by `sqrt(nodeCount)`
-   - root regions get a gentle pull toward the world center, which makes the Old World the core
-2. **Landmarks.** One `d3-force` simulation over all 141 nodes, seeded at their region centroids:
-   - **link** along lineage edges, with strength `1 / max(deg)` so hubs don't collapse their neighbors
-   - **cluster pull** toward the node's region centroid
-   - **maturity pull:** maturity ≥ 4 toward the region interior, maturity 1–2 outward, away from the world centroid and toward open sea
+0. **Oceanic edges.** An edge between a root-region node and an applied-region node is *oceanic*. The survey ignores oceanic edges entirely: no links, no region weights, no `descends_from` weight. They still appear in `map.json` as routes and in panels.
+1. **West–east targets.** Survey space has three x bands: `oldWorld`, `ocean`, and `newWorld` (in `CONFIG.region`). Within its world's band, each region's target comes from a curated hint in `curation.yaml` `survey.west_east` (0 = west edge, 1 = east edge) if there is one. Otherwise it comes from the rank of the region's median node date, oldest furthest west.
+2. **Region seeds.** A `d3-force` simulation over 19 region bodies (8 root and 11 applied), run for `trials` seeded restarts. The restart with the lowest energy is kept.
+   - **Links** between region pairs, with strength proportional to their shared (non-oceanic) edge count. Every pair of root regions also gets a `rootKinship` link, which holds the Old World together.
+   - **Collide** by `sqrt(nodeCount)`, plus a gap of sea.
+   - **Spread:** mild many-body repulsion. Lower values let regions clump, leaving inland seas between groups.
+   - **x pull** toward each region's west–east target, at `hintPull` (firm) for hinted regions and `xPull` (a gentle recency bias) otherwise. A hint spans the whole band, so 0 is the coast itself. The Old World has a y pull toward the equator.
+   - **New World well:** elliptical gravity centred on the `newWorld` band, `newWorldGravity` east–west and `newWorldGravity · newWorldAspect²` north–south. Collisions push regions out sideways, so the New World settles into an oval (about `newWorldAspect` wide to 1 tall) by physics rather than by placement. The well is strong enough to dominate the region links, so the links decide neighbours and the well decides overall shape.
+   - **Level:** each world is translated so its north–south midpoint sits on y = 0. Without this, the worlds drift apart vertically.
+   - **Divide:** a hard constraint that keeps root bodies west of the ocean and applied bodies east of it.
+   - **Energy** is the weighted gap between linked bodies beyond touching distance.
+3. **Landmarks.** One `d3-force` simulation over all 141 nodes, seeded at their region centroids:
+   - **link** along non-oceanic lineage edges, with strength `1 / max(deg)` so hubs don't collapse their neighbors. Cross-region links are weaker still.
+   - **cluster pull** toward the node's region centroid, stronger for root regions
+   - **recency lean:** within a region, a node is pulled west or east of the centroid by its date relative to the region median, saturating at `recencySpanYears`
+   - **maturity pull:** mature nodes go toward the region interior (by maturity rank), and maturity 1–2 go outward, away from the New World's centre, toward open sea
+   - **divide:** the same hard constraint as for regions. Outposts are exempt.
    - **collide** with radius = symbol + label allowance, plus `growthRoom · log2(1 + childCount)` so hubs keep space for future settlers
 3. Write `ledger.yaml` with `settled` = the survey date. Then run 4.1 and 4.2 to create `terrain.json`.
 4. Run `sea --sweep` and pick `sea_level` by eye (see 4.5). The target is a few landmasses, isthmuses between strongly linked regions, and straits elsewhere.
 5. Do any hand curation by editing the ledger, then commit. `survey --redo` stops working once the user marks the survey as accepted, via `world.accepted: true`.
+
+Set `ATLAS_DEBUG=1` to print each region body's final and target position.
 
 ### 4.4 Settlement (`settle`, every build)
 
@@ -204,6 +219,7 @@ For each backbone node that isn't in the ledger, in backbone file order:
    - distance to the parent centroid
    - a crowding penalty that applies inside `minSpacing` of any landmark, which is a hard reject
    - a territory penalty if the cell is owned by another region
+   - a hard reject for sites on the wrong side of the ocean
    - a site-type penalty, which depends on maturity:
      - maturity 1–2: the site must be water, near the coast, and facing away from other regions' land
      - maturity ≥ 3: the site should be on land within `coastBand` of the coast, or in shallow water next to it

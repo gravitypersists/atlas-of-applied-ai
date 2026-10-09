@@ -4,14 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A data project, not an application: the **Applied AI Engineering Atlas** backbone, a taxonomy of AI-engineering techniques shown as a lineage graph. It will eventually be drawn as a fantasy-style map (see `STRATEGY.md`). There is no build system and there are no tests. The repo holds one YAML source of truth and two Python scripts (dependency: `pyyaml`).
+A data project, not an application: the **Applied AI Engineering Atlas** backbone, a taxonomy of AI-engineering techniques shown as a lineage graph. It is drawn as a fantasy-style slippy map (see `STRATEGY.md` and `SPEC.md`). There are no tests. The repo holds one YAML source of truth, two Python scripts (dependency: `pyyaml`), and the map in `map/` (a Node build script plus a static viewer).
 
 ## Commands
 
 ```sh
 python3 validate.py      # check backbone.yaml; writes backbone.json + validation-report.txt; exits 1 on errors
 python3 make_guides.py   # regenerate deep-dives/*.md (incl. deep-dives/README.md) from backbone.yaml
+
+# map (Node 22; run `npm install` in map/ once)
+node map/build.mjs                     # settle: render map/public/map.json from the ledger
+node map/build.mjs survey --redo       # re-run the founding survey (only while world.accepted is false)
+node map/build.mjs --preview out.svg   # also write a static debug SVG
+python3 map/serve.py 8000              # dev server with no-cache headers
 ```
+
+The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` is the permanent geography: once the survey is accepted, existing entries never change, and new nodes are only appended.
 
 After any edit to `backbone.yaml`, run both scripts. `validate.py` must report 0 errors.
 

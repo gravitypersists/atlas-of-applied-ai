@@ -23,7 +23,7 @@ The elevation field is a sum of non-negative contributions:
 | Contribution | Comes from | Effect |
 |---|---|---|
 | **Settlement uplift** | Each landmark, with height and spread set by maturity | Mature work builds broad, high ground. Research builds a small rise. |
-| **Lineage ridges** | Edges between landmarks that are both maturity ≥ 3, raised along the line between them; cross-region ridges are scaled by how connected the two regions are | Strongly connected regions end up joined by land. Weakly connected ones stay separated by water. |
+| **Lineage ridges** | Edges between landmarks that are both maturity ≥ 3, raised along the line between them; cross-region ridges are scaled by how connected the two regions are. Edges that cross between the Old World and the New World raise no ridge. | Strongly connected regions end up joined by land. Weakly connected ones stay separated by water. The ocean between the worlds stays open. |
 | **Ancient bedrock** | A low, fixed noise field from a seed | Natural, irregular coasts and the odd stray islet. |
 | **Ocean basin** | Falloff toward the edge of the world | Keeps the world bounded by sea. |
 
@@ -57,15 +57,26 @@ Regions are **territories on the land**, not islands. A region might occupy part
 
 - **Claims are permanent.** When a land cell first appears, it's claimed by the region of its nearest landmark, and it keeps that owner forever. Borders are as fixed as positions.
 - **Borders inside a landmass** are drawn as faint dashed lines. Where a region is a whole island, the coast is its border.
-- **The Old World** is the 8 root disciplines. They're settled first and have the oldest, most mature landmarks, so they naturally form the largest, highest landmass. They carry one shared title, "The Old World", with each discipline as a province.
+- **The Old World** is the 8 root disciplines. It's a continent of its own in the west, kept as a reference. It carries one shared title, "The Old World", with each discipline as a province.
+
+## West to east: the Old World and the New World
+
+Time runs roughly west to east, which makes the map read like a world atlas rather than a radial diagram.
+
+- **The Old World** sits in the far west as a reference continent. It holds the pre-LLM ancestor disciplines, ordered loosely by age, with Deep Learning on its eastern shore facing the New World.
+- **The ocean** separates the two worlds. In this edition, lineage that crosses the ocean plays no part in the layout. Each world is laid out on its own terms, so an applied technique is placed by its applied relatives: GraphRAG sits next to RAG, not next to knowledge graphs. Cross-ocean lineage is still in the data and still shows in a landmark's panel and routes.
+- **The New World** holds the applied regions, with Prompting and Context Engineering on its west coast. Prompting was the first land LLMs conquered: few-shot prompting (GPT-3, 2020) worked on a bare pretrained model before fine-tuning, retrieval, or agents became common practice. Other regions are ordered by recency. Within each region, older landmarks lean west and newer ones lean east.
+- **Curated anchors.** Median dates can't capture "first conquered" (the applied regions' medians span barely a year), so the west–east order takes a few hand-written hints in `map/curation.yaml`: Deep Learning at the Old World's east edge, Prompting at the New World's west edge. Only the founding survey reads them.
+- **Later editions** may bring cross-ocean lineage back, for example as islets in the strait for frontier work that grows straight from the old disciplines (a neuro-symbolic island nation). It's left out for now because it pulled applied work out of place.
 
 ## Placement: founding survey, then settlement
 
 **Founding survey (one time).** A force-directed layout (d3-force) places the initial 141 nodes:
-- descendants are pulled near their parents
-- each region is pulled toward its own centroid
+- the two worlds are kept apart, west and east, with an ocean between them, and each world is levelled north–south
+- descendants are pulled near their parents within each world; lineage across the ocean is ignored
+- each region is pulled toward its own centroid and toward its west–east target (curated anchors pull hardest)
 - regions with many shared edges are pulled toward each other
-- mature nodes are pulled toward the region's interior and frontier nodes toward the open sea
+- mature nodes are pulled toward the region's interior, and frontier nodes toward the open sea
 
 The survey leaves generous space around hubs, because they'll attract settlers. The result is curated by hand once and then **written to the ledger, where it's fixed permanently**.
 
@@ -155,3 +166,4 @@ The titles can drift in style, and "Isles" may stop being literal once sea level
 5. Start from the current 141 nodes. Deep-dive content grows in at deeper zoom.
 6. Positions and land are permanent. The map only grows.
 7. Hidden elevation plus a single sea level decide what is contiguous land and what is island.
+8. The Old World is its own continent in the west. Time runs roughly west to east, and an ocean separates the Old World from the New World.

@@ -1,0 +1,14 @@
+# Cartography choices for the atlas map (SPEC.md §3.4).
+# Freely editable. Nothing here moves a settled landmark.
+
+old_world: {title: The Old World, subtitle: Ancestral Disciplines}
+
+# Read only by `node build.mjs survey`. Inert once the survey is accepted.
+survey:
+  # West–east position of a region within its own world: 0 = west edge, 1 = east edge.
+  # Regions without a hint are ordered by their median node date.
+  west_east:
+    # Old World: deep learning faces the New World across the ocean.
+    deep-learning-nlp: 1.0
+    # New World: prompting was the first land LLMs conquered (few-shot prompting, 2020).
+    prompting-and-context-engineering: 0.0
