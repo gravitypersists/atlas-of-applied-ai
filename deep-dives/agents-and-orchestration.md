@@ -1,6 +1,6 @@
 # Deep dive: Agents and Orchestration
 
-Backbone v0.2 · 12 anchors · 17 cross-region edges
+Backbone v0.2 · 13 anchors · 20 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -42,6 +42,7 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `computer-use-agents` — Computer-Use Agents (maturity 2, 2024-10)
 - `deep-research-agents` — Deep Research Agents (maturity 3, 2024-12)
 - `agent-skills` — Agent Skills (maturity 2, 2025-10)
+- `decision-models` — Decision Models (maturity 2, 2026-09)
 
 Nodes homed elsewhere that also touch this region:
 - `model-routing` — Model Routing and Cascades (home: inference-and-serving)
@@ -145,7 +146,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - inference-and-serving: autoregressive-decoding, kv-cache, paged-attention, continuous-batching, speculative-decoding, weight-quantization, kv-cache-quantization, prompt-caching, constrained-decoding, model-routing, prefill-decode-disaggregation, local-inference
 - prompting-and-context-engineering: zero-shot-prompting, few-shot-prompting, system-prompts, prompt-templating, prompt-chaining, structured-outputs, context-compaction, context-engineering, automatic-prompt-optimization, declarative-prompt-compilation
 - retrieval-and-knowledge: text-embeddings, dense-retrieval, retrieval-augmented-generation, chunking-strategies, hybrid-search, cross-encoder-reranking, query-rewriting, contextual-retrieval, graph-rag, self-rag, corrective-rag, agentic-rag
-- agents-and-orchestration: mrkl-systems, tool-learning, function-calling, react-agent-loop, workflow-state-machines, model-context-protocol, agent-memory, multi-agent-systems, coding-agents, computer-use-agents, deep-research-agents, agent-skills
+- agents-and-orchestration: mrkl-systems, tool-learning, function-calling, react-agent-loop, workflow-state-machines, model-context-protocol, agent-memory, multi-agent-systems, coding-agents, computer-use-agents, deep-research-agents, agent-skills, decision-models
 - planning-and-reasoning: scratchpads, chain-of-thought, self-consistency, tree-of-thoughts, reflexion, process-reward-models, test-time-compute-scaling, reasoning-models, llm-plus-p, llm-modulo
 - adaptation-and-post-training: supervised-fine-tuning, parameter-efficient-fine-tuning, low-rank-adaptation, rlhf, direct-preference-optimization, constitutional-ai, rlvr, grpo, llm-distillation
 - data-and-synthetic-data: self-instruct, evol-instruct, synthetic-textbook-data, human-instruction-datasets, llm-annotation, data-deduplication, data-decontamination, data-quality-filtering
@@ -170,6 +171,7 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - Computer-Use Agents: Introducing computer use (Anthropic, October 2024)
 - Deep Research Agents: How we built our multi-agent research system (Anthropic) — https://www.anthropic.com/engineering/built-multi-agent-research-system
 - Agent Skills: Equipping agents for the real world with Agent Skills (Anthropic) — https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
+- Decision Models: Introducing Clef: our open-source decision models, and new RL fine-tuning platform (Cloudflare) — https://blog.cloudflare.com/clef-decision-models/
 
 ## Reference: cross-region edges touching this region
 - agent-memory --applies--> retrieval-augmented-generation
@@ -178,6 +180,9 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - agent-skills --applies--> context-engineering
 - agentic-rag --combines--> react-agent-loop
 - computer-use-agents --combines--> vision-language-models
+- decision-models --extends--> model-routing
+- decision-models --replaces--> constrained-decoding
+- decision-models --specializes--> pretrained-language-models
 - deep-research-agents --extends--> agentic-rag
 - function-calling --combines--> structured-outputs
 - human-in-the-loop-approval --applies--> function-calling

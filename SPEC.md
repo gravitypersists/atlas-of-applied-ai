@@ -243,7 +243,8 @@ For each backbone node that isn't in the ledger:
      - maturity 1–2: the site must be water between `islet[0]` and `islet[1]` from the coast, ideally `isletIdeal`. That's far enough that the node's own small rise stays a separate islet until it matures.
      - maturity ≥ 3: land, penalized beyond `coastBand` inland, or water at most `shoreWater` out, since land will grow to meet it
    - Coast distances come from a two-pass chamfer distance transform (`coastField` in `map/terrain.mjs`), within a few percent of true Euclidean distance.
-3. If no site is acceptable, double `R` and try again, up to 3 times. If that still fails, the build fails and names the node.
+3. Candidates are gathered out to `8R`, in rings that double each time, and the best score overall wins. Distance is part of the score, so a farther site only wins when every nearer one carries a penalty, for example by facing another region's shore. If there is no acceptable site at all, the build fails and names the node.
+   - **Frontier nodes are verified, not estimated.** Near a coast the sea floor is already shallow, so distance alone can't promise an islet. For maturity 1–2 nodes, the best `isletTries` sites are tested in order. Each test simulates the terrain with that site added, including the same coverage repair the real build applies, and the first site whose land touches no other landmark is taken. If none qualifies, the best site is used and the build warns.
 4. Append `{id, x, y, settled}` to the ledger, where `settled` is the backbone's `meta.date` (the edition). Using the build date would break determinism. The node's uplift and ridges then grow land in step 4.2.
 5. `settle --dry-run` prints what would be settled or retired and writes nothing.
 

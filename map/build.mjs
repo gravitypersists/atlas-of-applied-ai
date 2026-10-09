@@ -82,6 +82,7 @@ const SETTLE = {
   comfortSpacing: 95,       // soft crowding penalty below this
   coastBand: 70,            // non-frontier nodes prefer land within this distance of the coast
   shoreWater: 36,           // ...or water at most this far out (land will grow to meet them)
+  isletTries: 12,           // frontier nodes: how many top sites to test by simulating the terrain
   islet: [80, 190],         // frontier nodes settle offshore at this water distance: far enough that
   isletIdeal: 110,          // their own small rise stays a separate islet until they mature
   territoryPenalty: 300,    // water facing another region's shore
@@ -712,13 +713,17 @@ function settle(model, ledger, { dryRun = false } = {}) {
     const cx = kin.reduce((a, p) => a + p.x, 0) / kin.length, cy = kin.reduce((a, p) => a + p.y, 0) / kin.length;
     const rng = rngFor(ledger.world.seed, `settle:${n.id}`);
 
+    // Search out to the widest radius and keep the best score overall: distance grows the score, so a
+    // farther site only wins when the nearer ones carry penalties (e.g. facing another region's shore).
     let best = null;
-    for (let attempt = 0; attempt < 4 && !best; attempt++) {
+    const ranked = [];
+    for (let attempt = 0; attempt < 4; attempt++) {
       const R = SETTLE.radius * 2 ** attempt;
+      const inner = attempt ? SETTLE.radius * 2 ** (attempt - 1) : 0; // each ring only adds new ground
       for (let gy = -R; gy <= R; gy += SETTLE.step) for (let gx = -R; gx <= R; gx += SETTLE.step) {
         const x = cx + gx + (rng() - 0.5) * SETTLE.step, y = cy + gy + (rng() - 0.5) * SETTLE.step;
         const dc = Math.hypot(x - cx, y - cy);
-        if (dc > R) continue;
+        if (dc > R || dc <= inner) continue;
         if (x < bx0 + mx || x > bx1 - mx || y < by0 + my || y > by1 - my) continue;
         if (root ? x >= divide : x <= divide) continue;
         let nearest = Infinity;
@@ -743,10 +748,20 @@ function settle(model, ledger, { dryRun = false } = {}) {
           penalty += -d * 3;
         }
         const score = dc + penalty;
-        if (!best || score < best.score) best = { x: round1(x), y: round1(y), score, water: d < 0, nearest };
+        ranked.push({ x: round1(x), y: round1(y), score, water: d < 0, nearest });
       }
     }
-    if (!best) fail(`no acceptable site for ${n.id} near its parents. Place it by hand in the ledger.`);
+    ranked.sort((a, b) => a.score - b.score);
+    if (!ranked.length) fail(`no acceptable site for ${n.id} near its parents. Place it by hand in the ledger.`);
+    best = ranked[0];
+    // A frontier node must really end up on an islet of its own: near a coast the sea floor is already
+    // shallow, so distance alone can't promise that. Simulate the terrain for the best few sites (with
+    // the nodes settled so far) and take the first whose land touches no other landmark.
+    if (n.maturity <= 2) {
+      const islet = ranked.slice(0, SETTLE.isletTries).find((c) => isletAt(model, ledger, grid, pos, n.id, c));
+      if (islet) best = islet;
+      else report.warnings.push(`${n.id}: no site among the best ${SETTLE.isletTries} stays a separate islet; it joins nearby land`);
+    }
     pos.set(n.id, { x: best.x, y: best.y, region: n.region });
     const neighbour = [...pos.entries()].filter(([id]) => id !== n.id)
       .map(([id, p]) => ({ id, d: Math.hypot(p.x - best.x, p.y - best.y) })).sort((a, b) => a.d - b.d)[0];
@@ -767,6 +782,27 @@ function settle(model, ledger, { dryRun = false } = {}) {
   ledger.retired.push(...retiring);
   if (!dryRun) writeLedger(ledger);
   return report;
+}
+
+// Would a landmark at site c sit on land that touches no other landmark? Simulates elevation with every
+// current position plus the candidate, at the current sea level.
+function isletAt(model, ledger, grid, pos, id, c) {
+  const placed = new Map([...pos].map(([k, p]) => [k, { x: p.x, y: p.y }]));
+  placed.set(id, { x: c.x, y: c.y });
+  const inputs = Terrain.terrainInputs(model, placed, model.terrainStyles);
+  const k = Terrain.cellOf(grid, c.x, c.y);
+  // Apply the same coverage repair as buildTerrain: raise the candidate's uplift until it's on land.
+  const boost = new Map();
+  let land;
+  for (let pass = 0; pass <= 3; pass++) {
+    land = Terrain.threshold(Terrain.elevation(grid, { ...inputs, seed: ledger.world.seed }, boost), ledger.world.sea_level);
+    if (land[k]) break;
+    boost.set(id, (boost.get(id) ?? 0) + Terrain.TERRAIN.repairBoost);
+  }
+  if (!land[k]) return false;
+  const { label } = Terrain.components(grid, land);
+  for (const [other, p] of placed) if (other !== id && label[Terrain.cellOf(grid, p.x, p.y)] === label[k]) return false;
+  return true;
 }
 
 function printSettleReport(report, dryRun) {

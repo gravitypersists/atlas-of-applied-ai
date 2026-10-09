@@ -2757,6 +2757,60 @@
       "status": "added"
     },
     {
+      "id": "decision-models",
+      "name": "Decision Models",
+      "aliases": [
+        "System One models",
+        "typed decision models",
+        "calibrated classifiers for agents"
+      ],
+      "region": "agents-and-orchestration",
+      "also": [
+        "inference-and-serving",
+        "prompting-and-context-engineering"
+      ],
+      "desc": "Small models that answer typed questions about an input (pick one, score it, yes or no) with calibrated probabilities in a single pass instead of generating text; the fast decision layer agents use to route, classify, escalate, and decide when to defer to a human.",
+      "parents": [
+        {
+          "id": "constrained-decoding",
+          "rel": "replaces",
+          "why": "Scores every valid schema choice in parallel from one prefill pass rather than decoding tokens under a constraint.",
+          "src": "Introducing Clef: our open-source decision models (Cloudflare 2026)"
+        },
+        {
+          "id": "model-routing",
+          "rel": "extends",
+          "why": "Routing and escalation between models, tools, and humans become a cheap, calibrated model call.",
+          "src": "Introducing Clef: our open-source decision models (Cloudflare 2026)"
+        },
+        {
+          "id": "function-calling",
+          "rel": "specializes",
+          "why": "Answers the bounded decisions inside an agent loop (which tool, whether to call, whether to escalate) as typed outputs.",
+          "src": "TypeSafe AI launches Jev (2026)",
+          "confidence": "medium"
+        },
+        {
+          "id": "pretrained-language-models",
+          "rel": "specializes",
+          "why": "Built on a pretrained LLM backbone with a decision head in place of the language-model head.",
+          "src": "Introducing Clef: our open-source decision models (Cloudflare 2026)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Category launched September–October 2026 (Jev, then the open-weight Clef); early production use in routing and triage.",
+      "date": "2026-09",
+      "ref": {
+        "title": "Introducing Clef: our open-source decision models, and new RL fine-tuning platform (Cloudflare)",
+        "url": "https://blog.cloudflare.com/clef-decision-models/"
+      },
+      "examples": [
+        "Jev (TypeSafe AI)",
+        "Clef and Clef-flash (Cloudflare)"
+      ],
+      "status": "added"
+    },
+    {
       "id": "scratchpads",
       "name": "Scratchpads",
       "aliases": [
