@@ -1,6 +1,6 @@
 # Deep dive: Evaluation and Observability
 
-Backbone v0.2 · 9 anchors · 7 cross-region edges
+Backbone v0.2 · 15 anchors · 9 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -30,12 +30,18 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `capability-benchmarks` — Capability Benchmarks (maturity 5, 2020-09)
 - `long-context-evals` — Long-Context Evals (maturity 4, 2023-11)
 - `agent-benchmarks` — Agent Benchmarks (maturity 3, 2023-10)
-- `llm-as-a-judge` — LLM-as-a-Judge (maturity 4, 2023-06)
+- `llm-as-a-judge` — LLM-as-a-Judge (maturity 4, 2023-03)
 - `pairwise-preference-eval` — Pairwise Preference Evaluation (maturity 4, 2023-05)
 - `rag-evaluation` — RAG Evaluation (maturity 3, 2023-09)
 - `eval-driven-development` — Eval-Driven Development (maturity 3, 2023)
 - `llm-tracing` — LLM Tracing (maturity 4, 2023)
 - `online-evaluation` — Online Evaluation and Monitoring (maturity 3, 2024)
+- `judge-bias-mitigation` — Judge Bias Mitigation (maturity 3, 2023-06)
+- `probabilistic-judge-scoring` — Probabilistic Judge Scoring (maturity 2, 2023-03)
+- `fine-tuned-evaluators` — Fine-Tuned Evaluators (maturity 3, 2023-10)
+- `judge-score-correction` — Judge Score Correction (maturity 2, 2023-11)
+- `agent-trajectory-evaluation` — Agent Trajectory Evaluation (maturity 2, 2024-01)
+- `static-context-scoring` — Static Context Scoring (maturity 1, 2026-07)
 
 Nodes homed elsewhere that also touch this region:
 - `automatic-prompt-optimization` — Automatic Prompt Optimization (home: prompting-and-context-engineering)
@@ -54,8 +60,7 @@ Nodes homed elsewhere that also touch this region:
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- MT-Bench and judge-bias studies (arXiv:2306.05685)
-- Static context-quality scoring for agents (ProofAgent-Harness, "The Context Fails First") (arXiv:2607.14275)
+- none
 
 ## Output
 
@@ -159,7 +164,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; search-based decoding), reflexion (Self-Reflection; Reflexion; self-critique; self-refine; evaluator-optimizer), process-reward-models (Process Reward Models; PRMs; step-level verifiers; process supervision), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling; search against verifiers), reasoning-models (Reasoning Models; thinking models; extended thinking; o1-class models), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning), program-aided-reasoning (Program-Aided Reasoning; PAL; Program of Thoughts; PoT; program-aided language models), reasoning-via-planning (Reasoning via Planning; RAP; MCTS over reasoning), graph-of-thoughts (Graph of Thoughts; GoT), step-back-prompting (Step-Back Prompting; abstraction prompting), language-agent-tree-search (Language Agent Tree Search; LATS), math-shepherd (Automatic Process Supervision; Math-Shepherd; Monte Carlo step labels), quiet-star (Quiet-STaR; learned internal rationales; think before speaking), latent-reasoning (Latent Reasoning; Coconut; Chain of Continuous Thought; continuous thought), cot-monitoring (CoT Monitoring; CoT faithfulness; chain-of-thought monitorability; reasoning trace monitoring)
 - adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling), direct-preference-optimization (Direct Preference Optimization; DPO; KTO; ORPO; IPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT)
 - data-and-synthetic-data: self-instruct (Self-Instruct; synthetic instruction generation), evol-instruct (Evol-Instruct; instruction evolution), synthetic-textbook-data (Synthetic Pretraining Data; textbook-quality data; synthetic corpora), human-instruction-datasets (Crowdsourced Instruction Data; human-written demonstrations; OpenAssistant), llm-annotation (LLM-Assisted Annotation; LLM labeling; model-as-annotator), data-deduplication (Data Deduplication; near-duplicate removal; MinHash dedup), data-decontamination (Data Decontamination; test-set leakage prevention), data-quality-filtering (Data Quality Filtering; corpus curation; classifier-based filtering)
-- evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing), llm-tracing (LLM Tracing; LLM observability; agent traces), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring)
+- evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing; assertion-based testing), llm-tracing (LLM Tracing; LLM observability; agent traces; OpenTelemetry GenAI conventions; gen_ai spans), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring), judge-bias-mitigation (Judge Bias Mitigation; position-swap evaluation; length-controlled judging), probabilistic-judge-scoring (Probabilistic Judge Scoring; G-Eval; logprob-weighted scoring), fine-tuned-evaluators (Fine-Tuned Evaluators; judge models; open-weight judges; evaluator LMs), judge-score-correction (Judge Score Correction; prediction-powered inference; PPI; confidence intervals for judges), agent-trajectory-evaluation (Agent Trajectory Evaluation; step-level agent evals; trajectory grading; progress rate), static-context-scoring (Static Context Scoring; context quality scoring; preflight context evaluation)
 - safety-security-and-governance: prompt-injection (Prompt Injection; instruction injection), indirect-prompt-injection (Indirect Prompt Injection; data poisoning of context; tool-output injection), jailbreaks (Jailbreaks; adversarial prompts; GCG), red-teaming (AI Red Teaming; adversarial testing), guardrails (Guardrails and Safety Classifiers; input/output filters; content moderation; Llama Guard), injection-defenses (Prompt Injection Defenses; instruction hierarchy; spotlighting; injection detection), agent-sandboxing (Agent Sandboxing and Permissions; secure code execution; tool permissions; least-privilege agents), interpretability (Mechanistic Interpretability; circuits; interpretability), sparse-autoencoders (Sparse Autoencoders; SAEs; dictionary learning; monosemantic features), representation-engineering (Representation Engineering; RepE; activation steering), circuit-breakers (Circuit Breakers; representation rerouting), model-documentation (Model and System Cards; model cards; system cards; transparency documentation)
 - ai-product-and-interaction-design: human-ai-interaction-guidelines (Human-AI Interaction Guidelines; HAI guidelines; AI UX principles), chat-interfaces (Chat Interfaces; conversational UI; chat assistants), streaming-responses (Streaming Responses; token streaming; server-sent events), copilots (Copilots and Inline Assistance; inline completion; AI pair programming), citation-ux (Citation and Grounding UX; source attribution; inline citations), human-in-the-loop-approval (Human-in-the-Loop Approval; HITL; tool confirmation; permission prompts; interrupts; agent breakpoints), generative-ui (Generative UI; server-driven UI from models), canvas-artifacts (Canvases and Artifacts; side-by-side editing; artifacts; canvas), reasoning-trace-display (Reasoning Trace Display; thinking UI; thought summaries; reasoning visualization), plan-preview (Plan Preview; plan mode; plan approval; intent preview), agent-action-trace (Agent Action Trace; activity feed; tool call display; action log), mid-run-steering (Mid-Run Steering; active execution participation; mid-flight intervention; agent steering), trust-calibration (Trust Calibration; appropriate reliance; uncertainty display; confidence indicators; overreliance mitigation), voice-turn-taking (Turn-Taking and Barge-In; barge-in; voice interruption handling; semantic VAD; endpointing)
 - multimodal-applied: contrastive-image-text-pretraining (Contrastive Image-Text Pretraining; CLIP; joint embeddings), vision-language-models (Vision-Language Models; VLMs; multimodal LLMs), document-understanding (Document Understanding; PDF parsing; OCR-free parsing; layout understanding), visual-document-retrieval (Visual Document Retrieval; ColPali; page-image retrieval), speech-recognition (Speech Recognition; ASR; speech-to-text; Whisper), realtime-voice (Realtime Voice Agents; speech-to-speech; voice mode), diffusion-models (Diffusion Models; DDPM; denoising diffusion), text-to-image (Text-to-Image Generation; latent diffusion; image generation), video-generation (Video Generation; text-to-video)
@@ -174,15 +179,23 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - LLM-as-a-Judge: Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al.) — arXiv:2306.05685
 - Pairwise Preference Evaluation: Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference (Chiang et al.) — arXiv:2403.04132
 - RAG Evaluation: RAGAS: Automated Evaluation of Retrieval Augmented Generation (Es et al.) — arXiv:2309.15217
-- Eval-Driven Development: Demystifying evals for AI agents (Anthropic)
+- Eval-Driven Development: Demystifying evals for AI agents (Anthropic) — https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
 - LLM Tracing: OpenTelemetry Semantic Conventions for Generative AI — https://opentelemetry.io/docs/specs/semconv/gen-ai/
-- Online Evaluation and Monitoring: Langfuse / Arize documentation on online evaluation
+- Online Evaluation and Monitoring: Evaluate Production Traffic (Langfuse) — https://langfuse.com/docs/evaluation/get-started/online
+- Judge Bias Mitigation: Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al.), Section 3.3 on limitations — arXiv:2306.05685
+- Probabilistic Judge Scoring: G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment (Liu et al.) — arXiv:2303.16634
+- Fine-Tuned Evaluators: JudgeLM: Fine-tuned Large Language Models are Scalable Judges (Zhu et al.) — arXiv:2310.17631
+- Judge Score Correction: ARES: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems (Saad-Falcon et al.) — arXiv:2311.09476
+- Agent Trajectory Evaluation: AgentBoard: An Analytical Evaluation Board of Multi-turn LLM Agents (Ma et al.) — arXiv:2401.13178
+- Static Context Scoring: AI Agents Do Not Fail Alone: The Context Fails First (Bousetouane) — arXiv:2607.14275
 
 ## Reference: cross-region edges touching this region
 - agent-benchmarks --applies--> test-driven-development
 - cot-monitoring --applies--> llm-as-a-judge
 - eval-driven-development --applies--> test-driven-development
+- fine-tuned-evaluators --applies--> supervised-fine-tuning
 - guardrails --applies--> llm-as-a-judge
 - llm-as-a-judge --applies--> zero-shot-prompting
 - llm-tracing --applies--> distributed-tracing
 - rag-evaluation --applies--> retrieval-augmented-generation
+- static-context-scoring --applies--> context-engineering

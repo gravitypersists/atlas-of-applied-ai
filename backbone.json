@@ -420,6 +420,57 @@
         "Agent evaluation (trajectories, environments, SWE-bench-style harnesses)",
         "Judge reliability and calibration; human vs. model graders",
         "Observability standards (OpenTelemetry GenAI conventions) and online evals"
+      ],
+      "overview": "Evaluation and Observability is how teams find out whether an AI system works, and why it doesn't. Old NLP metrics like BLEU and ROUGE counted word overlap with a reference answer, which says nothing about whether an open-ended answer is right, so the field rebuilt measurement around benchmarks, human preference votes, and, above all, models grading other models.\n\nLLM-as-a-judge is the region's center. A strong model with a rubric agrees with human raters about as often as humans agree with each other, which made evaluation cheap enough to run on every change. Most of what surrounds it is about making judges trustworthy: swapping answer order to cancel position bias, reading score probabilities instead of a single number, training small dedicated judge models, and using a few human labels to correct a judge's aggregate score. Specialized evals grew out of this for RAG (was the right context found, and is the answer grounded in it?), for long context (can the model find a needle in a haystack?), and for agents, where benchmarks like SWE-bench check whether a task got done and trajectory evals grade the steps along the way.\n\nThe engineering side borrows from software practice. Eval-driven development runs eval suites in CI the way tests gate code, layering cheap deterministic checks under model-graded ones. Tracing records each model call, retrieval and tool call as spans, now with shared OpenTelemetry conventions, and online evaluation scores sampled production traffic to catch drift. Landmarks worth knowing: capability and agent benchmarks, LLM-as-a-judge, RAG evaluation, eval-driven development, and tracing.",
+      "learning_path": [
+        {
+          "kind": "blog",
+          "title": "Your AI Product Needs Evals",
+          "by": "Hamel Husain",
+          "year": 2024,
+          "url": "https://hamel.dev/blog/posts/evals/",
+          "why": "The clearest case for why evals sit at the centre of building with LLMs, and how unit tests, human review and model graders fit together."
+        },
+        {
+          "kind": "blog",
+          "title": "Let's talk about LLM evaluation",
+          "by": "Clémentine Fourrier (Hugging Face)",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/clefourrier/llm-evaluation",
+          "why": "A tour of the three ways models get scored (automatic benchmarks, human judges, model judges) from someone who ran the Open LLM Leaderboard. It shows what public benchmarks can and cannot tell you."
+        },
+        {
+          "kind": "blog",
+          "title": "Using LLM-as-a-Judge For Evaluation: A Complete Guide",
+          "by": "Hamel Husain",
+          "year": 2024,
+          "url": "https://hamel.dev/blog/posts/llm-judge/",
+          "why": "How to build a model grader that agrees with a domain expert, step by step. This is the workhorse technique of the whole region."
+        },
+        {
+          "kind": "blog",
+          "title": "Evaluating the Effectiveness of LLM-Evaluators (aka LLM-as-Judge)",
+          "by": "Eugene Yan",
+          "year": 2024,
+          "url": "https://eugeneyan.com/writing/llm-evaluators/",
+          "why": "A survey of the research on model judges: their biases, when they agree with people, and the fine-tuned alternatives. Read it once you have built a judge and want to know where it can fail."
+        },
+        {
+          "kind": "blog",
+          "title": "Demystifying evals for AI agents",
+          "by": "Anthropic",
+          "year": 2026,
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "why": "Carries the ideas over to agents, where a task has many steps and you grade both the outcome and the path taken."
+        },
+        {
+          "kind": "docs",
+          "title": "Evaluate Production Traffic - Langfuse",
+          "by": "Langfuse",
+          "year": 2025,
+          "url": "https://langfuse.com/docs/evaluation/get-started/online",
+          "why": "Closes the loop: run the same graders on sampled live traces, so evaluation continues after you ship."
+        }
       ]
     },
     {
@@ -7031,6 +7082,7 @@
       ],
       "region": "evaluation-and-observability",
       "desc": "Fixed datasets with reference answers used to compare model capabilities.",
+      "summary": "Fixed sets of questions with known answers, such as MMLU or GPQA, used to compare what models know and can reason about. They are the common yardstick for model releases, but scores saturate quickly and leak into training data, and a high score says little about how a model behaves inside your product.",
       "parents": [
         {
           "id": "external:shared-task-benchmarks",
@@ -7051,6 +7103,36 @@
         "GPQA",
         "HLE"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Let's talk about LLM evaluation",
+          "by": "Clémentine Fourrier (Hugging Face)",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/clefourrier/llm-evaluation"
+        },
+        {
+          "kind": "tutorial",
+          "title": "The LLM Evaluation Guidebook",
+          "by": "Hugging Face",
+          "year": 2024,
+          "url": "https://github.com/huggingface/evaluation-guidebook"
+        },
+        {
+          "kind": "paper",
+          "title": "Are We Done with MMLU?",
+          "by": "Aryo Pradipta Gema et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.04127"
+        },
+        {
+          "kind": "paper",
+          "title": "MMLU-Pro: A More Robust and Challenging Multi-Task Language Understanding Benchmark",
+          "by": "Yubo Wang et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.01574"
+        }
+      ],
       "status": "added"
     },
     {
@@ -7062,6 +7144,7 @@
       ],
       "region": "evaluation-and-observability",
       "desc": "Tests of whether models retrieve and use information placed at various depths in very long inputs.",
+      "summary": "Tests of whether a model actually uses everything in a very long input. The classic version hides one fact (the needle) at different depths in a long document (the haystack) and asks for it back; these tests exposed the \"lost in the middle\" weakness, and harder variants like RULER now ask for multi-step reasoning over the long input rather than lookup.",
       "parents": [
         {
           "id": "capability-benchmarks",
@@ -7081,6 +7164,36 @@
         "NIAH",
         "RULER"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Needle In A Haystack (GPT-4 128K)",
+          "by": "Greg Kamradt",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=KwRRuiCCdmc"
+        },
+        {
+          "kind": "talk",
+          "title": "Is RAG Really Dead? Testing Multi Fact Retrieval & Reasoning in GPT4-128k",
+          "by": "LangChain",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=UlmyyYQGhzc"
+        },
+        {
+          "kind": "paper",
+          "title": "RULER: What's the Real Context Size of Your Long-Context Language Models?",
+          "by": "Cheng-Ping Hsieh et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.06654"
+        },
+        {
+          "kind": "paper",
+          "title": "Lost in the Middle: How Language Models Use Long Contexts",
+          "by": "Nelson F. Liu et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2307.03172"
+        }
+      ],
       "status": "added"
     },
     {
@@ -7095,6 +7208,7 @@
         "agents-and-orchestration"
       ],
       "desc": "Evaluating agents by whether they complete tasks in real or simulated environments, judged by tests or state checks.",
+      "summary": "Benchmarks that drop an agent into a real or simulated environment, such as a code repository, a terminal or a website, and check whether it finished the task, usually by running tests or inspecting the final state. They measure multi-step tool use rather than single answers, but they are expensive to run, sensitive to the harness, and their methodology is still argued over.",
       "parents": [
         {
           "id": "capability-benchmarks",
@@ -7122,6 +7236,36 @@
         "tau-bench",
         "Terminal-Bench"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "SWE-Bench authors reflect on the state of LLM agents at Neurips 2024",
+          "by": "Jay Alammar",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=bivZWNQHRfE"
+        },
+        {
+          "kind": "talk",
+          "title": "Agentic Evaluations at Scale, For Everybody",
+          "by": "Nicholas Kang & Michael Aaron, Google DeepMind (AI Engineer)",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=Ubwb6NzegyA"
+        },
+        {
+          "kind": "paper",
+          "title": "τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+          "by": "Shunyu Yao et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.12045"
+        },
+        {
+          "kind": "paper",
+          "title": "WebArena: A Realistic Web Environment for Building Autonomous Agents",
+          "by": "Shuyan Zhou et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2307.13854"
+        }
+      ],
       "status": "added"
     },
     {
@@ -7133,6 +7277,7 @@
       ],
       "region": "evaluation-and-observability",
       "desc": "Using a strong model with a rubric to grade or compare outputs where exact answers don't exist.",
+      "summary": "Using a strong model, given a rubric, to grade or compare outputs where no exact answer exists, such as tone, helpfulness or faithfulness. Judges agree with human raters about as often as humans agree with each other, which made open-ended evaluation cheap and fast. They also have known biases (favoring the first option, longer answers and their own outputs), so a judge has to be checked against human labels before you trust it.",
       "parents": [
         {
           "id": "zero-shot-prompting",
@@ -7143,15 +7288,46 @@
       ],
       "maturity": 4,
       "maturity_note": "Standard for open-ended evaluation; reliability caveats well documented.",
-      "date": "2023-06",
+      "date": "2023-03",
       "ref": {
         "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al.)",
         "arxiv": "2306.05685"
       },
       "examples": [
+        "G-Eval",
         "MT-Bench",
         "Ragas",
         "LangSmith evaluators"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Using LLM-as-a-Judge For Evaluation: A Complete Guide",
+          "by": "Hamel Husain",
+          "year": 2024,
+          "url": "https://hamel.dev/blog/posts/llm-judge/"
+        },
+        {
+          "kind": "blog",
+          "title": "Evaluating the Effectiveness of LLM-Evaluators (aka LLM-as-Judge)",
+          "by": "Eugene Yan",
+          "year": 2024,
+          "url": "https://eugeneyan.com/writing/llm-evaluators/"
+        },
+        {
+          "kind": "talk",
+          "title": "Who Validates the Validators? Aligning LLM-Assisted Evaluation of LLM Outputs with Human Preferences",
+          "by": "Shreya Shankar et al. (ACM SIGCHI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=pkJJNgMYUyM"
+        },
+        {
+          "kind": "paper",
+          "title": "A Survey on LLM-as-a-Judge",
+          "by": "Jiawei Gu et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2411.15594"
+        }
       ],
       "status": "repaired"
     },
@@ -7164,6 +7340,7 @@
       ],
       "region": "evaluation-and-observability",
       "desc": "Comparing two anonymous responses side by side, by humans or judges, and aggregating into ratings.",
+      "summary": "Showing two anonymous responses side by side and asking a person or a judge model which is better, then turning many such votes into a ranking with Elo or Bradley-Terry ratings. Relative comparison is easier and more consistent than absolute scoring, which is why arena leaderboards became the public scoreboard for chat models. Votes reward style and length as well as substance.",
       "parents": [
         {
           "id": "external:elo-rating",
@@ -7183,6 +7360,22 @@
         "LMArena",
         "AlpacaEval"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Chatbot Arena: An Open Crowdsourced Platform for Human Feedback on LLMs",
+          "by": "Wei-Lin Chiang (The Linux Foundation)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=Ktby6XR3xII"
+        },
+        {
+          "kind": "paper",
+          "title": "From Crowdsourced Data to High-Quality Benchmarks: Arena-Hard and BenchBuilder Pipeline",
+          "by": "Tianle Li et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.11939"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -7197,6 +7390,7 @@
         "retrieval-and-knowledge"
       ],
       "desc": "Measuring retrieval quality and grounded answer faithfulness, often with model-graded metrics.",
+      "summary": "Measuring a retrieval-augmented system part by part rather than only end to end: did retrieval find the right passages (context relevance), is the answer supported by them (faithfulness), and does it answer the question (answer relevance). Splitting the score tells you whether to fix chunking and search or the generation prompt. The metrics are mostly model-graded, so they inherit judge reliability problems.",
       "parents": [
         {
           "id": "llm-as-a-judge",
@@ -7223,6 +7417,36 @@
         "TruLens",
         "DeepEval"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "RAG Triad",
+          "by": "TruLens",
+          "year": 2024,
+          "url": "https://www.trulens.org/getting_started/core_concepts/rag_triad/"
+        },
+        {
+          "kind": "blog",
+          "title": "Best Practices for LLM Evaluation of RAG Applications",
+          "by": "Databricks",
+          "year": 2023,
+          "url": "https://www.databricks.com/blog/LLM-auto-eval-best-practices-RAG"
+        },
+        {
+          "kind": "docs",
+          "title": "Ragas documentation",
+          "by": "Ragas",
+          "year": 2024,
+          "url": "https://docs.ragas.io/en/stable/"
+        },
+        {
+          "kind": "paper",
+          "title": "Evaluation of Retrieval-Augmented Generation: A Survey",
+          "by": "Hao Yu et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2405.07437"
+        }
+      ],
       "status": "added"
     },
     {
@@ -7231,13 +7455,15 @@
       "aliases": [
         "EDD",
         "offline evals",
-        "prompt regression testing"
+        "prompt regression testing",
+        "assertion-based testing"
       ],
       "region": "evaluation-and-observability",
       "also": [
         "prompting-and-context-engineering"
       ],
       "desc": "Gating prompt, model, and pipeline changes on eval suites run in CI, the way tests gate code.",
+      "summary": "Treating evals like tests: every change to a prompt, model or pipeline runs against an eval suite, often in CI, before it ships. Suites usually layer cheap deterministic checks (valid JSON, required strings, latency) under model-graded checks for qualities like tone and correctness. It replaces \"vibe checks\" with regression testing for systems whose outputs are never exactly the same twice.",
       "parents": [
         {
           "id": "test-driven-development",
@@ -7256,13 +7482,44 @@
       "maturity_note": "Mainstream in mature AI teams; tooling consolidating.",
       "date": "2023",
       "ref": {
-        "title": "Demystifying evals for AI agents (Anthropic)"
+        "title": "Demystifying evals for AI agents (Anthropic)",
+        "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
       },
       "examples": [
         "Braintrust",
         "Promptfoo",
         "LangSmith",
         "Inspect"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Your AI Product Needs Evals",
+          "by": "Hamel Husain",
+          "year": 2024,
+          "url": "https://hamel.dev/blog/posts/evals/"
+        },
+        {
+          "kind": "blog",
+          "title": "An LLM-as-Judge Won't Save The Product—Fixing Your Process Will",
+          "by": "Eugene Yan",
+          "year": 2025,
+          "url": "https://eugeneyan.com/writing/eval-process/"
+        },
+        {
+          "kind": "talk",
+          "title": "LLM Evals: Common Mistakes",
+          "by": "Hamel Husain & Shreya Shankar",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=GL0XhAj5LPE"
+        },
+        {
+          "kind": "docs",
+          "title": "Define success criteria and build evaluations",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests"
+        }
       ],
       "status": "repaired"
     },
@@ -7271,10 +7528,13 @@
       "name": "LLM Tracing",
       "aliases": [
         "LLM observability",
-        "agent traces"
+        "agent traces",
+        "OpenTelemetry GenAI conventions",
+        "gen_ai spans"
       ],
       "region": "evaluation-and-observability",
       "desc": "Capturing nested spans for model calls, retrieval, and tool use to debug quality, latency, and cost.",
+      "summary": "Recording every step of an LLM application as nested spans: each model call with its prompt, tokens and latency, plus retrieval steps and tool calls, so you can see exactly what happened on a given request. OpenTelemetry's GenAI conventions give these spans a shared vocabulary across providers and frameworks, though the spec is still changing and has broken dashboards along the way.",
       "parents": [
         {
           "id": "distributed-tracing",
@@ -7296,6 +7556,36 @@
         "Arize Phoenix",
         "OpenLLMetry"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "An Introduction to Observability for LLM-based applications using OpenTelemetry",
+          "by": "OpenTelemetry",
+          "year": 2024,
+          "url": "https://opentelemetry.io/blog/2024/llm-observability/"
+        },
+        {
+          "kind": "talk",
+          "title": "OpenTelemetry for GenAI and the OpenLLMetry project",
+          "by": "OpenObservability Talks",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=JnQXEMHh3aw"
+        },
+        {
+          "kind": "docs",
+          "title": "Overview: Tracing - Phoenix",
+          "by": "Arize",
+          "year": 2025,
+          "url": "https://arize.com/docs/phoenix/tracing/llm-traces"
+        },
+        {
+          "kind": "docs",
+          "title": "LLM Observability & Application Tracing",
+          "by": "Langfuse",
+          "year": 2025,
+          "url": "https://langfuse.com/docs/observability/overview"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -7307,6 +7597,7 @@
       ],
       "region": "evaluation-and-observability",
       "desc": "Scoring live traffic with automated graders and user signals to catch regressions and drift after deployment.",
+      "summary": "Scoring live production traffic after deployment, using judges or heuristics on sampled traces plus user signals like thumbs-down or retries, to catch quality regressions and drift. It closes the loop with offline evals: failures found in production become new test cases. Running judges on high-volume traffic is costly, so teams sample and use small models.",
       "parents": [
         {
           "id": "llm-tracing",
@@ -7325,12 +7616,397 @@
       "maturity_note": "Growing practice; methods and tooling still forming.",
       "date": "2024",
       "ref": {
-        "title": "Langfuse / Arize documentation on online evaluation"
+        "title": "Evaluate Production Traffic (Langfuse)",
+        "url": "https://langfuse.com/docs/evaluation/get-started/online"
       },
       "examples": [
         "Langfuse",
         "Arize",
         "Braintrust online scoring"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Run online evals on traces - Arize AX Docs",
+          "by": "Arize",
+          "year": 2025,
+          "url": "https://arize.com/docs/ax/evaluate/run-evals-on-traces"
+        },
+        {
+          "kind": "talk",
+          "title": "[Evals Workshop] Mastering AI Evaluation: From Playground to Production",
+          "by": "AI Engineer (Braintrust)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=9iN-cPnp7xg"
+        },
+        {
+          "kind": "blog",
+          "title": "A Field Guide to Rapidly Improving AI Products",
+          "by": "Hamel Husain",
+          "year": 2025,
+          "url": "https://hamel.dev/blog/posts/field-guide/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "judge-bias-mitigation",
+      "name": "Judge Bias Mitigation",
+      "aliases": [
+        "position-swap evaluation",
+        "length-controlled judging"
+      ],
+      "region": "evaluation-and-observability",
+      "layer": "detail",
+      "desc": "Countering the systematic biases of model judges, chiefly favoring the first option, longer answers, and their own outputs.",
+      "summary": "Model judges prefer whichever answer they see first, longer answers, and text from their own model family. The standard fixes are to run each pairwise comparison twice with the order swapped and count a win only if it holds both ways, to control for length, and to avoid judging a model with itself. These are cheap and should be on by default in any judge setup.",
+      "parents": [
+        {
+          "id": "llm-as-a-judge",
+          "rel": "counters",
+          "why": "Targets the position, verbosity and self-enhancement biases measured in model judges.",
+          "src": "Judging LLM-as-a-Judge (Zheng et al. 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Order swapping and length control are built into common eval tools and leaderboards; self-preference is harder to remove.",
+      "date": "2023-06",
+      "ref": {
+        "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (Zheng et al.), Section 3.3 on limitations",
+        "arxiv": "2306.05685"
+      },
+      "examples": [
+        "position swapping",
+        "length-controlled AlpacaEval"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Large Language Models are not Fair Evaluators",
+          "by": "Peiyi Wang et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2305.17926"
+        },
+        {
+          "kind": "paper",
+          "title": "Length-Controlled AlpacaEval: A Simple Way to Debias Automatic Evaluators",
+          "by": "Yann Dubois et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.04475"
+        },
+        {
+          "kind": "paper",
+          "title": "LLM Evaluators Recognize and Favor Their Own Generations",
+          "by": "Arjun Panickssery et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.13076"
+        },
+        {
+          "kind": "paper",
+          "title": "Replacing Judges with Juries: Evaluating LLM Generations with a Panel of Diverse Models",
+          "by": "Pat Verga et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.18796"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "probabilistic-judge-scoring",
+      "name": "Probabilistic Judge Scoring",
+      "aliases": [
+        "G-Eval",
+        "logprob-weighted scoring"
+      ],
+      "region": "evaluation-and-observability",
+      "layer": "detail",
+      "desc": "Reading the judge's token probabilities over the score values and taking their weighted average, instead of parsing one integer.",
+      "summary": "When a judge is asked for a 1–5 score, the single number it writes is coarse and flips with small prompt changes. G-Eval instead reads the probability the judge assigns to each score token and averages them, giving a continuous score that correlates better with human ratings. It needs an API that exposes log probabilities, which many hosted models don't.",
+      "parents": [
+        {
+          "id": "llm-as-a-judge",
+          "rel": "extends",
+          "why": "Replaces the parsed integer score with a probability-weighted one.",
+          "src": "G-Eval (Liu et al. 2023)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Implemented in eval libraries, but limited by providers that hide log probabilities.",
+      "date": "2023-03",
+      "ref": {
+        "title": "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment (Liu et al.)",
+        "arxiv": "2303.16634"
+      },
+      "examples": [
+        "G-Eval",
+        "DeepEval GEval metric"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "G-Eval | DeepEval",
+          "by": "Confident AI",
+          "year": 2025,
+          "url": "https://deepeval.com/docs/metrics-llm-evals"
+        },
+        {
+          "kind": "talk",
+          "title": "From BLEU to G-Eval: LLM-as-a-Judge Techniques & Limitations",
+          "by": "deepsense.ai",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=DBUK_0ZSCD8"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "fine-tuned-evaluators",
+      "name": "Fine-Tuned Evaluators",
+      "aliases": [
+        "judge models",
+        "open-weight judges",
+        "evaluator LMs"
+      ],
+      "region": "evaluation-and-observability",
+      "also": [
+        "adaptation-and-post-training"
+      ],
+      "layer": "detail",
+      "desc": "Smaller models fine-tuned on graded examples to act as judges, often given a rubric and a reference answer in the prompt.",
+      "summary": "Instead of paying a frontier model to grade everything, train a smaller open model to do only grading. JudgeLM and Prometheus fine-tune on large sets of judgments from strong models; Prometheus also takes a custom rubric and a reference answer, so it compares rather than solves. They are cheaper, faster and can run privately, but they generalize less well outside the kinds of tasks they were trained on.",
+      "parents": [
+        {
+          "id": "llm-as-a-judge",
+          "rel": "specializes",
+          "why": "A judge built for grading rather than a general model prompted to grade.",
+          "src": "JudgeLM (Zhu et al. 2023)"
+        },
+        {
+          "id": "supervised-fine-tuning",
+          "rel": "applies",
+          "why": "Fine-tunes on judgments distilled from strong models.",
+          "src": "Prometheus (Kim et al. 2023)"
+        },
+        {
+          "id": "pairwise-preference-eval",
+          "rel": "applies",
+          "why": "Trained largely on pairwise comparisons of two answers, the judging format arena evals made standard.",
+          "src": "JudgeLM (Zhu et al. 2023)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Several open judge models in use; frontier judges still preferred for hard or novel tasks.",
+      "date": "2023-10",
+      "ref": {
+        "title": "JudgeLM: Fine-tuned Large Language Models are Scalable Judges (Zhu et al.)",
+        "arxiv": "2310.17631"
+      },
+      "examples": [
+        "Prometheus",
+        "JudgeLM",
+        "PandaLM"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Prometheus: Inducing Fine-grained Evaluation Capability in Language Models",
+          "by": "Seungone Kim et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2310.08491"
+        },
+        {
+          "kind": "paper",
+          "title": "Prometheus 2: An Open Source Language Model Specialized in Evaluating Other Language Models",
+          "by": "Seungone Kim et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2405.01535"
+        },
+        {
+          "kind": "paper",
+          "title": "An Empirical Study of LLM-as-a-Judge for LLM Evaluation: Fine-tuned Judge Model is not a General Substitute for GPT-4",
+          "by": "Hui Huang et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2403.02839"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "judge-score-correction",
+      "name": "Judge Score Correction",
+      "aliases": [
+        "prediction-powered inference",
+        "PPI",
+        "confidence intervals for judges"
+      ],
+      "region": "evaluation-and-observability",
+      "also": [
+        "retrieval-and-knowledge"
+      ],
+      "layer": "detail",
+      "desc": "Combining many judge scores with a small human-labeled set to correct the judge's bias and put confidence intervals on the result.",
+      "summary": "A judge's aggregate score can be wrong in a consistent direction. Prediction-powered inference uses a few hundred human labels to measure how far the judge is off and corrects the large automated run accordingly, producing a score with an honest confidence interval. ARES brought this to RAG evaluation, so a regression it reports is a real one rather than judge noise.",
+      "parents": [
+        {
+          "id": "llm-as-a-judge",
+          "rel": "extends",
+          "why": "Adds a statistical correction layer on top of judge scores.",
+          "src": "ARES (Saad-Falcon et al. 2023)"
+        },
+        {
+          "id": "external:prediction-powered-inference",
+          "rel": "applies",
+          "why": "Uses PPI's rectifier on a human-labeled subset to bound the error of model predictions.",
+          "src": "ARES (Saad-Falcon et al. 2023)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Used in ARES and research; most production teams still report raw judge scores.",
+      "date": "2023-11",
+      "ref": {
+        "title": "ARES: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems (Saad-Falcon et al.)",
+        "arxiv": "2311.09476"
+      },
+      "examples": [
+        "ARES"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Prediction-Powered Inference",
+          "by": "Anastasios N. Angelopoulos et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2301.09633"
+        },
+        {
+          "kind": "talk",
+          "title": "Prediction-Powered Inference",
+          "by": "Anastasios Angelopoulos (Simons Institute)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=TjEWvEKtJM8"
+        },
+        {
+          "kind": "code",
+          "title": "ppi_py: prediction-powered inference",
+          "by": "Anastasios Angelopoulos et al.",
+          "year": 2023,
+          "url": "https://github.com/aangelopoulos/ppi_py"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "agent-trajectory-evaluation",
+      "name": "Agent Trajectory Evaluation",
+      "aliases": [
+        "step-level agent evals",
+        "trajectory grading",
+        "progress rate"
+      ],
+      "region": "evaluation-and-observability",
+      "also": [
+        "agents-and-orchestration"
+      ],
+      "layer": "detail",
+      "desc": "Grading the steps of an agent run, including tool choices, arguments and error recovery, rather than only whether the final state is right.",
+      "summary": "A pass/fail score on an agent task hides where things went wrong. Trajectory evaluation scores the path: which tools the agent picked, whether the calls were well formed, how far it got toward the goal, and whether it recovered from errors. It needs full traces of each run and is how teams find out whether a failure was planning, tool use, or reading the result.",
+      "parents": [
+        {
+          "id": "agent-benchmarks",
+          "rel": "extends",
+          "why": "Adds partial-progress and per-step scoring to outcome-only agent benchmarks.",
+          "src": "AgentBoard (Ma et al. 2024)"
+        },
+        {
+          "id": "llm-tracing",
+          "rel": "combines",
+          "why": "Scores the intermediate steps captured in traces.",
+          "src": "AgentBoard (Ma et al. 2024)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Widely wanted for debugging agents; no agreed metrics yet, and outcome grading is still preferred where possible.",
+      "date": "2024-01",
+      "ref": {
+        "title": "AgentBoard: An Analytical Evaluation Board of Multi-turn LLM Agents (Ma et al.)",
+        "arxiv": "2401.13178"
+      },
+      "examples": [
+        "AgentBoard",
+        "LangSmith trajectory evaluators"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "How to evaluate your agent with trajectory evaluations",
+          "by": "LangChain",
+          "year": 2025,
+          "url": "https://docs.langchain.com/langsmith/trajectory-evals"
+        },
+        {
+          "kind": "code",
+          "title": "agentevals: readymade evaluators for agent trajectories",
+          "by": "LangChain",
+          "year": 2025,
+          "url": "https://github.com/langchain-ai/agentevals"
+        },
+        {
+          "kind": "blog",
+          "title": "Demystifying evals for AI agents",
+          "by": "Anthropic",
+          "year": 2026,
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "static-context-scoring",
+      "name": "Static Context Scoring",
+      "aliases": [
+        "context quality scoring",
+        "preflight context evaluation"
+      ],
+      "region": "evaluation-and-observability",
+      "also": [
+        "prompting-and-context-engineering"
+      ],
+      "layer": "detail",
+      "desc": "Scoring the quality of an agent's operating context (instructions, tool schemas, guardrails, grounding) before running it, as a predictor of reliability.",
+      "summary": "Grading the context an agent will run with, rather than its behavior: are the role and instructions clear and consistent, are tool schemas well written, is there enough grounding, are guardrails present. One 2026 study found each of these scores predicted the matching behavior, such as grounding predicting hallucination resistance, which makes context a thing you can check before spending on runs. It is one paper so far.",
+      "parents": [
+        {
+          "id": "context-engineering",
+          "rel": "applies",
+          "why": "Treats the assembled context as an object that can be measured on its own.",
+          "src": "AI Agents Do Not Fail Alone: The Context Fails First (Bousetouane 2026)"
+        },
+        {
+          "id": "llm-as-a-judge",
+          "rel": "applies",
+          "why": "Scores context with a panel of model jurors against fixed criteria.",
+          "src": "AI Agents Do Not Fail Alone: The Context Fails First (Bousetouane 2026)",
+          "confidence": "medium"
+        },
+        {
+          "id": "agent-benchmarks",
+          "rel": "extends",
+          "why": "Moves agent evaluation upstream, scoring the context an agent runs with alongside its task outcomes.",
+          "src": "AI Agents Do Not Fail Alone: The Context Fails First (Bousetouane 2026)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "A single 2026 paper with an open-source harness; not yet replicated.",
+      "date": "2026-07",
+      "ref": {
+        "title": "AI Agents Do Not Fail Alone: The Context Fails First (Bousetouane)",
+        "arxiv": "2607.14275"
+      },
+      "examples": [
+        "ProofAgent-Harness"
       ],
       "status": "added"
     },
@@ -9011,6 +9687,7 @@
     "external:n-gram-overlap-detection",
     "external:nonequilibrium-thermodynamics-generative-modeling",
     "external:ocr",
+    "external:prediction-powered-inference",
     "external:preference-learning",
     "external:security-red-teaming",
     "external:shared-task-benchmarks",

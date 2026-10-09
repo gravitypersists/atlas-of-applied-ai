@@ -29,10 +29,7 @@ LEADS = {
         ("ORPO (reference-free, single-stage alignment)", "2403.07691"),
         ("InstructGPT pipeline as the canonical SFT→RM→PPO recipe", "2203.02155"),
     ],
-    "evaluation-and-observability": [
-        ("MT-Bench and judge-bias studies", "2306.05685"),
-        ("Static context-quality scoring for agents (ProofAgent-Harness, \"The Context Fails First\")", "2607.14275"),
-    ],    "ai-product-and-interaction-design": [
+    "ai-product-and-interaction-design": [
         ("Background / asynchronous agent delegation (assign a task, get a PR or report back)", None),
         ("Checkpoints, rewind and collaborative repair (\"The Collaboration Gap in Human-AI Work\")", "2604.18096"),
         ("Impact previews and staged execution for consequential agent actions", None),

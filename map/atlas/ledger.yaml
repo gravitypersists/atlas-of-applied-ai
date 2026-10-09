@@ -185,4 +185,10 @@ settlements:
   - {id: speculative-rag, x: 3249.4, y: 2047.1, settled: "2026-10-08"}
   - {id: lightweight-graph-rag, x: 3155.3, y: 2285.9, settled: "2026-10-08"}
   - {id: long-context-routing, x: 3301.3, y: 2178.2, settled: "2026-10-08"}
+  - {id: judge-bias-mitigation, x: 3427.3, y: 1375.2, settled: "2026-10-08"}
+  - {id: probabilistic-judge-scoring, x: 3500.9, y: 1181.6, settled: "2026-10-08"}
+  - {id: judge-score-correction, x: 3598.7, y: 1153.9, settled: "2026-10-08"}
+  - {id: agent-trajectory-evaluation, x: 3687.8, y: 1145.2, settled: "2026-10-08"}
+  - {id: static-context-scoring, x: 3404.2, y: 1208.2, settled: "2026-10-08"}
+  - {id: fine-tuned-evaluators, x: 3447.4, y: 1288.2, settled: "2026-10-08"}
 retired: []
