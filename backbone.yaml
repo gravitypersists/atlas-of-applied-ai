@@ -64,6 +64,10 @@ regions:
     kind: root
     name: Software Engineering and Operations
     definition: Practices for building and running reliable software — testing, observability, state machines, protocols. Added in v0.2; the ancestor of evals, tracing, workflows, and MCP.
+  - id: robotics-and-control
+    kind: root
+    name: Robotics and Control
+    definition: Getting machines to sense and move in the physical world — control, physics simulation, and learning from demonstration. Ancestor of robot foundation models, sim-to-real transfer, and imitation-based training.
 
   # ---------------- applied regions ----------------
   - id: inference-and-serving
@@ -282,7 +286,7 @@ regions:
     title: The Clockwork Marches
     definition: Foundation models that act in the physical world or simulate it — vision-language-action policies, robot learning from demonstrations, language-model task planning for robots, sim-to-real transfer, and world models that predict how an environment responds to actions.
     distinct_from: Agents that act through software (APIs, browsers, desktops) stay in Agents. Perception-only vision and passive video generation stay in Multimodal. RL algorithms themselves stay in the Reinforcement Learning root.
-    descends_from: [reinforcement-learning, deep-learning-nlp]
+    descends_from: [robotics-and-control, reinforcement-learning, deep-learning-nlp]
     node_target: "10–18"
     deep_dive_focus:
       - Action representations in VLAs (tokenized actions, diffusion and flow action heads, action chunking) and which ones are winning
@@ -290,6 +294,14 @@ regions:
       - World models — latent imagination for RL vs. generative interactive environments, and their use as simulators for training and policy evaluation
       - Hierarchical systems (a language model plans over learned skills) vs. end-to-end VLAs
       - What an engineer outside a robotics lab actually touches — fine-tuning an open VLA, on-robot inference latency, evaluating policies safely
+    overview: "Embodied AI is about models that act in the physical world, or that simulate it well enough to train in. Classical robotics planned every motion explicitly and broke whenever the scene differed from what its engineers expected. The modern approach learns a policy, a model that maps camera images and an instruction to motor commands, from demonstrations, simulation and large pretrained models.\n\nThe field moved fast after 2022. Language models first entered as planners that picked from a robot's fixed list of skills (SayCan) or wrote code against its control API. Then vision-language-action models (RT-2, OpenVLA, π0) fine-tuned a vision-language model to output actions directly. How to output those actions became the central design question: discrete tokens were coarse, diffusion policies handled demonstrations that do a task several ways but were slow, and flow-matching action heads made smooth, high-rate control practical. Most current systems split the work: a slow vision-language model reasons about the scene a few times a second while a fast action policy drives the motors.\n\nThe hard limit is data. Robot demonstrations are expensive, so teams pool data across robot types, collect it with cheap teleoperation rigs, pretrain on human video, and train in simulation, increasingly with generated images or interactive world models standing in for the real world. Landmarks worth knowing: sim-to-real transfer, diffusion policy, action chunking, VLAs, and cross-embodiment training. The open problems are reliability outside the lab, evaluating policies without running them on real robots, and pushing past what imitation alone can teach, with reinforcement learning fine-tuning as the current bet."
+    learning_path:
+    - {kind: talk, title: "Chelsea Finn: Building Robots That Can Do Anything", by: "Chelsea Finn (Y Combinator AI Startup School)", year: 2025, url: "https://www.youtube.com/watch?v=a8-QsBHoH94", why: "A plain-spoken overview from a Physical Intelligence co-founder of why robots are hard, where the data comes from, and how one general model learned laundry folding and table bussing."}
+    - {kind: blog, title: "SmolVLA: Efficient Vision-Language-Action Model trained on Lerobot Community Data", by: "Hugging Face (Dana Aubakirova et al.)", year: 2025, url: "https://huggingface.co/blog/smolvla", why: "Shows how a vision-language-action model is put together (a small VLM plus an action head), trained on community-collected robot data, and made fast enough to run on modest hardware."}
+    - {kind: docs, title: "Imitation Learning on Real-World Robots", by: "Hugging Face LeRobot", year: 2025, url: "https://huggingface.co/docs/lerobot/il_robots", why: "The hands-on loop an engineer actually runs: record teleoperated demonstrations, train a policy, and evaluate it on a low-cost arm."}
+    - {kind: blog, title: "Domain Randomization for Sim2Real Transfer", by: "Lilian Weng", year: 2019, url: "https://lilianweng.github.io/posts/2019-05-05-domain-randomization/", why: "Explains the simulation side of the data problem: why policies trained in a simulator fail on real robots and how randomizing the simulator closes the gap."}
+    - {kind: talk, title: "Robot Learning 2026 – Lecture 8: World Models", by: "Oier Mees (ETH Zürich)", year: 2026, url: "https://www.youtube.com/watch?v=cTTmUZlOF2s", why: "A recent lecture that connects the two meanings of world model, learned simulators for planning and RL and generative interactive environments, and how each is used to train or test robot policies."}
+    - {kind: paper, title: "A Survey on Vision-Language-Action Models for Embodied AI", by: "Yueen Ma et al.", year: 2024, url: "https://arxiv.org/abs/2405.14093", why: "A map of the field to come back to: the main model families, action representations, datasets and benchmarks in one place."}
 
 
 boundary_rules:
@@ -321,6 +333,7 @@ boundary_rules:
   - {concept: Physical vs. digital agents, home: "embodied-ai-and-world-models (physical); agents-and-orchestration (digital)", rule: "Acting through a body or a simulated physical world → Embodied. Acting through software interfaces, including GUIs → Agents."}
   - {concept: World models vs. video generation, home: "embodied-ai-and-world-models (action-conditioned); multimodal-applied (passive)", rule: "Generates what happens next given an action, for training or evaluating policies → Embodied. Generates media from a prompt → Multimodal."}
   - {concept: Robot policy training, home: embodied-ai-and-world-models, rule: "Training a policy to output physical actions → Embodied, even when it uses RL, imitation learning or fine-tuning (secondary: Adaptation)."}
+  - {concept: Spatial reasoning VLMs, home: multimodal-applied, rule: "Perception models stay in Multimodal even when built for robots (secondary: Embodied). A model that outputs actions → Embodied."}
 
 nodes:
   # ======================= ROOTS: information-retrieval =======================
@@ -558,6 +571,44 @@ nodes:
     examples: [TRL PPOTrainer, OpenRLHF]
     status: added
 
+  # ======================= ROOTS: robotics-and-control =======================
+  - id: behavior-cloning
+    name: Behavior Cloning
+    aliases: [imitation learning, learning from demonstration, ALVINN]
+    region: robotics-and-control
+    desc: Training a policy by supervised learning on recorded state–action pairs from an expert, so the model copies what the demonstrator did.
+    parents: []
+    maturity: 5
+    maturity_note: The default starting point for learning robot skills from demonstrations.
+    date: "1989"
+    ref: {title: "ALVINN: An Autonomous Land Vehicle in a Neural Network (Pomerleau)"}
+    examples: [ALVINN, LeRobot]
+    status: added
+  - id: dagger
+    name: DAgger
+    aliases: [dataset aggregation, interactive imitation learning, on-policy imitation]
+    region: robotics-and-control
+    desc: Imitation learning that runs the learner's own policy, asks the expert what it should have done in the states it reached, and retrains on the growing dataset, fixing the compounding errors of plain behavior cloning.
+    parents:
+      - {id: behavior-cloning, rel: extends, why: "Trains on states the learner itself visits, so small mistakes no longer compound into unfamiliar states.", src: "A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning (Ross et al. 2010)"}
+    maturity: 4
+    maturity_note: Standard remedy for compounding error; the idea behind on-policy distillation.
+    date: "2010-11"
+    ref: {title: "A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning (Ross, Gordon & Bagnell)", arxiv: "1011.0686"}
+    examples: [human-gated DAgger, HG-DAgger]
+    status: added
+  - id: physics-simulation
+    name: Physics Simulation for Robotics
+    aliases: [robot simulators, MuJoCo, rigid-body simulation]
+    region: robotics-and-control
+    desc: Fast simulators of rigid-body dynamics and contact, used to design controllers and to train and test robot policies without real hardware.
+    parents: []
+    maturity: 5
+    maturity_note: Every robot learning pipeline uses one.
+    date: "2012"
+    ref: {title: "MuJoCo: A physics engine for model-based control (Todorov, Erez & Tassa)"}
+    examples: [MuJoCo, Isaac Sim, PyBullet, Genesis]
+    status: added
   # ======================= ROOTS: knowledge-representation =======================
   - id: semantic-networks
     name: Semantic Networks
@@ -2953,7 +3004,7 @@ nodes:
     summary: "Ordinary distillation trains the student on text the teacher wrote, but at use time the student reads its own output, and one early slip can lead it somewhere the teacher's examples never went. In on-policy distillation the student writes its own answers and the teacher grades every token, so the student learns from the mistakes it actually makes. It gets much of the benefit of reinforcement learning with dense, per-token feedback, at a fraction of the compute."
     parents:
       - {id: llm-distillation, rel: extends, why: "Trains the student on its own samples instead of fixed teacher outputs.", src: "On-Policy Distillation of Language Models (Agarwal et al. 2023)"}
-      - {id: "external:dagger", rel: applies, why: "Applies imitation learning's fix for compounding errors, training on states the learner itself visits.", src: "On-Policy Distillation of Language Models (Agarwal et al. 2023)"}
+      - {id: dagger, rel: applies, why: "Applies imitation learning's fix for compounding errors, training on states the learner itself visits.", src: "On-Policy Distillation of Language Models (Agarwal et al. 2023)"}
     maturity: 3
     maturity_note: Used in the post-training of recent small open models such as Qwen3's; supported in common training libraries.
     date: "2023-06"
@@ -4555,27 +4606,57 @@ nodes:
       - {kind: talk, title: "Ok, but what IS ControlNet?", by: "koiboi", year: 2023, url: "https://www.youtube.com/watch?v=fhIGt7QGg4w"}
       - {kind: paper, title: "T2I-Adapter: Learning Adapters to Dig out More Controllable Ability for Text-to-Image Diffusion Models", by: "Chong Mou et al.", year: 2023, url: "https://arxiv.org/abs/2302.08453"}
     status: added
+  - id: spatial-vlms
+    name: Spatial Reasoning VLMs
+    aliases: [SpatialVLM, embodied reasoning models, metric spatial reasoning, 3D spatial reasoning]
+    region: multimodal-applied
+    layer: detail
+    also: [embodied-ai-and-world-models]
+    desc: Vision-language models trained on large amounts of 3D spatial question answering so they can estimate distances, sizes and positions in a scene, not just name what's in it.
+    summary: "Ordinary vision-language models can say there is a mug on the table but are poor at saying how far away it is or whether it fits in the box. Spatial reasoning VLMs are trained on millions of generated questions about distances, sizes and relative positions, built from images with estimated depth. Robots use them to ground plans in real coordinates, and embodied-reasoning models such as Gemini Robotics-ER build on the idea."
+    parents:
+      - {id: vision-language-models, rel: extends, why: "Adds quantitative 3D spatial reasoning to a VLM through generated spatial question-answer data.", src: "SpatialVLM: Endowing Vision-Language Models with Spatial Reasoning Capabilities (Chen et al. 2024)"}
+    maturity: 2
+    maturity_note: Used as the perception layer in some robot stacks; benchmarks still show large gaps.
+    date: "2024-01"
+    ref: {title: "SpatialVLM: Endowing Vision-Language Models with Spatial Reasoning Capabilities (Chen et al.)", arxiv: "2401.12168"}
+    examples: [SpatialVLM, Gemini Robotics-ER, SpatialRGPT]
+    resources:
+      - {kind: docs, title: "Gemini Robotics ER", by: "Google (Gemini API docs)", year: 2026, url: "https://ai.google.dev/gemini-api/docs/robotics-overview"}
+      - {kind: blog, title: "Introducing Gemini Robotics and Gemini Robotics-ER, AI models designed for robots to understand, act and react to the physical world", by: "Google DeepMind", year: 2025, url: "https://deepmind.google/blog/gemini-robotics-brings-ai-into-the-physical-world/"}
+      - {kind: talk, title: "Introducing Gemini Robotics 2", by: "Carolina Parada, Stuart Bowers, Kanishka Rao, Jie Tan with Logan Kilpatrick (Google for Developers)", year: 2026, url: "https://www.youtube.com/watch?v=-rYFDefcq3k"}
+      - {kind: paper, title: "Gemini Robotics 1.5: Pushing the Frontier of Generalist Robots with Advanced Embodied Reasoning, Thinking, and Motion Transfer", by: "Gemini Robotics Team", year: 2025, url: "https://arxiv.org/abs/2510.03342"}
+    status: added
 
   # ======================= APPLIED: embodied-ai-and-world-models =======================
   - id: sim-to-real-transfer
     name: Sim-to-Real Transfer
-    aliases: [domain randomization, sim2real]
+    aliases: [domain randomization, sim2real, real-to-sim-to-real]
     region: embodied-ai-and-world-models
+    also: [data-and-synthetic-data]
     desc: Training a policy in simulation and deploying it on a real robot, with simulator parameters randomized so the real world looks like one more variation.
+    summary: "Training on real robots is slow, costly and sometimes dangerous, so policies are trained in a physics simulator instead. To keep them from depending on the simulator's clean look and exact physics, engineers randomize textures, lighting, masses and friction during training, so the real world becomes just one more variation the policy has already seen. It is standard for legged locomotion and increasingly used for manipulation."
     parents:
       - {id: policy-gradient-methods, rel: applies, why: "Simulated policies are commonly trained with RL, which needs far more trials than a real robot can afford.", src: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World (Tobin et al. 2017)"}
-      - {id: "external:physics-simulation", rel: applies, why: "Rests on physics engines and rendering for robots.", src: "Tobin et al. 2017"}
+      - {id: physics-simulation, rel: applies, why: "Rests on physics engines and rendering for robots.", src: "Tobin et al. 2017"}
     maturity: 4
     maturity_note: Standard practice for locomotion and increasingly for manipulation.
     date: "2017-03"
     ref: {title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World (Tobin et al.)", arxiv: "1703.06907"}
-    examples: [Isaac Sim, MuJoCo, Isaac Lab]
+    examples: [Isaac Sim, Isaac Lab, MuJoCo]
+    resources:
+      - {kind: blog, title: "Domain Randomization for Sim2Real Transfer", by: "Lilian Weng", year: 2019, url: "https://lilianweng.github.io/posts/2019-05-05-domain-randomization/"}
+      - {kind: talk, title: "Lecture 22 Sim2Real and Domain Randomization -- CS287-FA19 Advanced Robotics at UC Berkeley", by: "Josh Tobin (guest lecture, Pieter Abbeel's CS287)", year: 2019, url: "https://www.youtube.com/watch?v=ac_W9IgKX2c"}
+      - {kind: docs, title: "Isaac Lab Documentation", by: "NVIDIA", year: 2024, url: "https://isaac-sim.github.io/IsaacLab/main/index.html"}
+      - {kind: paper, title: "Sim-to-Real Transfer in Deep Reinforcement Learning for Robotics: a Survey", by: "Wenshuai Zhao, Jorge Peña Queralta, Tomi Westerlund", year: 2020, url: "https://arxiv.org/abs/2009.13303"}
     status: added
   - id: latent-world-models
     name: Latent World Models
     aliases: [model-based RL, Dreamer, learning in imagination, World Models (Ha & Schmidhuber)]
     region: embodied-ai-and-world-models
+    also: [planning-and-reasoning]
     desc: Learning a compact model of how an environment changes in response to actions, then training a policy inside that learned model instead of the real environment.
+    summary: "The model learns to compress what it sees into a small internal state and to predict how that state, and the reward, will change after each action. A policy can then practice inside this learned model, imagining thousands of trajectories, and needs far fewer trials in the real environment. DreamerV3 made the approach work across many domains with one set of settings."
     parents:
       - {id: markov-decision-process, rel: extends, why: "Learns the MDP's transition and reward functions from experience.", src: "World Models (Ha & Schmidhuber 2018)"}
       - {id: policy-gradient-methods, rel: applies, why: "Trains an actor-critic on trajectories imagined by the model.", src: "Dream to Control (Hafner et al. 2019)"}
@@ -4583,13 +4664,20 @@ nodes:
     maturity_note: Strong results in games and robot learning; few product deployments.
     date: "2019-12"
     ref: {title: "Dream to Control: Learning Behaviors by Latent Imagination (Hafner et al.)", arxiv: "1912.01603"}
-    examples: [DreamerV3, TD-MPC2, V-JEPA 2]
+    examples: [DreamerV3, DayDreamer, TD-MPC2, V-JEPA 2]
+    resources:
+      - {kind: blog, title: "Introducing Dreamer: Scalable Reinforcement Learning Using World Models", by: "Danijar Hafner (Google Research)", year: 2020, url: "https://research.google/blog/introducing-dreamer-scalable-reinforcement-learning-using-world-models/"}
+      - {kind: talk, title: "Dream to Control: Learning Behaviors by Latent Imagination (paper explained)", by: "Yannic Kilcher", year: 2020, url: "https://www.youtube.com/watch?v=awyuuJoHawo"}
+      - {kind: blog, title: "World Models (interactive article)", by: "David Ha, Jürgen Schmidhuber", year: 2018, url: "https://worldmodels.github.io/"}
+      - {kind: paper, title: "Mastering Diverse Domains through World Models (DreamerV3)", by: "Danijar Hafner et al.", year: 2023, url: "https://arxiv.org/abs/2301.04104"}
     status: added
   - id: llm-robot-planning
     name: LLM Task Planning for Robots
-    aliases: [SayCan, Code as Policies, language-conditioned task planning, hierarchical VLA]
+    aliases: [SayCan, Code as Policies, language model programs, language-conditioned task planning, hierarchical robot control]
     region: embodied-ai-and-world-models
+    also: [planning-and-reasoning]
     desc: A language model breaks an instruction into steps and picks from a library of learned robot skills, or writes code that calls them, while low-level controllers do the moving.
+    summary: "A language model knows that cleaning up a spill means finding a sponge first, but it has no body. Here it acts as the planner: it breaks an instruction into steps and either picks each one from the robot's list of skills, checking that the skill can succeed in the current scene (SayCan), or writes a short program against the robot's control API (Code as Policies). The plan is easy to inspect, but the robot can only do what its skill library or API allows."
     parents:
       - {id: pretrained-language-models, rel: applies, why: "Uses an LLM's world knowledge to choose and order skills.", src: "Do As I Can, Not As I Say (Ahn et al. 2022)"}
       - {id: strips-planning, rel: replaces, why: "Sequences skills from a fixed library, the job classical planners did with hand-written operators.", src: "Ahn et al. 2022"}
@@ -4597,69 +4685,101 @@ nodes:
     maturity_note: Common as the high-level layer of hierarchical robot systems.
     date: "2022-04"
     ref: {title: "Do As I Can, Not As I Say: Grounding Language in Robotic Affordances (Ahn et al.)", arxiv: "2204.01691"}
-    examples: [SayCan, Code as Policies, Gemini Robotics-ER]
+    examples: [SayCan, Code as Policies, Inner Monologue, VoxPoser]
+    resources:
+      - {kind: blog, title: "Towards Helpful Robots: Grounding Language in Robotic Affordances", by: "Brian Ichter, Karol Hausman (Google Research)", year: 2022, url: "https://research.google/blog/towards-helpful-robots-grounding-language-in-robotic-affordances/"}
+      - {kind: talk, title: "Andy Zeng: From words to actions", by: "Andy Zeng (Montreal Robotics)", year: 2023, url: "https://www.youtube.com/watch?v=jgujjU4IYAs"}
+      - {kind: paper, title: "Code as Policies: Language Model Programs for Embodied Control", by: "Jacky Liang et al.", year: 2022, url: "https://arxiv.org/abs/2209.07753"}
+      - {kind: paper, title: "Inner Monologue: Embodied Reasoning through Planning with Language Models", by: "Wenlong Huang et al.", year: 2022, url: "https://arxiv.org/abs/2207.05608"}
     status: added
   - id: diffusion-policy
     name: Diffusion Policy
     aliases: [action diffusion, visuomotor diffusion policy]
     region: embodied-ai-and-world-models
     desc: Generating robot actions with a denoising diffusion model conditioned on observations, which captures demonstrations that have several valid ways to do the task.
+    summary: "People demonstrate the same task in different ways, for example reaching around a cup from the left one time and from the right the next. A model trained to predict the average action would reach straight into the cup. A diffusion policy generates the next stretch of actions by denoising, as image generators do, so it commits to one valid way instead of averaging them. It became the default for learning from demonstrations, at the cost of several model passes per action."
     parents:
       - {id: diffusion-models, rel: applies, why: "Denoises action sequences instead of images.", src: "Diffusion Policy (Chi et al. 2023)"}
-      - {id: "external:behavior-cloning", rel: extends, why: "Learns from demonstrations like behavior cloning, with a generative model in place of regression.", src: "Chi et al. 2023"}
+      - {id: behavior-cloning, rel: extends, why: "Learns from demonstrations like behavior cloning, with a generative model in place of regression.", src: "Chi et al. 2023"}
     maturity: 3
-    maturity_note: A default baseline for imitation learning; action heads of several VLAs use the same idea.
+    maturity_note: A default baseline for imitation learning; flow-matching heads are replacing it where speed matters.
     date: "2023-03"
     ref: {title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion (Chi et al.)", arxiv: "2303.04137"}
-    examples: [LeRobot, π0 flow-matching action head]
+    examples: [LeRobot, Octo]
+    resources:
+      - {kind: talk, title: "Diffusion Policy: LeRobot Research Presentation #2 by Cheng Chi", by: "Cheng Chi (Hugging Face)", year: 2024, url: "https://www.youtube.com/watch?v=M03sZFfW-qU"}
+      - {kind: talk, title: "Princeton Robotics - Russ Tedrake - Dexterous Manipulation with Diffusion Policies", by: "Russ Tedrake (Princeton Robotics seminar)", year: 2023, url: "https://www.youtube.com/watch?v=whpK0HDtOJ0"}
+      - {kind: code, title: "diffusion_policy: Visuomotor Policy Learning via Action Diffusion", by: "Columbia / Stanford REAL lab (Cheng Chi et al.)", year: 2023, url: "https://github.com/real-stanford/diffusion_policy"}
     status: added
   - id: action-chunking
     name: Action Chunking and Low-Cost Teleoperation
     aliases: [ACT, ALOHA, action chunking with transformers, teleoperation data collection]
     region: embodied-ai-and-world-models
+    also: [data-and-synthetic-data]
     desc: Collecting demonstrations with cheap teleoperation rigs and training a transformer to predict short sequences of future actions at once, which smooths control and reduces compounding errors.
+    summary: "ALOHA showed that a pair of low-cost arms, puppeteered by a person holding a matching pair, can collect good demonstrations for fine two-handed tasks. Its policy, ACT, predicts a chunk of the next few dozen actions at once instead of one step at a time, which keeps motion smooth and stops small errors from piling up. Predicting action chunks is now standard in almost every robot policy."
     parents:
       - {id: transformer-architecture, rel: applies, why: "A transformer predicts a chunk of future actions from images and joint states.", src: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware (Zhao et al. 2023)"}
-      - {id: "external:behavior-cloning", rel: extends, why: "Behavior cloning that predicts action sequences rather than single steps.", src: "Zhao et al. 2023"}
+      - {id: behavior-cloning, rel: extends, why: "Behavior cloning that predicts action sequences rather than single steps.", src: "Zhao et al. 2023"}
     maturity: 3
     maturity_note: Widely reproduced; chunked action output is now standard in VLAs.
     date: "2023-04"
     ref: {title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware (Zhao et al.)", arxiv: "2304.13705"}
-    examples: [ALOHA, LeRobot, SO-100 arm]
+    examples: [ALOHA, Mobile ALOHA, LeRobot, SO-100 arm]
+    resources:
+      - {kind: docs, title: "ACT (Action Chunking with Transformers)", by: "Hugging Face LeRobot", year: 2025, url: "https://huggingface.co/docs/lerobot/act"}
+      - {kind: talk, title: "ALOHA and ACT: LeRobot Research Presentation #1 by Alexander Soare", by: "Alexander Soare (Hugging Face)", year: 2024, url: "https://www.youtube.com/watch?v=ft73x0LfGpM"}
+      - {kind: paper, title: "Mobile ALOHA: Learning Bimanual Mobile Manipulation with Low-Cost Whole-Body Teleoperation", by: "Zipeng Fu, Tony Z. Zhao, Chelsea Finn", year: 2024, url: "https://arxiv.org/abs/2401.02117"}
     status: added
   - id: vision-language-action-models
     name: Vision-Language-Action Models
     aliases: [VLA, VLAs, RT-2, OpenVLA, robot foundation models, generalist robot policies]
     region: embodied-ai-and-world-models
+    also: [multimodal-applied]
     desc: A vision-language model fine-tuned to output robot actions directly, so web-scale knowledge of objects and language carries over to physical control.
+    summary: "A VLA starts from a vision-language model and is trained further on robot data so that, given camera images and an instruction, it outputs the robot's next actions. Because the base model already knows what objects are and what words mean, the robot can follow instructions it was never shown, like 'move the banana to the picture of Germany'. Teams usually fine-tune an open VLA on their own robot rather than train one, and reliability outside familiar settings is still the main problem."
     parents:
       - {id: vision-language-models, rel: extends, why: "Adds action outputs to a pretrained VLM and co-trains on robot data.", src: "RT-2 (Brohan et al. 2023)"}
       - {id: llm-robot-planning, rel: replaces, why: "Folds high-level planning and low-level control into one end-to-end model.", src: "RT-2 (Brohan et al. 2023)"}
-    maturity: 2
-    maturity_note: Open models and commercial pilots; reliability outside the lab is unsettled.
+    maturity: 3
+    maturity_note: Open models are fine-tuned widely and commercial pilots exist; generalization outside training conditions is unreliable.
     date: "2023-07"
     ref: {title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control (Brohan et al.)", arxiv: "2307.15818"}
-    examples: [RT-2, OpenVLA, π0, Gemini Robotics, GR00T N1]
+    examples: [RT-2, OpenVLA, Octo, π0, Gemini Robotics, GR00T N1]
+    resources:
+      - {kind: blog, title: "RT-2: New model translates vision and language into action", by: "Google DeepMind", year: 2023, url: "https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/"}
+      - {kind: blog, title: "SmolVLA: Efficient Vision-Language-Action Model trained on Lerobot Community Data", by: "Hugging Face (Dana Aubakirova et al.)", year: 2025, url: "https://huggingface.co/blog/smolvla"}
+      - {kind: talk, title: "OpenVLA: LeRobot Research Presentation #5 by Moo Jin Kim", by: "Moo Jin Kim (Hugging Face)", year: 2024, url: "https://www.youtube.com/watch?v=-0s0v3q7mBk"}
+      - {kind: paper, title: "OpenVLA: An Open-Source Vision-Language-Action Model", by: "Moo Jin Kim et al.", year: 2024, url: "https://arxiv.org/abs/2406.09246"}
     status: added
   - id: cross-embodiment-training
     name: Cross-Embodiment Training
     aliases: [Open X-Embodiment, RT-X, pooled robot datasets]
     region: embodied-ai-and-world-models
+    also: [data-and-synthetic-data]
     desc: Training one policy on pooled demonstrations from many different robot bodies, so data collected on one robot helps others.
+    summary: "No single lab has enough robot data, so the Open X-Embodiment project pooled demonstrations from dozens of robot types across many labs. A policy trained on the mix performed better on each robot than one trained on that robot's data alone. Pooled datasets are now how generalist robot models are pretrained, though a model still needs fine-tuning before it works well on a new robot."
     parents:
       - {id: vision-language-action-models, rel: extends, why: "Trains generalist policies on data from many robot types.", src: "Open X-Embodiment (2023)"}
       - {id: transfer-learning-fine-tuning, rel: applies, why: "Pretrain broadly across robots, then fine-tune to a specific one.", src: "Open X-Embodiment (2023)"}
-    maturity: 2
-    maturity_note: Shared datasets are standard in research; transfer gains vary.
+    maturity: 3
+    maturity_note: The standard way to pretrain generalist robot policies; gains on a new robot vary.
     date: "2023-10"
     ref: {title: "Open X-Embodiment: Robotic Learning Datasets and RT-X Models (Open X-Embodiment Collaboration)", arxiv: "2310.08864"}
     examples: [Open X-Embodiment, DROID, LeRobot datasets]
+    resources:
+      - {kind: blog, title: "Scaling up learning across many different robot types", by: "Google DeepMind", year: 2023, url: "https://deepmind.google/blog/scaling-up-learning-across-many-different-robot-types/"}
+      - {kind: talk, title: "Robot Learning 2025: Unlocking Scalable Robot Learning in the Real World with Karl Pertsch", by: "Karl Pertsch (Montreal Robotics)", year: 2025, url: "https://www.youtube.com/watch?v=vDeuS7V1VqY"}
+      - {kind: blog, title: "LeRobot Community Datasets: The \"ImageNet\" of Robotics — When and How?", by: "Hugging Face", year: 2025, url: "https://huggingface.co/blog/lerobot-datasets"}
+      - {kind: paper, title: "Octo: An Open-Source Generalist Robot Policy", by: "Octo Model Team (Dibya Ghosh, Homer Walke et al.)", year: 2024, url: "https://arxiv.org/abs/2405.12213"}
     status: added
   - id: interactive-world-models
     name: Interactive World Models
     aliases: [generative interactive environments, action-conditioned video models, world foundation models, Genie]
     region: embodied-ai-and-world-models
+    also: [multimodal-applied]
     desc: Video-generation models conditioned on actions, which produce a playable, explorable environment frame by frame and can stand in for a simulator.
+    summary: "A video model that, instead of following a text prompt, takes an action such as 'move left' or a robot command and generates what the scene looks like next. Run in a loop, it becomes an environment you can play in or train a robot in, learned from video rather than hand-built. Current models drift over long runs, with objects changing shape or vanishing, so they are used more for generating training data than for trustworthy evaluation."
     parents:
       - {id: video-generation, rel: extends, why: "Conditions video generation on actions so the scene responds to control.", src: "Genie: Generative Interactive Environments (Bruce et al. 2024)"}
       - {id: latent-world-models, rel: extends, why: "Learns environment dynamics like a world model, but from internet video at scale.", src: "Bruce et al. 2024"}
@@ -4668,4 +4788,118 @@ nodes:
     date: "2024-02"
     ref: {title: "Genie: Generative Interactive Environments (Bruce et al.)", arxiv: "2402.15391"}
     examples: [Genie 3, NVIDIA Cosmos, Oasis]
+    resources:
+      - {kind: blog, title: "Genie 3: A new frontier for world models", by: "Google DeepMind", year: 2025, url: "https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/"}
+      - {kind: talk, title: "DeepMind Open-Endedness Team - Genie: Generative Interactive Environments", by: "Ashley Edwards, Jack Parker-Holder, Jimmy Shi (UCL DARK)", year: 2024, url: "https://www.youtube.com/watch?v=vs5a2JTy0K0"}
+      - {kind: talk, title: "An Introduction to NVIDIA Cosmos World Foundational Models", by: "Ming-Yu Liu (NVIDIA GTC 2025)", year: 2025, url: "https://www.youtube.com/watch?v=kChwwFb5gMU"}
+      - {kind: paper, title: "Cosmos World Foundation Model Platform for Physical AI", by: "NVIDIA", year: 2025, url: "https://arxiv.org/abs/2501.03575"}
+    status: added
+  # ---- deep dive (2026-10-10) ----
+  - id: human-video-pretraining
+    name: Human Video Pretraining
+    aliases: [R3M, VIP, VC-1, egocentric video pretraining, learning from human video, latent action pretraining]
+    region: embodied-ai-and-world-models
+    layer: detail
+    also: [data-and-synthetic-data]
+    desc: Pretraining a robot's visual encoder, or its whole policy, on large collections of first-person video of people handling objects, then fine-tuning on a much smaller amount of robot data.
+    summary: "Robot data is scarce, but there are thousands of hours of first-person video of people cooking, cleaning and building things. Pretraining a robot's vision model on that video teaches it what matters in a manipulation scene, such as hands, contact and how objects move, so far less robot data is needed afterwards. Newer work goes further and infers the actions people took in video to pretrain whole policies."
+    parents:
+      - {id: contrastive-image-text-pretraining, rel: applies, why: "Aligns video frames with language descriptions, CLIP-style, to learn representations for control.", src: "R3M: A Universal Visual Representation for Robot Manipulation (Nair et al. 2022)"}
+      - {id: transfer-learning-fine-tuning, rel: applies, why: "Pretrain on human video, then fine-tune on scarce robot demonstrations.", src: "Nair et al. 2022"}
+    maturity: 3
+    maturity_note: A common way to initialize visual encoders for robot policies.
+    date: "2022-03"
+    ref: {title: "R3M: A Universal Visual Representation for Robot Manipulation (Nair et al.)", arxiv: "2203.12601"}
+    examples: [R3M, VIP, VC-1, Ego4D]
+    resources:
+      - {kind: talk, title: "Autonomy Talks - Deepak Pathak: Robotics In The Wild: Continual Improvement by Watching & Practicing", by: "Deepak Pathak (Autonomy Talks)", year: 2022, url: "https://www.youtube.com/watch?v=mBkbnQoknr8"}
+      - {kind: paper, title: "VIP: Towards Universal Visual Reward and Representation via Value-Implicit Pre-Training", by: "Yecheng Jason Ma et al.", year: 2022, url: "https://arxiv.org/abs/2210.00030"}
+      - {kind: paper, title: "Masked Visual Pre-training for Motor Control", by: "Tete Xiao, Ilija Radosavovic, Trevor Darrell, Jitendra Malik", year: 2022, url: "https://arxiv.org/abs/2203.06173"}
+      - {kind: blog, title: "EgoMimic: Scaling Imitation Learning via Egocentric Video (project page)", by: "Simar Kareer et al.", year: 2024, url: "https://egomimic.github.io/"}
+    status: added
+  - id: flow-matching-policy
+    name: Flow-Matching Action Heads
+    aliases: [flow-matching policy, π0 action expert, action flow matching]
+    region: embodied-ai-and-world-models
+    layer: detail
+    desc: Generating continuous action chunks with a flow-matching model attached to a VLA, which needs fewer steps than diffusion and supports high-rate control.
+    summary: "Diffusion policies need many denoising passes per action chunk, which is too slow for fast, dexterous control. π0 attached a small flow-matching network, an 'action expert', to a vision-language model; it turns noise into a smooth chunk of actions in a few steps, fast enough for 50 actions a second. This became a common action head for VLAs, alongside better action tokenizers such as FAST that keep the simpler token-by-token approach competitive."
+    parents:
+      - {id: flow-matching, rel: applies, why: "Uses the flow-matching objective from image generation to generate action sequences.", src: "π0: A Vision-Language-Action Flow Model for General Robot Control (Black et al. 2024)"}
+      - {id: diffusion-policy, rel: replaces, why: "Does the same job with fewer sampling steps, fast enough for high-rate control.", src: "Black et al. 2024"}
+      - {id: vision-language-action-models, rel: extends, why: "Gives a VLA a continuous action expert instead of discrete action tokens.", src: "Black et al. 2024"}
+    maturity: 3
+    maturity_note: The action head of several leading open and commercial VLAs; discrete tokenizers remain a competing choice.
+    date: "2024-10"
+    ref: {title: "π0: A Vision-Language-Action Flow Model for General Robot Control (Black et al.)", arxiv: "2410.24164"}
+    examples: [π0, π0.5, GR00T N1, FAST tokenizer (alternative)]
+    resources:
+      - {kind: docs, title: "π₀ (Pi0)", by: "Hugging Face LeRobot", year: 2025, url: "https://huggingface.co/docs/lerobot/pi0"}
+      - {kind: code, title: "openpi", by: "Physical Intelligence", year: 2025, url: "https://github.com/Physical-Intelligence/openpi"}
+      - {kind: talk, title: "π0: A Foundation Model for Robotics with Sergey Levine", by: "Sergey Levine (The TWIML AI Podcast)", year: 2025, url: "https://www.youtube.com/watch?v=5mY71rGXAkM"}
+      - {kind: paper, title: "FAST: Efficient Action Tokenization for Vision-Language-Action Models", by: "Karl Pertsch et al.", year: 2025, url: "https://arxiv.org/abs/2501.09747"}
+    status: added
+  - id: generative-sim-to-real
+    name: Generative Sim-to-Real
+    aliases: [LucidSim, generative augmentation, generative digital twins]
+    region: embodied-ai-and-world-models
+    layer: detail
+    also: [data-and-synthetic-data]
+    desc: Using image or video generators to repaint a physics simulator's rendered frames into realistic, varied images that stay consistent with the simulated geometry, so camera-based policies transfer to the real world.
+    summary: "Simulators get the physics roughly right but look like old video games, so a policy that relies on camera images can fail on real ones. Generative sim-to-real keeps the simulator for physics and uses an image generator, guided by the simulator's depth and layout, to paint realistic and varied scenes over each frame. LucidSim used this to train a robot dog for visual parkour entirely in simulation."
+    parents:
+      - {id: sim-to-real-transfer, rel: extends, why: "Replaces hand-made visual randomization with realistic generated images.", src: "Learning Visual Parkour from Generated Images (Yu et al. 2024)"}
+      - {id: text-to-image, rel: applies, why: "Uses conditioned image generators to render training observations.", src: "Yu et al. 2024"}
+    maturity: 2
+    maturity_note: Strong research results; generation cost limits it at large simulation scale.
+    date: "2024-10"
+    ref: {title: "Learning Visual Parkour from Generated Images (Yu et al.)", arxiv: "2411.00083"}
+    examples: [LucidSim, NVIDIA Cosmos Transfer]
+    resources:
+      - {kind: blog, title: "Can robots learn from machine dreams?", by: "MIT News (MIT CSAIL)", year: 2024, url: "https://news.mit.edu/2024/can-robots-learn-machine-dreams-1119"}
+      - {kind: talk, title: "Robots that learn from machine dreams", by: "MIT CSAIL", year: 2024, url: "https://www.youtube.com/watch?v=fgnJQrvTj70"}
+      - {kind: docs, title: "NVIDIA Cosmos documentation", by: "NVIDIA", year: 2025, url: "https://docs.nvidia.com/cosmos/latest/index.html"}
+    status: added
+  - id: dual-system-vlas
+    name: Dual-System VLAs
+    aliases: [System 1 / System 2 robot models, slow-fast VLAs, hierarchical VLAs, Helix]
+    region: embodied-ai-and-world-models
+    layer: detail
+    desc: Splitting a robot model into a slow vision-language model that understands the scene and instruction a few times a second and a fast action policy that turns its output into motor commands at high rate.
+    summary: "A large vision-language model is too slow to drive motors directly, and a small fast policy doesn't understand instructions. Dual-system designs use both: the large model looks at the scene and instruction a few times a second and passes a compact plan or embedding to a small policy that runs fast enough to react to contact. It brings back the hierarchy of planner and controller, but both parts are learned and trained together."
+    parents:
+      - {id: vision-language-action-models, rel: extends, why: "Splits a VLA into a slow reasoning model and a fast action policy.", src: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots (NVIDIA 2025)"}
+      - {id: llm-robot-planning, rel: combines, why: "Keeps the planner-over-controller hierarchy, but with both layers learned end to end.", src: "NVIDIA 2025"}
+    maturity: 2
+    maturity_note: The common architecture of 2025 humanoid models; patterns still settling.
+    date: "2025-03"
+    ref: {title: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots (NVIDIA)", arxiv: "2503.14734"}
+    examples: [GR00T N1, Figure Helix, π0.5, Gemini Robotics]
+    resources:
+      - {kind: blog, title: "Helix: A Vision-Language-Action Model for Generalist Humanoid Control", by: "Figure AI", year: 2025, url: "https://www.figure.ai/news/helix"}
+      - {kind: blog, title: "Accelerate Generalist Humanoid Robot Development with NVIDIA Isaac GR00T N1", by: "NVIDIA Technical Blog", year: 2025, url: "https://developer.nvidia.com/blog/accelerate-generalist-humanoid-robot-development-with-nvidia-isaac-gr00t-n1/"}
+      - {kind: talk, title: "What Is a Humanoid Foundation Model? An Introduction to GR00T N1", by: "Annika & Aastha (NVIDIA, AI Engineer)", year: 2025, url: "https://www.youtube.com/watch?v=mWKYvT9Lc50"}
+      - {kind: paper, title: "π0.5: a Vision-Language-Action Model with Open-World Generalization", by: "Physical Intelligence (Kevin Black et al.)", year: 2025, url: "https://arxiv.org/abs/2504.16054"}
+    status: added
+  - id: vla-reinforcement-learning
+    name: RL Fine-Tuning of VLAs
+    aliases: [VLA online RL, ReinFlow, flow policy RL]
+    region: embodied-ai-and-world-models
+    layer: detail
+    also: [adaptation-and-post-training]
+    desc: Improving a VLA beyond its demonstrations with reinforcement learning, which for flow and diffusion action heads requires adding noise to their sampling so action probabilities can be computed.
+    summary: "A policy trained only to imitate can't get better than its demonstrations, and it struggles to recover from situations they never showed. Reinforcement learning lets it improve from its own successes and failures, in simulation or on real robots. For flow-matching action heads, which normally turn noise into actions deterministically, methods like ReinFlow add learned noise to each step so standard algorithms such as PPO can update them."
+    parents:
+      - {id: flow-matching-policy, rel: extends, why: "Makes flow-matching action heads trainable with policy gradients by injecting noise into their sampling steps.", src: "ReinFlow: Fine-tuning Flow Matching Policy with Online Reinforcement Learning (Zhang et al. 2025)"}
+      - {id: ppo, rel: applies, why: "Uses PPO-style policy gradient updates on the continuous action head.", src: "Zhang et al. 2025"}
+    maturity: 2
+    maturity_note: An active 2025–26 frontier; most production policies are still trained by imitation.
+    date: "2025-05"
+    ref: {title: "ReinFlow: Fine-tuning Flow Matching Policy with Online Reinforcement Learning (Zhang et al.)", arxiv: "2505.22094"}
+    examples: [ReinFlow, πRL]
+    resources:
+      - {kind: talk, title: "Sergey Levine (UC Berkeley & PI): RL for Robot Foundation Models", by: "Sergey Levine (ICRA 2026 Workshop on RL in the Era of IL)", year: 2026, url: "https://www.youtube.com/watch?v=u0WJXi8PC6Y"}
+      - {kind: code, title: "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning", by: "PRIME-RL", year: 2025, url: "https://github.com/PRIME-RL/SimpleVLA-RL"}
+      - {kind: paper, title: "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning", by: "Haozhan Li et al.", year: 2025, url: "https://arxiv.org/abs/2509.09674"}
+      - {kind: paper, title: "What Can RL Bring to VLA Generalization? An Empirical Study", by: "Jijia Liu et al.", year: 2025, url: "https://arxiv.org/abs/2505.19789"}
     status: added

@@ -9,10 +9,10 @@ One guide per applied region, generated from `backbone.yaml` by `make_guides.py`
 | Retrieval and Knowledge | [retrieval-and-knowledge.md](retrieval-and-knowledge.md) | 21 | 27 |
 | Agents and Orchestration | [agents-and-orchestration.md](agents-and-orchestration.md) | 18 | 29 |
 | Planning and Reasoning | [planning-and-reasoning.md](planning-and-reasoning.md) | 19 | 16 |
-| Adaptation and Post-Training | [adaptation-and-post-training.md](adaptation-and-post-training.md) | 17 | 13 |
+| Adaptation and Post-Training | [adaptation-and-post-training.md](adaptation-and-post-training.md) | 17 | 14 |
 | Data and Synthetic Data | [data-and-synthetic-data.md](data-and-synthetic-data.md) | 15 | 7 |
 | Evaluation and Observability | [evaluation-and-observability.md](evaluation-and-observability.md) | 15 | 12 |
 | Safety, Security and Governance | [safety-security-and-governance.md](safety-security-and-governance.md) | 18 | 17 |
 | AI Product and Interaction Design | [ai-product-and-interaction-design.md](ai-product-and-interaction-design.md) | 15 | 17 |
-| Multimodal | [multimodal-applied.md](multimodal-applied.md) | 16 | 15 |
-| Embodied AI and World Models | [embodied-ai-and-world-models.md](embodied-ai-and-world-models.md) | 8 | 10 |
+| Multimodal | [multimodal-applied.md](multimodal-applied.md) | 17 | 18 |
+| Embodied AI and World Models | [embodied-ai-and-world-models.md](embodied-ai-and-world-models.md) | 13 | 18 |

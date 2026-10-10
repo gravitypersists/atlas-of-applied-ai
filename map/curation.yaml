@@ -14,6 +14,11 @@ terrain:
   planning-and-reasoning:
     spine:
       points: [[2230, 1790], [2200, 1960], [2250, 2130], [2370, 2270], [2540, 2370], [2730, 2440], [2920, 2465], [3080, 2435]]
+  # The Clockwork Marches: one long island running west to east, Crete-style, south of the Painted Isles.
+  # Its landmarks were laid along the spine by date in the ledger (2026-10-10).
+  embodied-ai-and-world-models:
+    spine:
+      points: [[3840, 2470], [3960, 2425], [4080, 2400], [4200, 2385], [4320, 2360], [4430, 2320]]
 
 # Read only by `node build.mjs survey`. Inert once the survey is accepted.
 survey:
@@ -50,3 +55,5 @@ regions:
   adaptation-and-post-training: {label: [2774, 754]}
   # The Engine Works' deep dive (2026-10-10) shifted terrain and pushed this title north onto a town; kept at its old spot.
   retrieval-and-knowledge: {label: [2990, 2214]}
+  # The Clockwork Marches: its landmarks fill the island's length, so the title sits offshore to the south.
+  embodied-ai-and-world-models: {label: [4150, 2590]}

@@ -521,6 +521,7 @@ function render(model, curation) {
 const ROOT_COLORS = [
   ["#e3d3b4", "#8c6d46"], ["#ddcaa6", "#7a5c3a"], ["#e6d6b6", "#9a7b4f"], ["#d9c7a8", "#6e5a43"],
   ["#e8d9bd", "#a08060"], ["#dfcdb0", "#857055"], ["#dbc8aa", "#76624a"], ["#e4d2b3", "#93785a"],
+  ["#ddcfb6", "#7d6a52"],
 ];
 const APPLIED_COLORS = [
   ["#c9d9de", "#4f7a8c"], ["#e3c9d3", "#8c4f6d"], ["#d3dfc4", "#6d8c4f"], ["#ecd5bd", "#b0773c"],
@@ -529,7 +530,7 @@ const APPLIED_COLORS = [
 ];
 function regionPalette(bb) {
   const m = new Map();
-  bb.regions.filter((r) => r.kind === "root").forEach((r, i) => m.set(r.id, { tint: ROOT_COLORS[i % 8][0], ink: ROOT_COLORS[i % 8][1] }));
+  bb.regions.filter((r) => r.kind === "root").forEach((r, i) => m.set(r.id, { tint: ROOT_COLORS[i % ROOT_COLORS.length][0], ink: ROOT_COLORS[i % ROOT_COLORS.length][1] }));
   bb.regions.filter((r) => r.kind !== "root").forEach((r, i) => m.set(r.id, { tint: APPLIED_COLORS[i % APPLIED_COLORS.length][0], ink: APPLIED_COLORS[i % APPLIED_COLORS.length][1] }));
   return m;
 }
@@ -843,15 +844,15 @@ function routeOf(e, placed) {
 }
 
 // ---------------------------------------------------------------- debug preview
+const DEBUG_ROOTS = ["#8c6d46", "#7a5c3a", "#9a7b4f", "#6e5a43", "#a08060", "#857055", "#76624a", "#93785a", "#7d6a52"]; // sepia family
 const DEBUG_PALETTE = [
-  "#8c6d46", "#7a5c3a", "#9a7b4f", "#6e5a43", "#a08060", "#857055", "#76624a", "#93785a", // roots: sepia family
   "#4f7a8c", "#8c4f6d", "#6d8c4f", "#b0773c", "#5b5fa0", "#3c9a8a", "#a05b5b", "#7f6aa8", "#4c8f4c", "#b05a8c", "#2f7fb0", "#857a2c",
 ];
 function regionColors(bb) {
   const roots = bb.regions.filter((r) => r.kind === "root"), applied = bb.regions.filter((r) => r.kind !== "root");
   const m = new Map();
-  roots.forEach((r, i) => m.set(r.id, DEBUG_PALETTE[i % 8]));
-  applied.forEach((r, i) => m.set(r.id, DEBUG_PALETTE[8 + (i % (DEBUG_PALETTE.length - 8))]));
+  roots.forEach((r, i) => m.set(r.id, DEBUG_ROOTS[i % DEBUG_ROOTS.length]));
+  applied.forEach((r, i) => m.set(r.id, DEBUG_PALETTE[i % DEBUG_PALETTE.length]));
   return m;
 }
 

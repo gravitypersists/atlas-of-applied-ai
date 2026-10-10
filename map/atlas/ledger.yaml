@@ -226,16 +226,25 @@ settlements:
   - {id: pii-redaction, x: 2444.5, y: 1037, settled: "2026-10-08"}
   - {id: data-flywheel, x: 2535, y: 1165, settled: "2026-10-08"}
   - {id: synthetic-rag-data, x: 2400, y: 1295, settled: "2026-10-08"}
-  - {id: sim-to-real-transfer, x: 3980, y: 2480, settled: "2026-10-10"}
-  - {id: latent-world-models, x: 4060, y: 2585, settled: "2026-10-10"}
-  - {id: llm-robot-planning, x: 4120, y: 2380, settled: "2026-10-10"}
-  - {id: diffusion-policy, x: 4235, y: 2470, settled: "2026-10-10"}
-  - {id: action-chunking, x: 4305, y: 2565, settled: "2026-10-10"}
-  - {id: vision-language-action-models, x: 4250, y: 2295, settled: "2026-10-10"}
-  - {id: cross-embodiment-training, x: 4385, y: 2385, settled: "2026-10-10"}
-  - {id: interactive-world-models, x: 4400, y: 2215, settled: "2026-10-10"}
   - {id: agent-to-agent-protocols, x: 2566, y: 1859, settled: "2026-10-08"}
   - {id: agent-authorization, x: 2941.2, y: 1095.6, settled: "2026-10-08"}
   - {id: tool-poisoning, x: 3044, y: 1131.8, settled: "2026-10-08"}
   - {id: background-agents, x: 2960.2, y: 1395.9, settled: "2026-10-08"}
+  - {id: sim-to-real-transfer, x: 3843.8, y: 2428, settled: "2026-10-10"}
+  - {id: latent-world-models, x: 3915.3, y: 2482.3, settled: "2026-10-10"}
+  - {id: human-video-pretraining, x: 3933.5, y: 2394.4, settled: "2026-10-10"}
+  - {id: llm-robot-planning, x: 4000.9, y: 2455.3, settled: "2026-10-10"}
+  - {id: diffusion-policy, x: 4032.2, y: 2371.1, settled: "2026-10-10"}
+  - {id: action-chunking, x: 4091.7, y: 2436.8, settled: "2026-10-10"}
+  - {id: vision-language-action-models, x: 4129.8, y: 2355.5, settled: "2026-10-10"}
+  - {id: cross-embodiment-training, x: 4186.7, y: 2425, settled: "2026-10-10"}
+  - {id: interactive-world-models, x: 4221.4, y: 2341.7, settled: "2026-10-10"}
+  - {id: flow-matching-policy, x: 4283.7, y: 2406.4, settled: "2026-10-10"}
+  - {id: generative-sim-to-real, x: 4309.8, y: 2323.3, settled: "2026-10-10"}
+  - {id: dual-system-vlas, x: 4380.7, y: 2378.3, settled: "2026-10-10"}
+  - {id: vla-reinforcement-learning, x: 4399.8, y: 2290.6, settled: "2026-10-10"}
+  - {id: behavior-cloning, x: 1030, y: 1850, settled: "2026-10-10"}
+  - {id: dagger, x: 1120, y: 1910, settled: "2026-10-10"}
+  - {id: physics-simulation, x: 1010, y: 1950, settled: "2026-10-10"}
+  - {id: spatial-vlms, x: 3953.3, y: 1487.1, settled: "2026-10-08"}
 retired: []

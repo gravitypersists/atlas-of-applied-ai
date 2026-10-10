@@ -13,11 +13,11 @@ Adding a region after acceptance means settling around permanent borders, so thi
 - [x] 8 seed anchors, arXiv ids checked against the arXiv API: sim-to-real transfer, latent world models, LLM task planning for robots, diffusion policy, action chunking, VLAs, cross-embodiment training, interactive world models
 - [x] `make_guides.py` reads an optional region `node_target`; guide generated at `deep-dives/embodied-ai-and-world-models.md`
 - [x] Map: seeds hand-laid in the ledger south of the Painted Isles (the automatic settle scattered them, e.g. pulling diffusion policy into the Painted Isles); a 12th applied color added to `build.mjs`
-- [ ] Run the guide through deep research
-- [ ] Merge the report per `MERGING.md`: nodes, then a resources pass, then summaries; region `overview` and `learning_path`
-- [ ] Decide: add a **Robotics and Control** root to the Old World? Candidates are behavior cloning, physics simulation, MPC and classical control. `external:behavior-cloning` and `external:physics-simulation` already wait as ancestors.
-- [ ] Decide the terrain style: archipelago (like the Painted Isles) or let it join land as nodes mature. It's 5 islands now because no in-region edge links two maturity ≥ 3 nodes. My answer: archipelago, but like a long linear island, sort of like Crete in Greece.
-- [ ] Re-check the title "The Clockwork Marches" once the region has content
+- [x] Run the guide through deep research
+- [x] Merge the report per `MERGING.md`: nodes, then a resources pass, then summaries; region `overview` and `learning_path`. Added human video pretraining, flow-matching action heads, generative sim-to-real, dual-system VLAs (not in the report; from its practitioner section) and RL fine-tuning of VLAs; Spatial Reasoning VLMs homed in Multimodal under a new boundary rule; Code as Policies folded into `llm-robot-planning`. 53 resources and a 6-item learning path from a background pass, spot-checked.
+- [x] Decide: add a **Robotics and Control** root to the Old World? Yes: `robotics-and-control` with behavior cloning, DAgger (replacing `external:dagger` under on-policy distillation) and physics simulation, hand-placed south of Reinforcement Learning. MPC and classical control left out until something applied descends from them.
+- [x] Decide the terrain style: archipelago (like the Painted Isles) or let it join land as nodes mature. It's 5 islands now because no in-region edge links two maturity ≥ 3 nodes. My answer: archipelago, but like a long linear island, sort of like Crete in Greece. Done with a curated west–east spine in `curation.yaml`; landmarks laid along it by date, title pinned offshore to the south.
+- [ ] Re-check the title "The Clockwork Marches" once the region has content (now has 13 landmarks; still fits, your call)
 
 ## 2. Agent security and protocols (cheap; clearly mature by 2025)
 
