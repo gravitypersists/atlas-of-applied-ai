@@ -57,3 +57,7 @@ regions:
   retrieval-and-knowledge: {label: [2990, 2214]}
   # The Clockwork Marches: its landmarks fill the island's length, so the title sits offshore to the south.
   embodied-ai-and-world-models: {label: [4150, 2590]}
+  # Hallucination Detection (2026-10-10) shifted terrain and pulled this title onto LLM-as-a-Judge; kept at its old spot.
+  evaluation-and-observability: {label: [3662, 1498]}
+  # The practitioner-staple nodes (2026-10-10) shifted terrain and pulled this title west onto Model Routing's label; kept at its old spot.
+  inference-and-serving: {label: [3710, 1962]}

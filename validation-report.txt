@@ -1,8 +1,8 @@
-nodes: 248  edges: 388  cross-region edges: 143  external ancestors: 33
-status: {'kept': 8, 'added': 163, 'repaired': 77}  layers: {'core': 168, 'detail': 80}  with resources: 212
+nodes: 264  edges: 423  cross-region edges: 158  external ancestors: 41
+status: {'kept': 8, 'added': 179, 'repaired': 77}  layers: {'core': 182, 'detail': 82}  with resources: 212
 per region:
   root    information-retrieval                3
-  root    deep-learning-nlp                    8
+  root    deep-learning-nlp                    10
   root    symbolic-ai-planning                 4
   root    reinforcement-learning               3
   root    knowledge-representation             2
@@ -10,17 +10,17 @@ per region:
   root    systems-security                     3
   root    software-engineering                 4
   root    robotics-and-control                 3
-  applied inference-and-serving                21
+  applied inference-and-serving                25
   applied prompting-and-context-engineering    16
-  applied retrieval-and-knowledge              21
+  applied retrieval-and-knowledge              24
   applied agents-and-orchestration             18
   applied planning-and-reasoning               19
-  applied adaptation-and-post-training         17
+  applied adaptation-and-post-training         18
   applied data-and-synthetic-data              15
-  applied evaluation-and-observability         15
-  applied safety-and-security                  17
+  applied evaluation-and-observability         17
+  applied safety-and-security                  19
   applied ai-product-and-interaction-design    15
-  applied multimodal-applied                   17
+  applied multimodal-applied                   19
   applied embodied-ai-and-world-models         13
   applied governance-and-compliance            11
 errors: 0

@@ -35,17 +35,19 @@ Adding a region after acceptance means settling around permanent borders, so thi
 
 ## 4. Practitioner staples (core nodes)
 
-- [ ] Text-to-SQL / structured-data QA (Retrieval)
-- [ ] Hallucination detection and mitigation: grounding checks, semantic entropy, uncertainty estimation (Evaluation)
-- [ ] Semantic caching (Inference)
-- [ ] LLM gateways: fallback, rate limits, cost budgets (Inference; currently only `model-routing`)
-- [ ] Long-context extension: RoPE scaling, YaRN (Inference or DL-NLP root)
-- [ ] Tokenization as a practical concern: cost, token counting (DL-NLP root)
-- [ ] Embedding practice: Matryoshka / binary embeddings, domain fine-tuning of embedders (Retrieval)
-- [ ] Continued / domain-adaptive pretraining (Adaptation)
-- [ ] Image personalization and editing: DreamBooth/LoRA for diffusion, instruction-based editing (Multimodal)
-- [ ] Serving parallelism: tensor, pipeline and expert parallelism (Inference)
-- [ ] Sycophancy; backdoors and data poisoning; bias and fairness evals (Safety / Evaluation)
+Landed 2026-10-10: 16 nodes with summaries, arXiv refs checked against the arXiv API (GPTCache and LiteLLM refs opened), five boundary rules. No `resources` yet; they need the separate resources pass from `MERGING.md`. `text-to-sql`, `semantic-caching`, `hallucination-detection` and `image-personalization` were hand-placed in the ledger (their parents' centroid fell in other regions), and `continued-pretraining`, `data-poisoning` and `instruction-image-editing` were nudged so their labels show at z1. Titles of the Engine Works and the Watchtowers pinned at their old spots.
+
+- [x] Text-to-SQL / structured-data QA (Retrieval): `text-to-sql`, core, m3, parents RAG, open-domain QA, few-shot prompting and `external:semantic-parsing`
+- [x] Hallucination detection and mitigation: grounding checks, semantic entropy, uncertainty estimation (Evaluation): `hallucination-detection`, core, m3; mitigation stays with RAG and citation UX (new boundary rule)
+- [x] Semantic caching (Inference): `semantic-caching`, core, m3
+- [x] LLM gateways: fallback, rate limits, cost budgets (Inference; currently only `model-routing`): `llm-gateways`, core, m4, child of `model-routing`
+- [x] Long-context extension: RoPE scaling, YaRN (Inference or DL-NLP root): `rotary-position-embeddings` in the root (m5), `context-window-extension` in Inference (m4, `also` DL-NLP and Adaptation)
+- [x] Tokenization as a practical concern: cost, token counting (DL-NLP root): `subword-tokenization` (BPE, m5); the summary carries the cost and counting angle
+- [x] Embedding practice: Matryoshka / binary embeddings, domain fine-tuning of embedders (Retrieval): `embedding-compression` and `embedding-fine-tuning`, both detail, m3
+- [x] Continued / domain-adaptive pretraining (Adaptation): `continued-pretraining`, core, m4
+- [x] Image personalization and editing: DreamBooth/LoRA for diffusion, instruction-based editing (Multimodal): `image-personalization` and `instruction-image-editing`, core, m4
+- [x] Serving parallelism: tensor, pipeline and expert parallelism (Inference): `model-parallelism`, core, m4
+- [x] Sycophancy; backdoors and data poisoning; bias and fairness evals (Safety / Evaluation): `sycophancy` and `data-poisoning` in Safety, `bias-and-fairness-evals` in Evaluation, all core, m3
 
 ## 5. 2025–26 frontier
 

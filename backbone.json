@@ -1146,6 +1146,31 @@
       "concept": "Training-data rights",
       "home": "governance-and-compliance",
       "rule": "Licensing, consent, opt-outs and provenance audits of training data → Governance (secondary: Data). Filtering and deduplication pipelines → Data."
+    },
+    {
+      "concept": "Semantic caching / LLM gateways",
+      "home": "inference-and-serving",
+      "rule": "Reusing answers and proxying model calls to cut cost and keep traffic flowing → Inference, alongside prompt caching and routing, even though they work at the API layer."
+    },
+    {
+      "concept": "Position encodings and context extension",
+      "home": "deep-learning-nlp (RoPE); inference-and-serving (context extension)",
+      "rule": "The architecture choice → the root. Rescaling it to run past the training length, set in model and serving configs → Inference (secondary: Adaptation for the fine-tune)."
+    },
+    {
+      "concept": "Embedding fine-tuning",
+      "home": "retrieval-and-knowledge",
+      "rule": "Training a retriever or embedder for a search system → Retrieval (secondary: Adaptation). Training the generator → Adaptation."
+    },
+    {
+      "concept": "Hallucination detection",
+      "home": "evaluation-and-observability",
+      "rule": "Scoring whether an answer is supported or confident → Evaluation, even when the score gates answers at runtime (secondary: Safety). Ways of grounding answers in the first place (RAG, citations) stay in their regions."
+    },
+    {
+      "concept": "Data poisoning vs. indirect prompt injection",
+      "home": "safety-and-security",
+      "rule": "Both Safety. Malicious content in training or fine-tuning data that changes the weights → data poisoning. Malicious content read at inference time → indirect prompt injection."
     }
   ],
   "nodes": [
@@ -1448,6 +1473,83 @@
         "Mamba",
         "Jamba",
         "Nemotron-H"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "subword-tokenization",
+      "name": "Subword Tokenization",
+      "aliases": [
+        "tokenization",
+        "BPE",
+        "byte-pair encoding",
+        "tokenizers",
+        "SentencePiece",
+        "token counting"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Splitting text into a fixed vocabulary of frequent word pieces, so any string can be encoded without unknown words; the unit models read, bill and limit by.",
+      "summary": "Models don't read characters or words but tokens: pieces of words learned from how often they appear in the training text, so common words are one token and rare ones are split into several. Everything practical is counted in tokens: context limits, output limits, prices and rate limits. The same text can cost noticeably more in one model's tokenizer than another's, and code, numbers and non-English text often split into many more tokens than plain English.",
+      "parents": [
+        {
+          "id": "sequence-to-sequence-learning",
+          "rel": "extends",
+          "why": "Introduced to give neural translation models an open vocabulary.",
+          "src": "Neural Machine Translation of Rare Words with Subword Units (Sennrich et al. 2015)"
+        },
+        {
+          "id": "external:byte-pair-encoding-compression",
+          "rel": "applies",
+          "why": "Repurposes a 1994 compression algorithm to build the vocabulary.",
+          "src": "Sennrich et al. 2015"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Every production LLM uses a subword tokenizer; engineers meet it as token counting and cost.",
+      "date": "2015-08",
+      "ref": {
+        "title": "Neural Machine Translation of Rare Words with Subword Units (Sennrich et al.)",
+        "arxiv": "1508.07909"
+      },
+      "examples": [
+        "tiktoken",
+        "SentencePiece",
+        "Hugging Face tokenizers",
+        "token-counting APIs"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "rotary-position-embeddings",
+      "name": "Rotary Position Embeddings",
+      "aliases": [
+        "RoPE",
+        "RoFormer",
+        "rotary embeddings"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Encodes each token's position by rotating its query and key vectors by an angle proportional to the position, so attention depends on relative distance.",
+      "summary": "Attention on its own doesn't know word order, so the model has to be told where each token sits. RoPE does this by rotating the vectors used in attention by an angle that grows with position, so that two tokens' interaction depends on how far apart they are. Almost every open LLM uses it, and its rotation frequencies are the knob that context-extension methods adjust.",
+      "parents": [
+        {
+          "id": "transformer-architecture",
+          "rel": "extends",
+          "why": "Replaces the transformer's absolute position encodings with relative rotations.",
+          "src": "RoFormer (Su et al. 2021)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "The default position encoding in Llama, Qwen, Mistral, DeepSeek and most open models.",
+      "date": "2021-04",
+      "ref": {
+        "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding (Su et al.)",
+        "arxiv": "2104.09864"
+      },
+      "examples": [
+        "Llama",
+        "Qwen",
+        "Mistral",
+        "GPT-NeoX"
       ],
       "status": "added"
     },
@@ -3318,6 +3420,196 @@
           "year": 2025,
           "url": "https://huggingface.co/blog/faster-transformers"
         }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "semantic-caching",
+      "name": "Semantic Caching",
+      "aliases": [
+        "response caching",
+        "GPTCache",
+        "embedding-based caching"
+      ],
+      "region": "inference-and-serving",
+      "desc": "Returning a stored answer when a new request is close enough in meaning to an earlier one, matched by embedding similarity, skipping the model call.",
+      "summary": "Many users ask the same thing in different words. A semantic cache embeds each incoming request, looks for a previous request whose vector is close enough, and returns the stored answer instead of calling the model. It cuts cost and latency for repetitive traffic such as support questions, but the similarity threshold is a real risk: set it loose and users get answers to a question they didn't ask. Unlike prompt caching, it skips the model entirely.",
+      "parents": [
+        {
+          "id": "text-embeddings",
+          "rel": "applies",
+          "why": "Uses embeddings to decide that two differently worded requests mean the same thing.",
+          "src": "GPTCache (Bang 2023)"
+        },
+        {
+          "id": "approximate-nearest-neighbor-search",
+          "rel": "applies",
+          "why": "Looks up the nearest earlier request in a vector index.",
+          "src": "GPTCache (Bang 2023)"
+        },
+        {
+          "id": "external:web-caching",
+          "rel": "extends",
+          "why": "Exact-match response caching, loosened from identical keys to similar meanings.",
+          "src": "GPTCache (Bang 2023)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Offered by gateways and vector databases; correctness of loose matches limits it to repetitive, low-stakes traffic.",
+      "date": "2023-03",
+      "ref": {
+        "title": "GPTCache: An Open-Source Semantic Cache for LLM Applications (Zilliz)",
+        "url": "https://github.com/zilliztech/GPTCache"
+      },
+      "examples": [
+        "GPTCache",
+        "Redis semantic cache",
+        "LiteLLM caching",
+        "Portkey"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "llm-gateways",
+      "name": "LLM Gateways",
+      "aliases": [
+        "AI gateway",
+        "LLM proxy",
+        "model fallback",
+        "rate limiting",
+        "cost budgets",
+        "LiteLLM"
+      ],
+      "region": "inference-and-serving",
+      "also": [
+        "software-engineering"
+      ],
+      "desc": "A proxy between applications and model providers that gives one API over many models and adds fallback, retries, rate limits, spend budgets, keys and logging.",
+      "summary": "Instead of each application calling each provider directly, every call goes through one proxy. The gateway speaks a single API for many models, retries or falls back to another provider when one fails or is rate-limited, enforces per-team keys, rate limits and spend budgets, and logs every request for cost tracking. It is the API-gateway pattern from web services applied to models, and the natural place to put routing, caching and guardrails.",
+      "parents": [
+        {
+          "id": "model-routing",
+          "rel": "extends",
+          "why": "Wraps per-request model choice in fallback, retries and policy.",
+          "src": "LiteLLM (BerriAI 2023)"
+        },
+        {
+          "id": "external:api-gateways",
+          "rel": "applies",
+          "why": "Applies the API-gateway pattern (auth, quotas, retries, logging) to model providers.",
+          "src": "LiteLLM (BerriAI 2023)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Standard in companies using several providers; open-source and managed options are mature.",
+      "date": "2023-07",
+      "ref": {
+        "title": "LiteLLM: call 100+ LLM APIs in one format, with fallbacks, budgets and logging (BerriAI)",
+        "url": "https://github.com/BerriAI/litellm"
+      },
+      "examples": [
+        "LiteLLM",
+        "OpenRouter",
+        "Portkey",
+        "Cloudflare AI Gateway",
+        "Kong AI Gateway"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "context-window-extension",
+      "name": "Context Window Extension",
+      "aliases": [
+        "RoPE scaling",
+        "position interpolation",
+        "YaRN",
+        "NTK-aware scaling",
+        "long-context extension"
+      ],
+      "region": "inference-and-serving",
+      "also": [
+        "deep-learning-nlp",
+        "adaptation-and-post-training"
+      ],
+      "desc": "Stretching a model's usable context beyond its training length by rescaling its rotary position frequencies, usually with a short fine-tune on long documents.",
+      "summary": "A model trained on 4,000-token documents breaks down on longer inputs because it has never seen those positions. Rescaling the rotary position angles squeezes long inputs into the range the model knows, and a short fine-tune on long documents repairs the rest. Methods such as position interpolation and YaRN are how most open models reach 128K tokens, and engineers meet them as the rope_scaling setting in model configs and serving engines.",
+      "parents": [
+        {
+          "id": "rotary-position-embeddings",
+          "rel": "extends",
+          "why": "Rescales RoPE's rotation frequencies to cover positions beyond the training length.",
+          "src": "Extending Context Window of Large Language Models via Positional Interpolation (Chen et al. 2023)"
+        },
+        {
+          "id": "transfer-learning-fine-tuning",
+          "rel": "applies",
+          "why": "Repairs the rescaled model with a short fine-tune on long sequences.",
+          "src": "YaRN (Peng et al. 2023)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Used to build the long-context versions of Llama, Qwen and DeepSeek; exposed as a serving-time config option.",
+      "date": "2023-06",
+      "ref": {
+        "title": "Extending Context Window of Large Language Models via Positional Interpolation (Chen et al.)",
+        "arxiv": "2306.15595"
+      },
+      "examples": [
+        "position interpolation",
+        "YaRN",
+        "NTK-aware scaling",
+        "LongRoPE",
+        "rope_scaling in vLLM"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "model-parallelism",
+      "name": "Tensor, Pipeline and Expert Parallelism",
+      "aliases": [
+        "model parallelism",
+        "tensor parallelism",
+        "pipeline parallelism",
+        "expert parallelism",
+        "TP",
+        "PP",
+        "EP",
+        "Megatron"
+      ],
+      "region": "inference-and-serving",
+      "also": [
+        "deep-learning-nlp"
+      ],
+      "desc": "Splitting one model across many GPUs, by slicing each layer's matrices (tensor), assigning layers to stages (pipeline), or placing MoE experts on different devices (expert).",
+      "summary": "A large model doesn't fit on one GPU, so it is split. Tensor parallelism cuts each layer's weight matrices across GPUs that work in lockstep and needs fast links, so it stays within one server. Pipeline parallelism gives each GPU a block of layers and passes activations along, which works across servers. Expert parallelism puts different mixture-of-experts experts on different GPUs. Choosing the mix is the first decision when deploying a large model, and serving engines expose it as flags.",
+      "parents": [
+        {
+          "id": "transformer-architecture",
+          "rel": "applies",
+          "why": "Partitions the transformer's attention and MLP matrices across devices.",
+          "src": "Megatron-LM (Shoeybi et al. 2019)"
+        },
+        {
+          "id": "mixture-of-experts",
+          "rel": "applies",
+          "why": "Expert parallelism shards MoE experts across devices.",
+          "src": "GShard (Lepikhin et al. 2020)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Assumed by every multi-GPU serving engine; the right mix for MoE models is still tuned case by case.",
+      "date": "2019-09",
+      "ref": {
+        "title": "Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism (Shoeybi et al.)",
+        "arxiv": "1909.08053"
+      },
+      "examples": [
+        "Megatron-LM",
+        "vLLM --tensor-parallel-size",
+        "DeepSpeed",
+        "SGLang expert parallelism"
       ],
       "status": "added"
     },
@@ -5680,6 +5972,148 @@
           "year": 2024,
           "url": "https://arxiv.org/abs/2409.01666"
         }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "text-to-sql",
+      "name": "Text-to-SQL",
+      "aliases": [
+        "natural language to SQL",
+        "NL2SQL",
+        "structured-data QA",
+        "table question answering"
+      ],
+      "region": "retrieval-and-knowledge",
+      "desc": "Answering questions over databases by having a model write a SQL query from the question and the schema, running it, and reporting the result.",
+      "summary": "Much of a company's knowledge lives in tables, not documents, and embedding rows works poorly for questions like \"revenue by region last quarter\". Text-to-SQL gives the model the database schema and a few example queries, has it write SQL, runs the query and answers from the result. Picking the relevant tables, describing what columns mean and checking the query before running it matter more than the model; it is the usual way to put a chat interface on analytics.",
+      "parents": [
+        {
+          "id": "retrieval-augmented-generation",
+          "rel": "specializes",
+          "why": "Retrieves with a generated query against a database instead of a search index, then answers from the rows.",
+          "src": "Text-to-SQL Empowered by Large Language Models (Gao et al. 2023)",
+          "confidence": "medium"
+        },
+        {
+          "id": "open-domain-qa",
+          "rel": "specializes",
+          "why": "Question answering where the source is a database rather than a text corpus.",
+          "src": "Evaluating the Text-to-SQL Capabilities of Large Language Models (Rajkumar et al. 2022)",
+          "confidence": "medium"
+        },
+        {
+          "id": "external:semantic-parsing",
+          "rel": "replaces",
+          "why": "Replaces trained semantic parsers with prompted LLMs.",
+          "src": "Rajkumar et al. 2022"
+        },
+        {
+          "id": "few-shot-prompting",
+          "rel": "applies",
+          "why": "Prompts with the schema and example question-query pairs.",
+          "src": "DAIL-SQL (Gao et al. 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Shipped in BI and data-warehouse products; accuracy on large, messy schemas still needs schema curation and human review.",
+      "date": "2022-03",
+      "ref": {
+        "title": "Evaluating the Text-to-SQL Capabilities of Large Language Models (Rajkumar et al.)",
+        "arxiv": "2204.00498"
+      },
+      "examples": [
+        "Vanna",
+        "Snowflake Cortex Analyst",
+        "Databricks Genie",
+        "BIRD and Spider benchmarks"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "embedding-compression",
+      "name": "Embedding Compression",
+      "aliases": [
+        "Matryoshka embeddings",
+        "MRL",
+        "binary embeddings",
+        "embedding quantization",
+        "truncatable embeddings"
+      ],
+      "region": "retrieval-and-knowledge",
+      "layer": "detail",
+      "desc": "Shrinking stored vectors by training embeddings whose leading dimensions work on their own (Matryoshka) and by quantizing them to int8 or single bits.",
+      "summary": "Embedding indexes get large: millions of 1,000-dimension float vectors. Matryoshka training makes the first dimensions carry the most meaning, so a vector can be cut to a quarter of its length with little loss. Binary quantization keeps one bit per dimension for a 32× saving. A common pattern searches the small vectors first and rescores the top hits with the full ones.",
+      "parents": [
+        {
+          "id": "text-embeddings",
+          "rel": "extends",
+          "why": "Trains embeddings so their prefixes are usable at any length.",
+          "src": "Matryoshka Representation Learning (Kusupati et al. 2022)"
+        },
+        {
+          "id": "approximate-nearest-neighbor-search",
+          "rel": "applies",
+          "why": "Pairs a coarse search over compressed vectors with exact rescoring.",
+          "src": "Embedding Quantization (Hugging Face 2024)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Supported by major embedding APIs (OpenAI text-embedding-3 dimensions parameter) and vector databases.",
+      "date": "2022-05",
+      "ref": {
+        "title": "Matryoshka Representation Learning (Kusupati et al.)",
+        "arxiv": "2205.13147"
+      },
+      "examples": [
+        "OpenAI text-embedding-3 dimensions",
+        "Nomic Embed",
+        "binary quantization in Qdrant and Weaviate"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "embedding-fine-tuning",
+      "name": "Embedding Fine-Tuning",
+      "aliases": [
+        "domain adaptation of embedders",
+        "fine-tuning embedding models",
+        "GPL",
+        "synthetic query generation for retrieval"
+      ],
+      "region": "retrieval-and-knowledge",
+      "also": [
+        "adaptation-and-post-training"
+      ],
+      "layer": "detail",
+      "desc": "Adapting an embedding model to a domain by training it on in-domain question-passage pairs, often generated by an LLM from the corpus itself.",
+      "summary": "General embedding models miss what matters in specialized text: legal clauses, part numbers, internal jargon. Fine-tuning on pairs of questions and the passages that answer them fixes much of this, and the pairs can be generated by having a model write questions for each chunk of your own documents. A small fine-tuned embedder often beats a larger general one on its home domain.",
+      "parents": [
+        {
+          "id": "text-embeddings",
+          "rel": "specializes",
+          "why": "Adapts a general embedder to one domain's notion of relevance.",
+          "src": "GPL (Wang et al. 2021)"
+        },
+        {
+          "id": "dense-retrieval",
+          "rel": "extends",
+          "why": "Trains the retriever with contrastive pairs mined or generated from the target corpus.",
+          "src": "GPL (Wang et al. 2021)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Common in production search with tooling in Sentence Transformers; many teams still skip it in favor of rerankers.",
+      "date": "2021-12",
+      "ref": {
+        "title": "GPL: Generative Pseudo Labeling for Unsupervised Domain Adaptation of Dense Retrieval (Wang et al.)",
+        "arxiv": "2112.07577"
+      },
+      "examples": [
+        "Sentence Transformers training",
+        "LlamaIndex finetune_embedding",
+        "Voyage custom models"
       ],
       "status": "added"
     },
@@ -9112,6 +9546,48 @@
       "status": "added"
     },
     {
+      "id": "continued-pretraining",
+      "name": "Continued Pretraining",
+      "aliases": [
+        "domain-adaptive pretraining",
+        "DAPT",
+        "continual pretraining",
+        "task-adaptive pretraining",
+        "TAPT"
+      ],
+      "region": "adaptation-and-post-training",
+      "desc": "Resuming next-token pretraining on a large unlabeled corpus from a new domain or language before instruction tuning, to teach knowledge and vocabulary that fine-tuning can't.",
+      "summary": "Fine-tuning teaches a model how to behave, but it is a poor way to teach a lot of new knowledge. Continued pretraining runs the original next-token training on billions of tokens of domain text (code, medicine, finance, a new language) and then re-applies instruction tuning. It is how most domain models are built; the main risk is forgetting general skills, which is managed by mixing in general data and keeping the learning rate low.",
+      "parents": [
+        {
+          "id": "pretrained-language-models",
+          "rel": "extends",
+          "why": "Continues the same self-supervised objective on new-domain text.",
+          "src": "Don't Stop Pretraining (Gururangan et al. 2020)"
+        },
+        {
+          "id": "transfer-learning-fine-tuning",
+          "rel": "specializes",
+          "why": "An unsupervised adaptation stage inserted before task fine-tuning.",
+          "src": "Gururangan et al. 2020"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Standard route to domain and language models; recipes to avoid forgetting are well documented.",
+      "date": "2020-04",
+      "ref": {
+        "title": "Don't Stop Pretraining: Adapt Language Models to Domains and Tasks (Gururangan et al.)",
+        "arxiv": "2004.10964"
+      },
+      "examples": [
+        "Code Llama",
+        "BloombergGPT",
+        "Meditron",
+        "SaulLM"
+      ],
+      "status": "added"
+    },
+    {
       "id": "self-instruct",
       "name": "Self-Instruct",
       "aliases": [
@@ -10983,6 +11459,106 @@
       "status": "added"
     },
     {
+      "id": "hallucination-detection",
+      "name": "Hallucination Detection",
+      "aliases": [
+        "semantic entropy",
+        "SelfCheckGPT",
+        "groundedness checks",
+        "faithfulness checks",
+        "uncertainty estimation",
+        "confabulation detection"
+      ],
+      "region": "evaluation-and-observability",
+      "also": [
+        "safety-and-security",
+        "retrieval-and-knowledge"
+      ],
+      "desc": "Flagging answers likely to be fabricated, by checking claims against the provided sources or by measuring how much the model's answers disagree across samples.",
+      "summary": "Models state false things fluently, so you need a signal for when to distrust an answer. With sources (RAG), a grounding check asks whether each claim is supported by the retrieved text. Without sources, you sample several answers: if they disagree in meaning (high semantic entropy), the model is probably guessing. These scores gate answers in production, trigger a retry or an \"I don't know\", and feed monitoring.",
+      "parents": [
+        {
+          "id": "self-consistency",
+          "rel": "applies",
+          "why": "Uses disagreement across sampled answers as the warning sign, not as a vote.",
+          "src": "SelfCheckGPT (Manakul et al. 2023)"
+        },
+        {
+          "id": "llm-as-a-judge",
+          "rel": "applies",
+          "why": "Grounding checks prompt a model to verify each claim against the sources.",
+          "src": "SelfCheckGPT (Manakul et al. 2023)",
+          "confidence": "medium"
+        },
+        {
+          "id": "external:predictive-uncertainty",
+          "rel": "applies",
+          "why": "Brings uncertainty estimation from statistics and ML to free-form generation.",
+          "src": "Semantic Uncertainty (Kuhn et al. 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Grounding checks are common in RAG products; sampling-based detectors cost several calls and are used selectively.",
+      "date": "2023-03",
+      "ref": {
+        "title": "SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models (Manakul et al.)",
+        "arxiv": "2303.08896"
+      },
+      "examples": [
+        "semantic entropy",
+        "SelfCheckGPT",
+        "HHEM",
+        "Bespoke-MiniCheck",
+        "RAGAS faithfulness"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "bias-and-fairness-evals",
+      "name": "Bias and Fairness Evals",
+      "aliases": [
+        "bias benchmarks",
+        "fairness testing",
+        "BBQ",
+        "demographic bias evaluation",
+        "counterfactual fairness tests"
+      ],
+      "region": "evaluation-and-observability",
+      "also": [
+        "safety-and-security",
+        "governance-and-compliance"
+      ],
+      "desc": "Tests of whether a model treats demographic groups differently, using benchmark questions or counterfactual prompts that vary only a person's group.",
+      "summary": "Checks whether a model's answers or decisions shift with a person's gender, race, age or other attributes. Benchmarks like BBQ ask questions where a stereotype would push to the wrong answer; counterfactual tests send the same prompt with only the name or group changed and compare outcomes. They appear in model cards, and teams using models for hiring, lending or similar decisions run their own on their actual task, which regulation increasingly requires.",
+      "parents": [
+        {
+          "id": "capability-benchmarks",
+          "rel": "specializes",
+          "why": "Benchmarks aimed at differential treatment rather than skill.",
+          "src": "BBQ (Parrish et al. 2021)"
+        },
+        {
+          "id": "external:algorithmic-fairness",
+          "rel": "applies",
+          "why": "Carries fairness metrics from classical ML to generated text.",
+          "src": "BBQ (Parrish et al. 2021)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Reported in model cards and required for high-risk uses; task-specific testing is still uneven.",
+      "date": "2021-10",
+      "ref": {
+        "title": "BBQ: A Hand-Built Bias Benchmark for Question Answering (Parrish et al.)",
+        "arxiv": "2110.08193"
+      },
+      "examples": [
+        "BBQ",
+        "DiscrimEval",
+        "counterfactual name-swap tests"
+      ],
+      "status": "added"
+    },
+    {
       "id": "prompt-injection",
       "name": "Prompt Injection",
       "aliases": [
@@ -12054,6 +12630,84 @@
           "year": 2025,
           "url": "https://arxiv.org/abs/2508.14925"
         }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "sycophancy",
+      "name": "Sycophancy",
+      "aliases": [
+        "model sycophancy",
+        "telling users what they want to hear",
+        "agreement bias"
+      ],
+      "region": "safety-and-security",
+      "also": [
+        "evaluation-and-observability"
+      ],
+      "desc": "The tendency of preference-trained models to agree with the user, flatter, or drop a correct answer when pushed back on.",
+      "summary": "Models trained on human ratings learn that people like being agreed with. They change a correct answer when the user objects, praise weak work and echo the user's stated views. It undermines code review, tutoring, advice and LLM judges alike. Labs now measure it before release and train against it; application teams test for it by pushing back on correct answers.",
+      "parents": [
+        {
+          "id": "rlhf",
+          "rel": "counters",
+          "why": "A failure mode produced by optimizing for human approval.",
+          "src": "Towards Understanding Sycophancy in Language Models (Sharma et al. 2023)",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Measured and reported by major labs; a widely publicized 2025 model rollback made it a release criterion.",
+      "date": "2023-10",
+      "ref": {
+        "title": "Towards Understanding Sycophancy in Language Models (Sharma et al.)",
+        "arxiv": "2310.13548"
+      },
+      "examples": [
+        "pushback tests",
+        "sycophancy evals in system cards"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "data-poisoning",
+      "name": "Backdoors and Data Poisoning",
+      "aliases": [
+        "training data poisoning",
+        "backdoor attacks",
+        "sleeper agents",
+        "trigger phrases"
+      ],
+      "region": "safety-and-security",
+      "also": [
+        "data-and-synthetic-data"
+      ],
+      "desc": "Planting a small number of crafted examples in training or fine-tuning data so the model misbehaves when it sees a trigger, while looking normal otherwise.",
+      "summary": "If an attacker can get documents into a model's training or fine-tuning data, a few hundred crafted examples can install a hidden behavior that fires on a trigger phrase, such as writing insecure code or outputting gibberish, while the model behaves normally otherwise. The number of poisoned documents needed stays roughly constant as models grow, and backdoors can survive later safety training. It matters to anyone fine-tuning on scraped, user-submitted or third-party data, or using unvetted open weights.",
+      "parents": [
+        {
+          "id": "supervised-fine-tuning",
+          "rel": "counters",
+          "why": "Turns the fine-tuning data pipeline into an attack surface.",
+          "src": "Poisoning Language Models During Instruction Tuning (Wan et al. 2023)"
+        },
+        {
+          "id": "external:backdoor-attacks",
+          "rel": "applies",
+          "why": "Brings trigger-based backdoors from image classifiers (BadNets) to language models.",
+          "src": "Wan et al. 2023"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Demonstrated at pretraining and fine-tuning scale; defenses beyond data provenance and filtering are immature.",
+      "date": "2023-05",
+      "ref": {
+        "title": "Poisoning Language Models During Instruction Tuning (Wan et al.)",
+        "arxiv": "2305.00944"
+      },
+      "examples": [
+        "Sleeper Agents",
+        "near-constant poison sample counts (Anthropic 2025)"
       ],
       "status": "added"
     },
@@ -14161,6 +14815,94 @@
       "status": "added"
     },
     {
+      "id": "image-personalization",
+      "name": "Image Personalization",
+      "aliases": [
+        "DreamBooth",
+        "subject-driven generation",
+        "diffusion LoRA",
+        "style LoRA",
+        "textual inversion"
+      ],
+      "region": "multimodal-applied",
+      "desc": "Teaching an image model a specific subject or style from a handful of photos by fine-tuning it, today usually as a small LoRA, then generating that subject in new scenes.",
+      "summary": "Text alone can't describe your dog, your product or your brand's illustration style precisely enough. Fine-tuning an image model on three to twenty pictures binds them to a new word, after which prompts can put that subject anywhere. Training a small LoRA instead of the whole model made this cheap enough that thousands of shared style and character LoRAs exist; newer methods do it from a single reference image with no training.",
+      "parents": [
+        {
+          "id": "text-to-image",
+          "rel": "extends",
+          "why": "Fine-tunes a text-to-image model to bind a new subject to a token.",
+          "src": "DreamBooth (Ruiz et al. 2022)"
+        },
+        {
+          "id": "diffusion-models",
+          "rel": "applies",
+          "why": "Fine-tunes the diffusion denoiser with a prior-preservation loss so the model keeps its general knowledge.",
+          "src": "DreamBooth (Ruiz et al. 2022)"
+        },
+        {
+          "id": "low-rank-adaptation",
+          "rel": "applies",
+          "why": "LoRA made subject and style fine-tunes small and shareable.",
+          "src": "cloneofsimo/lora (2023)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Mainstream in creative tools and open-model communities; zero-shot reference methods are catching up.",
+      "date": "2022-08",
+      "ref": {
+        "title": "DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven Generation (Ruiz et al.)",
+        "arxiv": "2208.12242"
+      },
+      "examples": [
+        "DreamBooth",
+        "Civitai LoRAs",
+        "IP-Adapter",
+        "textual inversion"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "instruction-image-editing",
+      "name": "Instruction-Based Image Editing",
+      "aliases": [
+        "InstructPix2Pix",
+        "text-guided image editing",
+        "edit by instruction"
+      ],
+      "region": "multimodal-applied",
+      "desc": "Editing an existing image by telling the model what to change (\"make it night\", \"remove the car\"), with a model trained on before-after pairs.",
+      "summary": "Instead of masking areas and writing a fresh prompt, you give the image and an instruction, and the model changes only what was asked. InstructPix2Pix trained on synthetic before-and-after pairs written by a language model and rendered by an image model; today's editors are much more faithful at keeping the rest of the picture intact. It is how most people now edit images with AI.",
+      "parents": [
+        {
+          "id": "text-to-image",
+          "rel": "extends",
+          "why": "Conditions generation on an input image plus an edit instruction.",
+          "src": "InstructPix2Pix (Brooks et al. 2022)"
+        },
+        {
+          "id": "external:prompt-to-prompt",
+          "rel": "applies",
+          "why": "Renders its synthetic before-and-after training pairs with Prompt-to-Prompt editing.",
+          "src": "InstructPix2Pix (Brooks et al. 2022)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Shipped in major image tools and model APIs; consistency over many edits still varies.",
+      "date": "2022-11",
+      "ref": {
+        "title": "InstructPix2Pix: Learning to Follow Image Editing Instructions (Brooks et al.)",
+        "arxiv": "2211.09800"
+      },
+      "examples": [
+        "InstructPix2Pix",
+        "FLUX.1 Kontext",
+        "Qwen-Image-Edit",
+        "Photoshop Generative Fill"
+      ],
+      "status": "added"
+    },
+    {
       "id": "sim-to-real-transfer",
       "name": "Sim-to-Real Transfer",
       "aliases": [
@@ -15802,6 +16544,10 @@
   ],
   "external_ancestors": [
     "external:adaptive-mixtures-of-local-experts",
+    "external:algorithmic-fairness",
+    "external:api-gateways",
+    "external:backdoor-attacks",
+    "external:byte-pair-encoding-compression",
     "external:classical-multi-agent-systems",
     "external:content-moderation-classifiers",
     "external:control-theory-state-space",
@@ -15826,13 +16572,17 @@
     "external:oauth",
     "external:ocr",
     "external:prediction-powered-inference",
+    "external:predictive-uncertainty",
     "external:preference-learning",
+    "external:prompt-to-prompt",
     "external:security-red-teaming",
+    "external:semantic-parsing",
     "external:shared-task-benchmarks",
     "external:software-bill-of-materials",
     "external:star-self-taught-reasoner",
     "external:template-engines",
     "external:trust-in-automation",
+    "external:web-caching",
     "external:weight-averaging"
   ]
 }

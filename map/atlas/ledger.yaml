@@ -257,4 +257,20 @@ settlements:
   - {id: content-provenance, x: 4090, y: 1115, settled: "2026-10-10"}
   - {id: ai-bill-of-materials, x: 3819.1, y: 913, settled: "2026-10-08"}
   - {id: ai-impact-assessment, x: 4317.6, y: 695.1, settled: "2026-10-08"}
+  - {id: text-to-sql, x: 3180, y: 1890, settled: "2026-10-10"}
+  - {id: hallucination-detection, x: 3455, y: 1565, settled: "2026-10-10"}
+  - {id: image-personalization, x: 4390, y: 1440, settled: "2026-10-10"}
+  - {id: semantic-caching, x: 3265, y: 1850, settled: "2026-10-10"}
+  - {id: subword-tokenization, x: 1439.8, y: 1324.4, settled: "2026-10-08"}
+  - {id: rotary-position-embeddings, x: 1207.8, y: 1347.7, settled: "2026-10-08"}
+  - {id: llm-gateways, x: 3596.1, y: 2113.9, settled: "2026-10-08"}
+  - {id: model-parallelism, x: 3564.7, y: 1724.7, settled: "2026-10-08"}
+  - {id: embedding-compression, x: 2822.4, y: 2131, settled: "2026-10-08"}
+  - {id: embedding-fine-tuning, x: 2804.1, y: 2034.4, settled: "2026-10-08"}
+  - {id: continued-pretraining, x: 2525, y: 1080, settled: "2026-10-08"}
+  - {id: bias-and-fairness-evals, x: 3744.4, y: 1244.1, settled: "2026-10-08"}
+  - {id: sycophancy, x: 2994.7, y: 1024.2, settled: "2026-10-08"}
+  - {id: data-poisoning, x: 3055.9, y: 981.7, settled: "2026-10-08"}
+  - {id: instruction-image-editing, x: 4196, y: 1456.4, settled: "2026-10-08"}
+  - {id: context-window-extension, x: 3409.2, y: 1649, settled: "2026-10-08"}
 retired: []
