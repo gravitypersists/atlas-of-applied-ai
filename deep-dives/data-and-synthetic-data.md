@@ -12,12 +12,13 @@ Backbone v0.2 · 8 anchors · 2 cross-region edges
 I'm building a lineage graph of applied AI engineering that will be rendered as an interactive map. Each region of the map is a discipline; each node is a technique, pattern, or method; edges record what each node was built on. This run is a DEEP DIVE into one region: **Data and Synthetic Data**. A backbone of stable ids already exists — attach everything you find to it.
 
 ## The region
-Creating, curating, and cleaning data for training, retrieval, and evaluation — synthetic generation, deduplication, decontamination, quality filtering, model-assisted annotation.
+Creating, curating, and cleaning the data an AI system is built, tuned and tested on — golden and eval sets, model-assisted labeling, data flywheels from production traffic, synthetic generation, and corpus hygiene (deduplication, decontamination, quality filtering).
 
 Boundary with neighboring regions: Produces datasets (vs. Adaptation, which consumes them; vs. Evaluation, which uses them to measure).
 
 Boundary rules (apply these exactly; if you disagree, say so in Amendments rather than breaking them):
 - Self-instruct / synthetic data → data-and-synthetic-data: Producing the dataset → Data; training on it → Adaptation.
+- Eval and golden sets → data-and-synthetic-data: Building, labeling and maintaining the dataset → Data; running it, grading outputs and tracking scores → Evaluation.
 
 ## Perspective and scope
 - Take the view of a practicing AI engineer building products and systems, not a model researcher.
@@ -42,16 +43,21 @@ Nodes homed elsewhere that also touch this region:
 - `llm-distillation` — LLM Distillation (home: adaptation-and-post-training)
 
 ## Questions to answer
-- Synthetic data at scale — what works, model collapse concerns, and verification
+- Data work for application teams — golden and eval sets, synthetic test cases, LLM labeling with human review, mining production traces and feedback (the data flywheel)
+- Synthetic data for teams adapting models — task-specific generation, distillation data, verification and filtering of generated examples
 - Environments and task generation for agentic RL
-- Data for application teams — eval sets, golden sets, labeling with LLMs
+- Lab-scale corpus work (pretraining dedup, quality classifiers, synthetic pretraining corpora) only as background; keep it to detail-layer nodes
 - What are the major sub-areas of this region, and what is the lineage within each?
 - Which techniques here were superseded, and by what?
 - Where does this region draw on other regions, and where do other regions draw on it?
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- none
+- Golden / eval set construction (bootstrapping test cases from production traces, synthetic test-case generation)
+- Data flywheel: turning production logs and user feedback into eval and fine-tuning data
+- PII detection and redaction for training and retrieval corpora
+- Synthetic RAG eval data (generated question-answer pairs over a corpus)
+- Environment and task generation for agentic RL
 
 ## Output
 

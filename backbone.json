@@ -495,16 +495,17 @@
       "kind": "applied",
       "name": "Data and Synthetic Data",
       "title": "The Quarries",
-      "definition": "Creating, curating, and cleaning data for training, retrieval, and evaluation — synthetic generation, deduplication, decontamination, quality filtering, model-assisted annotation.",
+      "definition": "Creating, curating, and cleaning the data an AI system is built, tuned and tested on — golden and eval sets, model-assisted labeling, data flywheels from production traffic, synthetic generation, and corpus hygiene (deduplication, decontamination, quality filtering).",
       "distinct_from": "Produces datasets (vs. Adaptation, which consumes them; vs. Evaluation, which uses them to measure).",
       "descends_from": [
         "deep-learning-nlp",
         "information-retrieval"
       ],
       "deep_dive_focus": [
-        "Synthetic data at scale — what works, model collapse concerns, and verification",
+        "Data work for application teams — golden and eval sets, synthetic test cases, LLM labeling with human review, mining production traces and feedback (the data flywheel)",
+        "Synthetic data for teams adapting models — task-specific generation, distillation data, verification and filtering of generated examples",
         "Environments and task generation for agentic RL",
-        "Data for application teams — eval sets, golden sets, labeling with LLMs"
+        "Lab-scale corpus work (pretraining dedup, quality classifiers, synthetic pretraining corpora) only as background; keep it to detail-layer nodes"
       ]
     },
     {
@@ -829,6 +830,11 @@
       "concept": "Self-instruct / synthetic data",
       "home": "data-and-synthetic-data",
       "rule": "Producing the dataset → Data; training on it → Adaptation."
+    },
+    {
+      "concept": "Eval and golden sets",
+      "home": "data-and-synthetic-data",
+      "rule": "Building, labeling and maintaining the dataset → Data; running it, grading outputs and tracking scores → Evaluation."
     },
     {
       "concept": "Reasoning distillation",
@@ -8660,6 +8666,7 @@
         "synthetic corpora"
       ],
       "region": "data-and-synthetic-data",
+      "layer": "detail",
       "desc": "Generating large, high-quality synthetic corpora with strong models to pretrain or mid-train smaller ones.",
       "parents": [
         {
@@ -8754,6 +8761,7 @@
         "MinHash dedup"
       ],
       "region": "data-and-synthetic-data",
+      "layer": "detail",
       "desc": "Removing exact and near-duplicate documents from training corpora to improve quality and reduce memorization.",
       "parents": [
         {
@@ -8815,6 +8823,7 @@
         "classifier-based filtering"
       ],
       "region": "data-and-synthetic-data",
+      "layer": "detail",
       "desc": "Selecting high-value training text with heuristics and model-based quality classifiers.",
       "parents": [
         {

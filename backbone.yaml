@@ -184,13 +184,14 @@ regions:
     kind: applied
     name: Data and Synthetic Data
     title: The Quarries
-    definition: Creating, curating, and cleaning data for training, retrieval, and evaluation — synthetic generation, deduplication, decontamination, quality filtering, model-assisted annotation.
+    definition: Creating, curating, and cleaning the data an AI system is built, tuned and tested on — golden and eval sets, model-assisted labeling, data flywheels from production traffic, synthetic generation, and corpus hygiene (deduplication, decontamination, quality filtering).
     distinct_from: Produces datasets (vs. Adaptation, which consumes them; vs. Evaluation, which uses them to measure).
     descends_from: [deep-learning-nlp, information-retrieval]
     deep_dive_focus:
-      - Synthetic data at scale — what works, model collapse concerns, and verification
+      - Data work for application teams — golden and eval sets, synthetic test cases, LLM labeling with human review, mining production traces and feedback (the data flywheel)
+      - Synthetic data for teams adapting models — task-specific generation, distillation data, verification and filtering of generated examples
       - Environments and task generation for agentic RL
-      - Data for application teams — eval sets, golden sets, labeling with LLMs
+      - Lab-scale corpus work (pretraining dedup, quality classifiers, synthetic pretraining corpora) only as background; keep it to detail-layer nodes
   - id: evaluation-and-observability
     kind: applied
     name: Evaluation and Observability
@@ -279,6 +280,7 @@ boundary_rules:
   - {concept: Function calling, home: agents-and-orchestration, rule: "The primitive for requesting external execution → Agents."}
   - {concept: MCP / Agent skills, home: agents-and-orchestration, rule: "Protocols and packaging for capabilities agents use → Agents."}
   - {concept: Self-instruct / synthetic data, home: data-and-synthetic-data, rule: "Producing the dataset → Data; training on it → Adaptation."}
+  - {concept: Eval and golden sets, home: data-and-synthetic-data, rule: "Building, labeling and maintaining the dataset → Data; running it, grading outputs and tracking scores → Evaluation."}
   - {concept: Reasoning distillation, home: adaptation-and-post-training, rule: "The act of training a student → Adaptation; generating the traces → Data."}
   - {concept: Model merging, home: adaptation-and-post-training, rule: "Arithmetic on fine-tuned weights changes the model after pretraining → Adaptation, even though the merge itself runs no gradient steps."}
   - {concept: Text watermarking, home: inference-and-serving, rule: "A bias applied at the sampling step → Inference, even though its purpose (provenance) is governance; it appears in Safety through also."}
@@ -2906,6 +2908,7 @@ nodes:
     name: Synthetic Pretraining Data
     aliases: [textbook-quality data, synthetic corpora]
     region: data-and-synthetic-data
+    layer: detail
     desc: Generating large, high-quality synthetic corpora with strong models to pretrain or mid-train smaller ones.
     parents:
       - {id: self-instruct, rel: extends, why: "Scales model-generated data from instructions to full training corpora.", src: "Textbooks Are All You Need (Gunasekar et al. 2023)", confidence: medium}
@@ -2946,6 +2949,7 @@ nodes:
     name: Data Deduplication
     aliases: [near-duplicate removal, MinHash dedup]
     region: data-and-synthetic-data
+    layer: detail
     desc: Removing exact and near-duplicate documents from training corpora to improve quality and reduce memorization.
     parents:
       - {id: "external:minhash", rel: applies, why: "Uses locality-sensitive hashing for near-duplicate detection.", src: "Deduplicating Training Data Makes Language Models Better (Lee et al. 2021)"}
@@ -2973,6 +2977,7 @@ nodes:
     name: Data Quality Filtering
     aliases: [corpus curation, classifier-based filtering]
     region: data-and-synthetic-data
+    layer: detail
     desc: Selecting high-value training text with heuristics and model-based quality classifiers.
     parents:
       - {id: data-deduplication, rel: extends, why: "Builds on deduplicated corpora with quality scoring.", src: "The FineWeb Datasets (Penedo et al. 2024)"}
