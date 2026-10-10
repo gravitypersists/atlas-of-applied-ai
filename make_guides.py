@@ -18,7 +18,6 @@ LEADS = {
         ("Portfolio Beam Search and diversity-aware search under PRM uncertainty (single blog source; verify adoption)", None),
     ],
     "ai-product-and-interaction-design": [
-        ("Background / asynchronous agent delegation (assign a task, get a PR or report back)", None),
         ("Checkpoints, rewind and collaborative repair (\"The Collaboration Gap in Human-AI Work\")", "2604.18096"),
         ("Impact previews and staged execution for consequential agent actions", None),
     ],
@@ -101,7 +100,7 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - Take the view of a practicing AI engineer building products and systems, not a model researcher.
 - Cover the field through 2026. 2024–2026 work is easy to under-represent — look for it deliberately.
 - A node is a technique, pattern, method, or discipline. Products, libraries, frameworks, benchmarks, and companies are NOT nodes; list them under `examples`.
-- Target 15–30 nodes for this region in total, counting the existing anchors below. Quality over count: leave out research-only ideas that no practitioner would meet unless they're real ancestors of something that matters.
+- Target {r.get('node_target', '15–30')} nodes for this region in total, counting the existing anchors below. Quality over count: leave out research-only ideas that no practitioner would meet unless they're real ancestors of something that matters.
 - Before adding a node, check the backbone index at the end (ids, names, and aliases across ALL regions). If the concept already exists anywhere, even in another region or under an alias, attach to that id (correct it, or add an alias or example). Never re-create it under a new id.
 
 ## Existing anchors in this region (keep these ids; you may correct their fields)

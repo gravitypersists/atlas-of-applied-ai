@@ -276,6 +276,21 @@ regions:
     - {kind: blog, title: "Voice AI & Voice Agents: An Illustrated Primer", by: "Kwindla Hultman Kramer (Daily)", year: 2025, url: "https://voiceaiandvoiceagents.com/", why: "A practical guide to building voice agents: the latency budget, transcription, turn detection, interruptions, and when to use speech-to-speech models instead of a pipeline."}
     - {kind: blog, title: "The Illustrated Stable Diffusion", by: "Jay Alammar", year: 2022, url: "https://jalammar.github.io/illustrated-stable-diffusion/", why: "Pictures each part of a latent diffusion image generator (text encoder, denoiser, image decoder) and how a prompt steers the denoising."}
     - {kind: talk, title: "Building Generative Image & Video models at Scale", by: "Sander Dieleman (Google DeepMind, AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=xOP1PM8fwnk", why: "Covers how today's image and video generators are built, from latent spaces and denoising to conditioning and post-training, from someone who works on Veo."}
+  - id: embodied-ai-and-world-models
+    kind: applied
+    name: Embodied AI and World Models
+    title: The Clockwork Marches
+    definition: Foundation models that act in the physical world or simulate it — vision-language-action policies, robot learning from demonstrations, language-model task planning for robots, sim-to-real transfer, and world models that predict how an environment responds to actions.
+    distinct_from: Agents that act through software (APIs, browsers, desktops) stay in Agents. Perception-only vision and passive video generation stay in Multimodal. RL algorithms themselves stay in the Reinforcement Learning root.
+    descends_from: [reinforcement-learning, deep-learning-nlp]
+    node_target: "10–18"
+    deep_dive_focus:
+      - Action representations in VLAs (tokenized actions, diffusion and flow action heads, action chunking) and which ones are winning
+      - The data bottleneck — teleoperation, cross-embodiment datasets, simulation, and learning from human video
+      - World models — latent imagination for RL vs. generative interactive environments, and their use as simulators for training and policy evaluation
+      - Hierarchical systems (a language model plans over learned skills) vs. end-to-end VLAs
+      - What an engineer outside a robotics lab actually touches — fine-tuning an open VLA, on-robot inference latency, evaluating policies safely
+
 
 boundary_rules:
   - {concept: ReAct, home: agents-and-orchestration, rule: "Defined by acting in an environment via tools → Agents."}
@@ -303,6 +318,9 @@ boundary_rules:
   - {concept: LLM-as-judge, home: evaluation-and-observability, rule: "Deployed to measure → Evaluation, though implemented as a prompt."}
   - {concept: Human-in-the-loop approval, home: ai-product-and-interaction-design, rule: "Defined by the human decision point → Product (secondary: Agents)."}
   - {concept: Architectures (MoE, SSMs), home: deep-learning-nlp, rule: "Model internals stay in the root unless engineers configure them at serving time."}
+  - {concept: Physical vs. digital agents, home: "embodied-ai-and-world-models (physical); agents-and-orchestration (digital)", rule: "Acting through a body or a simulated physical world → Embodied. Acting through software interfaces, including GUIs → Agents."}
+  - {concept: World models vs. video generation, home: "embodied-ai-and-world-models (action-conditioned); multimodal-applied (passive)", rule: "Generates what happens next given an action, for training or evaluating policies → Embodied. Generates media from a prompt → Multimodal."}
+  - {concept: Robot policy training, home: embodied-ai-and-world-models, rule: "Training a policy to output physical actions → Embodied, even when it uses RL, imitation learning or fine-tuning (secondary: Adaptation)."}
 
 nodes:
   # ======================= ROOTS: information-retrieval =======================
@@ -2199,6 +2217,25 @@ nodes:
     date: "2026-01"
     ref: {title: "Enhancing Model Context Protocol (MCP) with Context-Aware Server Collaboration (Jayanti & Han)", arxiv: "2601.11595"}
     status: added
+  - id: agent-to-agent-protocols
+    name: Agent-to-Agent Protocols
+    aliases: [A2A, Agent2Agent, agent interoperability protocols, agent cards]
+    region: agents-and-orchestration
+    layer: detail
+    desc: Open protocols that let agents built by different teams or vendors discover each other, delegate tasks and exchange results, where MCP connects an agent to tools.
+    summary: "MCP gives an agent a standard way to call tools. Agent-to-agent protocols such as A2A give agents a standard way to call each other: each agent publishes a card describing what it can do, and another agent can hand it a task, follow its progress and collect the result, without either side knowing how the other is built. They matter when agents from different vendors or teams need to work together."
+    parents:
+      - {id: model-context-protocol, rel: applies, why: "Takes MCP's idea of an open, standard interface and uses it between peer agents instead of between an agent and its tools.", src: "Announcing the Agent2Agent Protocol (A2A) (Google 2025)"}
+      - {id: multi-agent-systems, rel: extends, why: "Lets multi-agent systems span vendors and organizations instead of one codebase.", src: "Google 2025"}
+      - {id: "external:classical-multi-agent-systems", rel: replaces, why: "Revives the goal of agent communication languages such as FIPA ACL and KQML with web-native transport.", src: "Google 2025"}
+    maturity: 2
+    maturity_note: Backed by a Linux Foundation project and many vendors; production use across organizations is still rare.
+    date: "2025-04"
+    ref: {title: "Announcing the Agent2Agent Protocol (A2A) (Google Developers Blog)", url: "https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/"}
+    examples: [A2A, IBM ACP (merged into A2A)]
+    resources:
+      - {kind: docs, title: "A2A Protocol", by: "A2A Project (Linux Foundation)", year: 2025, url: "https://a2a-protocol.org/latest/"}
+    status: added
 
   # ======================= APPLIED: planning-and-reasoning =======================
   - id: scratchpads
@@ -3850,6 +3887,46 @@ nodes:
       - {kind: "paper", title: "TOFU: A Task of Fictitious Unlearning for LLMs", by: "Pratyush Maini et al.", year: 2024, url: "https://arxiv.org/abs/2401.06121"}
       - {kind: "paper", title: "The WMDP Benchmark: Measuring and Reducing Malicious Use With Unlearning", by: "Nathaniel Li et al.", year: 2024, url: "https://arxiv.org/abs/2403.03218"}
     status: added
+  - id: agent-authorization
+    name: Agent Identity and Delegated Authorization
+    aliases: [OAuth for agents, delegated authorization, agent identity, scoped credentials, on-behalf-of access, non-human identity]
+    region: safety-security-and-governance
+    also: [agents-and-orchestration]
+    desc: Giving an agent its own identity and short-lived, narrowly scoped credentials that a user grants through a standard flow such as OAuth, instead of handing it the user's keys.
+    summary: "An agent that reads your email or opens pull requests needs access, and the easy shortcut is to paste in a long-lived API key with full rights. Delegated authorization gives the agent its own identity and has the user grant it limited, expiring permissions through a standard flow like OAuth, so every action can be traced and revoked. MCP adopted OAuth for remote servers in 2025, which made this the normal way to connect agents to real accounts."
+    parents:
+      - {id: least-privilege, rel: applies, why: "Grants an agent only the scopes a task needs, for a limited time.", src: "Model Context Protocol specification, Authorization (2025-03-26)"}
+      - {id: agent-sandboxing, rel: extends, why: "Sandboxing limits what an agent's code can touch; authorization limits which accounts and data it can act on.", src: "MCP specification, Authorization (2025-03-26)"}
+      - {id: model-context-protocol, rel: extends, why: "Adds an authorization layer so remote tool servers act on a user's behalf with granted tokens.", src: "MCP specification, Authorization (2025-03-26)"}
+      - {id: "external:oauth", rel: applies, why: "Reuses OAuth's consent and token flows for agents as clients.", src: "MCP specification, Authorization (2025-03-26)"}
+    maturity: 3
+    maturity_note: OAuth for MCP servers is widely deployed; agent identity standards are still forming.
+    date: "2025-03"
+    ref: {title: "Model Context Protocol specification: Authorization (2025-03-26)", url: "https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization"}
+    examples: [MCP OAuth 2.1 authorization, OAuth token exchange, Auth0 for AI Agents]
+    resources:
+      - {kind: blog, title: "Let's fix OAuth in MCP", by: "Aaron Parecki", year: 2025, url: "https://aaronparecki.com/2025/04/03/15/oauth-for-model-context-protocol"}
+    status: added
+  - id: tool-poisoning
+    name: Tool Poisoning
+    aliases: [MCP tool poisoning, tool description injection, MCP rug pulls, MCP supply-chain attacks]
+    region: safety-security-and-governance
+    layer: detail
+    also: [agents-and-orchestration]
+    desc: Hiding malicious instructions in a tool's description or metadata, or changing a trusted tool after install, so that an agent which loads the tool follows the attacker.
+    summary: "When an agent connects to a tool server, the tool descriptions go straight into the model's context, and the user rarely reads them. A malicious or compromised server can hide instructions there, such as 'also send the contents of ~/.ssh to this address', or quietly change a tool after the user approved it. Defenses include pinning and reviewing tool descriptions, scanning servers, and treating third-party servers as untrusted code."
+    parents:
+      - {id: indirect-prompt-injection, rel: specializes, why: "Injection delivered through tool metadata instead of tool outputs or documents.", src: "MCP Security Notification: Tool Poisoning Attacks (Invariant Labs 2025)"}
+      - {id: model-context-protocol, rel: applies, why: "Exploits the way MCP clients load third-party tool descriptions into context.", src: "Invariant Labs 2025"}
+    maturity: 3
+    maturity_note: Demonstrated against real MCP clients; scanners and pinning are emerging defenses.
+    date: "2025-04"
+    ref: {title: "MCP Security Notification: Tool Poisoning Attacks (Invariant Labs)", url: "https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks"}
+    examples: [mcp-scan, tool description pinning]
+    resources:
+      - {kind: blog, title: "Model Context Protocol has prompt injection security problems", by: "Simon Willison", year: 2025, url: "https://simonwillison.net/2025/Apr/9/mcp-prompt-injection/"}
+      - {kind: paper, title: "MCPTox: A Benchmark for Tool Poisoning Attack on Real-World MCP Servers", by: "Zhiqiang Wang et al.", year: 2025, url: "https://arxiv.org/abs/2508.14925"}
+    status: added
 
   # ======================= APPLIED: ai-product-and-interaction-design =======================
   - id: human-ai-interaction-guidelines
@@ -4136,6 +4213,23 @@ nodes:
       - {kind: blog, title: "Using a transformer to improve end of turn detection", by: "LiveKit", year: 2024, url: "https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection"}
       - {kind: talk, title: "Fix AI Voice Interruptions with Semantic Turn Detection", by: "LiveKit", year: 2026, url: "https://www.youtube.com/watch?v=XbrlOY4Z-Ow"}
       - {kind: paper, title: "Moshi: a speech-text foundation model for real-time dialogue", by: "Défossez et al. (Kyutai)", year: 2024, url: "https://arxiv.org/abs/2410.00037"}
+    status: added
+  - id: background-agents
+    name: Background Agents
+    aliases: [asynchronous agents, cloud agents, agent delegation, assign-and-review]
+    region: ai-product-and-interaction-design
+    also: [agents-and-orchestration]
+    desc: Handing an agent a whole task, such as an issue, and letting it work unattended in a cloud sandbox, then reviewing the result it returns as a pull request or report.
+    summary: "Instead of watching an agent step by step, you assign it a task the way you would a colleague, and it works on its own in a sandboxed environment, possibly for an hour, while you do something else. When it's done it hands back a pull request, a report or a question. The design work moves from approving each action to writing a good task description and reviewing finished work."
+    parents:
+      - {id: coding-agents, rel: applies, why: "Runs coding agents unattended on assigned issues.", src: "GitHub Copilot: Meet the new coding agent (GitHub 2025)"}
+      - {id: human-in-the-loop-approval, rel: replaces, why: "Moves human review from each step to the finished result.", src: "GitHub 2025"}
+      - {id: agent-sandboxing, rel: applies, why: "Each task runs in its own isolated cloud environment.", src: "GitHub 2025"}
+    maturity: 3
+    maturity_note: Shipped by major coding tools in 2025; how to review and trust the output is still being worked out.
+    date: "2025-05"
+    ref: {title: "GitHub Copilot: Meet the new coding agent (GitHub Blog)", url: "https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/"}
+    examples: [Devin, OpenAI Codex, GitHub Copilot coding agent, Jules, Claude Code on the web]
     status: added
 
   # ======================= APPLIED: multimodal-applied =======================
@@ -4460,4 +4554,118 @@ nodes:
       - {kind: tutorial, title: "Train your ControlNet with diffusers", by: "Hugging Face (Apolinário, Pedro Cuenca)", year: 2023, url: "https://huggingface.co/blog/train-your-controlnet"}
       - {kind: talk, title: "Ok, but what IS ControlNet?", by: "koiboi", year: 2023, url: "https://www.youtube.com/watch?v=fhIGt7QGg4w"}
       - {kind: paper, title: "T2I-Adapter: Learning Adapters to Dig out More Controllable Ability for Text-to-Image Diffusion Models", by: "Chong Mou et al.", year: 2023, url: "https://arxiv.org/abs/2302.08453"}
+    status: added
+
+  # ======================= APPLIED: embodied-ai-and-world-models =======================
+  - id: sim-to-real-transfer
+    name: Sim-to-Real Transfer
+    aliases: [domain randomization, sim2real]
+    region: embodied-ai-and-world-models
+    desc: Training a policy in simulation and deploying it on a real robot, with simulator parameters randomized so the real world looks like one more variation.
+    parents:
+      - {id: policy-gradient-methods, rel: applies, why: "Simulated policies are commonly trained with RL, which needs far more trials than a real robot can afford.", src: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World (Tobin et al. 2017)"}
+      - {id: "external:physics-simulation", rel: applies, why: "Rests on physics engines and rendering for robots.", src: "Tobin et al. 2017"}
+    maturity: 4
+    maturity_note: Standard practice for locomotion and increasingly for manipulation.
+    date: "2017-03"
+    ref: {title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World (Tobin et al.)", arxiv: "1703.06907"}
+    examples: [Isaac Sim, MuJoCo, Isaac Lab]
+    status: added
+  - id: latent-world-models
+    name: Latent World Models
+    aliases: [model-based RL, Dreamer, learning in imagination, World Models (Ha & Schmidhuber)]
+    region: embodied-ai-and-world-models
+    desc: Learning a compact model of how an environment changes in response to actions, then training a policy inside that learned model instead of the real environment.
+    parents:
+      - {id: markov-decision-process, rel: extends, why: "Learns the MDP's transition and reward functions from experience.", src: "World Models (Ha & Schmidhuber 2018)"}
+      - {id: policy-gradient-methods, rel: applies, why: "Trains an actor-critic on trajectories imagined by the model.", src: "Dream to Control (Hafner et al. 2019)"}
+    maturity: 3
+    maturity_note: Strong results in games and robot learning; few product deployments.
+    date: "2019-12"
+    ref: {title: "Dream to Control: Learning Behaviors by Latent Imagination (Hafner et al.)", arxiv: "1912.01603"}
+    examples: [DreamerV3, TD-MPC2, V-JEPA 2]
+    status: added
+  - id: llm-robot-planning
+    name: LLM Task Planning for Robots
+    aliases: [SayCan, Code as Policies, language-conditioned task planning, hierarchical VLA]
+    region: embodied-ai-and-world-models
+    desc: A language model breaks an instruction into steps and picks from a library of learned robot skills, or writes code that calls them, while low-level controllers do the moving.
+    parents:
+      - {id: pretrained-language-models, rel: applies, why: "Uses an LLM's world knowledge to choose and order skills.", src: "Do As I Can, Not As I Say (Ahn et al. 2022)"}
+      - {id: strips-planning, rel: replaces, why: "Sequences skills from a fixed library, the job classical planners did with hand-written operators.", src: "Ahn et al. 2022"}
+    maturity: 3
+    maturity_note: Common as the high-level layer of hierarchical robot systems.
+    date: "2022-04"
+    ref: {title: "Do As I Can, Not As I Say: Grounding Language in Robotic Affordances (Ahn et al.)", arxiv: "2204.01691"}
+    examples: [SayCan, Code as Policies, Gemini Robotics-ER]
+    status: added
+  - id: diffusion-policy
+    name: Diffusion Policy
+    aliases: [action diffusion, visuomotor diffusion policy]
+    region: embodied-ai-and-world-models
+    desc: Generating robot actions with a denoising diffusion model conditioned on observations, which captures demonstrations that have several valid ways to do the task.
+    parents:
+      - {id: diffusion-models, rel: applies, why: "Denoises action sequences instead of images.", src: "Diffusion Policy (Chi et al. 2023)"}
+      - {id: "external:behavior-cloning", rel: extends, why: "Learns from demonstrations like behavior cloning, with a generative model in place of regression.", src: "Chi et al. 2023"}
+    maturity: 3
+    maturity_note: A default baseline for imitation learning; action heads of several VLAs use the same idea.
+    date: "2023-03"
+    ref: {title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion (Chi et al.)", arxiv: "2303.04137"}
+    examples: [LeRobot, π0 flow-matching action head]
+    status: added
+  - id: action-chunking
+    name: Action Chunking and Low-Cost Teleoperation
+    aliases: [ACT, ALOHA, action chunking with transformers, teleoperation data collection]
+    region: embodied-ai-and-world-models
+    desc: Collecting demonstrations with cheap teleoperation rigs and training a transformer to predict short sequences of future actions at once, which smooths control and reduces compounding errors.
+    parents:
+      - {id: transformer-architecture, rel: applies, why: "A transformer predicts a chunk of future actions from images and joint states.", src: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware (Zhao et al. 2023)"}
+      - {id: "external:behavior-cloning", rel: extends, why: "Behavior cloning that predicts action sequences rather than single steps.", src: "Zhao et al. 2023"}
+    maturity: 3
+    maturity_note: Widely reproduced; chunked action output is now standard in VLAs.
+    date: "2023-04"
+    ref: {title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware (Zhao et al.)", arxiv: "2304.13705"}
+    examples: [ALOHA, LeRobot, SO-100 arm]
+    status: added
+  - id: vision-language-action-models
+    name: Vision-Language-Action Models
+    aliases: [VLA, VLAs, RT-2, OpenVLA, robot foundation models, generalist robot policies]
+    region: embodied-ai-and-world-models
+    desc: A vision-language model fine-tuned to output robot actions directly, so web-scale knowledge of objects and language carries over to physical control.
+    parents:
+      - {id: vision-language-models, rel: extends, why: "Adds action outputs to a pretrained VLM and co-trains on robot data.", src: "RT-2 (Brohan et al. 2023)"}
+      - {id: llm-robot-planning, rel: replaces, why: "Folds high-level planning and low-level control into one end-to-end model.", src: "RT-2 (Brohan et al. 2023)"}
+    maturity: 2
+    maturity_note: Open models and commercial pilots; reliability outside the lab is unsettled.
+    date: "2023-07"
+    ref: {title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control (Brohan et al.)", arxiv: "2307.15818"}
+    examples: [RT-2, OpenVLA, π0, Gemini Robotics, GR00T N1]
+    status: added
+  - id: cross-embodiment-training
+    name: Cross-Embodiment Training
+    aliases: [Open X-Embodiment, RT-X, pooled robot datasets]
+    region: embodied-ai-and-world-models
+    desc: Training one policy on pooled demonstrations from many different robot bodies, so data collected on one robot helps others.
+    parents:
+      - {id: vision-language-action-models, rel: extends, why: "Trains generalist policies on data from many robot types.", src: "Open X-Embodiment (2023)"}
+      - {id: transfer-learning-fine-tuning, rel: applies, why: "Pretrain broadly across robots, then fine-tune to a specific one.", src: "Open X-Embodiment (2023)"}
+    maturity: 2
+    maturity_note: Shared datasets are standard in research; transfer gains vary.
+    date: "2023-10"
+    ref: {title: "Open X-Embodiment: Robotic Learning Datasets and RT-X Models (Open X-Embodiment Collaboration)", arxiv: "2310.08864"}
+    examples: [Open X-Embodiment, DROID, LeRobot datasets]
+    status: added
+  - id: interactive-world-models
+    name: Interactive World Models
+    aliases: [generative interactive environments, action-conditioned video models, world foundation models, Genie]
+    region: embodied-ai-and-world-models
+    desc: Video-generation models conditioned on actions, which produce a playable, explorable environment frame by frame and can stand in for a simulator.
+    parents:
+      - {id: video-generation, rel: extends, why: "Conditions video generation on actions so the scene responds to control.", src: "Genie: Generative Interactive Environments (Bruce et al. 2024)"}
+      - {id: latent-world-models, rel: extends, why: "Learns environment dynamics like a world model, but from internet video at scale.", src: "Bruce et al. 2024"}
+    maturity: 2
+    maturity_note: Public demos and early use for synthetic robot data; not yet a standard simulator.
+    date: "2024-02"
+    ref: {title: "Genie: Generative Interactive Environments (Bruce et al.)", arxiv: "2402.15391"}
+    examples: [Genie 3, NVIDIA Cosmos, Oasis]
     status: added

@@ -525,12 +525,12 @@ const ROOT_COLORS = [
 const APPLIED_COLORS = [
   ["#c9d9de", "#4f7a8c"], ["#e3c9d3", "#8c4f6d"], ["#d3dfc4", "#6d8c4f"], ["#ecd5bd", "#b0773c"],
   ["#d0d1e6", "#5b5fa0"], ["#c4e0da", "#3c9a8a"], ["#e8c9c4", "#a05b5b"], ["#d9cfe6", "#7f6aa8"],
-  ["#cde0c8", "#4c8f4c"], ["#ead0df", "#b05a8c"], ["#c6d9e8", "#2f7fb0"],
+  ["#cde0c8", "#4c8f4c"], ["#ead0df", "#b05a8c"], ["#c6d9e8", "#2f7fb0"], ["#dedbbd", "#857a2c"],
 ];
 function regionPalette(bb) {
   const m = new Map();
   bb.regions.filter((r) => r.kind === "root").forEach((r, i) => m.set(r.id, { tint: ROOT_COLORS[i % 8][0], ink: ROOT_COLORS[i % 8][1] }));
-  bb.regions.filter((r) => r.kind !== "root").forEach((r, i) => m.set(r.id, { tint: APPLIED_COLORS[i % 11][0], ink: APPLIED_COLORS[i % 11][1] }));
+  bb.regions.filter((r) => r.kind !== "root").forEach((r, i) => m.set(r.id, { tint: APPLIED_COLORS[i % APPLIED_COLORS.length][0], ink: APPLIED_COLORS[i % APPLIED_COLORS.length][1] }));
   return m;
 }
 
@@ -845,13 +845,13 @@ function routeOf(e, placed) {
 // ---------------------------------------------------------------- debug preview
 const DEBUG_PALETTE = [
   "#8c6d46", "#7a5c3a", "#9a7b4f", "#6e5a43", "#a08060", "#857055", "#76624a", "#93785a", // roots: sepia family
-  "#4f7a8c", "#8c4f6d", "#6d8c4f", "#b0773c", "#5b5fa0", "#3c9a8a", "#a05b5b", "#7f6aa8", "#4c8f4c", "#b05a8c", "#2f7fb0",
+  "#4f7a8c", "#8c4f6d", "#6d8c4f", "#b0773c", "#5b5fa0", "#3c9a8a", "#a05b5b", "#7f6aa8", "#4c8f4c", "#b05a8c", "#2f7fb0", "#857a2c",
 ];
 function regionColors(bb) {
   const roots = bb.regions.filter((r) => r.kind === "root"), applied = bb.regions.filter((r) => r.kind !== "root");
   const m = new Map();
   roots.forEach((r, i) => m.set(r.id, DEBUG_PALETTE[i % 8]));
-  applied.forEach((r, i) => m.set(r.id, DEBUG_PALETTE[8 + (i % 11)]));
+  applied.forEach((r, i) => m.set(r.id, DEBUG_PALETTE[8 + (i % (DEBUG_PALETTE.length - 8))]));
   return m;
 }
 
