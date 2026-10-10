@@ -219,4 +219,11 @@ settlements:
   - {id: multi-head-latent-attention, x: 3737.5, y: 1968.8, settled: "2026-10-08"}
   - {id: structured-pruning, x: 2610.7, y: 899.3, settled: "2026-10-08"}
   - {id: on-policy-distillation, x: 2594.8, y: 986.9, settled: "2026-10-08"}
+  - {id: golden-eval-sets, x: 2463.4, y: 1207.8, settled: "2026-10-08"}
+  - {id: instruction-backtranslation, x: 2024.2, y: 1196.5, settled: "2026-10-08"}
+  - {id: instruction-data-selection, x: 2233, y: 920.8, settled: "2026-10-08"}
+  - {id: agent-trajectory-synthesis, x: 2385, y: 845, settled: "2026-10-08"}
+  - {id: pii-redaction, x: 2444.5, y: 1037, settled: "2026-10-08"}
+  - {id: data-flywheel, x: 2535, y: 1165, settled: "2026-10-08"}
+  - {id: synthetic-rag-data, x: 2400, y: 1295, settled: "2026-10-08"}
 retired: []

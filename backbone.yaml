@@ -192,6 +192,14 @@ regions:
       - Synthetic data for teams adapting models — task-specific generation, distillation data, verification and filtering of generated examples
       - Environments and task generation for agentic RL
       - Lab-scale corpus work (pretraining dedup, quality classifiers, synthetic pretraining corpora) only as background; keep it to detail-layer nodes
+    overview: "Data and Synthetic Data is about making the datasets an AI system is tested, tuned and trained on. For an application team that mostly means two things. The first is a golden set: real requests and known failures, labeled by someone who knows the domain, that every change is tested against. The second is a data flywheel that keeps that set, and any fine-tuning data, growing from production traces and user feedback. Models now do much of the labeling, with people reviewing samples and hard cases.\n\nWhen real data runs short, models generate it. Self-Instruct showed in 2022 that a model can write an entire instruction dataset from a handful of seed tasks; Evol-Instruct made the generated tasks harder, and instruction backtranslation grounded them in human-written text. The same idea now produces RAG test questions from a company's own documents and, for agents, whole sandboxed tasks with automatic checks whose successful runs become training data. Generated data needs filtering as much as generating: near-duplicates, wrong answers and easy examples are thrown out, and a few thousand well-chosen examples often beat a much larger set.\n\nUnder this sits corpus hygiene, mostly the work of labs training base models: removing duplicates, filtering web text for quality, scrubbing personal information, and keeping test questions out of training data. A recurring worry is model collapse, where models trained only on earlier models' output lose rare knowledge over generations; keeping real data in the mix and checking generated examples against tests or solvers avoids it in practice. Landmarks worth knowing: golden sets, LLM-assisted labeling, the data flywheel, Self-Instruct, and decontamination."
+    learning_path:
+      - {kind: blog, title: "Your AI Product Needs Evals", by: "Hamel Husain", year: 2024, url: "https://hamel.dev/blog/posts/evals/", why: "Shows how a team builds its first eval set from real traces, unit-style checks and human review, using one product as the running example. Start here because the golden set is what every other dataset in this region gets measured against."}
+      - {kind: blog, title: "A Field Guide to Rapidly Improving AI Products", by: "Hamel Husain", year: 2025, url: "https://hamel.dev/blog/posts/field-guide/", why: "Covers error analysis, a custom data viewer and domain-expert review as a repeating loop. Read it second because it turns a one-off eval set into a flywheel fed by production traffic."}
+      - {kind: blog, title: "Generative Benchmarking", by: "Kelly Hong, Anton Troynikov, Jeff Huber (Chroma)", year: 2025, url: "https://www.trychroma.com/research/generative-benchmarking", why: "Generates test queries from your own documents, filters them, and checks them against real user queries. It is the first synthetic-data technique most application teams need, for testing retrieval before there is traffic."}
+      - {kind: blog, title: "Synthetic data: save money, time and carbon with open source", by: "Moritz Laurer (Hugging Face)", year: 2024, url: "https://huggingface.co/blog/synthetic-data-save-costs", why: "Uses a large model to label data, has a person check the labels, and trains a small classifier on the result. It shows LLM labeling end to end, including where human review still matters."}
+      - {kind: docs, title: "Synthetic Data & Distillation (RLHF Book)", by: "Nathan Lambert", year: 2025, url: "https://rlhfbook.com/c/12-synthetic-data", why: "Surveys how labs generate instruction, preference and feedback data with models, from Alpaca to on-policy distillation. Read it once you have used synthetic data yourself and want the wider landscape behind Self-Instruct and its successors."}
+      - {kind: blog, title: "FineWeb: decanting the web for the finest text data at scale", by: "Guilherme Penedo et al. (Hugging Face)", year: 2024, url: "https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1", why: "Walks through deduplication, heuristic filters and a model-based quality classifier, with an ablation for each step. It comes last because it covers lab-scale corpus hygiene, which application teams mostly inherit rather than run."}
   - id: evaluation-and-observability
     kind: applied
     name: Evaluation and Observability
@@ -2926,6 +2934,7 @@ nodes:
     aliases: [synthetic instruction generation]
     region: data-and-synthetic-data
     desc: Bootstrapping instruction datasets by prompting a model to generate tasks, inputs, and outputs from a few seeds.
+    summary: "Builds an instruction-tuning dataset with a model instead of human writers. Starting from a small seed set of hand-written tasks (175 in the paper), the model is shown a few examples and asked for new instructions, then for inputs and answers to them, and near-duplicates and malformed items are filtered out. It made instruction data cheap: Stanford's Alpaca set of 52,000 examples cost a few hundred dollars to generate."
     parents:
       - {id: few-shot-prompting, rel: applies, why: "Uses few-shot prompts seeded with example tasks to generate new ones.", src: "Self-Instruct (Wang et al. 2022)"}
     maturity: 4
@@ -2933,12 +2942,18 @@ nodes:
     date: "2022-12"
     ref: {title: "Self-Instruct: Aligning Language Models with Self-Generated Instructions (Wang et al.)", arxiv: "2212.10560"}
     examples: [Alpaca data]
+    resources:
+      - {kind: blog, title: "Alpaca: A Strong, Replicable Instruction-Following Model", by: "Rohan Taori et al. (Stanford CRFM)", year: 2023, url: "https://crfm.stanford.edu/2023/03/13/alpaca.html"}
+      - {kind: docs, title: "SelfInstruct - Distilabel Docs", by: "Argilla", year: 2024, url: "https://distilabel.argilla.io/latest/components-gallery/tasks/selfinstruct/"}
+      - {kind: talk, title: "Instruction Tuning of Large Language Models", by: "Yizhong Wang (JHU CLSP)", year: 2023, url: "https://www.youtube.com/watch?v=jpbt3IZgbcc"}
+      - {kind: docs, title: "Synthetic Data & Distillation (RLHF Book)", by: "Nathan Lambert", year: 2025, url: "https://rlhfbook.com/c/12-synthetic-data"}
     status: repaired
   - id: evol-instruct
     name: Evol-Instruct
     aliases: [instruction evolution]
     region: data-and-synthetic-data
     desc: Iteratively rewriting instructions to be harder or broader, producing more complex training data.
+    summary: "Model-generated instructions tend to be easy and alike, because the generator sticks to likely, simple requests. Evol-Instruct has a model rewrite each instruction over several rounds, adding constraints, requiring more reasoning steps, or moving it to a new topic, so the dataset gets harder and more varied. It was used to train WizardLM and WizardCoder."
     parents:
       - {id: self-instruct, rel: extends, why: "Evolves generated instructions for difficulty and diversity.", src: "WizardLM (Xu et al. 2023)"}
     maturity: 3
@@ -2946,6 +2961,10 @@ nodes:
     date: "2023-04"
     ref: {title: "WizardLM: Empowering Large Language Models to Follow Complex Instructions (Xu et al.)", arxiv: "2304.12244"}
     examples: [WizardLM, WizardCoder]
+    resources:
+      - {kind: docs, title: "EvolInstruct - Distilabel Docs", by: "Argilla", year: 2024, url: "https://distilabel.argilla.io/latest/components-gallery/tasks/evolinstruct/"}
+      - {kind: talk, title: "WizardLM: Evolving Instruction Datasets to Create a Better Model", by: "Sam Witteveen", year: 2023, url: "https://www.youtube.com/watch?v=5IAxCL4dHWk"}
+      - {kind: paper, title: "WizardCoder: Empowering Code Large Language Models with Evol-Instruct", by: "Ziyang Luo et al.", year: 2023, url: "https://arxiv.org/abs/2306.08568"}
     status: repaired
   - id: synthetic-textbook-data
     name: Synthetic Pretraining Data
@@ -2953,6 +2972,7 @@ nodes:
     region: data-and-synthetic-data
     layer: detail
     desc: Generating large, high-quality synthetic corpora with strong models to pretrain or mid-train smaller ones.
+    summary: "Training a model on text that a stronger model wrote to be clear and instructive, such as textbook chapters and exercises, instead of on raw web text. Microsoft's phi-1 was trained mostly on filtered web code plus under a billion tokens of synthetic textbooks, and beat coding models many times its size. Varying the prompts by topic and audience keeps the generated text from becoming repetitive. Training only on model output, generation after generation, can make models lose rare knowledge (model collapse), so pipelines keep real data in the mix."
     parents:
       - {id: self-instruct, rel: extends, why: "Scales model-generated data from instructions to full training corpora.", src: "Textbooks Are All You Need (Gunasekar et al. 2023)", confidence: medium}
     maturity: 3
@@ -2960,12 +2980,17 @@ nodes:
     date: "2023-06"
     ref: {title: "Textbooks Are All You Need (Gunasekar et al.)", arxiv: "2306.11644"}
     examples: [phi models, Cosmopedia]
+    resources:
+      - {kind: blog, title: "Cosmopedia: how to create large-scale synthetic data for pre-training Large Language Models", by: "Loubna Ben Allal, Anton Lozhkov, Daniel van Strien (Hugging Face)", year: 2024, url: "https://huggingface.co/blog/cosmopedia"}
+      - {kind: talk, title: "Best of 2024: Synthetic Data / Smol Models", by: "Loubna Ben Allal (Latent Space Live, NeurIPS 2024)", year: 2024, url: "https://www.youtube.com/watch?v=AjmdDy7Rzx0"}
+      - {kind: paper, title: "Is Model Collapse Inevitable? Breaking the Curse of Recursion by Accumulating Real and Synthetic Data", by: "Matthias Gerstgrasser et al.", year: 2024, url: "https://arxiv.org/abs/2404.01413"}
     status: added
   - id: human-instruction-datasets
     name: Crowdsourced Instruction Data
     aliases: [human-written demonstrations, OpenAssistant]
     region: data-and-synthetic-data
     desc: Collecting instruction and conversation data written and rated by people.
+    summary: "Instruction and conversation data written and rated by people. In OpenAssistant, more than 13,000 volunteers wrote prompts, played the assistant, and ranked each other's replies, with review and voting to keep quality up. Human data like this is expensive and rarely very hard, so it is now mostly a small, trusted core alongside larger synthetic sets."
     parents:
       - {id: "external:crowdsourcing", rel: applies, why: "Applies crowdsourcing to conversational training data.", src: "OpenAssistant Conversations (Köpf et al. 2023)"}
     maturity: 4
@@ -2973,6 +2998,9 @@ nodes:
     date: "2023-04"
     ref: {title: "OpenAssistant Conversations — Democratizing Large Language Model Alignment (Köpf et al.)", arxiv: "2304.07327"}
     examples: [OpenAssistant, Dolly]
+    resources:
+      - {kind: blog, title: "Free Dolly: Introducing the World's First Truly Open Instruction-Tuned LLM", by: "Mike Conover et al. (Databricks)", year: 2023, url: "https://www.databricks.com/blog/2023/04/12/dolly-first-open-commercially-viable-instruction-tuned-llm"}
+      - {kind: docs, title: "Preference Data (RLHF Book)", by: "Nathan Lambert", year: 2025, url: "https://rlhfbook.com/c/11-preference-data"}
     status: added
   - id: llm-annotation
     name: LLM-Assisted Annotation
@@ -2980,6 +3008,7 @@ nodes:
     region: data-and-synthetic-data
     also: [evaluation-and-observability]
     desc: Using models to label or classify data in place of, or alongside, human annotators.
+    summary: "Using a model to label data, such as tagging topics, classifying intents, or scoring quality, instead of or alongside human annotators. You write the labeling guidelines into a prompt, run it over the data, and have people review a sample and the cases the model is unsure about. It is far cheaper and faster than crowd work and often as accurate, which is why most data pipelines now have a model labeling step somewhere."
     parents:
       - {id: zero-shot-prompting, rel: applies, why: "Annotation as a zero-shot classification task.", src: "ChatGPT Outperforms Crowd-Workers for Text-Annotation Tasks (Gilardi et al. 2023)"}
     maturity: 4
@@ -2987,6 +3016,11 @@ nodes:
     date: "2023-03"
     ref: {title: "ChatGPT Outperforms Crowd-Workers for Text-Annotation Tasks (Gilardi et al.)", arxiv: "2303.15056"}
     examples: [Argilla, Label Studio LLM labeling]
+    resources:
+      - {kind: blog, title: "Synthetic data: save money, time and carbon with open source", by: "Moritz Laurer (Hugging Face)", year: 2024, url: "https://huggingface.co/blog/synthetic-data-save-costs"}
+      - {kind: blog, title: "LLMs can structure data as well as humans, but 100x faster", by: "Refuel", year: 2023, url: "https://www.refuel.ai/blog-posts/llm-labeling-technical-report"}
+      - {kind: talk, title: "Automating Data Annotation with LLMs", by: "Nikolai Liubimov (HumanSignal), LLMs in Production Conference 3", year: 2023, url: "https://www.youtube.com/watch?v=mTVNE0Sw5vI"}
+      - {kind: paper, title: "Large Language Models for Data Annotation and Synthesis: A Survey", by: "Zhen Tan et al.", year: 2024, url: "https://arxiv.org/abs/2402.13446"}
     status: added
   - id: data-deduplication
     name: Data Deduplication
@@ -2994,6 +3028,7 @@ nodes:
     region: data-and-synthetic-data
     layer: detail
     desc: Removing exact and near-duplicate documents from training corpora to improve quality and reduce memorization.
+    summary: "Removing exact and near-duplicate documents from a training corpus. Web crawls repeat the same text many times over, and a model trained on repeats memorizes them instead of generalizing, and wastes compute. Near-duplicates are found at scale with hashing tricks such as MinHash, which flag documents that share most of their word sequences without comparing every pair."
     parents:
       - {id: "external:minhash", rel: applies, why: "Uses locality-sensitive hashing for near-duplicate detection.", src: "Deduplicating Training Data Makes Language Models Better (Lee et al. 2021)"}
     maturity: 5
@@ -3001,6 +3036,11 @@ nodes:
     date: "2021-07"
     ref: {title: "Deduplicating Training Data Makes Language Models Better (Lee et al.)", arxiv: "2107.06499"}
     examples: [datatrove, text-dedup]
+    resources:
+      - {kind: blog, title: "Large-scale Near-deduplication Behind BigCode", by: "Chenghao Mou (Hugging Face)", year: 2023, url: "https://huggingface.co/blog/dedup"}
+      - {kind: docs, title: "Deduplication | NeMo Curator", by: "NVIDIA", year: 2025, url: "https://docs.nvidia.com/nemo/curator/latest/curate-text/process-data/deduplication"}
+      - {kind: talk, title: "Beyond Spark MLlib: Deduplicating Common Crawl at Scale", by: "Ken Obata (PyData London)", year: 2026, url: "https://www.youtube.com/watch?v=LkBvaesVeYo"}
+      - {kind: paper, title: "SemDeDup: Data-efficient learning at web-scale through semantic deduplication", by: "Amro Abbas et al.", year: 2023, url: "https://arxiv.org/abs/2303.09540"}
     status: added
   - id: data-decontamination
     name: Data Decontamination
@@ -3008,6 +3048,7 @@ nodes:
     region: data-and-synthetic-data
     also: [evaluation-and-observability]
     desc: Removing training data that overlaps with evaluation benchmarks so scores reflect real capability.
+    summary: "Removing training data that overlaps with the benchmarks or eval sets a model will be tested on, usually by matching long word sequences. If test questions leak into training, scores measure memory rather than ability. The same applies to an application team's own eval set: examples used for fine-tuning must be kept out of it."
     parents:
       - {id: "external:n-gram-overlap-detection", rel: applies, why: "Detects benchmark overlap by n-gram matching.", src: "Language Models are Few-Shot Learners (Brown et al. 2020)"}
     maturity: 4
@@ -3015,6 +3056,9 @@ nodes:
     date: "2020-05"
     ref: {title: "Language Models are Few-Shot Learners, contamination analysis (Brown et al.)", arxiv: "2005.14165"}
     examples: [n-gram overlap filters]
+    resources:
+      - {kind: blog, title: "Catch me if you can! How to beat GPT-4 with a 13B model", by: "Shuo Yang et al. (LMSYS)", year: 2023, url: "https://www.lmsys.org/blog/2023-11-14-llm-decontaminator/"}
+      - {kind: paper, title: "Benchmark Data Contamination of Large Language Models: A Survey", by: "Cheng Xu et al.", year: 2024, url: "https://arxiv.org/abs/2406.04244"}
     status: repaired
   - id: data-quality-filtering
     name: Data Quality Filtering
@@ -3022,14 +3066,168 @@ nodes:
     region: data-and-synthetic-data
     layer: detail
     desc: Selecting high-value training text with heuristics and model-based quality classifiers.
+    summary: "Keeping only the useful part of a raw web crawl. Simple rules drop spam, boilerplate and garbled text, and trained classifiers score what remains: early pipelines like CCNet kept text that a language model trained on Wikipedia found likely, while recent ones like FineWeb-Edu train a classifier on a model's judgments of educational value. Some pipelines iterate, adding newly found good pages to the classifier's training set and searching again, which is how DeepSeekMath mined 120 billion tokens of math from the web."
     parents:
-      - {id: data-deduplication, rel: extends, why: "Builds on deduplicated corpora with quality scoring.", src: "The FineWeb Datasets (Penedo et al. 2024)"}
-      - {id: llm-annotation, rel: applies, why: "Trains quality classifiers on LLM-annotated samples.", src: "The FineWeb Datasets (Penedo et al. 2024)"}
+      - {id: "external:fasttext-classifiers", rel: applies, why: "Scores documents with fast linear text classifiers and n-gram language-model perplexity.", src: "CCNet (Wenzek et al. 2019)"}
     maturity: 4
     maturity_note: Standard in pretraining pipelines.
-    date: "2024-06"
-    ref: {title: "The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale (Penedo et al.)", arxiv: "2406.17557"}
-    examples: [FineWeb-Edu, DCLM, Dolma]
+    date: "2019-11"
+    ref: {title: "CCNet: Extracting High Quality Monolingual Datasets from Web Crawl Data (Wenzek et al.)", arxiv: "1911.00359"}
+    examples: [CCNet, FineWeb-Edu, DCLM, Dolma, DeepSeekMath corpus]
+    resources:
+      - {kind: blog, title: "FineWeb: decanting the web for the finest text data at scale", by: "Guilherme Penedo et al. (Hugging Face)", year: 2024, url: "https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1"}
+      - {kind: docs, title: "Quality Assessment and Filtering | NeMo Curator", by: "NVIDIA", year: 2025, url: "https://docs.nvidia.com/nemo/curator/latest/curate-text/process-data/quality-assessment"}
+      - {kind: talk, title: "Stanford CS336 Language Modeling from Scratch, Spring 2025, Lecture 14: Data 2", by: "Stanford Online", year: 2025, url: "https://www.youtube.com/watch?v=9Cd0THLS1t0"}
+      - {kind: paper, title: "DataComp-LM: In search of the next generation of training sets for language models", by: "Jeffrey Li et al.", year: 2024, url: "https://arxiv.org/abs/2406.11794"}
+    status: repaired
+  # ---- deep dive (2026-10-10, Gemini run, reviewed): detail layer unless noted ----
+  - id: golden-eval-sets
+    name: Golden and Eval Sets
+    aliases: [golden datasets, eval datasets, test sets, reference sets]
+    region: data-and-synthetic-data
+    also: [evaluation-and-observability]
+    desc: Building and maintaining the labeled examples an application is tested against, drawn from real traffic, expert labels and generated cases.
+    summary: "The set of example inputs, with expected answers or grading notes, that an application is tested against on every change. Teams start from real user requests and failures found by reading traces, have a domain expert label them, and fill gaps with generated cases for rare or risky situations. The set is never finished: new failures from production are added, and stale examples are retired."
+    parents:
+      - {id: "external:held-out-test-sets", rel: applies, why: "Applies machine learning's held-out test set to one product's own tasks.", src: "Patterns for Building LLM-based Systems & Products (Yan 2023)"}
+      - {id: llm-annotation, rel: combines, why: "Uses model labeling with expert review to label examples at scale.", src: "Patterns for Building LLM-based Systems & Products (Yan 2023)", confidence: medium}
+    maturity: 4
+    maturity_note: Expected practice for production LLM apps, though many teams' sets stay small and stale.
+    date: "2023-07"
+    ref: {title: "Patterns for Building LLM-based Systems & Products (Eugene Yan)", url: "https://eugeneyan.com/writing/llm-patterns/"}
+    examples: [LangSmith datasets, Braintrust datasets, Langfuse datasets]
+    resources:
+      - {kind: blog, title: "Your AI Product Needs Evals", by: "Hamel Husain", year: 2024, url: "https://hamel.dev/blog/posts/evals/"}
+      - {kind: talk, title: "AI Evals For Engineers: Course Preview (Chapters 1-3 of 8)", by: "Hamel Husain", year: 2025, url: "https://www.youtube.com/watch?v=OJItZndMUII"}
+      - {kind: paper, title: "Who Validates the Validators? Aligning LLM-Assisted Evaluation of LLM Outputs with Human Preferences", by: "Shreya Shankar et al.", year: 2024, url: "https://arxiv.org/abs/2404.12272"}
+    status: added
+  - id: data-flywheel
+    name: Data Flywheel
+    aliases: [production data loop, trace mining]
+    region: data-and-synthetic-data
+    also: [evaluation-and-observability, adaptation-and-post-training]
+    desc: Turning logged production traffic and user feedback into eval cases and fine-tuning data, in a repeating loop.
+    summary: "A loop that turns an application's own traffic into better data. Production traces are logged, scrubbed of personal data, and sorted by signals such as user feedback or judge scores; failures become new eval cases, and good interactions become fine-tuning data, often used to train a smaller, cheaper model for the task. Every turn of the loop improves the next one. The idea is simple, but the plumbing (tracing, review queues, privacy) makes it hard to run well."
+    parents:
+      - {id: golden-eval-sets, rel: extends, why: "Keeps the eval set growing from production failures instead of a one-off collection.", src: "Data flywheel (NVIDIA glossary)"}
+      - {id: llm-tracing, rel: applies, why: "Draws its raw material from logged production traces.", src: "Data flywheel (NVIDIA glossary)"}
+      - {id: online-evaluation, rel: combines, why: "Uses production scores and feedback to pick which traces enter the dataset.", src: "Data flywheel (NVIDIA glossary)", confidence: medium}
+    maturity: 3
+    maturity_note: Widely described, practiced end to end mainly by mature teams.
+    date: "2024"
+    ref: {title: "Data flywheel: What it is and how it works (NVIDIA Glossary)", url: "https://www.nvidia.com/en-us/glossary/data-flywheel/"}
+    examples: [NVIDIA Data Flywheel Blueprint, LangSmith annotation queues]
+    resources:
+      - {kind: blog, title: "A Field Guide to Rapidly Improving AI Products", by: "Hamel Husain", year: 2025, url: "https://hamel.dev/blog/posts/field-guide/"}
+      - {kind: talk, title: "Effective AI Agents Need Data Flywheels, Not The Next Biggest LLM", by: "Sylendran Arunagiri (NVIDIA), AI Engineer", year: 2025, url: "https://www.youtube.com/watch?v=6lTxD_oUjXQ"}
+      - {kind: code, title: "NVIDIA-AI-Blueprints/data-flywheel", by: "NVIDIA", year: 2025, url: "https://github.com/NVIDIA-AI-Blueprints/data-flywheel"}
+    status: added
+  - id: synthetic-rag-data
+    name: Synthetic RAG Test Sets
+    aliases: [RAG testset generation, synthetic question-answer pairs]
+    region: data-and-synthetic-data
+    layer: detail
+    also: [retrieval-and-knowledge, evaluation-and-observability]
+    desc: Generating questions and reference answers from a document collection to test a RAG system before real users arrive.
+    summary: "Writing hundreds of test questions about a private document collection by hand is slow, so a model reads the documents and writes questions with their answers and source passages. Good generators vary the questions by persona and difficulty, including ones that need several passages combined, so the set looks like real traffic rather than easy lookups. Generated questions are then filtered or reviewed, because some are unanswerable or trivially copied from the text."
+    parents:
+      - {id: golden-eval-sets, rel: specializes, why: "Builds an eval set for retrieval systems from the corpus itself.", src: "ARES (Saad-Falcon et al. 2023)"}
+      - {id: self-instruct, rel: applies, why: "Applies model generation of tasks and answers, grounded in a given corpus.", src: "ARES (Saad-Falcon et al. 2023)", confidence: medium}
+      - {id: retrieval-augmented-generation, rel: applies, why: "Produces the question-passage-answer triples used to test a RAG pipeline.", src: "ARES (Saad-Falcon et al. 2023)"}
+    maturity: 3
+    maturity_note: Built into the main RAG eval tools; quality of generated questions varies.
+    date: "2023-11"
+    ref: {title: "ARES: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems (Saad-Falcon et al.)", arxiv: "2311.09476"}
+    examples: [Ragas testset generator, ARES, DeepEval Synthesizer]
+    resources:
+      - {kind: docs, title: "Testset Generation for RAG - Ragas", by: "Ragas", year: 2025, url: "https://docs.ragas.io/en/stable/getstarted/rag_testset_generation/"}
+      - {kind: tutorial, title: "RAG Evaluation (Hugging Face Open-Source AI Cookbook)", by: "Aymeric Roucher", year: 2024, url: "https://huggingface.co/learn/cookbook/en/rag_evaluation"}
+      - {kind: blog, title: "Generative Benchmarking", by: "Kelly Hong, Anton Troynikov, Jeff Huber (Chroma)", year: 2025, url: "https://www.trychroma.com/research/generative-benchmarking"}
+      - {kind: talk, title: "Generative Evals for benchmarking embedding models", by: "Kelly Hong (Chroma), hosted by Jason Liu", year: 2025, url: "https://www.youtube.com/watch?v=kJ35KUr5yIg"}
+    status: added
+  - id: instruction-backtranslation
+    name: Instruction Backtranslation
+    aliases: [Humpback, self-alignment with backtranslation]
+    region: data-and-synthetic-data
+    layer: detail
+    also: [adaptation-and-post-training]
+    desc: Generating instructions for existing human-written documents, then having the model score and keep only the best pairs.
+    summary: "Instead of having a model invent both the question and the answer, start from good human-written text and ask the model what instruction that text would answer. The model then rates its own pairs and keeps only the best for fine-tuning, and the loop repeats with the improved model. Answers come from real writing, so there is less made-up content than in fully synthetic data."
+    parents:
+      - {id: self-instruct, rel: extends, why: "Keeps model-generated instructions but takes the responses from human-written text.", src: "Self-Alignment with Instruction Backtranslation (Li et al. 2023)"}
+      - {id: llm-annotation, rel: applies, why: "The model scores its own generated pairs to select training data.", src: "Self-Alignment with Instruction Backtranslation (Li et al. 2023)"}
+    maturity: 2
+    maturity_note: Influential research recipe, little used as a named practice.
+    date: "2023-08"
+    ref: {title: "Self-Alignment with Instruction Backtranslation (Li et al.)", arxiv: "2308.06259"}
+    examples: [Humpback]
+    resources:
+      - {kind: docs, title: "InstructionBacktranslation - Distilabel Docs", by: "Argilla", year: 2024, url: "https://distilabel.argilla.io/latest/components-gallery/tasks/instructionbacktranslation/"}
+      - {kind: paper, title: "LongForm: Effective Instruction Tuning with Reverse Instructions", by: "Abdullatif Köksal et al.", year: 2023, url: "https://arxiv.org/abs/2304.08460"}
+      - {kind: paper, title: "Better Alignment with Instruction Back-and-Forth Translation", by: "Thao Nguyen et al.", year: 2024, url: "https://arxiv.org/abs/2408.04614"}
+    status: added
+  - id: instruction-data-selection
+    name: Instruction Data Selection
+    aliases: [instruction-following difficulty, IFD, SFT data pruning]
+    region: data-and-synthetic-data
+    layer: detail
+    also: [adaptation-and-post-training]
+    desc: Choosing a small, high-value subset of an instruction dataset by scoring each example's difficulty or quality.
+    summary: "A few thousand well-chosen fine-tuning examples can do as well as hundreds of thousands, so it pays to pick them. One method, instruction-following difficulty (IFD), compares how hard the model finds an answer with and without its instruction: if the instruction barely helps, the example has something to teach. Other selectors use a model's quality ratings or gradient similarity to the target task."
+    parents:
+      - {id: data-quality-filtering, rel: specializes, why: "Filters instruction data rather than pretraining text, scoring examples by what they teach.", src: "From Quantity to Quality (Li et al. 2023)"}
+    maturity: 2
+    maturity_note: Active research; few application teams select data this way.
+    date: "2023-08"
+    ref: {title: "From Quantity to Quality: Boosting LLM Performance with Self-Guided Data Selection for Instruction Tuning (Li et al.)", arxiv: "2308.12032"}
+    examples: [Cherry LLM, AlpaGasus, LESS]
+    resources:
+      - {kind: paper, title: "LIMA: Less Is More for Alignment", by: "Chunting Zhou et al.", year: 2023, url: "https://arxiv.org/abs/2305.11206"}
+      - {kind: talk, title: "LIMA: Less is More for Alignment", by: "Chunting Zhou, LLMs in Production Conference Part 2", year: 2023, url: "https://www.youtube.com/watch?v=baGxzYh8jH8"}
+      - {kind: talk, title: "Data Selection for Pre-training and Instruction-tuning of LLMs", by: "Danqi Chen (KUIS AI)", year: 2024, url: "https://www.youtube.com/watch?v=SFuNEkGUziA"}
+      - {kind: paper, title: "A Survey on Data Selection for Language Models", by: "Alon Albalak et al.", year: 2024, url: "https://arxiv.org/abs/2402.16827"}
+    status: added
+  - id: agent-trajectory-synthesis
+    name: Agent Trajectory Synthesis
+    aliases: [agent RL environments, SWE-Gym, trajectory harvesting]
+    region: data-and-synthetic-data
+    layer: detail
+    also: [agents-and-orchestration, adaptation-and-post-training]
+    desc: Building sandboxed task environments with automatic checks, running agents in them, and keeping the verified trajectories as training data.
+    summary: "Agents learn from multi-step examples, not single question-answer pairs. This builds sandboxed tasks with an automatic check, such as a real repository with an issue and unit tests, runs agents on them, and records every command, file read and edit. Runs that pass the check become fine-tuning data or reward signal for reinforcement learning, without needing a judge model."
+    parents:
+      - {id: agent-benchmarks, rel: extends, why: "Turns benchmark-style task harnesses with executable checks into training environments.", src: "SWE-Gym (Pan et al. 2024)"}
+      - {id: coding-agents, rel: applies, why: "Runs coding agents in the environments to collect trajectories.", src: "SWE-Gym (Pan et al. 2024)"}
+    maturity: 2
+    maturity_note: Fast-moving; mainly used by labs training coding and computer-use agents.
+    date: "2024-12"
+    ref: {title: "Training Software Engineering Agents and Verifiers with SWE-Gym (Pan et al.)", arxiv: "2412.21139"}
+    examples: [SWE-Gym, SWE-smith, R2E-Gym]
+    resources:
+      - {kind: docs, title: "Training SWE-agents - SWE-smith Documentation", by: "SWE-smith team", year: 2025, url: "https://swesmith.com/guides/train_swe_agent/"}
+      - {kind: talk, title: "SWE-smith: Scaling Data for Software Engineering Agents", by: "John Yang (Stanford), Open AGI", year: 2025, url: "https://www.youtube.com/watch?v=Wdkm_mJdFWU"}
+      - {kind: paper, title: "SWE-smith: Scaling Data for Software Engineering Agents", by: "John Yang et al.", year: 2025, url: "https://arxiv.org/abs/2504.21798"}
+      - {kind: paper, title: "AgentInstruct: Toward Generative Teaching with Agentic Flows", by: "Arindam Mitra et al.", year: 2024, url: "https://arxiv.org/abs/2407.03502"}
+    status: added
+  - id: pii-redaction
+    name: PII Redaction
+    aliases: [PII scrubbing, data anonymization]
+    region: data-and-synthetic-data
+    layer: detail
+    also: [safety-security-and-governance]
+    desc: Detecting and masking personal information in training, eval and retrieval data before models see it.
+    summary: "Finding names, emails, phone numbers, account numbers and similar details in data and masking or replacing them before the data is used for training, evals or retrieval. Detectors combine patterns for structured identifiers with named-entity models for names and places. Scrubbing reduces what a model can memorize and leak, but no detector is perfect, so it is one layer of privacy protection, not a guarantee."
+    parents:
+      - {id: "external:named-entity-recognition", rel: applies, why: "Finds personal names and places with entity recognition, alongside patterns for structured identifiers.", src: "Microsoft Presidio"}
+    maturity: 4
+    maturity_note: Standard compliance step; recall remains imperfect.
+    date: "2018"
+    ref: {title: "Presidio: data protection and de-identification SDK", url: "https://github.com/data-privacy-stack/presidio"}
+    examples: [Microsoft Presidio, NeMo Curator PII redaction]
+    resources:
+      - {kind: docs, title: "bigcode/starpii (model card)", by: "BigCode", year: 2023, url: "https://huggingface.co/bigcode/starpii"}
+      - {kind: talk, title: "Presidio - Automated identification and anonymization of PII data at scale", by: "Omri Mendels (Microsoft), Tel Aviv University AI Week", year: 2019, url: "https://www.youtube.com/watch?v=1pUEG0MZxvM"}
+      - {kind: paper, title: "Analyzing Leakage of Personally Identifiable Information in Language Models", by: "Nils Lukas et al.", year: 2023, url: "https://arxiv.org/abs/2302.00539"}
     status: added
 
   # ======================= APPLIED: evaluation-and-observability =======================

@@ -17,13 +17,6 @@ LEADS = {
         ("STaR (self-taught reasoner; iterative fine-tuning on self-generated rationales) as an anchor", "2203.14465"),
         ("Portfolio Beam Search and diversity-aware search under PRM uncertainty (single blog source; verify adoption)", None),
     ],
-    "data-and-synthetic-data": [
-        ("Golden / eval set construction (bootstrapping test cases from production traces, synthetic test-case generation)", None),
-        ("Data flywheel: turning production logs and user feedback into eval and fine-tuning data", None),
-        ("PII detection and redaction for training and retrieval corpora", None),
-        ("Synthetic RAG eval data (generated question-answer pairs over a corpus)", None),
-        ("Environment and task generation for agentic RL", None),
-    ],
     "ai-product-and-interaction-design": [
         ("Background / asynchronous agent delegation (assign a task, get a PR or report back)", None),
         ("Checkpoints, rewind and collaborative repair (\"The Collaboration Gap in Human-AI Work\")", "2604.18096"),
