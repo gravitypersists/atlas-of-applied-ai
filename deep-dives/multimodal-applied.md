@@ -1,6 +1,6 @@
 # Deep dive: Multimodal
 
-Backbone v0.2 · 9 anchors · 9 cross-region edges
+Backbone v0.2 · 16 anchors · 12 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -30,12 +30,19 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `contrastive-image-text-pretraining` — Contrastive Image-Text Pretraining (maturity 5, 2021-02)
 - `vision-language-models` — Vision-Language Models (maturity 4, 2023-04)
 - `document-understanding` — Document Understanding (maturity 3, 2021-11)
-- `visual-document-retrieval` — Visual Document Retrieval (maturity 2, 2024-06)
+- `visual-document-retrieval` — Visual Document Retrieval (maturity 2, 2024-07)
 - `speech-recognition` — Speech Recognition (maturity 5, 2022-12)
 - `realtime-voice` — Realtime Voice Agents (maturity 3, 2024-05)
 - `diffusion-models` — Diffusion Models (maturity 5, 2020-06)
 - `text-to-image` — Text-to-Image Generation (maturity 4, 2021-12)
 - `video-generation` — Video Generation (maturity 3, 2024-02)
+- `dynamic-resolution-encoding` — Dynamic Resolution Encoding (maturity 4, 2024-09)
+- `video-understanding` — Video Understanding (maturity 3, 2023-06)
+- `audio-language-models` — Audio Language Models (maturity 3, 2022-09)
+- `full-duplex-voice` — Full-Duplex Voice Models (maturity 2, 2024-09)
+- `diffusion-transformers` — Diffusion Transformers (maturity 4, 2022-12)
+- `flow-matching` — Flow Matching (maturity 3, 2022-10)
+- `spatial-conditioning` — Spatial Conditioning (maturity 4, 2023-02)
 
 Nodes homed elsewhere that also touch this region:
 - `computer-use-agents` — Computer-Use Agents (home: agents-and-orchestration)
@@ -158,7 +165,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing; assertion-based testing), llm-tracing (LLM Tracing; LLM observability; agent traces; OpenTelemetry GenAI conventions; gen_ai spans), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring), judge-bias-mitigation (Judge Bias Mitigation; position-swap evaluation; length-controlled judging), probabilistic-judge-scoring (Probabilistic Judge Scoring; G-Eval; logprob-weighted scoring), fine-tuned-evaluators (Fine-Tuned Evaluators; judge models; open-weight judges; evaluator LMs), judge-score-correction (Judge Score Correction; prediction-powered inference; PPI; confidence intervals for judges), agent-trajectory-evaluation (Agent Trajectory Evaluation; step-level agent evals; trajectory grading; progress rate), static-context-scoring (Static Context Scoring; context quality scoring; preflight context evaluation)
 - safety-security-and-governance: prompt-injection (Prompt Injection; instruction injection), indirect-prompt-injection (Indirect Prompt Injection; data poisoning of context; tool-output injection; XPIA), jailbreaks (Jailbreaks; adversarial prompts; GCG), red-teaming (AI Red Teaming; adversarial testing), guardrails (Guardrails and Safety Classifiers; input/output filters; content moderation; Llama Guard), injection-defenses (Prompt Injection Defenses; instruction hierarchy; injection detection), agent-sandboxing (Agent Sandboxing and Permissions; secure code execution; tool permissions; least-privilege agents), interpretability (Mechanistic Interpretability; circuits; interpretability), sparse-autoencoders (Sparse Autoencoders; SAEs; dictionary learning; monosemantic features), representation-engineering (Representation Engineering; RepE; activation steering), circuit-breakers (Circuit Breakers; representation rerouting), model-documentation (Model and System Cards; model cards; system cards; transparency documentation), automated-jailbreak-generation (Automated Jailbreak Generation; PAIR; TAP; Tree of Attacks with Pruning), spotlighting (Spotlighting; datamarking; input delimiting), dual-llm-pattern (Dual LLM Pattern; privileged and quarantined LLMs), machine-unlearning (Machine Unlearning; LLM unlearning; targeted forgetting; RMU)
 - ai-product-and-interaction-design: human-ai-interaction-guidelines (Human-AI Interaction Guidelines; HAI guidelines; AI UX principles), chat-interfaces (Chat Interfaces; conversational UI; chat assistants), streaming-responses (Streaming Responses; token streaming; server-sent events), copilots (Copilots and Inline Assistance; inline completion; AI pair programming), citation-ux (Citation and Grounding UX; source attribution; inline citations), human-in-the-loop-approval (Human-in-the-Loop Approval; HITL; tool confirmation; permission prompts; interrupts; agent breakpoints), generative-ui (Generative UI; server-driven UI from models), canvas-artifacts (Canvases and Artifacts; side-by-side editing; artifacts; canvas), reasoning-trace-display (Reasoning Trace Display; thinking UI; thought summaries; reasoning visualization), plan-preview (Plan Preview; plan mode; plan approval; intent preview), agent-action-trace (Agent Action Trace; activity feed; tool call display; action log), mid-run-steering (Mid-Run Steering; active execution participation; mid-flight intervention; agent steering), trust-calibration (Trust Calibration; appropriate reliance; uncertainty display; confidence indicators; overreliance mitigation), voice-turn-taking (Turn-Taking and Barge-In; barge-in; voice interruption handling; semantic VAD; endpointing)
-- multimodal-applied: contrastive-image-text-pretraining (Contrastive Image-Text Pretraining; CLIP; joint embeddings), vision-language-models (Vision-Language Models; VLMs; multimodal LLMs), document-understanding (Document Understanding; PDF parsing; OCR-free parsing; layout understanding), visual-document-retrieval (Visual Document Retrieval; ColPali; page-image retrieval), speech-recognition (Speech Recognition; ASR; speech-to-text; Whisper), realtime-voice (Realtime Voice Agents; speech-to-speech; voice mode), diffusion-models (Diffusion Models; DDPM; denoising diffusion), text-to-image (Text-to-Image Generation; latent diffusion; image generation), video-generation (Video Generation; text-to-video)
+- multimodal-applied: contrastive-image-text-pretraining (Contrastive Image-Text Pretraining; CLIP; joint embeddings), vision-language-models (Vision-Language Models; VLMs; multimodal LLMs; visual instruction tuning; LLaVA), document-understanding (Document Understanding; PDF parsing; OCR-free parsing; layout understanding), visual-document-retrieval (Visual Document Retrieval; ColPali; page-image retrieval; visual late interaction), speech-recognition (Speech Recognition; ASR; speech-to-text; Whisper), realtime-voice (Realtime Voice Agents; speech-to-speech; voice mode), diffusion-models (Diffusion Models; DDPM; denoising diffusion), text-to-image (Text-to-Image Generation; latent diffusion; image generation), video-generation (Video Generation; text-to-video), dynamic-resolution-encoding (Dynamic Resolution Encoding; native resolution; AnyRes; image tiling; M-RoPE), video-understanding (Video Understanding; video VLMs; video-LLMs; spatiotemporal vision encoding), audio-language-models (Audio Language Models; neural codec language models; codec TTS; zero-shot TTS; AudioLM; VALL-E), full-duplex-voice (Full-Duplex Voice Models; simultaneous listening and speaking; multi-stream speech models; Moshi), diffusion-transformers (Diffusion Transformers; DiT), flow-matching (Flow Matching; rectified flow), spatial-conditioning (Spatial Conditioning; ControlNet; T2I-Adapter; controllable generation)
 
 ---
 
@@ -173,14 +180,24 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - Diffusion Models: Denoising Diffusion Probabilistic Models (Ho et al.) — arXiv:2006.11239
 - Text-to-Image Generation: High-Resolution Image Synthesis with Latent Diffusion Models (Rombach et al.) — arXiv:2112.10752
 - Video Generation: Video generation models as world simulators (OpenAI, February 2024)
+- Dynamic Resolution Encoding: Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution (Wang et al.) — arXiv:2409.12191
+- Video Understanding: Video-ChatGPT: Towards Detailed Video Understanding via Large Vision and Language Models (Maaz et al.) — arXiv:2306.05424
+- Audio Language Models: AudioLM: a Language Modeling Approach to Audio Generation (Borsos et al.) — arXiv:2209.03143
+- Full-Duplex Voice Models: Moshi: a speech-text foundation model for real-time dialogue (Défossez et al.) — arXiv:2410.00037
+- Diffusion Transformers: Scalable Diffusion Models with Transformers (Peebles & Xie) — arXiv:2212.09748
+- Flow Matching: Flow Matching for Generative Modeling (Lipman et al.) — arXiv:2210.02747
+- Spatial Conditioning: Adding Conditional Control to Text-to-Image Diffusion Models (Zhang et al.) — arXiv:2302.05543
 
 ## Reference: cross-region edges touching this region
+- audio-language-models --applies--> pretrained-language-models
 - computer-use-agents --combines--> vision-language-models
 - contrastive-image-text-pretraining --applies--> transformer-architecture
+- diffusion-transformers --applies--> transformer-architecture
 - document-understanding --applies--> transformer-architecture
 - realtime-voice --combines--> pretrained-language-models
 - speech-recognition --applies--> sequence-to-sequence-learning
 - video-generation --applies--> transformer-architecture
 - vision-language-models --combines--> pretrained-language-models
 - visual-document-retrieval --applies--> dense-retrieval
+- visual-document-retrieval --applies--> late-interaction
 - voice-turn-taking --applies--> realtime-voice

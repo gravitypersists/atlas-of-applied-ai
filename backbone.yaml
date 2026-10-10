@@ -251,6 +251,14 @@ regions:
       - Document understanding pipelines (VLM parsing vs. OCR) and visual retrieval
       - Realtime voice agents — latency, turn-taking, interruption
       - Video understanding and generation as application building blocks
+    overview: "Multimodal covers AI that works with images, audio, video and documents, not just text. It started with alignment: CLIP (2021) trained image and text encoders so a picture and its caption land close together, giving models a shared vocabulary for both. Vision-language models then fed those image vectors into a language model as extra tokens, and training on visual instructions turned them into assistants that read screenshots, charts and photos. Later models take images at their native resolution, which made small text and dense layouts readable, and sample frames to follow video.\n\nDocuments were one of the first places this paid off. Pipelines that chain layout detection and OCR lose reading order and garble tables, so vision models that read a whole page and output structured text are replacing them, and visual retrieval such as ColPali searches page images directly. Speech went the same way. Whisper made transcription a commodity, audio language models turned sound into tokens a language model can predict, and realtime voice moved from slow recognize-think-speak chains to single models that hear and speak audio, some of them listening and talking at once.\n\nGeneration runs on a separate line. Diffusion models create images by removing noise step by step; latent diffusion made text-to-image practical, transformers replaced the U-Net inside, and flow matching cut the number of steps. The same machinery, applied to patches across space and time, produces video. Landmarks worth knowing: CLIP, vision-language models, document understanding, Whisper, realtime voice, and latent diffusion. The open problems are mostly practical: images and audio use many tokens, so cost and latency dominate design, and generated video and speech still need better control."
+    learning_path:
+    - {kind: blog, title: "Multimodality and Large Multimodal Models (LMMs)", by: "Chip Huyen", year: 2023, url: "https://huyenchip.com/2023/10/10/multimodal.html", why: "Explains why models need more than text, then walks through CLIP and Flamingo, the two designs most later vision-language systems build on."}
+    - {kind: blog, title: "Vision Language Models (Better, faster, stronger)", by: "Hugging Face (Merve Noyan, Sergio Paniego et al.)", year: 2025, url: "https://huggingface.co/blog/vlms-2025", why: "A current survey of how vision-language models are built and used: model families, video input, smaller models, and the uses engineers actually ship."}
+    - {kind: blog, title: "ColPali: Efficient Document Retrieval with Vision Language Models", by: "Manuel Faysse (Hugging Face blog)", year: 2024, url: "https://huggingface.co/blog/manu/colpali", why: "Shows the problem with text-extraction pipelines for PDFs and how searching page images directly avoids it, which is the core idea of the documents part of this region."}
+    - {kind: blog, title: "Voice AI & Voice Agents: An Illustrated Primer", by: "Kwindla Hultman Kramer (Daily)", year: 2025, url: "https://voiceaiandvoiceagents.com/", why: "A practical guide to building voice agents: the latency budget, transcription, turn detection, interruptions, and when to use speech-to-speech models instead of a pipeline."}
+    - {kind: blog, title: "The Illustrated Stable Diffusion", by: "Jay Alammar", year: 2022, url: "https://jalammar.github.io/illustrated-stable-diffusion/", why: "Pictures each part of a latent diffusion image generator (text encoder, denoiser, image decoder) and how a prompt steers the denoising."}
+    - {kind: talk, title: "Building Generative Image & Video models at Scale", by: "Sander Dieleman (Google DeepMind, AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=xOP1PM8fwnk", why: "Covers how today's image and video generators are built, from latent spaces and denoising to conditioning and post-training, from someone who works on Veo."}
 
 boundary_rules:
   - {concept: ReAct, home: agents-and-orchestration, rule: "Defined by acting in an environment via tools → Agents."}
@@ -3652,19 +3660,26 @@ nodes:
     aliases: [CLIP, joint embeddings]
     region: multimodal-applied
     desc: Training image and text encoders so matching pairs land close together in a shared embedding space.
+    summary: "An image encoder and a text encoder are trained together on hundreds of millions of captioned images, so that a picture and a matching caption end up as nearby vectors. The result can search images by text, classify images it was never trained on, and serves as the visual front end for many vision-language and image-generation models."
     parents:
       - {id: transformer-architecture, rel: applies, why: "Uses transformer encoders for both modalities.", src: "CLIP (Radford et al. 2021)"}
     maturity: 5
     maturity_note: Foundational component of vision-language systems.
     date: "2021-02"
     ref: {title: "Learning Transferable Visual Models From Natural Language Supervision (Radford et al.)", arxiv: "2103.00020"}
-    examples: [CLIP, SigLIP]
+    examples: [CLIP, SigLIP, ALIGN]
+    resources:
+      - {kind: blog, title: "Multimodality and Large Multimodal Models (LMMs)", by: "Chip Huyen", year: 2023, url: "https://huyenchip.com/2023/10/10/multimodal.html"}
+      - {kind: talk, title: "OpenAI CLIP: ConnectingText and Images (Paper Explained)", by: "Yannic Kilcher", year: 2021, url: "https://www.youtube.com/watch?v=T9XSU0pKX2E"}
+      - {kind: paper, title: "Sigmoid Loss for Language Image Pre-Training", by: "Xiaohua Zhai et al.", year: 2023, url: "https://arxiv.org/abs/2303.15343"}
+      - {kind: code, title: "open_clip: An open source implementation of CLIP", by: "LAION / mlfoundations", year: 2021, url: "https://github.com/mlfoundations/open_clip"}
     status: added
   - id: vision-language-models
     name: Vision-Language Models
-    aliases: [VLMs, multimodal LLMs]
+    aliases: [VLMs, multimodal LLMs, visual instruction tuning, LLaVA]
     region: multimodal-applied
     desc: Language models that accept images (and often video) alongside text by projecting visual features into the model.
+    summary: "A language model that takes images, and often video, alongside text. A vision encoder turns the image into vectors and a small projection layer feeds them to the language model as if they were extra tokens. Training on visual instructions, such as questions and answers about images, turns it into an assistant that can describe scenes, read charts and screenshots, and answer questions about them."
     parents:
       - {id: contrastive-image-text-pretraining, rel: combines, why: "Uses pretrained vision encoders such as CLIP.", src: "LLaVA (Liu et al. 2023)"}
       - {id: pretrained-language-models, rel: combines, why: "Connects visual features to an LLM.", src: "LLaVA (Liu et al. 2023)"}
@@ -3672,7 +3687,12 @@ nodes:
     maturity_note: Standard capability of frontier APIs.
     date: "2023-04"
     ref: {title: "Visual Instruction Tuning (Liu et al.)", arxiv: "2304.08485"}
-    examples: [GPT-4o, Claude, Gemini, Qwen-VL]
+    examples: [GPT-4o, Claude, Gemini, Qwen-VL, LLaVA]
+    resources:
+      - {kind: blog, title: "Vision Language Models (Better, faster, stronger)", by: "Hugging Face (Merve Noyan, Sergio Paniego et al.)", year: 2025, url: "https://huggingface.co/blog/vlms-2025"}
+      - {kind: blog, title: "Generalized Visual Language Models", by: "Lilian Weng", year: 2022, url: "https://lilianweng.github.io/posts/2022-06-09-vlm/"}
+      - {kind: talk, title: "Lucas Beyer - Computer Vision in the Age of LLMs | ML in PL 2024", by: "Lucas Beyer (ML in PL)", year: 2024, url: "https://www.youtube.com/watch?v=kxO6ARgI_SU"}
+      - {kind: paper, title: "Flamingo: a Visual Language Model for Few-Shot Learning", by: "Jean-Baptiste Alayrac et al.", year: 2022, url: "https://arxiv.org/abs/2204.14198"}
     status: repaired
   - id: document-understanding
     name: Document Understanding
@@ -3680,6 +3700,7 @@ nodes:
     region: multimodal-applied
     also: [retrieval-and-knowledge]
     desc: Extracting text, tables, and structure from documents with vision models rather than brittle OCR pipelines.
+    summary: "Turning PDFs, scans and slides into clean text, tables and structure that software can use. The older approach chains layout detection, character recognition (OCR) and hand-written rules, which loses reading order in multi-column pages and garbles tables. Vision models that read the whole page image and output Markdown or JSON directly are replacing it, especially for preparing documents for retrieval."
     parents:
       - {id: transformer-architecture, rel: applies, why: "Reads page images end to end with transformers; VLMs now dominate this role.", src: "OCR-free Document Understanding Transformer (Kim et al. 2021)"}
       - {id: "external:ocr", rel: replaces, why: "Replaces traditional OCR-plus-heuristics pipelines.", src: "Donut (Kim et al. 2021)"}
@@ -3687,28 +3708,40 @@ nodes:
     maturity_note: Rapidly replacing legacy OCR in RAG ingestion.
     date: "2021-11"
     ref: {title: "OCR-free Document Understanding Transformer (Kim et al.)", arxiv: "2111.15664"}
-    examples: [Docling, Unstructured, Mistral OCR, Reducto]
+    examples: [Docling, Nougat, Unstructured, Mistral OCR, Reducto]
+    resources:
+      - {kind: docs, title: "Docling documentation", by: "Docling Project (IBM Research)", year: 2025, url: "https://docling-project.github.io/docling/"}
+      - {kind: talk, title: "Structuring the Unstructured - Cedric Clyburn, Red Hat", by: "Cedric Clyburn (AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=-x5GEVnkuRw"}
+      - {kind: paper, title: "Nougat: Neural Optical Understanding for Academic Documents", by: "Lukas Blecher et al.", year: 2023, url: "https://arxiv.org/abs/2308.13418"}
+      - {kind: paper, title: "Docling: An Efficient Open-Source Toolkit for AI-driven Document Conversion", by: "Nikolaos Livathinos et al.", year: 2025, url: "https://arxiv.org/abs/2501.17887"}
     status: repaired
   - id: visual-document-retrieval
     name: Visual Document Retrieval
-    aliases: [ColPali, page-image retrieval]
+    aliases: [ColPali, page-image retrieval, visual late interaction]
     region: multimodal-applied
     also: [retrieval-and-knowledge]
     desc: Retrieving documents by embedding page images directly, skipping text extraction.
+    summary: "Searching documents by embedding pictures of their pages instead of extracted text, so charts, tables and layout count toward the match. ColPali splits each page into patches, keeps one vector per patch, and scores a query by matching each query word to its best patch (late interaction, as in ColBERT). It handles visually rich documents well but stores hundreds of vectors per page."
     parents:
       - {id: vision-language-models, rel: specializes, why: "Uses VLM embeddings of page images.", src: "ColPali (Faysse et al. 2024)"}
       - {id: dense-retrieval, rel: applies, why: "Multi-vector dense retrieval over images.", src: "ColPali (Faysse et al. 2024)"}
+      - {id: late-interaction, rel: applies, why: "Scores queries against page patches with ColBERT's max-sim late interaction.", src: "ColPali (Faysse et al. 2024)"}
     maturity: 2
     maturity_note: Promising; early production use.
-    date: "2024-06"
+    date: "2024-07"
     ref: {title: "ColPali: Efficient Document Retrieval with Vision Language Models (Faysse et al.)", arxiv: "2407.01449"}
     examples: [ColPali, ColQwen]
+    resources:
+      - {kind: blog, title: "ColPali: Efficient Document Retrieval with Vision Language Models", by: "Manuel Faysse (Hugging Face blog)", year: 2024, url: "https://huggingface.co/blog/manu/colpali"}
+      - {kind: blog, title: "Scaling ColPali to billions of PDFs with Vespa", by: "Jo Kristian Bergum (Vespa)", year: 2024, url: "https://blog.vespa.ai/scaling-colpali-to-billions/"}
+      - {kind: talk, title: "ColPali: Document Retrieval with Vision-Language Models only (with Manuel Faysse)", by: "Manuel Faysse (Zeta Alpha)", year: 2024, url: "https://www.youtube.com/watch?v=5zbwT4j_9KY"}
     status: added
   - id: speech-recognition
     name: Speech Recognition
     aliases: [ASR, speech-to-text, Whisper]
     region: multimodal-applied
     desc: Transcribing spoken audio to text with large weakly supervised transformer models.
+    summary: "Turning spoken audio into text. Whisper showed that an encoder-decoder transformer trained on hundreds of thousands of hours of loosely labeled web audio handles accents, noise and many languages without per-task tuning. It is a commodity API today and the first stage of most voice pipelines."
     parents:
       - {id: sequence-to-sequence-learning, rel: applies, why: "Encoder-decoder audio-to-text modeling.", src: "Whisper (Radford et al. 2022)"}
     maturity: 5
@@ -3716,26 +3749,37 @@ nodes:
     date: "2022-12"
     ref: {title: "Robust Speech Recognition via Large-Scale Weak Supervision (Radford et al.)", arxiv: "2212.04356"}
     examples: [Whisper, Deepgram, AssemblyAI]
+    resources:
+      - {kind: blog, title: "Fine-Tune Whisper For Multilingual ASR with Transformers", by: "Sanchit Gandhi (Hugging Face)", year: 2022, url: "https://huggingface.co/blog/fine-tune-whisper"}
+      - {kind: talk, title: "OpenAI Whisper: Robust Speech Recognition via Large-Scale Weak Supervision | Paper and Code", by: "Aleksa Gordić (The AI Epiphany)", year: 2022, url: "https://www.youtube.com/watch?v=AwJf8aQfChE"}
+      - {kind: code, title: "openai/whisper", by: "OpenAI", year: 2022, url: "https://github.com/openai/whisper"}
     status: added
   - id: realtime-voice
     name: Realtime Voice Agents
     aliases: [speech-to-speech, voice mode]
     region: multimodal-applied
     desc: Low-latency spoken conversation with interruption handling, either end-to-end audio models or ASR-LLM-TTS pipelines.
+    summary: "Spoken conversation with an AI fast enough to feel natural, including being interrupted. One design chains speech recognition, a language model and speech synthesis; it is easy to control but slow, and it drops tone of voice. The other uses a single model that hears and speaks audio directly, which cuts latency and keeps emotion and pacing. Turn-taking and latency are still the hard parts."
     parents:
       - {id: speech-recognition, rel: combines, why: "Pipelines start from transcription; end-to-end models subsume it.", src: "Hello GPT-4o (OpenAI 2024)"}
       - {id: pretrained-language-models, rel: combines, why: "An LLM drives the conversation.", src: "Hello GPT-4o (OpenAI 2024)"}
+      - {id: audio-language-models, rel: extends, why: "End-to-end voice models hear and speak in discrete audio tokens.", src: "Moshi (Défossez et al. 2024)"}
     maturity: 3
     maturity_note: In production for support and assistants; latency and turn-taking still hard.
     date: "2024-05"
     ref: {title: "Hello GPT-4o (OpenAI, May 2024)"}
     examples: [OpenAI Realtime API, Gemini Live, Pipecat, LiveKit Agents]
+    resources:
+      - {kind: blog, title: "Voice AI & Voice Agents: An Illustrated Primer", by: "Kwindla Hultman Kramer (Daily)", year: 2025, url: "https://voiceaiandvoiceagents.com/"}
+      - {kind: docs, title: "Getting started with the Realtime API", by: "OpenAI", year: 2025, url: "https://developers.openai.com/api/docs/guides/realtime"}
+      - {kind: talk, title: "How to build the world's fastest voice bot", by: "Kwindla Hultman Kramer (AI Engineer)", year: 2025, url: "https://www.youtube.com/watch?v=dRQHikOrH2A"}
     status: repaired
   - id: diffusion-models
     name: Diffusion Models
     aliases: [DDPM, denoising diffusion]
     region: multimodal-applied
     desc: Generative models that learn to reverse a gradual noising process, now standard for images, audio, and video.
+    summary: "A model is trained to remove a little noise from a noisy image. To generate, it starts from pure noise and denoises step by step until a clean image appears. The approach is stable to train and produces high-quality images, audio and video, at the cost of many sampling steps."
     parents:
       - {id: "external:nonequilibrium-thermodynamics-generative-modeling", rel: extends, why: "Builds on early diffusion probabilistic models (Sohl-Dickstein et al. 2015).", src: "DDPM (Ho et al. 2020)"}
     maturity: 5
@@ -3743,12 +3787,18 @@ nodes:
     date: "2020-06"
     ref: {title: "Denoising Diffusion Probabilistic Models (Ho et al.)", arxiv: "2006.11239"}
     examples: [Stable Diffusion, Imagen, Flux]
+    resources:
+      - {kind: blog, title: "What are Diffusion Models?", by: "Lilian Weng", year: 2021, url: "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/"}
+      - {kind: blog, title: "Perspectives on diffusion", by: "Sander Dieleman", year: 2023, url: "https://sander.ai/2023/07/20/perspectives.html"}
+      - {kind: talk, title: "Tutorial on Denoising Diffusion-based Generative Modeling: Foundations and Applications", by: "Karsten Kreis, Ruiqi Gao, Arash Vahdat (CVPR 2022 tutorial)", year: 2022, url: "https://www.youtube.com/watch?v=cS6JQpEY9cs"}
+      - {kind: paper, title: "Score-Based Generative Modeling through Stochastic Differential Equations", by: "Yang Song et al.", year: 2020, url: "https://arxiv.org/abs/2011.13456"}
     status: added
   - id: text-to-image
     name: Text-to-Image Generation
     aliases: [latent diffusion, image generation]
     region: multimodal-applied
     desc: Generating images from text prompts, typically with latent diffusion guided by text encoders.
+    summary: "Generating a picture from a written prompt. Latent diffusion made it practical: denoising runs in a compressed latent space instead of on full-size pixels, and a text encoder such as CLIP steers each step toward the prompt. Mature APIs and open models exist, and prompts alone give limited control over layout."
     parents:
       - {id: diffusion-models, rel: extends, why: "Runs diffusion in a compressed latent space with text conditioning.", src: "High-Resolution Image Synthesis with Latent Diffusion Models (Rombach et al. 2021)"}
       - {id: contrastive-image-text-pretraining, rel: combines, why: "Uses CLIP-style text encoders for conditioning.", src: "Rombach et al. 2021"}
@@ -3757,18 +3807,173 @@ nodes:
     date: "2021-12"
     ref: {title: "High-Resolution Image Synthesis with Latent Diffusion Models (Rombach et al.)", arxiv: "2112.10752"}
     examples: [Stable Diffusion, Midjourney, Imagen, gpt-image]
+    resources:
+      - {kind: blog, title: "The Illustrated Stable Diffusion", by: "Jay Alammar", year: 2022, url: "https://jalammar.github.io/illustrated-stable-diffusion/"}
+      - {kind: blog, title: "Stable Diffusion with Diffusers", by: "Hugging Face (Suraj Patil, Pedro Cuenca, Nathan Lambert, Patrick von Platen)", year: 2022, url: "https://huggingface.co/blog/stable_diffusion"}
+      - {kind: talk, title: "Stable Diffusion and Friends - Generative Modeling in Latent Space", by: "Robin Rombach (heidelberg.ai)", year: 2023, url: "https://www.youtube.com/watch?v=7W4aZObNucI"}
+      - {kind: paper, title: "SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis", by: "Dustin Podell et al.", year: 2023, url: "https://arxiv.org/abs/2307.01952"}
     status: added
   - id: video-generation
     name: Video Generation
     aliases: [text-to-video]
     region: multimodal-applied
     desc: Generating video from text or images with diffusion transformers over spacetime patches.
+    summary: "Generating video clips from a text prompt or a starting image. Current models cut video into patches that span space and time and denoise them with a diffusion transformer, which keeps objects consistent from frame to frame. Commercial APIs exist, but clips are short and costly, and physics and fine control are unreliable."
     parents:
       - {id: text-to-image, rel: extends, why: "Extends image diffusion across time.", src: "Video generation models as world simulators (OpenAI 2024)"}
       - {id: transformer-architecture, rel: applies, why: "Uses diffusion transformers over spacetime patches.", src: "OpenAI 2024"}
+      - {id: diffusion-transformers, rel: applies, why: "Sora-style models run a DiT over spacetime patches.", src: "Video generation models as world simulators (OpenAI 2024)"}
     maturity: 3
     maturity_note: Commercial APIs available; consistency and control still limited.
     date: "2024-02"
     ref: {title: "Video generation models as world simulators (OpenAI, February 2024)"}
     examples: [Sora, Veo, Runway]
+    resources:
+      - {kind: blog, title: "Diffusion Models for Video Generation", by: "Lilian Weng", year: 2024, url: "https://lilianweng.github.io/posts/2024-04-12-diffusion-video/"}
+      - {kind: talk, title: "Building Generative Image & Video models at Scale", by: "Sander Dieleman (Google DeepMind, AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=xOP1PM8fwnk"}
+      - {kind: paper, title: "Movie Gen: A Cast of Media Foundation Models", by: "Meta Movie Gen team (Adam Polyak et al.)", year: 2024, url: "https://arxiv.org/abs/2410.13720"}
+    status: added
+  # ---- deep dive (2026-10-10, Gemini run, reviewed): detail layer unless noted ----
+  - id: dynamic-resolution-encoding
+    name: Dynamic Resolution Encoding
+    aliases: [native resolution, AnyRes, image tiling, M-RoPE]
+    region: multimodal-applied
+    layer: detail
+    desc: Feeding images to a vision-language model at their native size and aspect ratio, so the number of visual tokens grows with the image instead of being squeezed into a fixed grid.
+    summary: "Early vision-language models shrank every image to a small fixed square, which made small text, dense charts and screen details unreadable. Newer models cut the image into tiles or patches at its own resolution and use 2D position encodings, so a large image becomes more tokens. Detail improves, but an image's token cost now depends on its size, which engineers control with resolution settings."
+    parents:
+      - {id: vision-language-models, rel: extends, why: "Replaces the fixed-size image input of early VLMs with a variable number of visual tokens.", src: "Qwen2-VL (Wang et al. 2024)"}
+    maturity: 4
+    maturity_note: Standard in current VLMs; exposed to engineers as resolution and image-token settings.
+    date: "2024-09"
+    ref: {title: "Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution (Wang et al.)", arxiv: "2409.12191"}
+    examples: [Qwen2-VL, LLaVA-NeXT AnyRes, image detail settings]
+    resources:
+      - {kind: blog, title: "Qwen2.5 VL! Qwen2.5 VL! Qwen2.5 VL!", by: "Qwen Team", year: 2025, url: "https://qwenlm.github.io/blog/qwen2.5-vl/"}
+      - {kind: blog, title: "LLaVA-NeXT: Improved reasoning, OCR, and world knowledge", by: "Haotian Liu et al.", year: 2024, url: "https://llava-vl.github.io/blog/2024-01-30-llava-next/"}
+      - {kind: docs, title: "Vision", by: "Anthropic (Claude Platform Docs)", year: 2025, url: "https://platform.claude.com/docs/en/build-with-claude/vision"}
+      - {kind: paper, title: "Patch n' Pack: NaViT, a Vision Transformer for any Aspect Ratio and Resolution", by: "Mostafa Dehghani et al.", year: 2023, url: "https://arxiv.org/abs/2307.06304"}
+    status: added
+  - id: video-understanding
+    name: Video Understanding
+    aliases: [video VLMs, video-LLMs, spatiotemporal vision encoding]
+    region: multimodal-applied
+    layer: detail
+    desc: Vision-language models that answer questions about video by sampling frames, encoding them, and pooling the visual tokens over space and time.
+    summary: "Letting a vision-language model watch a video and answer questions about it. The model samples frames, encodes each one like an image, and pools or compresses the results so minutes of video fit in its context window. How many frames to sample and how hard to compress them trades cost against missing short events."
+    parents:
+      - {id: vision-language-models, rel: extends, why: "Extends image VLMs to sequences of frames.", src: "Video-ChatGPT (Maaz et al. 2023)"}
+    maturity: 3
+    maturity_note: Available in frontier APIs; frame sampling and token budgets are still tuned per use case.
+    date: "2023-06"
+    ref: {title: "Video-ChatGPT: Towards Detailed Video Understanding via Large Vision and Language Models (Maaz et al.)", arxiv: "2306.05424"}
+    examples: [Gemini video input, Qwen2.5-VL, Video-LLaVA]
+    resources:
+      - {kind: docs, title: "Video understanding | Gemini API", by: "Google AI for Developers", year: 2025, url: "https://ai.google.dev/gemini-api/docs/video-understanding"}
+      - {kind: talk, title: "Token-Efficient Long Video Understanding for Multimodal LLMs | Paper explained", by: "Letitia Parcalabescu (AI Coffee Break)", year: 2025, url: "https://www.youtube.com/watch?v=uMk3VN4S8TQ"}
+      - {kind: paper, title: "Video-LLaVA: Learning United Visual Representation by Alignment Before Projection", by: "Bin Lin et al.", year: 2023, url: "https://arxiv.org/abs/2311.10122"}
+      - {kind: paper, title: "Video Understanding with Large Language Models: A Survey", by: "Yunlong Tang et al.", year: 2023, url: "https://arxiv.org/abs/2312.17432"}
+    status: added
+  - id: audio-language-models
+    name: Audio Language Models
+    aliases: [neural codec language models, codec TTS, zero-shot TTS, AudioLM, VALL-E]
+    region: multimodal-applied
+    layer: core
+    desc: Language models trained on discrete audio tokens from a neural codec, predicting audio the way text models predict words; the basis of modern speech synthesis and end-to-end voice models.
+    summary: "A neural audio codec compresses sound into a sequence of discrete tokens, and a language model learns to predict the next one, exactly as a text model predicts the next word. This produces natural speech and music, and from a few seconds of a speaker's voice it can continue in that voice (zero-shot text-to-speech). The same audio tokens let end-to-end voice assistants hear and speak without converting to text."
+    parents:
+      - {id: pretrained-language-models, rel: applies, why: "Applies next-token language modeling to audio codec tokens.", src: "AudioLM (Borsos et al. 2022)"}
+      - {id: "external:neural-audio-codecs", rel: combines, why: "Tokenizes audio with a neural codec such as SoundStream or EnCodec.", src: "AudioLM (Borsos et al. 2022)"}
+    maturity: 3
+    maturity_note: Behind current speech synthesis and voice models; voice cloning raises open consent and misuse questions.
+    date: "2022-09"
+    ref: {title: "AudioLM: a Language Modeling Approach to Audio Generation (Borsos et al.)", arxiv: "2209.03143"}
+    examples: [VALL-E, AudioLM, EnCodec, Mimi]
+    resources:
+      - {kind: blog, title: "AudioLM: a Language Modeling Approach to Audio Generation", by: "Zalán Borsos, Neil Zeghidour (Google Research)", year: 2022, url: "https://research.google/blog/audiolm-a-language-modeling-approach-to-audio-generation/"}
+      - {kind: talk, title: "Audio Language Models - Neil Zeghidour (Moshi)", by: "Neil Zeghidour (Hung-yi Lee's channel)", year: 2024, url: "https://www.youtube.com/watch?v=Zjpl84KCTvw"}
+      - {kind: paper, title: "Neural Codec Language Models are Zero-Shot Text to Speech Synthesizers", by: "Chengyi Wang et al.", year: 2023, url: "https://arxiv.org/abs/2301.02111"}
+      - {kind: paper, title: "High Fidelity Neural Audio Compression", by: "Alexandre Défossez et al.", year: 2022, url: "https://arxiv.org/abs/2210.13438"}
+    status: added
+  - id: full-duplex-voice
+    name: Full-Duplex Voice Models
+    aliases: [simultaneous listening and speaking, multi-stream speech models, Moshi]
+    region: multimodal-applied
+    also: [ai-product-and-interaction-design]
+    layer: detail
+    desc: Speech models that model the user's and the agent's audio as two parallel streams, so they listen and speak at the same time with no explicit turn boundaries.
+    summary: "Most voice assistants take turns: they wait for you to stop, then answer. A full-duplex model processes your audio and its own as two streams at once, frame by frame, so overlaps, interruptions and small acknowledgements like \"uh-huh\" are handled by the model itself. Moshi also predicts a text version of its own speech slightly ahead of the audio, which keeps answers coherent, and responds in about 200 ms."
+    parents:
+      - {id: realtime-voice, rel: specializes, why: "An end-to-end realtime voice model with no turn-based structure.", src: "Moshi (Défossez et al. 2024)"}
+      - {id: audio-language-models, rel: extends, why: "Models two parallel streams of codec tokens instead of one.", src: "Moshi (Défossez et al. 2024)"}
+    maturity: 2
+    maturity_note: Open research models and early products; most deployed voice agents still use turn detection.
+    date: "2024-09"
+    ref: {title: "Moshi: a speech-text foundation model for real-time dialogue (Défossez et al.)", arxiv: "2410.00037"}
+    examples: [Moshi]
+    resources:
+      - {kind: code, title: "kyutai-labs/moshi", by: "Kyutai", year: 2024, url: "https://github.com/kyutai-labs/moshi"}
+      - {kind: talk, title: "\"Moshi: a speech-text foundation model for real-time dialogue\" - Alexandre Défossez", by: "Alexandre Défossez (Conversational AI Reading Group)", year: 2025, url: "https://www.youtube.com/watch?v=0_c3bw_x6uU"}
+      - {kind: talk, title: "Your Voice Agent is Just a Walkie Talkie", by: "Neil Zeghidour (Gradium, AI Engineer)", year: 2026, url: "https://www.youtube.com/watch?v=a8EcVumh71E"}
+      - {kind: paper, title: "Generative Spoken Dialogue Language Modeling", by: "Tu Anh Nguyen et al.", year: 2022, url: "https://arxiv.org/abs/2203.16502"}
+    status: added
+  - id: diffusion-transformers
+    name: Diffusion Transformers
+    aliases: [DiT]
+    region: multimodal-applied
+    layer: detail
+    desc: Diffusion models whose denoising network is a transformer over latent patches instead of a convolutional U-Net.
+    summary: "Early diffusion models denoised with a U-Net, a convolutional network that stops improving much as it gets bigger. A diffusion transformer cuts the latent image into patches and processes them as tokens, like a vision transformer, so quality keeps rising with model size and compute. Most recent image and video generators use it."
+    parents:
+      - {id: diffusion-models, rel: specializes, why: "Replaces the U-Net denoiser with a transformer.", src: "Scalable Diffusion Models with Transformers (Peebles & Xie 2022)"}
+      - {id: transformer-architecture, rel: applies, why: "Processes noised latent patches as a token sequence.", src: "Peebles & Xie 2022"}
+    maturity: 4
+    maturity_note: The backbone of most current image and video generators.
+    date: "2022-12"
+    ref: {title: "Scalable Diffusion Models with Transformers (Peebles & Xie)", arxiv: "2212.09748"}
+    examples: [Sora, Stable Diffusion 3, Flux]
+    resources:
+      - {kind: docs, title: "DiT", by: "Hugging Face Diffusers", year: 2023, url: "https://huggingface.co/docs/diffusers/api/pipelines/dit"}
+      - {kind: talk, title: "Diffusion Transformers (ViT, DiT, MMDiT)", by: "Julia Turc", year: 2026, url: "https://www.youtube.com/watch?v=jNPmSjrxGtY"}
+      - {kind: paper, title: "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis", by: "Patrick Esser et al.", year: 2024, url: "https://arxiv.org/abs/2403.03206"}
+    status: added
+  - id: flow-matching
+    name: Flow Matching
+    aliases: [rectified flow]
+    region: multimodal-applied
+    layer: detail
+    desc: Training a generator to follow a learned velocity field from noise to data, usually along straight paths, instead of learning to reverse a noising process.
+    summary: "An alternative training objective to diffusion. Instead of learning to remove noise step by step, the model learns which direction to move at each point to get from noise to an image, with the paths kept close to straight lines. Straighter paths need fewer sampling steps, and training is simpler. Recent image, video and speech models such as Stable Diffusion 3 and Flux use it."
+    parents:
+      - {id: diffusion-models, rel: replaces, why: "Does the same job as diffusion with a simpler objective and fewer sampling steps.", src: "Flow Matching for Generative Modeling (Lipman et al. 2022)"}
+    maturity: 3
+    maturity_note: The default objective for many 2024+ generators; diffusion remains common.
+    date: "2022-10"
+    ref: {title: "Flow Matching for Generative Modeling (Lipman et al.)", arxiv: "2210.02747"}
+    examples: [Stable Diffusion 3, Flux, Movie Gen]
+    resources:
+      - {kind: blog, title: "An introduction to Flow Matching", by: "Tor Fjelde, Emile Mathieu, Vincent Dutordoir (Cambridge MLG)", year: 2024, url: "https://mlg.eng.cam.ac.uk/blog/2024/01/20/flow-matching.html"}
+      - {kind: blog, title: "Diffusion Meets Flow Matching", by: "Ruiqi Gao, Emiel Hoogeboom, Jonathan Heek, Valentin De Bortoli, Kevin P. Murphy, Tim Salimans", year: 2024, url: "https://diffusionflow.github.io/"}
+      - {kind: talk, title: "Flow Matching: Simplifying and Generalizing Diffusion Models", by: "Yaron Lipman (Proxima)", year: 2023, url: "https://www.youtube.com/watch?v=5ZSwYogAxYg"}
+      - {kind: paper, title: "Flow Matching Guide and Code", by: "Yaron Lipman et al.", year: 2024, url: "https://arxiv.org/abs/2412.06264"}
+    status: added
+  - id: spatial-conditioning
+    name: Spatial Conditioning
+    aliases: [ControlNet, T2I-Adapter, controllable generation]
+    region: multimodal-applied
+    layer: detail
+    desc: Steering a pretrained image generator with structural inputs (edge maps, depth, pose skeletons) through a trained add-on network, leaving the base model frozen.
+    summary: "A text prompt can't say exactly where things go in a picture. Spatial conditioning adds a second input, such as a sketch, an edge map, a depth map or a pose skeleton, and a small trained add-on network makes the generator follow it. The base model stays frozen, so one model can take many kinds of control."
+    parents:
+      - {id: text-to-image, rel: extends, why: "Adds structural control to a frozen text-to-image model.", src: "Adding Conditional Control to Text-to-Image Diffusion Models (Zhang et al. 2023)"}
+    maturity: 4
+    maturity_note: Widely used in image tools and design pipelines.
+    date: "2023-02"
+    ref: {title: "Adding Conditional Control to Text-to-Image Diffusion Models (Zhang et al.)", arxiv: "2302.05543"}
+    examples: [ControlNet, T2I-Adapter, ComfyUI]
+    resources:
+      - {kind: blog, title: "ControlNet in Diffusers", by: "Hugging Face (Sayak Paul, YiYi Xu, Patrick von Platen)", year: 2023, url: "https://huggingface.co/blog/controlnet"}
+      - {kind: tutorial, title: "Train your ControlNet with diffusers", by: "Hugging Face (Apolinário, Pedro Cuenca)", year: 2023, url: "https://huggingface.co/blog/train-your-controlnet"}
+      - {kind: talk, title: "Ok, but what IS ControlNet?", by: "koiboi", year: 2023, url: "https://www.youtube.com/watch?v=fhIGt7QGg4w"}
+      - {kind: paper, title: "T2I-Adapter: Learning Adapters to Dig out More Controllable Ability for Text-to-Image Diffusion Models", by: "Chong Mou et al.", year: 2023, url: "https://arxiv.org/abs/2302.08453"}
     status: added

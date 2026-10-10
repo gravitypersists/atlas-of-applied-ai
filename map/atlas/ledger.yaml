@@ -202,4 +202,11 @@ settlements:
   - {id: dual-llm-pattern, x: 3117.1, y: 822.2, settled: "2026-10-08"}
   - {id: machine-unlearning, x: 3408.7, y: 689, settled: "2026-10-08"}
   - {id: llm-watermarking, x: 3499.2, y: 1674.2, settled: "2026-10-08"}
+  - {id: dynamic-resolution-encoding, x: 3892.9, y: 1676.8, settled: "2026-10-08"}
+  - {id: video-understanding, x: 4084.3, y: 1704.1, settled: "2026-10-08"}
+  - {id: audio-language-models, x: 4179.8, y: 1718.2, settled: "2026-10-08"}
+  - {id: diffusion-transformers, x: 4257.1, y: 1583, settled: "2026-10-08"}
+  - {id: flow-matching, x: 4176, y: 1634.9, settled: "2026-10-08"}
+  - {id: spatial-conditioning, x: 4263, y: 1433.7, settled: "2026-10-08"}
+  - {id: full-duplex-voice, x: 4140.4, y: 1948.5, settled: "2026-10-08"}
 retired: []
