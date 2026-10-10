@@ -217,4 +217,6 @@ settlements:
   - {id: draft-heads, x: 3474.5, y: 2039.9, settled: "2026-10-08"}
   - {id: microscaling-formats, x: 3736.4, y: 1794, settled: "2026-10-08"}
   - {id: multi-head-latent-attention, x: 3737.5, y: 1968.8, settled: "2026-10-08"}
+  - {id: structured-pruning, x: 2610.7, y: 899.3, settled: "2026-10-08"}
+  - {id: on-policy-distillation, x: 2594.8, y: 986.9, settled: "2026-10-08"}
 retired: []

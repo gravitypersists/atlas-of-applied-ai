@@ -842,6 +842,11 @@
       "rule": "The act of training a student → Adaptation; generating the traces → Data."
     },
     {
+      "concept": "Model compression",
+      "home": "inference-and-serving (quantization); adaptation-and-post-training (pruning with retraining)",
+      "rule": "Compression applied to a finished model with at most light calibration → Inference. Removing structure and retraining to produce a new, smaller model → Adaptation."
+    },
+    {
       "concept": "Model merging",
       "home": "adaptation-and-post-training",
       "rule": "Arithmetic on fine-tuned weights changes the model after pretraining → Adaptation, even though the merge itself runs no gradient steps."
@@ -2274,6 +2279,13 @@
           "by": "Dujian Ding et al.",
           "year": 2024,
           "url": "https://arxiv.org/abs/2404.14618"
+        },
+        {
+          "kind": "paper",
+          "title": "Small Language Models are the Future of Agentic AI",
+          "by": "Peter Belcak et al. (NVIDIA)",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2506.02153"
         }
       ],
       "status": "repaired"
@@ -2352,7 +2364,8 @@
       "name": "Local and On-Device Inference",
       "aliases": [
         "llama.cpp",
-        "edge inference"
+        "edge inference",
+        "on-device models"
       ],
       "region": "inference-and-serving",
       "desc": "Running models on consumer hardware or devices, relying on quantization and efficient kernels.",
@@ -8187,7 +8200,9 @@
       "name": "LLM Distillation",
       "aliases": [
         "reasoning distillation",
-        "distilled CoT"
+        "distilled CoT",
+        "small language models",
+        "SLM"
       ],
       "region": "adaptation-and-post-training",
       "also": [
@@ -8220,13 +8235,6 @@
         "DeepSeek-R1-Distill models"
       ],
       "resources": [
-        {
-          "kind": "blog",
-          "title": "On-Policy Distillation - Thinking Machines Lab",
-          "by": "Kevin Lu et al. (Thinking Machines)",
-          "year": 2025,
-          "url": "https://thinkingmachines.ai/blog/on-policy-distillation/"
-        },
         {
           "kind": "docs",
           "title": "Synthetic Data & Distillation (RLHF Book)",
@@ -8597,6 +8605,134 @@
           "by": "Yadav et al.",
           "year": 2023,
           "url": "https://arxiv.org/abs/2306.01708"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "structured-pruning",
+      "name": "Structured Pruning",
+      "aliases": [
+        "LLM pruning",
+        "width and depth pruning",
+        "Minitron",
+        "Sheared LLaMA"
+      ],
+      "region": "adaptation-and-post-training",
+      "also": [
+        "inference-and-serving"
+      ],
+      "desc": "Removing whole layers, attention heads or hidden dimensions from a trained model, then retraining briefly to recover quality, producing a smaller model.",
+      "summary": "Makes a small model by cutting a large one down: whole layers, attention heads or hidden dimensions are removed, chosen by how little each contributes, and the result is retrained briefly, often by distilling from the original model. This costs a small fraction of training the small model from scratch. Unlike scattering zeros through the weights, removing whole structures gives a genuinely smaller model that runs faster on ordinary hardware.",
+      "parents": [
+        {
+          "id": "llm-distillation",
+          "rel": "combines",
+          "why": "Recovers the pruned model's quality by distilling from the unpruned original.",
+          "src": "Compact Language Models via Pruning and Knowledge Distillation (Muralidharan et al. 2024)"
+        },
+        {
+          "id": "external:network-pruning",
+          "rel": "extends",
+          "why": "Applies classic neural-network pruning to whole structures of a pretrained LLM.",
+          "src": "LLM-Pruner (Ma et al. 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Used by NVIDIA and Meta to make released small models; recipes are still evolving.",
+      "date": "2023-10",
+      "ref": {
+        "title": "Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning (Xia et al.)",
+        "arxiv": "2310.06694"
+      },
+      "examples": [
+        "Llama-3.1-Minitron 4B",
+        "Llama 3.2 1B and 3B",
+        "Sheared-LLaMA"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "How to Prune and Distill Llama-3.1 8B to an NVIDIA Llama-3.1-Minitron 4B Model",
+          "by": "NVIDIA Technical Blog",
+          "year": 2024,
+          "url": "https://developer.nvidia.com/blog/how-to-prune-and-distill-llama-3-1-8b-to-an-nvidia-llama-3-1-minitron-4b-model/"
+        },
+        {
+          "kind": "paper",
+          "title": "Compact Language Models via Pruning and Knowledge Distillation",
+          "by": "Saurav Muralidharan et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2407.14679"
+        },
+        {
+          "kind": "paper",
+          "title": "LLM-Pruner: On the Structural Pruning of Large Language Models",
+          "by": "Xinyin Ma et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2305.11627"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "on-policy-distillation",
+      "name": "On-Policy Distillation",
+      "aliases": [
+        "generalized knowledge distillation",
+        "GKD",
+        "MiniLLM"
+      ],
+      "region": "adaptation-and-post-training",
+      "layer": "detail",
+      "desc": "Distillation in which the student generates its own outputs and the teacher scores each token, so the student learns to recover from its own mistakes.",
+      "summary": "Ordinary distillation trains the student on text the teacher wrote, but at use time the student reads its own output, and one early slip can lead it somewhere the teacher's examples never went. In on-policy distillation the student writes its own answers and the teacher grades every token, so the student learns from the mistakes it actually makes. It gets much of the benefit of reinforcement learning with dense, per-token feedback, at a fraction of the compute.",
+      "parents": [
+        {
+          "id": "llm-distillation",
+          "rel": "extends",
+          "why": "Trains the student on its own samples instead of fixed teacher outputs.",
+          "src": "On-Policy Distillation of Language Models (Agarwal et al. 2023)"
+        },
+        {
+          "id": "external:dagger",
+          "rel": "applies",
+          "why": "Applies imitation learning's fix for compounding errors, training on states the learner itself visits.",
+          "src": "On-Policy Distillation of Language Models (Agarwal et al. 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Used in the post-training of recent small open models such as Qwen3's; supported in common training libraries.",
+      "date": "2023-06",
+      "ref": {
+        "title": "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes (Agarwal et al.)",
+        "arxiv": "2306.13649"
+      },
+      "examples": [
+        "Qwen3 small models",
+        "TRL GKDTrainer"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "On-Policy Distillation - Thinking Machines Lab",
+          "by": "Kevin Lu et al. (Thinking Machines)",
+          "year": 2025,
+          "url": "https://thinkingmachines.ai/blog/on-policy-distillation/"
+        },
+        {
+          "kind": "docs",
+          "title": "Generalized Knowledge Distillation Trainer",
+          "by": "Hugging Face TRL",
+          "year": 2024,
+          "url": "https://huggingface.co/docs/trl/gkd_trainer"
+        },
+        {
+          "kind": "paper",
+          "title": "MiniLLM: On-Policy Distillation of Large Language Models",
+          "by": "Yuxian Gu et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2306.08543"
         }
       ],
       "status": "added"
@@ -12786,11 +12922,13 @@
     "external:content-moderation-classifiers",
     "external:control-theory-state-space",
     "external:crowdsourcing",
+    "external:dagger",
     "external:datasheets-and-documentation",
     "external:digital-watermarking",
     "external:elo-rating",
     "external:minhash",
     "external:n-gram-overlap-detection",
+    "external:network-pruning",
     "external:neural-audio-codecs",
     "external:nonequilibrium-thermodynamics-generative-modeling",
     "external:ocr",
