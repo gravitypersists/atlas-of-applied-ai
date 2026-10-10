@@ -1,6 +1,6 @@
 # Deep dive: Inference and Serving
 
-Backbone v0.2 · 13 anchors · 9 cross-region edges
+Backbone v0.2 · 21 anchors · 12 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -41,6 +41,14 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `prefill-decode-disaggregation` — Prefill-Decode Disaggregation (maturity 3, 2024-01)
 - `local-inference` — Local and On-Device Inference (maturity 4, 2023-03)
 - `llm-watermarking` — LLM Watermarking (maturity 3, 2023-01)
+- `io-aware-attention` — FlashAttention (maturity 5, 2022-05)
+- `grouped-query-attention` — Grouped-Query Attention (maturity 4, 2023-05)
+- `multi-head-latent-attention` — Multi-Head Latent Attention (maturity 3, 2024-05)
+- `chunked-prefill` — Chunked Prefill (maturity 4, 2023-08)
+- `kv-cache-offloading` — KV Cache Offloading (maturity 3, 2024-07)
+- `multi-lora-serving` — Multi-LoRA Serving (maturity 4, 2023-11)
+- `draft-heads` — Speculative Draft Heads (maturity 3, 2024-01)
+- `microscaling-formats` — Microscaling Formats (maturity 3, 2023-10)
 
 Nodes homed elsewhere that also touch this region:
 - `mixture-of-experts` — Mixture of Experts (home: deep-learning-nlp)
@@ -60,11 +68,7 @@ Nodes homed elsewhere that also touch this region:
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- FlashAttention / FlashAttention-3 (IO-aware attention kernels) (arXiv:2205.14135; 2407.08608)
-- Grouped-query attention (KV cache size vs. quality) (arXiv:2305.13245)
-- Staged / asynchronous speculative decoding (arXiv:2308.04623)
-- Mixture-of-Depths (dynamic per-token compute) (arXiv:2404.02258)
-- RoPE and context-length extension (arXiv:2104.09864)
+- none
 
 ## Output
 
@@ -161,7 +165,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - human-computer-interaction: conversational-agents (Conversational Agents; chatbots; dialogue systems), direct-manipulation (Direct Manipulation; WYSIWYG), mixed-initiative-interaction (Mixed-Initiative Interaction; human-AI collaboration; intelligent assistance)
 - systems-security: least-privilege (Least Privilege; principle of least authority), sandboxing-and-isolation (Sandboxing and Isolation; containerization; secure execution), injection-attacks (Injection Attacks; SQL injection; code injection)
 - software-engineering: statecharts (Statecharts and State Machines; finite-state machines; workflow engines), test-driven-development (Test-Driven Development; TDD; regression testing), distributed-tracing (Distributed Tracing; spans; Dapper), language-server-protocol (Language Server Protocol; LSP)
-- inference-and-serving: autoregressive-decoding (Autoregressive Decoding; next-token generation; sampling), kv-cache (KV Cache; key-value cache; incremental decoding), paged-attention (PagedAttention; paged KV cache), continuous-batching (Continuous Batching; in-flight batching; iteration-level scheduling), speculative-decoding (Speculative Decoding; assisted generation; draft-and-verify), weight-quantization (Weight Quantization; INT8; INT4; FP8; GPTQ; AWQ), kv-cache-quantization (KV Cache Quantization; KIVI; compressed KV cache), prompt-caching (Prompt Caching; prefix caching; RadixAttention), constrained-decoding (Constrained Decoding; grammar-constrained generation; guided decoding; JSON mode), model-routing (Model Routing and Cascades; LLM routing; FrugalGPT; model cascades), prefill-decode-disaggregation (Prefill-Decode Disaggregation; disaggregated serving; split-level inference), local-inference (Local and On-Device Inference; llama.cpp; edge inference), llm-watermarking (LLM Watermarking; text watermarking; green-list watermarking)
+- inference-and-serving: autoregressive-decoding (Autoregressive Decoding; next-token generation; sampling), kv-cache (KV Cache; key-value cache; incremental decoding), paged-attention (PagedAttention; paged KV cache), continuous-batching (Continuous Batching; in-flight batching; iteration-level scheduling), speculative-decoding (Speculative Decoding; assisted generation; draft-and-verify), weight-quantization (Weight Quantization; INT8; INT4; FP8; GPTQ; AWQ), kv-cache-quantization (KV Cache Quantization; KIVI; compressed KV cache), prompt-caching (Prompt Caching; prefix caching; RadixAttention), constrained-decoding (Constrained Decoding; grammar-constrained generation; guided decoding; JSON mode; grammar automata), model-routing (Model Routing and Cascades; LLM routing; FrugalGPT; model cascades), prefill-decode-disaggregation (Prefill-Decode Disaggregation; disaggregated serving; split-level inference), local-inference (Local and On-Device Inference; llama.cpp; edge inference), llm-watermarking (LLM Watermarking; text watermarking; green-list watermarking), io-aware-attention (FlashAttention; IO-aware attention; FlashAttention-2; FlashAttention-3; fused attention kernels; FlashInfer), grouped-query-attention (Grouped-Query Attention; GQA; multi-query attention; MQA), multi-head-latent-attention (Multi-Head Latent Attention; MLA; DeepSeek MLA), chunked-prefill (Chunked Prefill; Sarathi; stall-free batching; piggybacked decodes), kv-cache-offloading (KV Cache Offloading; tiered KV cache; KV cache pool; KV-centric serving), multi-lora-serving (Multi-LoRA Serving; S-LoRA; Punica; adapter serving), draft-heads (Speculative Draft Heads; EAGLE; Medusa; self-speculative decoding; draft trees), microscaling-formats (Microscaling Formats; MXFP4; NVFP4; FP4; block-scaled quantization)
 - prompting-and-context-engineering: zero-shot-prompting (Zero-Shot Prompting; direct prompting; instruction prompting), few-shot-prompting (Few-Shot Prompting; in-context learning; ICL), system-prompts (System Prompts; system messages; custom instructions; developer messages), prompt-templating (Prompt Templating; prompt templates), prompt-chaining (Prompt Chaining; LLM chains; pipelines of prompts; AI chains), structured-outputs (Structured Outputs; JSON outputs; schema-constrained outputs), context-compaction (Context Compaction; prompt compression; summarization of history), context-engineering (Context Engineering; context management), automatic-prompt-optimization (Automatic Prompt Optimization; APO; APE; prompt search), declarative-prompt-compilation (Declarative Prompt Compilation; DSPy; LM programs), zero-shot-cot (Zero-Shot Chain-of-Thought; zero-shot CoT; Let's think step by step), dynamic-few-shot-selection (Dynamic Few-Shot Selection; example selection; prompt retrieval; kNN prompting; KATE), decomposed-prompting (Decomposed Prompting; DECOMP; task decomposition prompting), textual-gradients (Textual Gradients; TextGrad; textual gradient descent), context-ordering (Context Ordering; position engineering; context reordering; lost-in-the-middle mitigation), progressive-disclosure (Progressive Disclosure; just-in-time context; lazy-loaded context)
 - retrieval-and-knowledge: text-embeddings (Text Embeddings; embedding models; sentence embeddings), dense-retrieval (Dense Retrieval; vector search; semantic search; DPR), retrieval-augmented-generation (Retrieval-Augmented Generation; RAG; naive RAG), chunking-strategies (Chunking Strategies; text splitting; semantic chunking), hybrid-search (Hybrid Search; sparse + dense retrieval; reciprocal rank fusion), cross-encoder-reranking (Cross-Encoder Reranking; rerankers; retrieve-and-rerank; multi-stage retrieval), query-rewriting (Query Rewriting and HyDE; query expansion; HyDE; Rewrite-Retrieve-Read), contextual-retrieval (Contextual Retrieval; contextual chunking), graph-rag (GraphRAG; knowledge-graph RAG), self-rag (Self-RAG; self-reflective RAG), corrective-rag (Corrective RAG; CRAG), agentic-rag (Agentic RAG; agentic search; iterative retrieval), parent-document-retrieval (Parent-Document Retrieval; small-to-big retrieval; ParentDocumentRetriever; sentence-window retrieval; auto-merging retrieval), late-interaction (Late Interaction; ColBERT; multi-vector retrieval; MaxSim), learned-sparse-retrieval (Learned Sparse Retrieval; SPLADE; neural sparse retrieval), propositional-chunking (Propositional Chunking; Dense X Retrieval; proposition indexing), late-chunking (Late Chunking; post-embedding chunking), active-retrieval (Active Retrieval; FLARE; forward-looking active retrieval), speculative-rag (Speculative RAG; draft-then-verify RAG), lightweight-graph-rag (Lightweight GraphRAG; LightRAG; LazyGraphRAG), long-context-routing (RAG vs. Long-Context Routing; Self-Route; Pre-Route)
 - agents-and-orchestration: mrkl-systems (MRKL Systems; modular reasoning; neuro-symbolic routing), tool-learning (Tool Learning; Toolformer; self-taught tool use), function-calling (Function Calling; tool use; tool calling), react-agent-loop (ReAct Agent Loop; reason and act; agent loop), workflow-state-machines (Workflow Graphs and State Machines; graph-based agents; agent workflows), model-context-protocol (Model Context Protocol; MCP), agent-memory (Agent Memory; long-term memory; episodic memory; MemGPT; structured note-taking), multi-agent-systems (Multi-Agent Systems; orchestrator-worker; subagents; agent teams), coding-agents (Coding Agents; software engineering agents; SWE-agent), computer-use-agents (Computer-Use Agents; GUI agents; browser agents), deep-research-agents (Deep Research Agents; research agents), agent-skills (Agent Skills; skills; packaged procedures), decision-models (Decision Models; System One models; typed decision models; calibrated classifiers for agents), semantic-routing (Semantic Routing; embedding-based intent routing; Semantic Router), mcp-code-execution (Code Execution with MCP; Code Mode; tools as code APIs), long-running-agent-harness (Long-Running Agent Harnesses; multi-session agents; initializer agent pattern; progress files), context-aware-mcp (Context-Aware MCP; CA-MCP; shared context store)
@@ -177,10 +181,10 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 
 ## Reference: seed sources for this region
 Key references currently attached to the anchors (from the backbone runs; arXiv ids spot-checked, not exhaustively verified):
-- Autoregressive Decoding: Improving Language Understanding by Generative Pre-Training (Radford et al.)
+- Autoregressive Decoding: Improving Language Understanding by Generative Pre-Training (Radford et al.) — https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf
 - KV Cache: Fast Transformer Decoding: One Write-Head is All You Need (Shazeer) — arXiv:1911.02150
 - PagedAttention: Efficient Memory Management for Large Language Model Serving with PagedAttention (Kwon et al.) — arXiv:2309.06180
-- Continuous Batching: Orca: A Distributed Serving System for Transformer-Based Generative Models (Yu et al., OSDI 2022)
+- Continuous Batching: Orca: A Distributed Serving System for Transformer-Based Generative Models (Yu et al., OSDI 2022) — https://www.usenix.org/conference/osdi22/presentation/yu
 - Speculative Decoding: Fast Inference from Transformers via Speculative Decoding (Leviathan et al.) — arXiv:2211.17192
 - Weight Quantization: LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale (Dettmers et al.) — arXiv:2208.07339
 - KV Cache Quantization: KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache (Liu et al.) — arXiv:2402.02750
@@ -190,13 +194,24 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - Prefill-Decode Disaggregation: DistServe: Disaggregating Prefill and Decoding for Goodput-optimized LLM Serving (Zhong et al.) — arXiv:2401.09670
 - Local and On-Device Inference: llama.cpp (Gerganov) — https://github.com/ggml-org/llama.cpp
 - LLM Watermarking: A Watermark for Large Language Models (Kirchenbauer et al.) — arXiv:2301.10226
+- FlashAttention: FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness (Dao et al.) — arXiv:2205.14135
+- Grouped-Query Attention: GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints (Ainslie et al.) — arXiv:2305.13245
+- Multi-Head Latent Attention: DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model (DeepSeek-AI) — arXiv:2405.04434
+- Chunked Prefill: SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked Prefills (Agrawal et al.) — arXiv:2308.16369
+- KV Cache Offloading: Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving (Qin et al.) — arXiv:2407.00079
+- Multi-LoRA Serving: S-LoRA: Serving Thousands of Concurrent LoRA Adapters (Sheng et al.) — arXiv:2311.03285
+- Speculative Draft Heads: EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty (Li et al.) — arXiv:2401.15077
+- Microscaling Formats: Microscaling Data Formats for Deep Learning (Rouhani et al.) — arXiv:2310.10537
 
 ## Reference: cross-region edges touching this region
 - autoregressive-decoding --applies--> pretrained-language-models
 - decision-models --extends--> model-routing
 - decision-models --replaces--> constrained-decoding
+- grouped-query-attention --specializes--> transformer-architecture
+- io-aware-attention --applies--> transformer-architecture
 - long-context-routing --applies--> model-routing
 - model-routing --applies--> mixture-of-experts
+- multi-lora-serving --applies--> low-rank-adaptation
 - speculative-rag --applies--> speculative-decoding
 - streaming-responses --applies--> autoregressive-decoding
 - structured-outputs --combines--> constrained-decoding

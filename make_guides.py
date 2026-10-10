@@ -13,13 +13,6 @@ OUT = HERE / "deep-dives"
 # Leads surfaced by the two Gemini runs that are not backbone anchors.
 # The deep dive should evaluate each: include as a node, fold into an anchor, or reject.
 LEADS = {
-    "inference-and-serving": [
-        ("FlashAttention / FlashAttention-3 (IO-aware attention kernels)", "2205.14135; 2407.08608"),
-        ("Grouped-query attention (KV cache size vs. quality)", "2305.13245"),
-        ("Staged / asynchronous speculative decoding", "2308.04623"),
-        ("Mixture-of-Depths (dynamic per-token compute)", "2404.02258"),
-        ("RoPE and context-length extension", "2104.09864"),
-    ],
     "planning-and-reasoning": [
         ("STaR (self-taught reasoner; iterative fine-tuning on self-generated rationales) as an anchor", "2203.14465"),
         ("Portfolio Beam Search and diversity-aware search under PRM uncertainty (single blog source; verify adoption)", None),

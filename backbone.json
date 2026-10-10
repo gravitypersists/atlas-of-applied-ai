@@ -94,6 +94,57 @@
         "The 2025–2026 serving stack (disaggregation, KV offload, multi-tier caching) and which techniques became defaults",
         "Cost/latency engineering from the application side — routing, cascades, caching APIs",
         "Local and on-device inference"
+      ],
+      "overview": "Inference and serving is the work of running a trained model fast and cheaply. The central fact is that generating text is limited by memory, not arithmetic: a model writes one token at a time, and each step has to read all of its weights plus a KV cache holding attention state for every earlier token. The cache grows with context length and with every concurrent request, and much of this region is about fitting, sharing and shrinking it.\n\nServing engines solved the basic problems first. Continuous batching lets requests join and leave a batch at every step so the GPU never idles, PagedAttention stores the cache in small blocks like virtual memory so little is wasted, and FlashAttention computes attention without moving large matrices through slow memory. Quantization stores weights, and then the cache, in fewer bits, which also makes models small enough for laptops and phones. Speculative decoding has a fast drafter guess several tokens that the big model checks at once.\n\nThe current stack treats the KV cache as data to manage across a cluster. Prompt caching reuses it for shared prefixes, and providers bill cache hits as cheaper input tokens. Chunked prefill keeps long prompts from stalling other users, and disaggregated serving runs prompt processing and token generation on separate machines, shipping the cache between them and offloading it to CPU memory or SSD for reuse. From the application side the main levers are routing easy requests to cheaper models, ordering prompts so caches hit, and constrained decoding for guaranteed output formats. Landmarks worth knowing: the KV cache, continuous batching, PagedAttention, FlashAttention, quantization, speculative decoding and prompt caching. The open questions are mostly economic: how to trade time to first token, streaming speed and cost per token across very different workloads, long-running agents especially.",
+      "learning_path": [
+        {
+          "kind": "blog",
+          "title": "Transformer Inference Arithmetic",
+          "by": "kipply (Carol Chen)",
+          "year": 2022,
+          "url": "https://kipp.ly/p/transformer-inference-arithmetic",
+          "why": "Works through the memory and compute math of generating one token at a time. It shows why decoding is limited by memory bandwidth and why the KV cache is the main thing to manage."
+        },
+        {
+          "kind": "blog",
+          "title": "Achieve 23x LLM Inference Throughput & Reduce p50 Latency",
+          "by": "Cade Daniel et al. (Anyscale)",
+          "year": 2023,
+          "url": "https://www.anyscale.com/blog/continuous-batching-llm-inference",
+          "why": "Explains continuous batching and why paged KV memory makes it work. Read it to see how serving engines keep the GPU busy across many requests."
+        },
+        {
+          "kind": "blog",
+          "title": "A Visual Guide to Quantization",
+          "by": "Maarten Grootendorst",
+          "year": 2024,
+          "url": "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-quantization",
+          "why": "Illustrated tour of number formats and the main weight quantization methods (GPTQ, AWQ, GGUF). It covers the most common way to fit a model into less memory."
+        },
+        {
+          "kind": "blog",
+          "title": "Looking back at speculative decoding",
+          "by": "Yaniv Leviathan, Matan Kalman, Yossi Matias (Google Research)",
+          "year": 2024,
+          "url": "https://research.google/blog/looking-back-at-speculative-decoding/",
+          "why": "The original authors explain how a cheap draft model plus one verification pass speeds up decoding without changing outputs. Start here before draft heads like EAGLE and Medusa."
+        },
+        {
+          "kind": "blog",
+          "title": "Fast and Expressive LLM Inference with RadixAttention and SGLang",
+          "by": "Lianmin Zheng, Ying Sheng et al. (LMSYS)",
+          "year": 2024,
+          "url": "https://www.lmsys.org/blog/2024-01-17-sglang/",
+          "why": "Shows how reusing the KV cache across requests that share a prefix saves recomputation. This is the mechanism behind prefix and prompt caching."
+        },
+        {
+          "kind": "talk",
+          "title": "DistServe: disaggregating prefill and decoding for goodput-optimized LLM inference",
+          "by": "Hao Zhang (PyTorch Expert Exchange)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=Bh-jlh5vlF0",
+          "why": "Explains why prefill and decode have different bottlenecks and why large deployments now run them on separate GPUs. It ties the earlier pieces into the shape of a modern serving stack."
+        }
       ]
     },
     {
@@ -1621,6 +1672,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Generating text one token at a time, each conditioned on everything generated so far, using a sampling strategy.",
+      "summary": "A language model writes one token at a time. It scores every possible next token, a sampling rule (greedy, temperature, top-p) picks one, and that token is appended and fed back in. Every new token needs another pass through the whole model, and that pass is limited mostly by how fast weights and cached state can be read from memory, not by arithmetic. Almost every technique in this region attacks that cost.",
       "parents": [
         {
           "id": "pretrained-language-models",
@@ -1633,12 +1685,43 @@
       "maturity_note": "The baseline execution pattern of every generative model.",
       "date": "2018-06",
       "ref": {
-        "title": "Improving Language Understanding by Generative Pre-Training (Radford et al.)"
+        "title": "Improving Language Understanding by Generative Pre-Training (Radford et al.)",
+        "url": "https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf"
       },
       "examples": [
         "vLLM",
         "llama.cpp",
         "Hugging Face generate"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "How to generate text: using different decoding methods for language generation with Transformers",
+          "by": "Patrick von Platen (Hugging Face)",
+          "year": 2020,
+          "url": "https://huggingface.co/blog/how-to-generate"
+        },
+        {
+          "kind": "docs",
+          "title": "Generation strategies",
+          "by": "Hugging Face",
+          "year": 2024,
+          "url": "https://huggingface.co/docs/transformers/main/en/generation_strategies"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS336 Language Modeling from Scratch | Spring 2025 | Lecture 10: Inference",
+          "by": "Percy Liang (Stanford Online)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=fcgPYo3OtV0"
+        },
+        {
+          "kind": "paper",
+          "title": "The Curious Case of Neural Text Degeneration",
+          "by": "Ari Holtzman et al.",
+          "year": 2019,
+          "url": "https://arxiv.org/abs/1904.09751"
+        }
       ],
       "status": "repaired"
     },
@@ -1651,6 +1734,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Storing attention keys and values from earlier tokens so each decoding step avoids recomputation; its memory footprint dominates serving design.",
+      "summary": "During generation, attention needs the keys and values of every earlier token. The KV cache stores them, so each step computes them only for the new token instead of reprocessing the whole sequence. The catch is memory: the cache grows with every token and every concurrent request, and for long contexts it can outgrow the model weights, so most serving design is about fitting, sharing and shrinking it.",
       "parents": [
         {
           "id": "autoregressive-decoding",
@@ -1670,6 +1754,36 @@
         "TensorRT-LLM",
         "vLLM"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Understanding and Coding the KV Cache in LLMs from Scratch",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/coding-the-kv-cache-in-llms"
+        },
+        {
+          "kind": "blog",
+          "title": "Transformer Inference Arithmetic",
+          "by": "kipply (Carol Chen)",
+          "year": 2022,
+          "url": "https://kipp.ly/p/transformer-inference-arithmetic"
+        },
+        {
+          "kind": "talk",
+          "title": "LLaMA explained: KV-Cache, Rotary Positional Embedding, RMS Norm, Grouped Query Attention, SwiGLU",
+          "by": "Umar Jamil",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=Mn_9W1nCFLo"
+        },
+        {
+          "kind": "blog",
+          "title": "Optimizing AI Inference at Character.AI",
+          "by": "Character.AI",
+          "year": 2024,
+          "url": "https://blog.character.ai/optimizing-ai-inference-at-character-ai/"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1680,6 +1794,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Stores the KV cache in non-contiguous fixed-size blocks, like OS virtual memory, cutting fragmentation and raising batch sizes.",
+      "summary": "Stores each request's KV cache in small fixed-size blocks scattered across GPU memory and tracked by a block table, the way an operating system pages virtual memory. Engines no longer reserve one large contiguous region per request for its maximum length, so far less memory is wasted and many more requests fit in a batch. Requests with the same prefix can also share blocks. It was the core idea behind vLLM.",
       "parents": [
         {
           "id": "kv-cache",
@@ -1698,6 +1813,29 @@
       "examples": [
         "vLLM"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention",
+          "by": "Woosuk Kwon, Zhuohan Li et al. (vLLM)",
+          "year": 2023,
+          "url": "https://vllm.ai/blog/2023-06-20-vllm"
+        },
+        {
+          "kind": "talk",
+          "title": "SOSP '23 | Efficient Memory Management for Large Language Model Serving with PagedAttention",
+          "by": "Woosuk Kwon (SOSP 2023)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=UdNocRPQS3Y"
+        },
+        {
+          "kind": "docs",
+          "title": "PagedAttention",
+          "by": "Hugging Face (Text Generation Inference)",
+          "year": 2024,
+          "url": "https://huggingface.co/docs/text-generation-inference/conceptual/paged_attention"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1709,6 +1847,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Scheduling at the level of decoding steps so new requests join and finished ones leave a batch continuously.",
+      "summary": "Schedules work one decoding step at a time instead of one batch of requests at a time. When a request finishes, a waiting one takes its slot on the next step, so the GPU never sits idle while a batch waits for its longest answer. It raises throughput several times over static batching and is how every production serving engine runs.",
       "parents": [
         {
           "id": "autoregressive-decoding",
@@ -1721,12 +1860,36 @@
       "maturity_note": "Required for production-scale serving.",
       "date": "2022-07",
       "ref": {
-        "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models (Yu et al., OSDI 2022)"
+        "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models (Yu et al., OSDI 2022)",
+        "url": "https://www.usenix.org/conference/osdi22/presentation/yu"
       },
       "examples": [
         "vLLM",
         "TGI",
         "TensorRT-LLM"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Achieve 23x LLM Inference Throughput & Reduce p50 Latency",
+          "by": "Cade Daniel et al. (Anyscale)",
+          "year": 2023,
+          "url": "https://www.anyscale.com/blog/continuous-batching-llm-inference"
+        },
+        {
+          "kind": "talk",
+          "title": "OSDI '22 - Orca: A Distributed Serving System for Transformer-Based Generative Models",
+          "by": "Gyeong-In Yu (OSDI 2022)",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=Ob9PPLxETYU"
+        },
+        {
+          "kind": "blog",
+          "title": "vLLM V1: A Major Upgrade to vLLM's Core Architecture",
+          "by": "vLLM Team",
+          "year": 2025,
+          "url": "https://vllm.ai/blog/2025-01-27-v1-alpha-release"
+        }
       ],
       "status": "repaired"
     },
@@ -1739,6 +1902,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "A small draft model or head proposes several tokens that the target model verifies in parallel, reducing latency without changing outputs.",
+      "summary": "A fast drafter guesses the next several tokens, and the large model checks all of the guesses in one forward pass, keeping the ones it agrees with. Checking several tokens costs about the same as generating one, so each accepted guess saves a full step, and an acceptance rule keeps the output distribution identical to the large model's. Gains are largest on predictable text such as code and shrink at large batch sizes, where the GPU is already busy.",
       "parents": [
         {
           "id": "autoregressive-decoding",
@@ -1748,16 +1912,46 @@
         }
       ],
       "maturity": 4,
-      "maturity_note": "Broadly integrated into serving engines; variants (Medusa, EAGLE) still evolving.",
+      "maturity_note": "Broadly integrated into serving engines; draft-head variants (EAGLE, Medusa) are now the common form.",
       "date": "2022-11",
       "ref": {
         "title": "Fast Inference from Transformers via Speculative Decoding (Leviathan et al.)",
         "arxiv": "2211.17192"
       },
       "examples": [
-        "EAGLE",
-        "Medusa",
-        "vLLM speculative decoding"
+        "Hugging Face assisted generation",
+        "vLLM speculative decoding",
+        "SGLang"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Looking back at speculative decoding",
+          "by": "Yaniv Leviathan, Matan Kalman, Yossi Matias (Google Research)",
+          "year": 2024,
+          "url": "https://research.google/blog/looking-back-at-speculative-decoding/"
+        },
+        {
+          "kind": "blog",
+          "title": "Assisted Generation: a new direction toward low-latency text generation",
+          "by": "Joao Gante (Hugging Face)",
+          "year": 2023,
+          "url": "https://huggingface.co/blog/assisted-generation"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 22: Hacker's Guide to Speculative Decoding in VLLM",
+          "by": "Cade Daniel (GPU MODE)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=9wNAgpX6z_4"
+        },
+        {
+          "kind": "blog",
+          "title": "How Speculative Decoding Boosts vLLM Performance by up to 2.8x",
+          "by": "vLLM Team",
+          "year": 2024,
+          "url": "https://vllm.ai/blog/2024-10-17-spec-decode"
+        }
       ],
       "status": "repaired"
     },
@@ -1773,6 +1967,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Storing weights at lower numerical precision to cut memory and bandwidth with minimal quality loss.",
+      "summary": "Stores model weights in fewer bits, for example 8 or 4 instead of 16, so the model takes less memory and each decoding step reads less data. Because decoding is limited by memory bandwidth, smaller weights also mean faster generation. Methods such as GPTQ and AWQ choose how to round the weights so quality barely drops, and handle the few outlier values that break naive rounding.",
       "parents": [
         {
           "id": "transformer-architecture",
@@ -1794,6 +1989,36 @@
         "GGUF",
         "bitsandbytes"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "A Visual Guide to Quantization",
+          "by": "Maarten Grootendorst",
+          "year": 2024,
+          "url": "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-quantization"
+        },
+        {
+          "kind": "blog",
+          "title": "A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using transformers, accelerate and bitsandbytes",
+          "by": "Younes Belkada, Tim Dettmers (Hugging Face)",
+          "year": 2022,
+          "url": "https://huggingface.co/blog/hf-bitsandbytes-integration"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 73: [ScaleML Series] Quantization in Large Models",
+          "by": "Chris De Sa (GPU MODE)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=6Cxnnvv3DnY"
+        },
+        {
+          "kind": "paper",
+          "title": "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration",
+          "by": "Ji Lin et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2306.00978"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1805,6 +2030,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Storing cached keys and values at reduced precision to fit longer contexts and larger batches in memory.",
+      "summary": "Stores the cached keys and values at lower precision (8-bit, 4-bit, even 2-bit) instead of 16-bit. Long conversations and large batches are often limited by cache size rather than by the weights, so a smaller cache fits longer contexts and more concurrent requests on the same GPU. Keys and values have different outlier patterns, so good methods quantize them differently.",
       "parents": [
         {
           "id": "kv-cache",
@@ -1830,6 +2056,29 @@
         "vLLM FP8 KV cache",
         "KIVI"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Unlocking Longer Generation with Key-Value Cache Quantization",
+          "by": "Raushan Turganbay (Hugging Face)",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/kv-cache-quantization"
+        },
+        {
+          "kind": "docs",
+          "title": "Quantized KV Cache - vLLM",
+          "by": "vLLM",
+          "year": 2025,
+          "url": "https://docs.vllm.ai/en/latest/features/quantization/quantized_kvcache/"
+        },
+        {
+          "kind": "paper",
+          "title": "KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache Quantization",
+          "by": "Coleman Hooper et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2401.18079"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1844,6 +2093,7 @@
         "prompting-and-context-engineering"
       ],
       "desc": "Reusing the computed KV cache for shared prompt prefixes across requests, cutting prefill cost and latency.",
+      "summary": "When many requests start with the same text, such as a system prompt, tool definitions or a long document, the server keeps the KV cache it computed for that prefix and reuses it instead of processing the prefix again. That cuts latency and cost for the shared part. Engines match prefixes in fixed-size blocks (vLLM) or token by token in a radix tree (SGLang's RadixAttention), and API providers bill cache hits as cheaper input tokens, which rewards putting stable content first in a prompt.",
       "parents": [
         {
           "id": "kv-cache",
@@ -1864,6 +2114,36 @@
         "OpenAI prompt caching",
         "SGLang"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Fast and Expressive LLM Inference with RadixAttention and SGLang",
+          "by": "Lianmin Zheng, Ying Sheng et al. (LMSYS)",
+          "year": 2024,
+          "url": "https://www.lmsys.org/blog/2024-01-17-sglang/"
+        },
+        {
+          "kind": "docs",
+          "title": "Automatic Prefix Caching - vLLM",
+          "by": "vLLM",
+          "year": 2025,
+          "url": "https://docs.vllm.ai/en/latest/design/prefix_caching/"
+        },
+        {
+          "kind": "docs",
+          "title": "Prompt caching - Claude Platform Docs",
+          "by": "Anthropic",
+          "year": 2024,
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        },
+        {
+          "kind": "talk",
+          "title": "Efficient LLM Inference with SGLang, Lianmin Zheng, xAI",
+          "by": "Lianmin Zheng (AMD Developer Central)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=Ny4xxErgFgQ"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1872,13 +2152,15 @@
       "aliases": [
         "grammar-constrained generation",
         "guided decoding",
-        "JSON mode"
+        "JSON mode",
+        "grammar automata"
       ],
       "region": "inference-and-serving",
       "also": [
         "prompting-and-context-engineering"
       ],
       "desc": "Masking invalid tokens at each decoding step so output is guaranteed to match a grammar or schema.",
+      "summary": "At every generation step, tokens that would break a required format (a JSON schema, a regular expression, a grammar) are masked out before sampling, so the output is guaranteed to parse. Libraries such as Outlines and XGrammar compile the grammar ahead of time into a state machine, which makes the check at each step nearly free. It is the mechanism under the structured-output features of the major APIs.",
       "parents": [
         {
           "id": "autoregressive-decoding",
@@ -1899,6 +2181,36 @@
         "llguidance",
         "XGrammar"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Achieving Efficient, Flexible, and Portable Structured Generation with XGrammar",
+          "by": "MLC team (Yixin Dong et al.)",
+          "year": 2024,
+          "url": "https://blog.mlc.ai/2024/11/22/achieving-efficient-flexible-portable-structured-generation-with-xgrammar"
+        },
+        {
+          "kind": "talk",
+          "title": "No more bad outputs with structured generation: Remi Louf",
+          "by": "Rémi Louf (AI Engineer)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=aNmfvN6S_n4"
+        },
+        {
+          "kind": "paper",
+          "title": "Efficient Guided Generation for Large Language Models",
+          "by": "Brandon T. Willard, Rémi Louf",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2307.09702"
+        },
+        {
+          "kind": "paper",
+          "title": "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models",
+          "by": "Yixin Dong et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2411.15100"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1914,6 +2226,7 @@
         "agents-and-orchestration"
       ],
       "desc": "Sending each request to the cheapest model likely to handle it well, or escalating through a cascade of models.",
+      "summary": "Sends each request to the cheapest model likely to answer it well, using a trained router or simple rules, or tries a cheap model first and escalates to a stronger one when the answer looks unreliable (a cascade). Most traffic is easy, so this can cut cost substantially with little loss in quality. The hard parts are predicting difficulty before answering and keeping the router calibrated as models change.",
       "parents": [
         {
           "id": "mixture-of-experts",
@@ -1934,6 +2247,29 @@
         "RouteLLM",
         "OpenRouter auto-routing"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "RouteLLM: An Open-Source Framework for Cost-Effective LLM Routing",
+          "by": "Isaac Ong et al. (LMSYS)",
+          "year": 2024,
+          "url": "https://www.lmsys.org/blog/2024-07-01-routellm/"
+        },
+        {
+          "kind": "paper",
+          "title": "RouteLLM: Learning to Route LLMs with Preference Data",
+          "by": "Isaac Ong et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.18665"
+        },
+        {
+          "kind": "paper",
+          "title": "Hybrid LLM: Cost-Efficient and Quality-Aware Query Routing",
+          "by": "Dujian Ding et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.14618"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1945,6 +2281,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Running the compute-bound prefill phase and the memory-bound decode phase on separate hardware pools, transferring KV state between them.",
+      "summary": "Generating a response has two phases: prefill reads the whole prompt at once and is limited by compute, while decode produces tokens one at a time and is limited by memory bandwidth. On the same GPUs the two slow each other down, so disaggregated serving puts them on separate pools of machines and ships the KV cache from prefill to decode over a fast network. Each pool can then be sized and tuned for its own phase.",
       "parents": [
         {
           "id": "continuous-batching",
@@ -1969,7 +2306,38 @@
       "examples": [
         "NVIDIA Dynamo",
         "llm-d",
-        "Mooncake"
+        "Mooncake",
+        "DistServe"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Throughput is Not All You Need: Maximizing Goodput in LLM Serving using Prefill-Decode Disaggregation",
+          "by": "Hao AI Lab (UCSD)",
+          "year": 2024,
+          "url": "https://haoailab.com/blogs/distserve/"
+        },
+        {
+          "kind": "talk",
+          "title": "DistServe: disaggregating prefill and decoding for goodput-optimized LLM inference",
+          "by": "Hao Zhang (PyTorch Expert Exchange)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=Bh-jlh5vlF0"
+        },
+        {
+          "kind": "blog",
+          "title": "NVIDIA Dynamo, A Low-Latency Distributed Inference Framework for Scaling Reasoning AI Models",
+          "by": "NVIDIA",
+          "year": 2025,
+          "url": "https://developer.nvidia.com/blog/introducing-nvidia-dynamo-a-low-latency-distributed-inference-framework-for-scaling-reasoning-ai-models/"
+        },
+        {
+          "kind": "paper",
+          "title": "Splitwise: Efficient generative LLM inference using phase splitting",
+          "by": "Pratyush Patel et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2311.18677"
+        }
       ],
       "status": "repaired"
     },
@@ -1982,6 +2350,7 @@
       ],
       "region": "inference-and-serving",
       "desc": "Running models on consumer hardware or devices, relying on quantization and efficient kernels.",
+      "summary": "Running models on your own laptop, phone or workstation instead of calling a cloud API. Heavily quantized weights (often 4-bit, in formats such as GGUF) and engines tuned for CPUs and Apple Silicon, such as llama.cpp and MLX, make mid-sized open models usable on consumer hardware. People use it for privacy, offline use and zero per-token cost, giving up the quality of the largest models.",
       "parents": [
         {
           "id": "weight-quantization",
@@ -2002,6 +2371,36 @@
         "Ollama",
         "LM Studio",
         "MLX"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Large language models are having their Stable Diffusion moment",
+          "by": "Simon Willison",
+          "year": 2023,
+          "url": "https://simonwillison.net/2023/Mar/11/llama/"
+        },
+        {
+          "kind": "blog",
+          "title": "Introduction to ggml",
+          "by": "Xuan Son Nguyen et al. (Hugging Face)",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/introduction-to-ggml"
+        },
+        {
+          "kind": "docs",
+          "title": "GGUF",
+          "by": "Hugging Face",
+          "year": 2024,
+          "url": "https://huggingface.co/docs/hub/gguf"
+        },
+        {
+          "kind": "talk",
+          "title": "Bringing Whisper and LLaMA to the masses (Interview)",
+          "by": "Georgi Gerganov (The Changelog)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=8D3GNEq_FNY"
+        }
       ],
       "status": "added"
     },
@@ -2064,6 +2463,522 @@
           "by": "Sumanth Dathathri et al. (Nature)",
           "year": 2024,
           "url": "https://www.nature.com/articles/s41586-024-08025-4"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "io-aware-attention",
+      "name": "FlashAttention",
+      "aliases": [
+        "IO-aware attention",
+        "FlashAttention-2",
+        "FlashAttention-3",
+        "fused attention kernels",
+        "FlashInfer"
+      ],
+      "region": "inference-and-serving",
+      "desc": "Computing exact attention in tiles that stay in fast on-chip GPU memory, so the full attention matrix is never written to main memory.",
+      "summary": "Computes exactly the same attention as the standard method, but in small tiles that stay in the GPU's fast on-chip memory, so the large attention matrix is never written out to slower main memory. Moving less data makes attention several times faster and lets memory use grow linearly rather than quadratically with sequence length, which made long contexts practical. Later versions target newer GPUs, and libraries such as FlashInfer adapt the same ideas to paged KV caches inside serving engines.",
+      "parents": [
+        {
+          "id": "transformer-architecture",
+          "rel": "applies",
+          "why": "Re-implements the transformer's exact attention around the GPU memory hierarchy.",
+          "src": "FlashAttention (Dao et al. 2022)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "The default attention implementation in training and serving frameworks.",
+      "date": "2022-05",
+      "ref": {
+        "title": "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness (Dao et al.)",
+        "arxiv": "2205.14135"
+      },
+      "examples": [
+        "FlashAttention-3",
+        "FlashInfer",
+        "PyTorch SDPA",
+        "xFormers"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision",
+          "by": "Tri Dao et al.",
+          "year": 2024,
+          "url": "https://tridao.me/blog/2024/flash3/"
+        },
+        {
+          "kind": "talk",
+          "title": "FlashAttention - Tri Dao | Stanford MLSys #67",
+          "by": "Tri Dao (Stanford MLSys Seminar)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=gMOAud7hZg4"
+        },
+        {
+          "kind": "blog",
+          "title": "Accelerating Self-Attentions for LLM Serving with FlashInfer",
+          "by": "Zihao Ye et al. (FlashInfer)",
+          "year": 2024,
+          "url": "https://flashinfer.ai/2024/02/02/introduce-flashinfer.html"
+        },
+        {
+          "kind": "paper",
+          "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+          "by": "Zihao Ye et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2501.01005"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "grouped-query-attention",
+      "name": "Grouped-Query Attention",
+      "aliases": [
+        "GQA",
+        "multi-query attention",
+        "MQA"
+      ],
+      "region": "inference-and-serving",
+      "also": [
+        "deep-learning-nlp"
+      ],
+      "layer": "detail",
+      "desc": "Letting groups of query heads share one key and value head, so the KV cache shrinks by the group factor with little quality loss.",
+      "summary": "In standard multi-head attention every head keeps its own keys and values in the cache. Grouped-query attention lets several query heads share one key-value head, shrinking the KV cache by that factor (often 4 to 8 times) while keeping quality close to the original. It sits between multi-query attention, where all heads share a single key-value head, and full multi-head attention. It is fixed when a model is trained, but the payoff comes at serving time, and most open models now use it.",
+      "parents": [
+        {
+          "id": "kv-cache",
+          "rel": "extends",
+          "why": "Shares key-value heads across query groups to shrink the cache, generalizing multi-query attention.",
+          "src": "GQA (Ainslie et al. 2023)"
+        },
+        {
+          "id": "transformer-architecture",
+          "rel": "specializes",
+          "why": "A variant of the transformer's multi-head attention.",
+          "src": "GQA (Ainslie et al. 2023)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Used by most open-weight models; well-understood quality and memory tradeoff.",
+      "date": "2023-05",
+      "ref": {
+        "title": "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints (Ainslie et al.)",
+        "arxiv": "2305.13245"
+      },
+      "examples": [
+        "Llama 3",
+        "Mistral",
+        "Qwen2.5"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Big LLM Architecture Comparison",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison"
+        },
+        {
+          "kind": "talk",
+          "title": "LLaMA explained: KV-Cache, Rotary Positional Embedding, RMS Norm, Grouped Query Attention, SwiGLU",
+          "by": "Umar Jamil",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=Mn_9W1nCFLo"
+        },
+        {
+          "kind": "blog",
+          "title": "Optimizing AI Inference at Character.AI",
+          "by": "Character.AI",
+          "year": 2024,
+          "url": "https://blog.character.ai/optimizing-ai-inference-at-character-ai/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "multi-head-latent-attention",
+      "name": "Multi-Head Latent Attention",
+      "aliases": [
+        "MLA",
+        "DeepSeek MLA"
+      ],
+      "region": "inference-and-serving",
+      "also": [
+        "deep-learning-nlp"
+      ],
+      "layer": "detail",
+      "desc": "Compressing keys and values into one small latent vector per token before caching, and expanding them again inside attention.",
+      "summary": "Instead of caching full keys and values for every head, the model caches one small compressed vector per token and expands it back inside attention. DeepSeek reported a much smaller cache than grouped-query attention with quality at least as good as standard attention. The cost is engineering: the speed-up needs specialized kernels and tricks such as folding the expansion matrices into neighboring weights, so serving-engine support arrived later than for GQA.",
+      "parents": [
+        {
+          "id": "grouped-query-attention",
+          "rel": "replaces",
+          "why": "Proposed as a smaller-cache, higher-quality alternative to grouped- and multi-query attention.",
+          "src": "DeepSeek-V2 (DeepSeek-AI 2024)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Used by DeepSeek-V2, V3 and R1 and by Kimi K2; engines added dedicated kernels such as FlashMLA.",
+      "date": "2024-05",
+      "ref": {
+        "title": "DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model (DeepSeek-AI)",
+        "arxiv": "2405.04434"
+      },
+      "examples": [
+        "DeepSeek-V3",
+        "Kimi K2",
+        "FlashMLA"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Big LLM Architecture Comparison",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison"
+        },
+        {
+          "kind": "talk",
+          "title": "Multi-Head Latent Attention From Scratch | One of the major DeepSeek innovation",
+          "by": "Vizuara",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=NlDQUj1olXM"
+        },
+        {
+          "kind": "paper",
+          "title": "DeepSeek-V3 Technical Report",
+          "by": "DeepSeek-AI",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2412.19437"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "chunked-prefill",
+      "name": "Chunked Prefill",
+      "aliases": [
+        "Sarathi",
+        "stall-free batching",
+        "piggybacked decodes"
+      ],
+      "region": "inference-and-serving",
+      "layer": "detail",
+      "desc": "Splitting long prompts into chunks processed alongside ongoing decode steps, so a big prefill doesn't stall other requests' token generation.",
+      "summary": "A long new prompt can occupy the GPU for one large step and freeze token generation for every other request in the batch. Chunked prefill splits the prompt into pieces and processes one piece per step alongside the other requests' decoding, so everyone keeps receiving tokens at a steady pace. A per-step token budget sets the tradeoff between time to first token and smooth streaming.",
+      "parents": [
+        {
+          "id": "continuous-batching",
+          "rel": "extends",
+          "why": "Mixes prompt chunks and decode steps in each iteration-level batch.",
+          "src": "SARATHI (Agrawal et al. 2023)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "On by default in vLLM and supported by SGLang and TensorRT-LLM.",
+      "date": "2023-08",
+      "ref": {
+        "title": "SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked Prefills (Agrawal et al.)",
+        "arxiv": "2308.16369"
+      },
+      "examples": [
+        "Sarathi-Serve",
+        "vLLM",
+        "TensorRT-LLM"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "OSDI '24 - Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+          "by": "Amey Agrawal (OSDI 2024)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=S8rq3pYboZY"
+        },
+        {
+          "kind": "paper",
+          "title": "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+          "by": "Amey Agrawal et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2403.02310"
+        },
+        {
+          "kind": "docs",
+          "title": "Optimization and Tuning - vLLM",
+          "by": "vLLM",
+          "year": 2025,
+          "url": "https://docs.vllm.ai/en/latest/configuration/optimization/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "kv-cache-offloading",
+      "name": "KV Cache Offloading",
+      "aliases": [
+        "tiered KV cache",
+        "KV cache pool",
+        "KV-centric serving"
+      ],
+      "region": "inference-and-serving",
+      "layer": "detail",
+      "desc": "Moving KV cache out of GPU memory into CPU memory, SSD or a shared networked pool, so cached prefixes survive GPU eviction and can be reused across machines.",
+      "summary": "GPU memory holds only a small part of the KV cache worth keeping. Offloading moves cache blocks down to CPU memory, local SSD or a pool shared across machines, and brings them back when a later request has the same prefix, which for long prefixes is faster than recomputing them. Moonshot built Mooncake, the serving system behind Kimi, around such a pool, and open engines do the same with tools like LMCache and NVIDIA Dynamo.",
+      "parents": [
+        {
+          "id": "prompt-caching",
+          "rel": "extends",
+          "why": "Extends prefix reuse beyond GPU memory into CPU, SSD and cluster-wide tiers.",
+          "src": "Mooncake (Qin et al. 2024)"
+        },
+        {
+          "id": "prefill-decode-disaggregation",
+          "rel": "combines",
+          "why": "Shares the fast KV transfer path between machines that disaggregated serving needs.",
+          "src": "Mooncake (Qin et al. 2024)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "In production at large providers; open tooling (LMCache, Dynamo, llm-d) still settling.",
+      "date": "2024-07",
+      "ref": {
+        "title": "Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving (Qin et al.)",
+        "arxiv": "2407.00079"
+      },
+      "examples": [
+        "Mooncake",
+        "LMCache",
+        "NVIDIA Dynamo",
+        "llm-d"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "FAST '25 - Mooncake: Trading More Storage for Less Computation — A KVCache-centric Architecture for Serving LLM Chatbot",
+          "by": "Ruoyu Qin (USENIX FAST 2025)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=-Lpx9QuCEsw"
+        },
+        {
+          "kind": "talk",
+          "title": "Next-Gen Long-Context LLM Inference with LMCache",
+          "by": "Junchen Jiang (UChicago & LMCache)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=Z4vmQhV4w-I"
+        },
+        {
+          "kind": "paper",
+          "title": "LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference",
+          "by": "LMCache team (Yihua Cheng et al.)",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2510.09665"
+        },
+        {
+          "kind": "docs",
+          "title": "Welcome to Mooncake",
+          "by": "kvcache-ai (Moonshot AI)",
+          "year": 2025,
+          "url": "https://kvcache-ai.github.io/Mooncake/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "multi-lora-serving",
+      "name": "Multi-LoRA Serving",
+      "aliases": [
+        "S-LoRA",
+        "Punica",
+        "adapter serving"
+      ],
+      "region": "inference-and-serving",
+      "also": [
+        "adaptation-and-post-training"
+      ],
+      "layer": "detail",
+      "desc": "Serving many LoRA adapters on one shared base model, batching requests for different adapters together.",
+      "summary": "Fine-tuning with LoRA produces small adapters on top of a shared base model, and a platform may host thousands of them, one per customer or task. Multi-LoRA serving keeps one copy of the base model on the GPU, swaps adapter weights in and out of memory on demand, and uses custom kernels so requests for different adapters run in the same batch. Each fine-tuned model then costs a small fraction of a dedicated deployment.",
+      "parents": [
+        {
+          "id": "low-rank-adaptation",
+          "rel": "applies",
+          "why": "Serves many LoRA adapters over one shared base model.",
+          "src": "S-LoRA (Sheng et al. 2023)"
+        },
+        {
+          "id": "paged-attention",
+          "rel": "applies",
+          "why": "Pages adapter weights in the same unified memory pool as the KV cache.",
+          "src": "S-LoRA (Sheng et al. 2023)"
+        }
+      ],
+      "maturity": 4,
+      "maturity_note": "Supported in vLLM, SGLang, TensorRT-LLM and LoRAX; common on hosted fine-tuning platforms.",
+      "date": "2023-11",
+      "ref": {
+        "title": "S-LoRA: Serving Thousands of Concurrent LoRA Adapters (Sheng et al.)",
+        "arxiv": "2311.03285"
+      },
+      "examples": [
+        "S-LoRA",
+        "Punica",
+        "LoRAX",
+        "vLLM multi-LoRA"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Recipe for Serving Thousands of Concurrent LoRA Adapters",
+          "by": "Ying Sheng et al. (LMSYS)",
+          "year": 2023,
+          "url": "https://www.lmsys.org/blog/2023-11-15-slora/"
+        },
+        {
+          "kind": "blog",
+          "title": "Potentials of Multitenancy Fine-Tuned LLM Serving",
+          "by": "Lequn Chen",
+          "year": 2023,
+          "url": "https://le.qun.ch/en/blog/2023/09/11/multi-lora-potentials/"
+        },
+        {
+          "kind": "paper",
+          "title": "Punica: Multi-Tenant LoRA Serving",
+          "by": "Lequn Chen et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2310.18547"
+        },
+        {
+          "kind": "blog",
+          "title": "TGI Multi-LoRA: Deploy Once, Serve 30 Models",
+          "by": "Hugging Face",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/multi-lora-serving"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "draft-heads",
+      "name": "Speculative Draft Heads",
+      "aliases": [
+        "EAGLE",
+        "Medusa",
+        "self-speculative decoding",
+        "draft trees"
+      ],
+      "region": "inference-and-serving",
+      "layer": "detail",
+      "desc": "Drafting tokens with small heads attached to the target model's own hidden states instead of a separate draft model, and verifying a tree of candidates at once.",
+      "summary": "Instead of running a separate small draft model, these methods attach a light extra layer or a few output heads to the large model itself and draft from its hidden states. The drafts form a tree of candidate continuations that the model verifies in one pass. EAGLE drafts from the model's internal features, and its later versions grow the tree where the drafter is confident. These are the most common form of speculative decoding in serving engines, because there is no second model to deploy.",
+      "parents": [
+        {
+          "id": "speculative-decoding",
+          "rel": "specializes",
+          "why": "Drafts from heads on the target's own features instead of a separate model.",
+          "src": "EAGLE (Li et al. 2024); Medusa (Cai et al. 2024)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Supported in vLLM, SGLang and TensorRT-LLM; speed-ups vary with workload and batch size.",
+      "date": "2024-01",
+      "ref": {
+        "title": "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty (Li et al.)",
+        "arxiv": "2401.15077"
+      },
+      "examples": [
+        "Medusa",
+        "EAGLE-2",
+        "EAGLE-3"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Medusa: Simple framework for accelerating LLM generation with multiple decoding heads",
+          "by": "Tianle Cai et al. (Together AI)",
+          "year": 2023,
+          "url": "https://www.together.ai/blog/medusa"
+        },
+        {
+          "kind": "talk",
+          "title": "EAGLE and EAGLE-2: Lossless Inference Acceleration for LLMs",
+          "by": "Hongyang Zhang (Faster LLMs seminar)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=oXRSorx-Llg"
+        },
+        {
+          "kind": "paper",
+          "title": "EAGLE-2: Faster Inference of Language Models with Dynamic Draft Trees",
+          "by": "Yuhui Li et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.16858"
+        },
+        {
+          "kind": "code",
+          "title": "SafeAILab/EAGLE",
+          "by": "SafeAILab",
+          "year": 2024,
+          "url": "https://github.com/SafeAILab/EAGLE"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "microscaling-formats",
+      "name": "Microscaling Formats",
+      "aliases": [
+        "MXFP4",
+        "NVFP4",
+        "FP4",
+        "block-scaled quantization"
+      ],
+      "region": "inference-and-serving",
+      "layer": "detail",
+      "desc": "Low-precision number formats in which small blocks of values share one scale factor, computed on natively by recent accelerators.",
+      "summary": "At very low precision, such as 4-bit floating point, one scale factor for a whole tensor loses too much range. Microscaling formats give each small block of values (16 or 32 numbers) its own shared scale, so an outlier in one block doesn't wreck precision elsewhere. Recent accelerators, starting with NVIDIA's Blackwell GPUs, compute on these formats directly, which makes 4-bit models fast as well as small; OpenAI's gpt-oss models shipped with MXFP4 weights.",
+      "parents": [
+        {
+          "id": "weight-quantization",
+          "rel": "specializes",
+          "why": "Block-scaled floating-point formats for quantized weights and activations.",
+          "src": "Microscaling Data Formats for Deep Learning (Rouhani et al. 2023)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Native on Blackwell GPUs and used for released open weights; tooling and recipes still settling.",
+      "date": "2023-10",
+      "ref": {
+        "title": "Microscaling Data Formats for Deep Learning (Rouhani et al.)",
+        "arxiv": "2310.10537"
+      },
+      "examples": [
+        "MXFP4",
+        "NVFP4",
+        "TensorRT Model Optimizer"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Introducing NVFP4 for Efficient and Accurate Low-Precision Inference",
+          "by": "NVIDIA",
+          "year": 2025,
+          "url": "https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/"
+        },
+        {
+          "kind": "talk",
+          "title": "mxfp8, mxfp4, nvfp4 formats and applications in PyTorch",
+          "by": "Vasily Kuznetsov & Driss Guessous, Meta (PyTorch Conference)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=Up0EfrudTSQ"
+        },
+        {
+          "kind": "blog",
+          "title": "Tricks from OpenAI gpt-oss YOU 🫵 can use with transformers",
+          "by": "Hugging Face",
+          "year": 2025,
+          "url": "https://huggingface.co/blog/faster-transformers"
         }
       ],
       "status": "added"

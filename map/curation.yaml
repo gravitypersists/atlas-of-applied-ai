@@ -48,3 +48,5 @@ regions:
   ai-product-and-interaction-design: {label: [3250, 1690]}
   # The Bulwark's deep dive (2026-10-10) shifted terrain and pushed this title south; kept at its old spot.
   adaptation-and-post-training: {label: [2774, 754]}
+  # The Engine Works' deep dive (2026-10-10) shifted terrain and pushed this title north onto a town; kept at its old spot.
+  retrieval-and-knowledge: {label: [2990, 2214]}

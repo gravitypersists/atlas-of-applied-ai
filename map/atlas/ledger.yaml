@@ -209,4 +209,12 @@ settlements:
   - {id: flow-matching, x: 4176, y: 1634.9, settled: "2026-10-08"}
   - {id: spatial-conditioning, x: 4263, y: 1433.7, settled: "2026-10-08"}
   - {id: full-duplex-voice, x: 4140.4, y: 1948.5, settled: "2026-10-08"}
+  - {id: io-aware-attention, x: 3410.2, y: 1746.1, settled: "2026-10-08"}
+  - {id: grouped-query-attention, x: 3653.9, y: 2015.2, settled: "2026-10-08"}
+  - {id: chunked-prefill, x: 3358, y: 2003.7, settled: "2026-10-08"}
+  - {id: kv-cache-offloading, x: 3275.9, y: 1948.8, settled: "2026-10-08"}
+  - {id: multi-lora-serving, x: 3037.1, y: 1350.7, settled: "2026-10-08"}
+  - {id: draft-heads, x: 3474.5, y: 2039.9, settled: "2026-10-08"}
+  - {id: microscaling-formats, x: 3736.4, y: 1794, settled: "2026-10-08"}
+  - {id: multi-head-latent-attention, x: 3737.5, y: 1968.8, settled: "2026-10-08"}
 retired: []
