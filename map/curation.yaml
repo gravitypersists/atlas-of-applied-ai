@@ -46,3 +46,5 @@ regions:
   agents-and-orchestration: {label: [2762, 1518]}
   # Reasoning Trace Display (2026-10-09) settled under The Agora's title; moved east to clear it.
   ai-product-and-interaction-design: {label: [3250, 1690]}
+  # The Bulwark's deep dive (2026-10-10) shifted terrain and pushed this title south; kept at its old spot.
+  adaptation-and-post-training: {label: [2774, 754]}

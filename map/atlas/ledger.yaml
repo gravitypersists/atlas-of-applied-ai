@@ -197,4 +197,9 @@ settlements:
   - {id: orpo, x: 2779, y: 731.4, settled: "2026-10-08"}
   - {id: online-preference-optimization, x: 2867.1, y: 931.9, settled: "2026-10-08"}
   - {id: model-merging, x: 2838, y: 843, settled: "2026-10-08"}
+  - {id: automated-jailbreak-generation, x: 3361.1, y: 1128.5, settled: "2026-10-08"}
+  - {id: spotlighting, x: 3166.4, y: 1157.3, settled: "2026-10-08"}
+  - {id: dual-llm-pattern, x: 3117.1, y: 822.2, settled: "2026-10-08"}
+  - {id: machine-unlearning, x: 3408.7, y: 689, settled: "2026-10-08"}
+  - {id: llm-watermarking, x: 3499.2, y: 1674.2, settled: "2026-10-08"}
 retired: []

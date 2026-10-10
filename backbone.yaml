@@ -213,6 +213,14 @@ regions:
       - Prompt injection in agentic systems — attack taxonomy and the defenses that hold up
       - Agent permissions, sandboxing, and least privilege for tools and MCP servers
       - Interpretability methods that have reached engineering use
+    overview: "Safety, Security and Governance covers keeping AI systems from causing harm, whether through attacks, mistakes or misuse. Early on that meant filtering offensive output. Once models could read outside content and take actions, it became a security field: prompt injection showed that any text a model reads can act as an instruction, and agents with tools turned that into a way to leak data or take actions for an attacker.\n\nDefenses come in layers because none is complete. Guardrails screen what goes in and out. Injection defenses help the model tell instructions from data, by training it to rank sources by privilege (the instruction hierarchy), by marking untrusted text (spotlighting), or by designing the system so the model that reads untrusted text cannot act (the dual LLM pattern). Sandboxing and scoped permissions limit how much damage a hijacked agent can do. Red teaming, increasingly automated with attacker models, looks for the gaps before release.\n\nInterpretability is starting to become a control tool as well as a research field. Sparse autoencoders and representation engineering find concepts inside a model's activations, and circuit breakers and unlearning act on them directly. Governance rests on documentation (model and system cards) and on provenance tools such as watermarking. Landmarks worth knowing: prompt injection and its indirect form, guardrails, agent sandboxing, red teaming, and model cards."
+    learning_path:
+      - {kind: "docs", title: "OWASP Top 10 for LLM Applications (2025)", by: "OWASP Gen AI Security Project", year: 2025, url: "https://genai.owasp.org/llm-top-10/", why: "A checklist of the ten risks that come up most in real LLM applications, from prompt injection to excessive agency. It gives you the vocabulary and the overall picture before any one topic."}
+      - {kind: "talk", title: "Prompt Injection, explained", by: "Simon Willison", year: 2023, url: "https://www.youtube.com/watch?v=FgxwCaL6UTA", why: "The person who named prompt injection explains why mixing trusted instructions with untrusted text is the root problem, and why filters and clever prompting do not fix it."}
+      - {kind: "blog", title: "Design Patterns for Securing LLM Agents against Prompt Injections", by: "Simon Willison", year: 2025, url: "https://simonwillison.net/2025/Jun/13/prompt-injection-design-patterns/", why: "A readable summary of six system designs (plan-then-execute, dual LLM, code-then-execute and others) that limit what injected text can do. The defences come from how the system is built rather than from the model."}
+      - {kind: "blog", title: "Making Claude Code more secure and autonomous with sandboxing", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/engineering/claude-code-sandboxing", why: "A worked example of limiting an agent's damage through filesystem and network isolation. It also shows how a sandbox cuts the number of permission prompts a user has to answer."}
+      - {kind: "paper", title: "Lessons From Red Teaming 100 Generative AI Products", by: "Blake Bullwinkel et al. (Microsoft AI Red Team)", year: 2025, url: "https://arxiv.org/abs/2501.07238", why: "Eight practical lessons from testing real products: start from what the system can actually do, simple attacks often beat gradient-based ones, and automation helps but humans still matter."}
+      - {kind: "talk", title: "Interpretability: Understanding how AI models think", by: "Anthropic (Josh Batson, Emmanuel Ameisen, Jack Lindsey)", year: 2025, url: "https://www.youtube.com/watch?v=fGKNUvivvnc", why: "Three researchers explain in plain terms how they look inside a model to see what it is computing, and why that could become a way to check and steer behaviour rather than only test outputs."}
   - id: ai-product-and-interaction-design
     kind: applied
     name: AI Product and Interaction Design
@@ -257,6 +265,7 @@ boundary_rules:
   - {concept: Self-instruct / synthetic data, home: data-and-synthetic-data, rule: "Producing the dataset → Data; training on it → Adaptation."}
   - {concept: Reasoning distillation, home: adaptation-and-post-training, rule: "The act of training a student → Adaptation; generating the traces → Data."}
   - {concept: Model merging, home: adaptation-and-post-training, rule: "Arithmetic on fine-tuned weights changes the model after pretraining → Adaptation, even though the merge itself runs no gradient steps."}
+  - {concept: Text watermarking, home: inference-and-serving, rule: "A bias applied at the sampling step → Inference, even though its purpose (provenance) is governance; it appears in Safety through also."}
   - {concept: DSPy / prompt optimization, home: prompting-and-context-engineering, rule: "No gradient updates to model weights → Prompting."}
   - {concept: Process reward models, home: planning-and-reasoning, rule: "Primarily used to score steps for search and verification → Reasoning (secondary: Adaptation)."}
   - {concept: RLVR / GRPO, home: adaptation-and-post-training, rule: "Weight-updating methods → Adaptation, even when the goal is reasoning."}
@@ -820,6 +829,28 @@ nodes:
     date: "2023-03"
     ref: {title: "llama.cpp (Gerganov)", url: "https://github.com/ggml-org/llama.cpp"}
     examples: [llama.cpp, Ollama, LM Studio, MLX]
+    status: added
+  # Added by the Bulwark deep dive (2026-10-10): homed here for its mechanism, purpose is provenance.
+  - id: llm-watermarking
+    name: LLM Watermarking
+    aliases: [text watermarking, green-list watermarking]
+    region: inference-and-serving
+    also: [safety-security-and-governance]
+    layer: detail
+    desc: Nudging a model's token choices with a secret, key-dependent bias during generation so its text can later be detected statistically.
+    summary: "At each step of generation, a secret key and the preceding tokens split the vocabulary into a favored and an unfavored part, and the model is nudged toward the favored words. The text reads normally, but anyone with the key can count favored words and detect it with high confidence from a short passage. Paraphrasing weakens the signal, and it only works when the provider controls generation, so open-weight models are out of reach."
+    parents:
+      - {id: autoregressive-decoding, rel: applies, why: "Biases the sampling step of token-by-token generation.", src: "A Watermark for Large Language Models (Kirchenbauer et al. 2023)"}
+      - {id: "external:digital-watermarking", rel: extends, why: "Carries watermarking of media over to generated text.", src: "Kirchenbauer et al. 2023"}
+    maturity: 3
+    maturity_note: Deployed by Google as SynthID Text; most providers don't watermark text, and paraphrasing weakens it.
+    date: "2023-01"
+    ref: {title: "A Watermark for Large Language Models (Kirchenbauer et al.)", arxiv: "2301.10226"}
+    examples: [SynthID Text]
+    resources:
+      - {kind: "blog", title: "Introducing SynthID Text", by: "Hugging Face, Google DeepMind", year: 2024, url: "https://huggingface.co/blog/synthid-text"}
+      - {kind: "talk", title: "Watermarking of Large Language Models", by: "Scott Aaronson (Simons Institute)", year: 2023, url: "https://www.youtube.com/watch?v=2Kx9jbSMZqA"}
+      - {kind: "paper", title: "Scalable watermarking for identifying large language model outputs", by: "Sumanth Dathathri et al. (Nature)", year: 2024, url: "https://www.nature.com/articles/s41586-024-08025-4"}
     status: added
 
   # ======================= APPLIED: prompting-and-context-engineering =======================
@@ -3012,6 +3043,7 @@ nodes:
     aliases: [instruction injection]
     region: safety-security-and-governance
     desc: Attacks in which text supplied by a user or third party is followed as instructions, overriding the developer's intent.
+    summary: "Text from a user or another source is written so that the model follows it as instructions, overriding what the developer told it to do. It works because instructions and data reach the model in the same stream of text, much as SQL injection mixes code and data. There is no complete fix, so defenses aim to lower the odds and limit the damage."
     parents:
       - {id: injection-attacks, rel: applies, why: "The classic data-as-instructions flaw, where data and instructions share one channel.", src: "Ignore Previous Prompt (Perez & Ribeiro 2022)"}
       - {id: zero-shot-prompting, rel: applies, why: "Exploits instruction-following itself.", src: "Ignore Previous Prompt (Perez & Ribeiro 2022)"}
@@ -3020,13 +3052,18 @@ nodes:
     date: "2022-09"
     ref: {title: "Ignore Previous Prompt: Attack Techniques For Language Models (Perez & Ribeiro)", arxiv: "2211.09527"}
     examples: []
+    resources:
+      - {kind: "blog", title: "Prompt injection attacks against GPT-3", by: "Simon Willison", year: 2022, url: "https://simonwillison.net/2022/Sep/12/prompt-injection/"}
+      - {kind: "talk", title: "Prompt Injection, explained", by: "Simon Willison", year: 2023, url: "https://www.youtube.com/watch?v=FgxwCaL6UTA"}
+      - {kind: "docs", title: "LLM01:2025 Prompt Injection", by: "OWASP Gen AI Security Project", year: 2025, url: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"}
     status: added
   - id: indirect-prompt-injection
     name: Indirect Prompt Injection
-    aliases: [data poisoning of context, tool-output injection]
+    aliases: [data poisoning of context, tool-output injection, XPIA]
     region: safety-security-and-governance
     also: [agents-and-orchestration]
     desc: Injection delivered through retrieved documents, web pages, emails, or tool outputs rather than the user's own message.
+    summary: "The attacker never talks to the model directly. The instructions are hidden in a web page, email, document or tool result that the application pulls into context. Once an assistant can both read outside content and take actions, such as sending email or calling tools, a single poisoned page can make it leak data or act for the attacker. This is the central security problem for agents."
     parents:
       - {id: prompt-injection, rel: specializes, why: "Injection through third-party content.", src: "Not what you've signed up for (Greshake et al. 2023)"}
       - {id: retrieval-augmented-generation, rel: applies, why: "Exploits content pulled into context.", src: "Not what you've signed up for (Greshake et al. 2023)"}
@@ -3035,12 +3072,17 @@ nodes:
     date: "2023-02"
     ref: {title: "Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection (Greshake et al.)", arxiv: "2302.12173"}
     examples: []
+    resources:
+      - {kind: "blog", title: "The lethal trifecta for AI agents: private data, untrusted content, and external communication", by: "Simon Willison", year: 2025, url: "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"}
+      - {kind: "talk", title: "SpAIware & More: Advanced Prompt Injection Exploits in LLM Applications", by: "Johann Rehberger (Black Hat)", year: 2025, url: "https://www.youtube.com/watch?v=84NVG1c5LRI"}
+      - {kind: "paper", title: "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents", by: "Edoardo Debenedetti et al.", year: 2024, url: "https://arxiv.org/abs/2406.13352"}
     status: added
   - id: jailbreaks
     name: Jailbreaks
     aliases: [adversarial prompts, GCG]
     region: safety-security-and-governance
     desc: Inputs crafted to make a model violate its own safety training.
+    summary: "Inputs crafted to get a model to break its own safety training and produce content it would normally refuse. They range from hand-written role-play and persuasion to automatically optimized strings of odd tokens (adversarial suffixes such as GCG) that carry over between models. Attackers and defenders have traded moves ever since safety-tuned chat models launched."
     parents:
       - {id: rlhf, rel: counters, why: "Attacks the behaviors instilled by safety training.", src: "Jailbroken (Wei et al. 2023)", confidence: medium}
     maturity: 4
@@ -3048,6 +3090,11 @@ nodes:
     date: "2023-07"
     ref: {title: "Jailbroken: How Does LLM Safety Training Fail? (Wei et al.)", arxiv: "2307.02483"}
     examples: [universal adversarial suffixes]
+    resources:
+      - {kind: "blog", title: "Adversarial Attacks on LLMs", by: "Lilian Weng", year: 2023, url: "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/"}
+      - {kind: "talk", title: "Ten Years Hence Lecture: Adversarial Attacks on Large Language Models", by: "Zico Kolter (University of Notre Dame)", year: 2024, url: "https://www.youtube.com/watch?v=Ih34Ow9mdSY"}
+      - {kind: "paper", title: "Universal and Transferable Adversarial Attacks on Aligned Language Models", by: "Andy Zou et al.", year: 2023, url: "https://arxiv.org/abs/2307.15043"}
+      - {kind: "blog", title: "Many-shot jailbreaking", by: "Anthropic", year: 2024, url: "https://www.anthropic.com/research/many-shot-jailbreaking"}
     status: added
   - id: red-teaming
     name: AI Red Teaming
@@ -3055,6 +3102,7 @@ nodes:
     region: safety-security-and-governance
     also: [evaluation-and-observability]
     desc: Systematic adversarial testing by people and models to find harmful behaviors and vulnerabilities before release.
+    summary: "Attacking your own system on purpose before release to find harmful outputs and security holes. People do it by hand, and models do it at scale by generating many attack attempts against a target. Major labs run it before every release, and open tools bring the same probing to application teams."
     parents:
       - {id: "external:security-red-teaming", rel: applies, why: "Adapts adversarial testing from security practice.", src: "Red Teaming Language Models with Language Models (Perez et al. 2022)"}
       - {id: rlhf, rel: counters, why: "Probes for failures of safety-trained behavior.", src: "Red Teaming Language Models to Reduce Harms (Ganguli et al. 2022)", confidence: medium}
@@ -3063,12 +3111,18 @@ nodes:
     date: "2022-02"
     ref: {title: "Red Teaming Language Models with Language Models (Perez et al.)", arxiv: "2202.03286"}
     examples: [PyRIT, garak, promptfoo red team]
+    resources:
+      - {kind: "blog", title: "Challenges in red teaming AI systems", by: "Anthropic", year: 2024, url: "https://www.anthropic.com/news/challenges-in-red-teaming-ai-systems"}
+      - {kind: "docs", title: "Planning red teaming for large language models (LLMs) and their applications", by: "Microsoft", year: 2024, url: "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/red-teaming"}
+      - {kind: "talk", title: "BlueHat Oct 23. S19: A Few Useful Lessons About AI Red Teaming", by: "Ram Shankar Siva Kumar, Chang Kawaguchi (Microsoft)", year: 2023, url: "https://www.youtube.com/watch?v=WLBuv3JnVnk"}
+      - {kind: "paper", title: "Red Teaming Language Models to Reduce Harms: Methods, Scaling Behaviors, and Lessons Learned", by: "Deep Ganguli et al.", year: 2022, url: "https://arxiv.org/abs/2209.07858"}
     status: repaired
   - id: guardrails
     name: Guardrails and Safety Classifiers
     aliases: [input/output filters, content moderation, Llama Guard]
     region: safety-security-and-governance
     desc: Classifiers and rule layers that check inputs and outputs for policy violations, PII, or unsafe content.
+    summary: "Checks placed around the model: one screens incoming requests, another screens outgoing answers, looking for policy violations, personal data (PII) or unsafe content. Many are themselves language models prompted or fine-tuned as classifiers, such as Llama Guard. They are widely deployed, but they add latency and sometimes block legitimate requests."
     parents:
       - {id: "external:content-moderation-classifiers", rel: applies, why: "Extends content moderation to model inputs and outputs.", src: "Llama Guard (Inan et al. 2023)"}
       - {id: llm-as-a-judge, rel: applies, why: "Many guards are LLMs prompted or fine-tuned as classifiers.", src: "Llama Guard (Inan et al. 2023)", confidence: medium}
@@ -3077,12 +3131,17 @@ nodes:
     date: "2023-12"
     ref: {title: "Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations (Inan et al.)", arxiv: "2312.06674"}
     examples: [Llama Guard, NeMo Guardrails, Presidio]
+    resources:
+      - {kind: "docs", title: "How to implement LLM guardrails", by: "OpenAI Cookbook", year: 2023, url: "https://developers.openai.com/cookbook/examples/how_to_use_guardrails"}
+      - {kind: "blog", title: "Constitutional Classifiers: Defending against universal jailbreaks", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/research/constitutional-classifiers"}
+      - {kind: "code", title: "NeMo Guardrails", by: "NVIDIA", year: 2023, url: "https://github.com/NVIDIA-NeMo/Guardrails"}
     status: repaired
   - id: injection-defenses
     name: Prompt Injection Defenses
-    aliases: [instruction hierarchy, spotlighting, injection detection]
+    aliases: [instruction hierarchy, injection detection]
     region: safety-security-and-governance
     desc: Training, prompting, and architectural measures that make models distinguish trusted instructions from untrusted data.
+    summary: "Measures that help a model tell trusted instructions from untrusted data. They work at three levels: training (the instruction hierarchy teaches a model to rank system, user and tool text by privilege), input handling (marking untrusted text, as spotlighting does, and detectors that flag likely attacks), and system design (keeping untrusted text away from the parts that can act, as in the dual LLM pattern). Each lowers attack success and none is complete, so they are layered."
     parents:
       - {id: prompt-injection, rel: counters, why: "Mitigates injection.", src: "The Instruction Hierarchy (Wallace et al. 2024)"}
       - {id: indirect-prompt-injection, rel: counters, why: "Mitigates injection via third-party content.", src: "The Instruction Hierarchy (Wallace et al. 2024)"}
@@ -3091,6 +3150,11 @@ nodes:
     date: "2024-04"
     ref: {title: "The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions (Wallace et al.)", arxiv: "2404.13208"}
     examples: [Lakera Guard, Prompt Shields, CaMeL-style designs]
+    resources:
+      - {kind: "blog", title: "How Microsoft defends against indirect prompt injection attacks", by: "Microsoft Security Response Center", year: 2025, url: "https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks"}
+      - {kind: "blog", title: "Mitigating prompt injections in browser use", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/research/prompt-injection-defenses"}
+      - {kind: "docs", title: "LLM Prompt Injection Prevention Cheat Sheet", by: "OWASP Cheat Sheet Series", year: 2024, url: "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html"}
+      - {kind: "paper", title: "SecAlign: Defending Against Prompt Injection with Preference Optimization", by: "Sizhe Chen et al.", year: 2024, url: "https://arxiv.org/abs/2410.05451"}
     status: repaired
   - id: agent-sandboxing
     name: Agent Sandboxing and Permissions
@@ -3098,6 +3162,7 @@ nodes:
     region: safety-security-and-governance
     also: [agents-and-orchestration]
     desc: Running agent actions in isolated environments with scoped credentials and explicit permission prompts to limit damage.
+    summary: "Limits what an agent can do if it makes a mistake or is hijacked. Code it writes runs in an isolated container or VM, its credentials are scoped to the task, and risky actions need explicit permission. The design question is how much damage one bad step can do, not whether the model will behave. Standard for any agent that executes code."
     parents:
       - {id: sandboxing-and-isolation, rel: applies, why: "Applies isolation to LLM-generated code and actions.", src: "E2B (2023)"}
       - {id: least-privilege, rel: applies, why: "Scopes tools and credentials to what a task needs.", src: "Industry practice"}
@@ -3107,12 +3172,18 @@ nodes:
     date: "2023"
     ref: {title: "E2B — open-source cloud sandboxes for AI agents", url: "https://e2b.dev"}
     examples: [E2B, Daytona, Claude Code permissions, devcontainers]
+    resources:
+      - {kind: "blog", title: "Making Claude Code more secure and autonomous with sandboxing", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/engineering/claude-code-sandboxing"}
+      - {kind: "docs", title: "Configure the sandboxed Bash tool", by: "Anthropic (Claude Code Docs)", year: 2025, url: "https://code.claude.com/docs/en/sandboxing"}
+      - {kind: "docs", title: "LLM06:2025 Excessive Agency", by: "OWASP Gen AI Security Project", year: 2025, url: "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/"}
+      - {kind: "blog", title: "Living dangerously with Claude", by: "Simon Willison", year: 2025, url: "https://simonwillison.net/2025/Oct/22/living-dangerously-with-claude/"}
     status: repaired
   - id: interpretability
     name: Mechanistic Interpretability
     aliases: [circuits, interpretability]
     region: safety-security-and-governance
     desc: Reverse-engineering the internal mechanisms of neural networks into human-understandable features and circuits.
+    summary: "Reverse-engineering a trained network to find the internal features and circuits behind its behavior, such as the attention heads that continue repeated patterns. It is mostly research, but it supplies the methods the applied techniques nearby build on: sparse autoencoders, reading and steering representations, and circuit breakers."
     parents:
       - {id: transformer-architecture, rel: applies, why: "Studies transformer internals directly.", src: "A Mathematical Framework for Transformer Circuits (Elhage et al. 2021)"}
     maturity: 1
@@ -3120,12 +3191,18 @@ nodes:
     date: "2021-12"
     ref: {title: "A Mathematical Framework for Transformer Circuits (Elhage et al.)", url: "https://transformer-circuits.pub/2021/framework/index.html"}
     examples: [TransformerLens]
+    resources:
+      - {kind: "blog", title: "A Comprehensive Mechanistic Interpretability Explainer & Glossary", by: "Neel Nanda", year: 2022, url: "https://www.neelnanda.io/mechanistic-interpretability/glossary"}
+      - {kind: "talk", title: "Interpretability: Understanding how AI models think", by: "Anthropic (Josh Batson, Emmanuel Ameisen, Jack Lindsey)", year: 2025, url: "https://www.youtube.com/watch?v=fGKNUvivvnc"}
+      - {kind: "blog", title: "Tracing the thoughts of a large language model", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/research/tracing-thoughts-language-model"}
+      - {kind: "paper", title: "Open Problems in Mechanistic Interpretability", by: "Lee Sharkey et al.", year: 2025, url: "https://arxiv.org/abs/2501.16496"}
     status: added
   - id: sparse-autoencoders
     name: Sparse Autoencoders
     aliases: [SAEs, dictionary learning, monosemantic features]
     region: safety-security-and-governance
     desc: Decomposing model activations into many sparse, interpretable features.
+    summary: "A single neuron inside a model usually responds to many unrelated things. A sparse autoencoder learns to rewrite the model's internal activations as a mix drawn from a much larger set of features, only a few active at a time, and many of those features match one recognizable concept. Labs use them to inspect what a model is representing and to steer it by turning features up or down (as in Golden Gate Claude)."
     parents:
       - {id: interpretability, rel: extends, why: "Scalable method for finding interpretable features.", src: "Towards Monosemanticity (Bricken et al. 2023)"}
     maturity: 2
@@ -3133,12 +3210,18 @@ nodes:
     date: "2023-10"
     ref: {title: "Towards Monosemanticity: Decomposing Language Models With Dictionary Learning (Bricken et al.)", url: "https://transformer-circuits.pub/2023/monosemantic-features"}
     examples: [Gemma Scope, Neuronpedia]
+    resources:
+      - {kind: "blog", title: "An Intuitive Explanation of Sparse Autoencoders for LLM Interpretability", by: "Adam Karvonen", year: 2024, url: "https://adamkarvonen.github.io/machine_learning/2024/06/11/sae-intuitions.html"}
+      - {kind: "talk", title: "Demo: Gemma Scope: Sparse autoencoders on Gemma 2", by: "Google for Developers", year: 2024, url: "https://www.youtube.com/watch?v=X1gDXDQu_wU"}
+      - {kind: "paper", title: "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet", by: "Adly Templeton et al. (Anthropic)", year: 2024, url: "https://transformer-circuits.pub/2024/scaling-monosemanticity/"}
+      - {kind: "code", title: "SAELens: Training Sparse Autoencoders on Language Models", by: "Joseph Bloom et al. (Decode Research)", year: 2024, url: "https://github.com/decoderesearch/SAELens"}
     status: added
   - id: representation-engineering
     name: Representation Engineering
     aliases: [RepE, activation steering]
     region: safety-security-and-governance
     desc: Reading and steering high-level concepts in activation space to monitor or control behavior without retraining.
+    summary: "Instead of tracing individual circuits, find the direction in a model's activations that corresponds to a high-level concept such as honesty or harmfulness, by contrasting activations on examples with and without it. That direction can be read to monitor the model, or added or subtracted while it runs to steer its behavior, with no retraining."
     parents:
       - {id: interpretability, rel: applies, why: "Top-down use of internal representations for control.", src: "Representation Engineering (Zou et al. 2023)"}
     maturity: 2
@@ -3146,12 +3229,18 @@ nodes:
     date: "2023-10"
     ref: {title: "Representation Engineering: A Top-Down Approach to AI Transparency (Zou et al.)", arxiv: "2310.01405"}
     examples: [steering vectors]
+    resources:
+      - {kind: "blog", title: "Representation Engineering Mistral-7B an Acid Trip", by: "Theia Vogel", year: 2024, url: "https://vgel.me/posts/representation-engineering/"}
+      - {kind: "talk", title: "Andy Zou – Top-Down Interpretability for AI Safety [Alignment Workshop]", by: "Andy Zou (FAR.AI)", year: 2024, url: "https://www.youtube.com/watch?v=ub1ivilmzSc"}
+      - {kind: "paper", title: "Refusal in Language Models Is Mediated by a Single Direction", by: "Andy Arditi et al.", year: 2024, url: "https://arxiv.org/abs/2406.11717"}
+      - {kind: "code", title: "repeng: A library for making RepE control vectors", by: "Theia Vogel", year: 2024, url: "https://github.com/vgel/repeng"}
     status: repaired
   - id: circuit-breakers
     name: Circuit Breakers
     aliases: [representation rerouting]
     region: safety-security-and-governance
     desc: Training models so internal representations associated with harmful outputs are rerouted, interrupting generation.
+    summary: "A training method that teaches a model to scramble its own internal representations when they start heading toward harmful output, so generation breaks down instead of completing. Because it acts on what the model is about to produce rather than on how the request was worded, it holds up against attacks it never saw in training, with little loss on normal tasks. Mostly research so far."
     parents:
       - {id: representation-engineering, rel: applies, why: "Uses representation control as a safety mechanism.", src: "Improving Alignment and Robustness with Circuit Breakers (Zou et al. 2024)"}
       - {id: jailbreaks, rel: counters, why: "Designed to resist adversarial attacks.", src: "Zou et al. 2024"}
@@ -3160,12 +3249,17 @@ nodes:
     date: "2024-06"
     ref: {title: "Improving Alignment and Robustness with Circuit Breakers (Zou et al.)", arxiv: "2406.04313"}
     examples: []
+    resources:
+      - {kind: "blog", title: "Breaking circuit breakers", by: "Confirm Labs", year: 2024, url: "https://confirmlabs.org/posts/circuit_breaking.html"}
+      - {kind: "code", title: "circuit-breakers: Improving Alignment and Robustness with Circuit Breakers", by: "Gray Swan AI", year: 2024, url: "https://github.com/GraySwanAI/circuit-breakers"}
+      - {kind: "paper", title: "Obfuscated Activations Bypass LLM Latent-Space Defenses", by: "Luke Bailey et al.", year: 2024, url: "https://arxiv.org/abs/2412.09565"}
     status: repaired
   - id: model-documentation
     name: Model and System Cards
     aliases: [model cards, system cards, transparency documentation]
     region: safety-security-and-governance
     desc: Standardized documentation of a model's intended use, evaluations, limitations, and safety testing.
+    summary: "Standard documents published with a model that state what it is for, how it was evaluated, where it falls short, and what safety testing was done. Model cards began as short reports that included results broken down by demographic group; frontier labs now publish long system cards covering red teaming and dangerous-capability tests. They are expected for major releases and referenced in regulation."
     parents:
       - {id: "external:datasheets-and-documentation", rel: applies, why: "Brings structured documentation practice to ML models.", src: "Model Cards for Model Reporting (Mitchell et al. 2018)"}
     maturity: 4
@@ -3173,6 +3267,96 @@ nodes:
     date: "2018-10"
     ref: {title: "Model Cards for Model Reporting (Mitchell et al.)", arxiv: "1810.03993"}
     examples: [frontier system cards, Hugging Face model cards]
+    resources:
+      - {kind: "docs", title: "Model Cards", by: "Hugging Face", year: 2022, url: "https://huggingface.co/docs/hub/model-cards"}
+      - {kind: "docs", title: "Model system cards", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/system-cards"}
+      - {kind: "paper", title: "Datasheets for Datasets", by: "Timnit Gebru et al.", year: 2018, url: "https://arxiv.org/abs/1803.09010"}
+    status: added
+
+  # ---- deep dive (2026-10-10, Gemini run, reviewed): detail layer ----
+  - id: automated-jailbreak-generation
+    name: Automated Jailbreak Generation
+    aliases: [PAIR, TAP, Tree of Attacks with Pruning]
+    region: safety-security-and-governance
+    also: [evaluation-and-observability]
+    layer: detail
+    desc: An attacker model iteratively rewrites a jailbreak prompt against a target model, using the target's replies as feedback, until the attack works.
+    summary: "One model attacks another. An attacker model writes a jailbreak attempt, reads the target's reply and revises, often succeeding within a few dozen queries with only black-box access. PAIR runs this as a single refinement loop; TAP branches into several variants at once and prunes the ones unlikely to work. The jailbreaks it finds are readable and often carry over to other models, which makes it a practical way to scale red teaming."
+    parents:
+      - {id: red-teaming, rel: specializes, why: "Replaces the human attacker in red teaming with a model in a feedback loop.", src: "Jailbreaking Black Box Large Language Models in Twenty Queries (Chao et al. 2023)"}
+    maturity: 3
+    maturity_note: Built into open red-teaming tools and used for scaled testing by labs and security teams.
+    date: "2023-10"
+    ref: {title: "Jailbreaking Black Box Large Language Models in Twenty Queries (Chao et al.)", arxiv: "2310.08419"}
+    examples: [PyRIT, garak]
+    resources:
+      - {kind: "paper", title: "Tree of Attacks: Jailbreaking Black-Box LLMs Automatically", by: "Anay Mehrotra et al.", year: 2023, url: "https://arxiv.org/abs/2312.02119"}
+      - {kind: "code", title: "PyRIT: Python Risk Identification Tool for generative AI", by: "Microsoft (Azure)", year: 2024, url: "https://github.com/Azure/PyRIT"}
+      - {kind: "talk", title: "Zero Day Quest - Learn to Red Team AI Systems Using PyRIT", by: "Microsoft Security Response Center", year: 2024, url: "https://www.youtube.com/watch?v=jq9DcEL3cHE"}
+      - {kind: "paper", title: "HarmBench: A Standardized Evaluation Framework for Automated Red Teaming and Robust Refusal", by: "Mantas Mazeika et al.", year: 2024, url: "https://arxiv.org/abs/2402.04249"}
+    status: added
+  - id: spotlighting
+    name: Spotlighting
+    aliases: [datamarking, input delimiting]
+    region: safety-security-and-governance
+    also: [prompting-and-context-engineering]
+    layer: detail
+    desc: Transforming untrusted text before it reaches the model (delimiting it, interleaving a marker, or encoding it) so the model can see which text is data and not follow it.
+    summary: "Untrusted text such as a retrieved web page is transformed before it goes into the prompt so the model can tell it apart from instructions. The simplest version wraps it in delimiters; stronger ones put a special marker between every word (datamarking) or encode the whole text, and the system prompt says never to follow instructions inside marked text. An attacker can't easily fake the marking, so attacks succeed far less often, but it still depends on the model obeying the system prompt."
+    parents:
+      - {id: indirect-prompt-injection, rel: counters, why: "Built to stop instructions hidden in third-party content.", src: "Defending Against Indirect Prompt Injection Attacks With Spotlighting (Hines et al. 2024)"}
+    maturity: 3
+    maturity_note: Delimiting untrusted text is common practice; datamarking and encoding are less widely adopted.
+    date: "2024-03"
+    ref: {title: "Defending Against Indirect Prompt Injection Attacks With Spotlighting (Hines et al.)", arxiv: "2403.14720"}
+    examples: []
+    resources:
+      - {kind: "blog", title: "How Microsoft defends against indirect prompt injection attacks", by: "Microsoft Security Response Center", year: 2025, url: "https://www.microsoft.com/en-us/msrc/blog/2025/07/how-microsoft-defends-against-indirect-prompt-injection-attacks"}
+      - {kind: "docs", title: "Prompt Shields in Azure AI Content Safety", by: "Microsoft", year: 2025, url: "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/jailbreak-detection"}
+      - {kind: "blog", title: "Delimiters won't save you from prompt injection", by: "Simon Willison", year: 2023, url: "https://simonwillison.net/2023/May/11/delimiters-wont-save-you/"}
+    status: added
+  - id: dual-llm-pattern
+    name: Dual LLM Pattern
+    aliases: [privileged and quarantined LLMs]
+    region: safety-security-and-governance
+    also: [agents-and-orchestration]
+    layer: detail
+    desc: Splitting an assistant into a privileged model that calls tools but never sees untrusted text, and a quarantined model that reads untrusted text but cannot act, with ordinary code passing references between them.
+    summary: "An architecture for assistants that must read untrusted content. A privileged model takes the user's instructions and calls tools but never sees untrusted text; a quarantined model reads that text (a web page, an email) but has no tools. Plain code between them hands the quarantined model's output to tools as opaque variables, so injected instructions have nothing to trigger. Google DeepMind's CaMeL (2025) builds the idea into a working system. The cost is extra complexity and fewer tasks the assistant can do."
+    parents:
+      - {id: indirect-prompt-injection, rel: counters, why: "Keeps injected text away from the model that can act.", src: "The Dual LLM pattern (Willison 2023)"}
+      - {id: least-privilege, rel: applies, why: "The component that reads untrusted data is given no authority.", src: "The Dual LLM pattern (Willison 2023)"}
+    maturity: 2
+    maturity_note: A widely cited design; production systems mostly use partial versions of it.
+    date: "2023-04"
+    ref: {title: "The Dual LLM pattern for building AI assistants that can resist prompt injection (Willison)", url: "https://simonwillison.net/2023/Apr/25/dual-llm-pattern/"}
+    examples: [CaMeL]
+    resources:
+      - {kind: "blog", title: "CaMeL offers a promising new direction for mitigating prompt injection attacks", by: "Simon Willison", year: 2025, url: "https://simonwillison.net/2025/Apr/11/camel/"}
+      - {kind: "paper", title: "Defeating Prompt Injections by Design", by: "Edoardo Debenedetti et al. (Google DeepMind)", year: 2025, url: "https://arxiv.org/abs/2503.18813"}
+      - {kind: "paper", title: "Design Patterns for Securing LLM Agents against Prompt Injections", by: "Luca Beurer-Kellner et al.", year: 2025, url: "https://arxiv.org/abs/2506.08837"}
+      - {kind: "blog", title: "My Lethal Trifecta talk at the Bay Area AI Security Meetup", by: "Simon Willison", year: 2025, url: "https://simonwillison.net/2025/Aug/9/bay-area-ai/"}
+    status: added
+  - id: machine-unlearning
+    name: Machine Unlearning
+    aliases: [LLM unlearning, targeted forgetting, RMU]
+    region: safety-security-and-governance
+    also: [adaptation-and-post-training]
+    layer: detail
+    desc: Further training a model so it no longer reproduces specific knowledge, such as copyrighted text, personal data or hazardous know-how, without retraining from scratch.
+    summary: "Tries to remove specific knowledge from a trained model, such as a book's contents, a person's private data or dangerous technical know-how, without retraining from scratch. Methods fine-tune against the target data or, as RMU does, scramble the model's internal representation of it. Benchmarks such as TOFU and WMDP show the hard part: removal is often shallow, and forgetting one thing damages related knowledge."
+    parents:
+      - {id: transfer-learning-fine-tuning, rel: applies, why: "Uses further fine-tuning to suppress what earlier training put in.", src: "Who's Harry Potter? Approximate Unlearning in LLMs (Eldan & Russinovich 2023)"}
+      - {id: representation-engineering, rel: applies, why: "RMU removes hazardous knowledge by perturbing its internal representations.", src: "The WMDP Benchmark (Li et al. 2024)", confidence: medium}
+    maturity: 1
+    maturity_note: Research; removal tends to be shallow or to damage related abilities.
+    date: "2023-10"
+    ref: {title: "Who's Harry Potter? Approximate Unlearning in LLMs (Eldan & Russinovich)", arxiv: "2310.02238"}
+    examples: []
+    resources:
+      - {kind: "blog", title: "Machine Unlearning in 2024", by: "Ken Ziyu Liu", year: 2024, url: "https://ai.stanford.edu/~kzliu/blog/unlearning/"}
+      - {kind: "paper", title: "TOFU: A Task of Fictitious Unlearning for LLMs", by: "Pratyush Maini et al.", year: 2024, url: "https://arxiv.org/abs/2401.06121"}
+      - {kind: "paper", title: "The WMDP Benchmark: Measuring and Reducing Malicious Use With Unlearning", by: "Nathaniel Li et al.", year: 2024, url: "https://arxiv.org/abs/2403.03218"}
     status: added
 
   # ======================= APPLIED: ai-product-and-interaction-design =======================
