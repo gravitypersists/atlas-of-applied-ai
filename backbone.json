@@ -377,7 +377,7 @@
       "name": "Adaptation and Post-Training",
       "title": "The Tempering Grounds",
       "definition": "Changing weights after pretraining — supervised fine-tuning, parameter-efficient methods, preference optimization, RL from verifiable rewards, distillation.",
-      "distinct_from": "Always involves gradient updates (vs. Prompting). Dataset construction lives in Data.",
+      "distinct_from": "Always changes weights, almost always through gradient updates (vs. Prompting); model merging is the exception. Dataset construction lives in Data.",
       "descends_from": [
         "deep-learning-nlp",
         "reinforcement-learning"
@@ -386,6 +386,57 @@
         "The post-DPO and post-R1 landscape — which preference and RL methods practitioners actually use",
         "Fine-tuning for application teams (when to fine-tune vs. prompt vs. retrieve)",
         "Distillation of frontier capabilities into small models"
+      ],
+      "overview": "Adaptation and Post-Training covers everything done to a model's weights after pretraining. Pretraining produces a model that continues text; post-training turns it into an assistant that follows instructions, matches a style, behaves safely, or reasons through hard problems. Prompting and retrieval change what a model sees, while this region changes the model itself.\n\nThe classic recipe, popularized by InstructGPT, has three stages: supervised fine-tuning on example answers, a reward model trained on human comparisons, and reinforcement learning (PPO) against that reward. It works but runs several models at once, and most later methods simplify it. DPO trains directly on pairs of preferred and rejected answers with no reward model or RL loop, and spawned variants for unpaired thumbs-up data (KTO), single-stage training (ORPO), and fresh samples from the model being trained (online DPO). Constitutional AI replaced much of the human labeling with AI feedback. Reasoning models brought RL back: RL with verifiable rewards scores answers with checkers such as unit tests, and GRPO drops PPO's critic model to make that affordable. Distillation then passes the resulting skills on to small models.\n\nFor application teams, the practical tools are parameter-efficient. LoRA trains small add-on matrices instead of the full model, QLoRA does so over a 4-bit base on a single GPU, and DoRA and ReFT push efficiency further. Model merging combines fine-tunes by weight arithmetic with no training at all. Landmarks worth knowing: SFT, LoRA, RLHF, DPO, RLVR with GRPO, and distillation.",
+      "learning_path": [
+        {
+          "kind": "docs",
+          "title": "Training Overview (RLHF Book)",
+          "by": "Nathan Lambert",
+          "year": 2025,
+          "url": "https://rlhfbook.com/c/03-training-overview",
+          "why": "A map of the modern post-training pipeline: instruction tuning, preference tuning and RL, and how labs chain them. Read it first so every later technique has a place to sit."
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS336 Language Modeling from Scratch | Spring 2025 | Lecture 15: Alignment - SFT/RLHF",
+          "by": "Percy Liang, Tatsunori Hashimoto (Stanford Online)",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=Dfu7vC9jo4w",
+          "why": "A university lecture that walks from supervised fine-tuning to the classic RLHF setup, with the data and objectives spelled out. It gives the foundation the rest of the path builds on."
+        },
+        {
+          "kind": "blog",
+          "title": "LoRA Without Regret - Thinking Machines Lab",
+          "by": "John Schulman et al. (Thinking Machines)",
+          "year": 2025,
+          "url": "https://thinkingmachines.ai/blog/lora/",
+          "why": "Careful experiments on when low-rank fine-tuning matches full fine-tuning and which settings matter. It is the practical side of adapting a model on a budget."
+        },
+        {
+          "kind": "blog",
+          "title": "LLM Training: RLHF and Its Alternatives",
+          "by": "Sebastian Raschka",
+          "year": 2023,
+          "url": "https://magazine.sebastianraschka.com/p/llm-training-rlhf-and-its-alternatives",
+          "why": "Explains the reward-model-plus-PPO recipe and the simpler preference methods (DPO and others) that grew up around it. Read it to see why the preference-optimization family exists."
+        },
+        {
+          "kind": "blog",
+          "title": "The State of Reinforcement Learning for LLM Reasoning",
+          "by": "Sebastian Raschka",
+          "year": 2025,
+          "url": "https://magazine.sebastianraschka.com/p/the-state-of-llm-reasoning-model-training",
+          "why": "Covers RL with verifiable rewards, GRPO and the reasoning-model papers that followed DeepSeek-R1. It brings the region up to the current frontier."
+        },
+        {
+          "kind": "talk",
+          "title": "The Rise of Reasoning Models | Post-Training Course Lecture 5",
+          "by": "Nathan Lambert",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=o4AB5xHIDdM",
+          "why": "A lecture from someone who builds open post-training recipes, on how RL for reasoning is done in practice. A good closing view of where post-training is heading."
+        }
       ]
     },
     {
@@ -630,6 +681,11 @@
       "concept": "Reasoning distillation",
       "home": "adaptation-and-post-training",
       "rule": "The act of training a student → Adaptation; generating the traces → Data."
+    },
+    {
+      "concept": "Model merging",
+      "home": "adaptation-and-post-training",
+      "rule": "Arithmetic on fine-tuned weights changes the model after pretraining → Adaptation, even though the merge itself runs no gradient steps."
     },
     {
       "concept": "DSPy / prompt optimization",
@@ -6536,6 +6592,7 @@
       ],
       "region": "adaptation-and-post-training",
       "desc": "Training a pretrained model on curated instruction-response pairs to follow instructions and adopt a format.",
+      "summary": "Training a pretrained model on curated examples of instructions paired with good responses, so it learns to follow instructions and answer in the expected format and tone. It is the first post-training step for almost every model, and the usual starting point when an application team fine-tunes.",
       "parents": [
         {
           "id": "transfer-learning-fine-tuning",
@@ -6556,6 +6613,36 @@
         "Axolotl",
         "Unsloth"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Instruction Fine-Tuning (RLHF Book)",
+          "by": "Nathan Lambert",
+          "year": 2025,
+          "url": "https://rlhfbook.com/c/04-instruction-tuning"
+        },
+        {
+          "kind": "docs",
+          "title": "SFT Trainer · Hugging Face",
+          "by": "Hugging Face TRL",
+          "year": 2025,
+          "url": "https://huggingface.co/docs/trl/sft_trainer"
+        },
+        {
+          "kind": "talk",
+          "title": "Instruction finetuning and RLHF lecture (NYU CSCI 2590)",
+          "by": "Hyung Won Chung",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=zjrM-MW-0y0"
+        },
+        {
+          "kind": "paper",
+          "title": "LIMA: Less Is More for Alignment",
+          "by": "Zhou et al. (Meta)",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2305.11206"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -6567,6 +6654,7 @@
       ],
       "region": "adaptation-and-post-training",
       "desc": "Fine-tuning only a small set of added or selected parameters, cutting memory and storage costs.",
+      "summary": "Fine-tuning only a small set of added or selected parameters while the rest of the model stays frozen. This cuts the memory needed for training, and each customized version is a small file instead of a full copy of the model.",
       "parents": [
         {
           "id": "transfer-learning-fine-tuning",
@@ -6585,6 +6673,36 @@
       "examples": [
         "Hugging Face PEFT"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Parameter-Efficient Fine-Tuning using 🤗 PEFT",
+          "by": "Hugging Face (Sourab Mangrulkar, Sayak Paul)",
+          "year": 2023,
+          "url": "https://huggingface.co/blog/peft"
+        },
+        {
+          "kind": "docs",
+          "title": "PEFT · Hugging Face",
+          "by": "Hugging Face",
+          "year": 2025,
+          "url": "https://huggingface.co/docs/peft/index"
+        },
+        {
+          "kind": "talk",
+          "title": "10: Generative AI – Adapting LLMs with Parameter-Efficient Fine-Tuning",
+          "by": "MIT OpenCourseWare",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=d-tngNnaG4U"
+        },
+        {
+          "kind": "paper",
+          "title": "Parameter-Efficient Fine-Tuning for Large Models: A Comprehensive Survey",
+          "by": "Han et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2403.14608"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -6596,6 +6714,7 @@
       ],
       "region": "adaptation-and-post-training",
       "desc": "Freezing base weights and training small low-rank update matrices injected into each layer.",
+      "summary": "Freezes the base model and trains small low-rank matrices added to its layers; the update can be merged into the weights or swapped in per request. QLoRA keeps the frozen base in 4-bit precision, so large models can be fine-tuned on a single GPU. It is the default way open models get customized.",
       "parents": [
         {
           "id": "parameter-efficient-fine-tuning",
@@ -6616,6 +6735,36 @@
         "Unsloth",
         "hosted fine-tuning APIs"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "LoRA Without Regret - Thinking Machines Lab",
+          "by": "John Schulman et al. (Thinking Machines)",
+          "year": 2025,
+          "url": "https://thinkingmachines.ai/blog/lora/"
+        },
+        {
+          "kind": "blog",
+          "title": "Practical Tips for Finetuning LLMs Using LoRA (Low-Rank Adaptation)",
+          "by": "Sebastian Raschka",
+          "year": 2023,
+          "url": "https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms"
+        },
+        {
+          "kind": "talk",
+          "title": "What is Low-Rank Adaptation (LoRA) | explained by the inventor",
+          "by": "Edward Hu",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=DhRoTONcyZE"
+        },
+        {
+          "kind": "talk",
+          "title": "Tim Dettmers | QLoRA: Efficient Finetuning of Quantized Large Language Models",
+          "by": "Tim Dettmers (London Machine Learning Meetup)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=y9PHWGOa8HA"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -6623,10 +6772,13 @@
       "name": "RLHF",
       "aliases": [
         "reinforcement learning from human feedback",
-        "reward modeling"
+        "reward modeling",
+        "InstructGPT pipeline",
+        "SFT-RM-PPO"
       ],
       "region": "adaptation-and-post-training",
       "desc": "Training a reward model on human preference comparisons, then optimizing the policy against it with RL.",
+      "summary": "Humans compare pairs of model answers, a reward model learns to predict which they prefer, and reinforcement learning (usually PPO) pushes the model toward answers the reward model scores highly. InstructGPT's three stages (SFT, then a reward model, then PPO) became the standard alignment recipe. It works, but running several models at once makes it expensive and finicky.",
       "parents": [
         {
           "id": "policy-gradient-methods",
@@ -6652,6 +6804,36 @@
         "InstructGPT",
         "OpenRLHF"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Illustrating Reinforcement Learning from Human Feedback (RLHF)",
+          "by": "Hugging Face (Nathan Lambert, Louis Castricato, Leandro von Werra, Alex Havrilla)",
+          "year": 2022,
+          "url": "https://huggingface.co/blog/rlhf"
+        },
+        {
+          "kind": "blog",
+          "title": "RLHF: Reinforcement Learning from Human Feedback",
+          "by": "Chip Huyen",
+          "year": 2023,
+          "url": "https://huyenchip.com/2023/05/02/rlhf.html"
+        },
+        {
+          "kind": "talk",
+          "title": "RLHF Foundations, IFT, Reward Modeling, Rejection Sampling | Post-Training Course Lecture 2",
+          "by": "Nathan Lambert",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=4gIwiSPmQkU"
+        },
+        {
+          "kind": "paper",
+          "title": "Training language models to follow instructions with human feedback",
+          "by": "Ouyang et al. (OpenAI)",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2203.02155"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -6659,12 +6841,12 @@
       "name": "Direct Preference Optimization",
       "aliases": [
         "DPO",
-        "KTO",
-        "ORPO",
-        "IPO"
+        "IPO",
+        "SimPO"
       ],
       "region": "adaptation-and-post-training",
       "desc": "Optimizing the model directly on preference pairs with a classification-style loss, removing the separate reward model and RL loop.",
+      "summary": "Trains directly on pairs of preferred and rejected answers with a simple classification-style loss, skipping the separate reward model and the RL loop. Cheap and stable, it became the default preference step for open models. Because it learns from a fixed dataset, it can drift toward surface traits such as longer answers; variants like IPO and SimPO adjust the loss to counter this.",
       "parents": [
         {
           "id": "rlhf",
@@ -6683,6 +6865,36 @@
       "examples": [
         "TRL DPOTrainer"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Preference Tuning LLMs with Direct Preference Optimization Methods",
+          "by": "Hugging Face (Kashif Rasul, Edward Beeching, Lewis Tunstall, et al.)",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/pref-tuning"
+        },
+        {
+          "kind": "blog",
+          "title": "Direct Preference Optimization (DPO)",
+          "by": "Cameron R. Wolfe",
+          "year": 2025,
+          "url": "https://cameronrwolfe.substack.com/p/direct-preference-optimization"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS234 I Guest Lecture on DPO: Rafael Rafailov, Archit Sharma, Eric Mitchell I Lecture 9",
+          "by": "Rafael Rafailov, Archit Sharma, Eric Mitchell (Stanford Online)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=Q7rl8ovBWwQ"
+        },
+        {
+          "kind": "paper",
+          "title": "SimPO: Simple Preference Optimization with a Reference-Free Reward",
+          "by": "Meng, Xia, Chen",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2405.14734"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -6698,6 +6910,7 @@
         "data-and-synthetic-data"
       ],
       "desc": "Using a model guided by written principles to critique, revise, and rank outputs, replacing much of the human preference labeling.",
+      "summary": "A model guided by a written set of principles (a constitution) critiques and revises answers and judges which of two is better, replacing most human preference labels with AI feedback (RLAIF). This makes preference data far cheaper to produce at scale, and the principles make the target behavior explicit.",
       "parents": [
         {
           "id": "rlhf",
@@ -6716,6 +6929,36 @@
       "examples": [
         "Claude training"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Claude's new constitution",
+          "by": "Anthropic",
+          "year": 2026,
+          "url": "https://www.anthropic.com/news/claude-new-constitution"
+        },
+        {
+          "kind": "docs",
+          "title": "Synthetic Data & Distillation: Constitutional AI (RLHF Book)",
+          "by": "Nathan Lambert",
+          "year": 2025,
+          "url": "https://rlhfbook.com/c/12-synthetic-data#constitutional-ai"
+        },
+        {
+          "kind": "talk",
+          "title": "AI Safety, RLHF, and Self-Supervision - Jared Kaplan | Stanford MLSys #79",
+          "by": "Jared Kaplan (Stanford MLSys Seminars)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=fqC3D-zNJUM"
+        },
+        {
+          "kind": "paper",
+          "title": "RLAIF vs. RLHF: Scaling Reinforcement Learning from Human Feedback with AI Feedback",
+          "by": "Lee et al. (Google)",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2309.00267"
+        }
+      ],
       "status": "kept"
     },
     {
@@ -6729,6 +6972,7 @@
         "planning-and-reasoning"
       ],
       "desc": "Keeping the RLHF objective but replacing the learned reward model with a programmatic verifier such as answer checks or unit tests.",
+      "summary": "Reinforcement learning where the reward comes from a program that checks the answer, such as comparing a math result or running unit tests, instead of a learned reward model. A checker is much harder to game than a reward model, so training can run long; it is a core ingredient of reasoning models. It only works where answers can be checked automatically.",
       "parents": [
         {
           "id": "rlhf",
@@ -6755,6 +6999,36 @@
         "Open-R1",
         "verifiers libraries"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Tülu 3: The next era in open post-training",
+          "by": "Ai2",
+          "year": 2024,
+          "url": "https://allenai.org/blog/tulu-3-technical"
+        },
+        {
+          "kind": "docs",
+          "title": "Reasoning and Inference-Time Scaling (RLHF Book)",
+          "by": "Nathan Lambert",
+          "year": 2025,
+          "url": "https://rlhfbook.com/c/07-reasoning"
+        },
+        {
+          "kind": "talk",
+          "title": "Tulu 3: Exploring Frontiers in Open Language Model Post-Training - Nathan Lambert (AI2)",
+          "by": "Nathan Lambert (Princeton Language & Intelligence)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=ltSzUIJ9m6s"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS336 Language Modeling from Scratch | Spring 2026 | Lecture 16: Post-Training - RLVR",
+          "by": "Percy Liang, Tatsunori Hashimoto (Stanford Online)",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=dIFAi87Ws4E"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -6765,6 +7039,7 @@
       ],
       "region": "adaptation-and-post-training",
       "desc": "A policy-gradient method that baselines each response against a group of samples for the same prompt, removing the value network.",
+      "summary": "A reinforcement learning algorithm that samples a group of answers to the same prompt and scores each one against the group's average, so it needs no separate value (critic) model. That saves a lot of memory, and since DeepSeek-R1 it has been the standard algorithm for training reasoning models with verifiable rewards.",
       "parents": [
         {
           "id": "ppo",
@@ -6773,8 +7048,8 @@
           "src": "DeepSeekMath (Shao et al. 2024)"
         }
       ],
-      "maturity": 3,
-      "maturity_note": "Algorithm of choice for open reasoning RL after DeepSeek-R1.",
+      "maturity": 4,
+      "maturity_note": "Algorithm of choice for open reasoning RL after DeepSeek-R1; built into the main open training libraries.",
       "date": "2024-02",
       "ref": {
         "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models (Shao et al.)",
@@ -6783,6 +7058,36 @@
       "examples": [
         "TRL GRPOTrainer",
         "verl"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Group Relative Policy Optimization (GRPO)",
+          "by": "Cameron R. Wolfe",
+          "year": 2025,
+          "url": "https://cameronrwolfe.substack.com/p/grpo"
+        },
+        {
+          "kind": "docs",
+          "title": "GRPO Trainer · Hugging Face",
+          "by": "Hugging Face TRL",
+          "year": 2025,
+          "url": "https://huggingface.co/docs/trl/grpo_trainer"
+        },
+        {
+          "kind": "talk",
+          "title": "[GRPO Explained] DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models",
+          "by": "Yannic Kilcher",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=bAWV_yrqx4w"
+        },
+        {
+          "kind": "paper",
+          "title": "Understanding R1-Zero-Like Training: A Critical Perspective",
+          "by": "Liu et al.",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2503.20783"
+        }
       ],
       "status": "repaired"
     },
@@ -6798,6 +7103,7 @@
         "data-and-synthetic-data"
       ],
       "desc": "Fine-tuning smaller models on outputs and rationales generated by larger ones.",
+      "summary": "Fine-tuning a small model on answers and step-by-step reasoning written by a larger one, so the small model picks up much of the larger one's skill at a fraction of the cost. Most small reasoning models are made this way. Small students can struggle to imitate reasoning traces that are too long or complex for them.",
       "parents": [
         {
           "id": "knowledge-distillation",
@@ -6822,7 +7128,387 @@
       "examples": [
         "DeepSeek-R1-Distill models"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "On-Policy Distillation - Thinking Machines Lab",
+          "by": "Kevin Lu et al. (Thinking Machines)",
+          "year": 2025,
+          "url": "https://thinkingmachines.ai/blog/on-policy-distillation/"
+        },
+        {
+          "kind": "docs",
+          "title": "Synthetic Data & Distillation (RLHF Book)",
+          "by": "Nathan Lambert",
+          "year": 2025,
+          "url": "https://rlhfbook.com/c/12-synthetic-data"
+        },
+        {
+          "kind": "talk",
+          "title": "Knowledge Distillation: How LLMs train each other",
+          "by": "Julia Turc",
+          "year": 2025,
+          "url": "https://www.youtube.com/watch?v=jrJKRYAdh7I"
+        },
+        {
+          "kind": "paper",
+          "title": "A Survey on Knowledge Distillation of Large Language Models",
+          "by": "Xu et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2402.13116"
+        }
+      ],
       "status": "repaired"
+    },
+    {
+      "id": "dora",
+      "name": "DoRA",
+      "aliases": [
+        "weight-decomposed low-rank adaptation"
+      ],
+      "region": "adaptation-and-post-training",
+      "layer": "detail",
+      "desc": "A LoRA variant that splits each weight into a magnitude and a direction and applies the low-rank update to the direction only.",
+      "summary": "A LoRA variant that splits each weight matrix into a size (magnitude) and a direction, trains the magnitude directly, and applies the low-rank update only to the direction. Results come closer to full fine-tuning at almost the same cost as LoRA, and common fine-tuning libraries offer it as a switch.",
+      "parents": [
+        {
+          "id": "low-rank-adaptation",
+          "rel": "extends",
+          "why": "Adds a trainable magnitude and confines the low-rank update to the weight direction.",
+          "src": "DoRA (Liu et al. 2024)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "A drop-in LoRA upgrade in the main libraries, but not yet the default.",
+      "date": "2024-02",
+      "ref": {
+        "title": "DoRA: Weight-Decomposed Low-Rank Adaptation (Liu et al.)",
+        "arxiv": "2402.09353"
+      },
+      "examples": [
+        "Hugging Face PEFT use_dora",
+        "Unsloth"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Improving LoRA: Implementing Weight-Decomposed Low-Rank Adaptation (DoRA) from Scratch",
+          "by": "Sebastian Raschka",
+          "year": 2024,
+          "url": "https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch"
+        },
+        {
+          "kind": "blog",
+          "title": "Introducing DoRA, a High-Performing Alternative to LoRA for Fine-Tuning",
+          "by": "NVIDIA (Min-Hung Chen)",
+          "year": 2024,
+          "url": "https://developer.nvidia.com/blog/introducing-dora-a-high-performing-alternative-to-lora-for-fine-tuning/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "reft",
+      "name": "Representation Fine-Tuning",
+      "aliases": [
+        "ReFT",
+        "LoReFT"
+      ],
+      "region": "adaptation-and-post-training",
+      "layer": "detail",
+      "desc": "Freezing all weights and training small interventions that edit hidden activations at chosen layers and token positions.",
+      "summary": "Instead of changing weights, ReFT leaves the whole model frozen and trains small functions that edit its hidden activations at chosen layers and token positions. It can match LoRA while training far fewer parameters. It is still mostly a research technique.",
+      "parents": [
+        {
+          "id": "parameter-efficient-fine-tuning",
+          "rel": "specializes",
+          "why": "Parameter-efficient adaptation that trains edits to activations instead of weight updates.",
+          "src": "ReFT (Wu et al. 2024)"
+        },
+        {
+          "id": "representation-engineering",
+          "rel": "applies",
+          "why": "Learns by gradient descent the kind of activation-space interventions representation engineering sets by hand.",
+          "src": "ReFT (Wu et al. 2024)"
+        }
+      ],
+      "maturity": 1,
+      "maturity_note": "Research; one main library and little production use.",
+      "date": "2024-04",
+      "ref": {
+        "title": "ReFT: Representation Finetuning for Language Models (Wu et al.)",
+        "arxiv": "2404.03592"
+      },
+      "examples": [
+        "pyreft"
+      ],
+      "resources": [
+        {
+          "kind": "code",
+          "title": "stanfordnlp/pyreft: Stanford NLP Python library for Representation Finetuning (ReFT)",
+          "by": "Stanford NLP",
+          "year": 2024,
+          "url": "https://github.com/stanfordnlp/pyreft"
+        },
+        {
+          "kind": "talk",
+          "title": "How ReFT Works w/ Author Zhengxuan Wu",
+          "by": "Zhengxuan Wu (Oxen)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=to2oKwnknUk"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "kto",
+      "name": "Kahneman-Tversky Optimization",
+      "aliases": [
+        "KTO"
+      ],
+      "region": "adaptation-and-post-training",
+      "layer": "detail",
+      "desc": "Preference optimization from unpaired thumbs-up or thumbs-down labels, using a loss modeled on prospect theory.",
+      "summary": "A DPO-style method that learns from single answers labeled good or bad, instead of pairs ranked against each other. That matches the feedback many products already collect (thumbs up, thumbs down), so training data is cheaper to get. Its loss borrows loss aversion from prospect theory, weighting bad answers more heavily than good ones.",
+      "parents": [
+        {
+          "id": "direct-preference-optimization",
+          "rel": "extends",
+          "why": "Drops DPO's need for paired comparisons and learns from binary labels.",
+          "src": "KTO (Ethayarajh et al. 2024)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Implemented in the main training libraries; chosen mainly when only binary feedback exists.",
+      "date": "2024-02",
+      "ref": {
+        "title": "KTO: Model Alignment as Prospect Theoretic Optimization (Ethayarajh et al.)",
+        "arxiv": "2402.01306"
+      },
+      "examples": [
+        "TRL KTOTrainer"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Better, Cheaper, Faster LLM Alignment with KTO",
+          "by": "Contextual AI",
+          "year": 2023,
+          "url": "https://contextual.ai/research/better-cheaper-faster-llm-alignment-with-kto"
+        },
+        {
+          "kind": "docs",
+          "title": "KTO Trainer · Hugging Face",
+          "by": "Hugging Face TRL",
+          "year": 2025,
+          "url": "https://huggingface.co/docs/trl/kto_trainer"
+        },
+        {
+          "kind": "talk",
+          "title": "4 Ways to Align LLMs: RLHF, DPO, KTO, and ORPO",
+          "by": "Snorkel AI",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=lBzw9ku86dg"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "orpo",
+      "name": "Odds Ratio Preference Optimization",
+      "aliases": [
+        "ORPO"
+      ],
+      "region": "adaptation-and-post-training",
+      "layer": "detail",
+      "desc": "Combining instruction tuning and preference alignment in one training stage by adding an odds-ratio penalty to the SFT loss, with no reference model.",
+      "summary": "Folds instruction tuning and preference alignment into one training run: the usual SFT loss plus a penalty that makes the rejected answer less likely relative to the chosen one. It needs no frozen reference model, which saves memory and a whole training stage, but results are sensitive to its settings.",
+      "parents": [
+        {
+          "id": "supervised-fine-tuning",
+          "rel": "combines",
+          "why": "Keeps the SFT loss as the base of the single training stage.",
+          "src": "ORPO (Hong et al. 2024)"
+        },
+        {
+          "id": "direct-preference-optimization",
+          "rel": "combines",
+          "why": "Adds a preference term over chosen and rejected pairs, without DPO's reference model.",
+          "src": "ORPO (Hong et al. 2024)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Implemented in the main training libraries; used for some open models.",
+      "date": "2024-03",
+      "ref": {
+        "title": "ORPO: Monolithic Preference Optimization without Reference Model (Hong et al.)",
+        "arxiv": "2403.07691"
+      },
+      "examples": [
+        "TRL ORPOTrainer"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Fine-tune Llama 3 with ORPO",
+          "by": "Maxime Labonne",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/mlabonne/orpo-llama-3"
+        },
+        {
+          "kind": "docs",
+          "title": "ORPO Trainer · Hugging Face",
+          "by": "Hugging Face TRL",
+          "year": 2025,
+          "url": "https://huggingface.co/docs/trl/orpo_trainer"
+        },
+        {
+          "kind": "talk",
+          "title": "ORPO: Monolithic Preference Optimization without Reference Model (Paper Explained)",
+          "by": "Yannic Kilcher",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=52kMBrAI_IM"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "online-preference-optimization",
+      "name": "Online Preference Optimization",
+      "aliases": [
+        "online DPO",
+        "iterative DPO",
+        "OAIF"
+      ],
+      "region": "adaptation-and-post-training",
+      "layer": "detail",
+      "desc": "Repeatedly sampling fresh answers from the model being trained, labeling preferences with a reward model or AI judge, and training on them.",
+      "summary": "Standard DPO learns from a fixed set of answers, often written by other models. The online version keeps generating new answers from the model being trained, has a reward model or AI judge pick the better ones, and trains on those, round after round. Learning from its own current mistakes closes much of the gap with full RL, at the cost of more infrastructure.",
+      "parents": [
+        {
+          "id": "direct-preference-optimization",
+          "rel": "extends",
+          "why": "Runs the DPO loss in a loop over freshly sampled answers instead of a fixed dataset.",
+          "src": "Direct Language Model Alignment from Online AI Feedback (Guo et al. 2024)"
+        },
+        {
+          "id": "constitutional-ai",
+          "rel": "applies",
+          "why": "Uses an AI annotator to label preferences between fresh samples.",
+          "src": "Direct Language Model Alignment from Online AI Feedback (Guo et al. 2024)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Iterative rounds of sampling and preference training are common in open and frontier post-training recipes.",
+      "date": "2024-02",
+      "ref": {
+        "title": "Direct Language Model Alignment from Online AI Feedback (Guo et al.)",
+        "arxiv": "2402.04792"
+      },
+      "examples": [
+        "TRL OnlineDPOTrainer",
+        "Llama 3 post-training"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Online DPO Trainer · Hugging Face",
+          "by": "Hugging Face TRL",
+          "year": 2025,
+          "url": "https://huggingface.co/docs/trl/online_dpo_trainer"
+        },
+        {
+          "kind": "paper",
+          "title": "RLHF Workflow: From Reward Modeling to Online RLHF",
+          "by": "Dong et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2405.07863"
+        },
+        {
+          "kind": "paper",
+          "title": "Self-Rewarding Language Models",
+          "by": "Yuan et al. (Meta)",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2401.10020"
+        },
+        {
+          "kind": "paper",
+          "title": "Preference Fine-Tuning of LLMs Should Leverage Suboptimal, On-Policy Data",
+          "by": "Tajwar et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2404.14367"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "model-merging",
+      "name": "Model Merging",
+      "aliases": [
+        "task arithmetic",
+        "task vectors",
+        "model soups",
+        "TIES-Merging",
+        "SLERP merging"
+      ],
+      "region": "adaptation-and-post-training",
+      "desc": "Combining fine-tuned models by arithmetic on their weights, such as averaging them or adding task vectors, with no further training.",
+      "summary": "Combines fine-tuned versions of the same base model by doing arithmetic on their weights: averaging them, or adding and subtracting the change each fine-tune made (a task vector). No training is needed, so it is a cheap way to mix skills. Naive merges interfere with each other, and methods like TIES trim and reconcile the changes first; results are still less predictable than training.",
+      "parents": [
+        {
+          "id": "supervised-fine-tuning",
+          "rel": "applies",
+          "why": "Operates on the weight changes that fine-tuning produces.",
+          "src": "Editing Models with Task Arithmetic (Ilharco et al. 2022)"
+        },
+        {
+          "id": "external:weight-averaging",
+          "rel": "extends",
+          "why": "Generalizes averaging the weights of models from a shared starting point.",
+          "src": "Model soups (Wortsman et al. 2022)"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Widely used for open models and in some lab pipelines; behavior is hard to predict.",
+      "date": "2022-12",
+      "ref": {
+        "title": "Editing Models with Task Arithmetic (Ilharco et al.)",
+        "arxiv": "2212.04089"
+      },
+      "examples": [
+        "MergeKit"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Merge Large Language Models with mergekit",
+          "by": "Maxime Labonne",
+          "year": 2024,
+          "url": "https://huggingface.co/blog/mlabonne/merge-models"
+        },
+        {
+          "kind": "blog",
+          "title": "Model Merging: A Survey",
+          "by": "Cameron R. Wolfe",
+          "year": 2024,
+          "url": "https://cameronrwolfe.substack.com/p/model-merging"
+        },
+        {
+          "kind": "talk",
+          "title": "mergekit founder explains model merging",
+          "by": "Charles Goddard (Arcee AI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=IVDNhQIzyIY"
+        },
+        {
+          "kind": "paper",
+          "title": "TIES-Merging: Resolving Interference When Merging Models",
+          "by": "Yadav et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2306.01708"
+        }
+      ],
+      "status": "added"
     },
     {
       "id": "self-instruct",
@@ -9693,6 +10379,7 @@
     "external:shared-task-benchmarks",
     "external:star-self-taught-reasoner",
     "external:template-engines",
-    "external:trust-in-automation"
+    "external:trust-in-automation",
+    "external:weight-averaging"
   ]
 }

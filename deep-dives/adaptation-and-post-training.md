@@ -1,6 +1,6 @@
 # Deep dive: Adaptation and Post-Training
 
-Backbone v0.2 · 9 anchors · 11 cross-region edges
+Backbone v0.2 · 15 anchors · 12 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -14,10 +14,11 @@ I'm building a lineage graph of applied AI engineering that will be rendered as 
 ## The region
 Changing weights after pretraining — supervised fine-tuning, parameter-efficient methods, preference optimization, RL from verifiable rewards, distillation.
 
-Boundary with neighboring regions: Always involves gradient updates (vs. Prompting). Dataset construction lives in Data.
+Boundary with neighboring regions: Always changes weights, almost always through gradient updates (vs. Prompting); model merging is the exception. Dataset construction lives in Data.
 
 Boundary rules (apply these exactly; if you disagree, say so in Amendments rather than breaking them):
 - Reasoning distillation → adaptation-and-post-training: The act of training a student → Adaptation; generating the traces → Data.
+- Model merging → adaptation-and-post-training: Arithmetic on fine-tuned weights changes the model after pretraining → Adaptation, even though the merge itself runs no gradient steps.
 - RLVR / GRPO → adaptation-and-post-training: Weight-updating methods → Adaptation, even when the goal is reasoning.
 
 ## Perspective and scope
@@ -35,8 +36,14 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments rathe
 - `direct-preference-optimization` — Direct Preference Optimization (maturity 4, 2023-05)
 - `constitutional-ai` — Constitutional AI and RLAIF (maturity 4, 2022-12)
 - `rlvr` — RL with Verifiable Rewards (maturity 3, 2024-11)
-- `grpo` — Group Relative Policy Optimization (maturity 3, 2024-02)
+- `grpo` — Group Relative Policy Optimization (maturity 4, 2024-02)
 - `llm-distillation` — LLM Distillation (maturity 4, 2023-05)
+- `dora` — DoRA (maturity 2, 2024-02)
+- `reft` — Representation Fine-Tuning (maturity 1, 2024-04)
+- `kto` — Kahneman-Tversky Optimization (maturity 2, 2024-02)
+- `orpo` — Odds Ratio Preference Optimization (maturity 2, 2024-03)
+- `online-preference-optimization` — Online Preference Optimization (maturity 3, 2024-02)
+- `model-merging` — Model Merging (maturity 3, 2022-12)
 
 Nodes homed elsewhere that also touch this region:
 - `process-reward-models` — Process Reward Models (home: planning-and-reasoning)
@@ -55,9 +62,7 @@ Nodes homed elsewhere that also touch this region:
 
 ## Leads from earlier research runs to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- KTO (binary-feedback preference optimization) (arXiv:2402.01306)
-- ORPO (reference-free, single-stage alignment) (arXiv:2403.07691)
-- InstructGPT pipeline as the canonical SFT→RM→PPO recipe (arXiv:2203.02155)
+- none
 
 ## Output
 
@@ -159,7 +164,7 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - retrieval-and-knowledge: text-embeddings (Text Embeddings; embedding models; sentence embeddings), dense-retrieval (Dense Retrieval; vector search; semantic search; DPR), retrieval-augmented-generation (Retrieval-Augmented Generation; RAG; naive RAG), chunking-strategies (Chunking Strategies; text splitting; semantic chunking), hybrid-search (Hybrid Search; sparse + dense retrieval; reciprocal rank fusion), cross-encoder-reranking (Cross-Encoder Reranking; rerankers; retrieve-and-rerank; multi-stage retrieval), query-rewriting (Query Rewriting and HyDE; query expansion; HyDE; Rewrite-Retrieve-Read), contextual-retrieval (Contextual Retrieval; contextual chunking), graph-rag (GraphRAG; knowledge-graph RAG), self-rag (Self-RAG; self-reflective RAG), corrective-rag (Corrective RAG; CRAG), agentic-rag (Agentic RAG; agentic search; iterative retrieval), parent-document-retrieval (Parent-Document Retrieval; small-to-big retrieval; ParentDocumentRetriever; sentence-window retrieval; auto-merging retrieval), late-interaction (Late Interaction; ColBERT; multi-vector retrieval; MaxSim), learned-sparse-retrieval (Learned Sparse Retrieval; SPLADE; neural sparse retrieval), propositional-chunking (Propositional Chunking; Dense X Retrieval; proposition indexing), late-chunking (Late Chunking; post-embedding chunking), active-retrieval (Active Retrieval; FLARE; forward-looking active retrieval), speculative-rag (Speculative RAG; draft-then-verify RAG), lightweight-graph-rag (Lightweight GraphRAG; LightRAG; LazyGraphRAG), long-context-routing (RAG vs. Long-Context Routing; Self-Route; Pre-Route)
 - agents-and-orchestration: mrkl-systems (MRKL Systems; modular reasoning; neuro-symbolic routing), tool-learning (Tool Learning; Toolformer; self-taught tool use), function-calling (Function Calling; tool use; tool calling), react-agent-loop (ReAct Agent Loop; reason and act; agent loop), workflow-state-machines (Workflow Graphs and State Machines; graph-based agents; agent workflows), model-context-protocol (Model Context Protocol; MCP), agent-memory (Agent Memory; long-term memory; episodic memory; MemGPT; structured note-taking), multi-agent-systems (Multi-Agent Systems; orchestrator-worker; subagents; agent teams), coding-agents (Coding Agents; software engineering agents; SWE-agent), computer-use-agents (Computer-Use Agents; GUI agents; browser agents), deep-research-agents (Deep Research Agents; research agents), agent-skills (Agent Skills; skills; packaged procedures), decision-models (Decision Models; System One models; typed decision models; calibrated classifiers for agents), semantic-routing (Semantic Routing; embedding-based intent routing; Semantic Router), mcp-code-execution (Code Execution with MCP; Code Mode; tools as code APIs), long-running-agent-harness (Long-Running Agent Harnesses; multi-session agents; initializer agent pattern; progress files), context-aware-mcp (Context-Aware MCP; CA-MCP; shared context store)
 - planning-and-reasoning: scratchpads (Scratchpads; intermediate computation), chain-of-thought (Chain-of-Thought; CoT; step-by-step reasoning), self-consistency (Self-Consistency; majority voting; best-of-n), tree-of-thoughts (Tree Search over Reasoning; Tree of Thoughts; ToT; search-based decoding), reflexion (Self-Reflection; Reflexion; self-critique; self-refine; evaluator-optimizer), process-reward-models (Process Reward Models; PRMs; step-level verifiers; process supervision), test-time-compute-scaling (Test-Time Compute Scaling; inference-time scaling; search against verifiers), reasoning-models (Reasoning Models; thinking models; extended thinking; o1-class models), llm-plus-p (LLM+P; LLM-to-PDDL translation; LLM + classical planner), llm-modulo (LLM-Modulo; generate-test-critique; verifier-in-the-loop planning), program-aided-reasoning (Program-Aided Reasoning; PAL; Program of Thoughts; PoT; program-aided language models), reasoning-via-planning (Reasoning via Planning; RAP; MCTS over reasoning), graph-of-thoughts (Graph of Thoughts; GoT), step-back-prompting (Step-Back Prompting; abstraction prompting), language-agent-tree-search (Language Agent Tree Search; LATS), math-shepherd (Automatic Process Supervision; Math-Shepherd; Monte Carlo step labels), quiet-star (Quiet-STaR; learned internal rationales; think before speaking), latent-reasoning (Latent Reasoning; Coconut; Chain of Continuous Thought; continuous thought), cot-monitoring (CoT Monitoring; CoT faithfulness; chain-of-thought monitorability; reasoning trace monitoring)
-- adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling), direct-preference-optimization (Direct Preference Optimization; DPO; KTO; ORPO; IPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT)
+- adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling; InstructGPT pipeline; SFT-RM-PPO), direct-preference-optimization (Direct Preference Optimization; DPO; IPO; SimPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT), dora (DoRA; weight-decomposed low-rank adaptation), reft (Representation Fine-Tuning; ReFT; LoReFT), kto (Kahneman-Tversky Optimization; KTO), orpo (Odds Ratio Preference Optimization; ORPO), online-preference-optimization (Online Preference Optimization; online DPO; iterative DPO; OAIF), model-merging (Model Merging; task arithmetic; task vectors; model soups; TIES-Merging; SLERP merging)
 - data-and-synthetic-data: self-instruct (Self-Instruct; synthetic instruction generation), evol-instruct (Evol-Instruct; instruction evolution), synthetic-textbook-data (Synthetic Pretraining Data; textbook-quality data; synthetic corpora), human-instruction-datasets (Crowdsourced Instruction Data; human-written demonstrations; OpenAssistant), llm-annotation (LLM-Assisted Annotation; LLM labeling; model-as-annotator), data-deduplication (Data Deduplication; near-duplicate removal; MinHash dedup), data-decontamination (Data Decontamination; test-set leakage prevention), data-quality-filtering (Data Quality Filtering; corpus curation; classifier-based filtering)
 - evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing; assertion-based testing), llm-tracing (LLM Tracing; LLM observability; agent traces; OpenTelemetry GenAI conventions; gen_ai spans), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring), judge-bias-mitigation (Judge Bias Mitigation; position-swap evaluation; length-controlled judging), probabilistic-judge-scoring (Probabilistic Judge Scoring; G-Eval; logprob-weighted scoring), fine-tuned-evaluators (Fine-Tuned Evaluators; judge models; open-weight judges; evaluator LMs), judge-score-correction (Judge Score Correction; prediction-powered inference; PPI; confidence intervals for judges), agent-trajectory-evaluation (Agent Trajectory Evaluation; step-level agent evals; trajectory grading; progress rate), static-context-scoring (Static Context Scoring; context quality scoring; preflight context evaluation)
 - safety-security-and-governance: prompt-injection (Prompt Injection; instruction injection), indirect-prompt-injection (Indirect Prompt Injection; data poisoning of context; tool-output injection), jailbreaks (Jailbreaks; adversarial prompts; GCG), red-teaming (AI Red Teaming; adversarial testing), guardrails (Guardrails and Safety Classifiers; input/output filters; content moderation; Llama Guard), injection-defenses (Prompt Injection Defenses; instruction hierarchy; spotlighting; injection detection), agent-sandboxing (Agent Sandboxing and Permissions; secure code execution; tool permissions; least-privilege agents), interpretability (Mechanistic Interpretability; circuits; interpretability), sparse-autoencoders (Sparse Autoencoders; SAEs; dictionary learning; monosemantic features), representation-engineering (Representation Engineering; RepE; activation steering), circuit-breakers (Circuit Breakers; representation rerouting), model-documentation (Model and System Cards; model cards; system cards; transparency documentation)
@@ -179,6 +184,12 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - RL with Verifiable Rewards: Tülu 3: Pushing Frontiers in Open Language Model Post-Training (Lambert et al.) — arXiv:2411.15124
 - Group Relative Policy Optimization: DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models (Shao et al.) — arXiv:2402.03300
 - LLM Distillation: Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes (Hsieh et al.) — arXiv:2305.02301
+- DoRA: DoRA: Weight-Decomposed Low-Rank Adaptation (Liu et al.) — arXiv:2402.09353
+- Representation Fine-Tuning: ReFT: Representation Finetuning for Language Models (Wu et al.) — arXiv:2404.03592
+- Kahneman-Tversky Optimization: KTO: Model Alignment as Prospect Theoretic Optimization (Ethayarajh et al.) — arXiv:2402.01306
+- Odds Ratio Preference Optimization: ORPO: Monolithic Preference Optimization without Reference Model (Hong et al.) — arXiv:2403.07691
+- Online Preference Optimization: Direct Language Model Alignment from Online AI Feedback (Guo et al.) — arXiv:2402.04792
+- Model Merging: Editing Models with Task Arithmetic (Ilharco et al.) — arXiv:2212.04089
 
 ## Reference: cross-region edges touching this region
 - chat-interfaces --applies--> rlhf
@@ -189,6 +200,7 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
 - parameter-efficient-fine-tuning --specializes--> transfer-learning-fine-tuning
 - process-reward-models --specializes--> rlhf
 - red-teaming --counters--> rlhf
+- reft --applies--> representation-engineering
 - rlhf --applies--> policy-gradient-methods
 - rlvr --applies--> ppo
 - supervised-fine-tuning --specializes--> transfer-learning-fine-tuning

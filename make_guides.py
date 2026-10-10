@@ -24,11 +24,6 @@ LEADS = {
         ("STaR (self-taught reasoner; iterative fine-tuning on self-generated rationales) as an anchor", "2203.14465"),
         ("Portfolio Beam Search and diversity-aware search under PRM uncertainty (single blog source; verify adoption)", None),
     ],
-    "adaptation-and-post-training": [
-        ("KTO (binary-feedback preference optimization)", "2402.01306"),
-        ("ORPO (reference-free, single-stage alignment)", "2403.07691"),
-        ("InstructGPT pipeline as the canonical SFT→RM→PPO recipe", "2203.02155"),
-    ],
     "ai-product-and-interaction-design": [
         ("Background / asynchronous agent delegation (assign a task, get a PR or report back)", None),
         ("Checkpoints, rewind and collaborative repair (\"The Collaboration Gap in Human-AI Work\")", "2604.18096"),

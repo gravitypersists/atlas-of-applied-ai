@@ -9,9 +9,9 @@ One guide per applied region, generated from `backbone.yaml` by `make_guides.py`
 | Retrieval and Knowledge | [retrieval-and-knowledge.md](retrieval-and-knowledge.md) | 21 | 25 |
 | Agents and Orchestration | [agents-and-orchestration.md](agents-and-orchestration.md) | 17 | 25 |
 | Planning and Reasoning | [planning-and-reasoning.md](planning-and-reasoning.md) | 19 | 16 |
-| Adaptation and Post-Training | [adaptation-and-post-training.md](adaptation-and-post-training.md) | 9 | 11 |
+| Adaptation and Post-Training | [adaptation-and-post-training.md](adaptation-and-post-training.md) | 15 | 12 |
 | Data and Synthetic Data | [data-and-synthetic-data.md](data-and-synthetic-data.md) | 8 | 2 |
 | Evaluation and Observability | [evaluation-and-observability.md](evaluation-and-observability.md) | 15 | 9 |
-| Safety, Security and Governance | [safety-security-and-governance.md](safety-security-and-governance.md) | 12 | 10 |
+| Safety, Security and Governance | [safety-security-and-governance.md](safety-security-and-governance.md) | 12 | 11 |
 | AI Product and Interaction Design | [ai-product-and-interaction-design.md](ai-product-and-interaction-design.md) | 14 | 15 |
 | Multimodal | [multimodal-applied.md](multimodal-applied.md) | 9 | 9 |

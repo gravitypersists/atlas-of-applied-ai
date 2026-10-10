@@ -191,4 +191,10 @@ settlements:
   - {id: agent-trajectory-evaluation, x: 3687.8, y: 1145.2, settled: "2026-10-08"}
   - {id: static-context-scoring, x: 3404.2, y: 1208.2, settled: "2026-10-08"}
   - {id: fine-tuned-evaluators, x: 3447.4, y: 1288.2, settled: "2026-10-08"}
+  - {id: dora, x: 2519.4, y: 951.6, settled: "2026-10-08"}
+  - {id: reft, x: 2988.9, y: 854, settled: "2026-10-08"}
+  - {id: kto, x: 2589.4, y: 779.2, settled: "2026-10-08"}
+  - {id: orpo, x: 2779, y: 731.4, settled: "2026-10-08"}
+  - {id: online-preference-optimization, x: 2867.1, y: 931.9, settled: "2026-10-08"}
+  - {id: model-merging, x: 2838, y: 843, settled: "2026-10-08"}
 retired: []
