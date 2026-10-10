@@ -926,6 +926,57 @@
         "Content provenance in practice — C2PA content credentials, invisible watermarks for images, audio and text, and where each breaks",
         "Training-data rights — licensing, opt-outs (robots.txt, AI crawler controls), dataset provenance audits, and copyright litigation as it affects what data teams can use",
         "Documentation and transparency artifacts beyond the model card (system cards, AI bills of materials, incident reporting) and which ones are becoming standard"
+      ],
+      "overview": "The Governance and Compliance region covers what an AI team owes to people outside it: regulators, auditors, customers, the public and the owners of the data it trains on. It began with documentation. Model cards (2018) set out what a model is for, how it was evaluated and where it fails, and today's system cards, often running to hundreds of pages, grew out of them.\n\nFrom 2023 the voluntary principles turned into frameworks and law. NIST's AI Risk Management Framework gave teams a shared process for finding and managing risk, ISO/IEC 42001 made it certifiable, and the EU AI Act (in force from 2024, with duties phasing in through 2027) made it binding for high-risk systems and general-purpose models. The EU's Code of Practice then spelled out what model providers actually have to produce: a standard documentation form, a copyright policy that honors crawler opt-outs, and for the largest models a safety and security framework with evaluations and incident reporting.\n\nFrontier labs built their own rules for extreme risks. Dangerous-capability evaluations test whether a model could help with bioweapons or cyberattacks or act autonomously, and frontier safety frameworks such as Anthropic's Responsible Scaling Policy commit the lab to stronger safeguards, or a pause, once a threshold is crossed. In August 2026 OpenAI paused RL training for two weeks after it could not rule out that Astra had reached its Critical cyber threshold. Critics point out that the labs write and enforce these rules themselves.\n\nTwo further problems involve what models consume and produce. Content provenance (C2PA) signs media with a record of how it was made, though the metadata is easily stripped, so it is paired with watermarks. On the input side, audits found widespread license errors in training datasets and a fast rise in sites blocking AI crawlers, which pushed teams toward tracking licenses and buying data. Landmarks worth knowing: model cards, the NIST AI RMF, the EU AI Act, frontier safety frameworks and C2PA.",
+      "learning_path": [
+        {
+          "kind": "docs",
+          "title": "High-level summary of the AI Act",
+          "by": "Future of Life Institute",
+          "year": 2024,
+          "url": "https://artificialintelligenceact.eu/high-level-summary/",
+          "why": "A short, plain-language walk through the Act's risk tiers and who has which duties. Read it first to see where your own system falls."
+        },
+        {
+          "kind": "docs",
+          "title": "NIST AI RMF Playbook",
+          "by": "NIST",
+          "year": 2023,
+          "url": "https://airc.nist.gov/airmf-resources/playbook/",
+          "why": "Turns the govern, map, measure and manage functions into concrete suggested actions, the most practical way into the vocabulary most AI risk programs use."
+        },
+        {
+          "kind": "talk",
+          "title": "Dangerous Capability Evals: Basis for Frontier Safety",
+          "by": "Mary Phuong (Google DeepMind, FAR.AI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=pO8IcIqhHuk",
+          "why": "Explains how labs test for severe-harm capabilities such as cyber offense, persuasion and self-proliferation, and why these tests are the trigger in a frontier safety framework."
+        },
+        {
+          "kind": "blog",
+          "title": "Common Elements of Frontier AI Safety Policies",
+          "by": "METR",
+          "year": 2025,
+          "url": "https://metr.org/common-elements",
+          "why": "Compares the published frontier safety frameworks side by side: thresholds, evaluations, safeguards and accountability, so you can read any one lab's policy in context."
+        },
+        {
+          "kind": "docs",
+          "title": "C2PA and Content Credentials Explainer",
+          "by": "C2PA",
+          "year": 2025,
+          "url": "https://spec.c2pa.org/specifications/specifications/2.2/explainer/Explainer.html",
+          "why": "The standard's own non-specialist explainer of manifests, signing and verification, including what provenance can and cannot prove."
+        },
+        {
+          "kind": "paper",
+          "title": "Consent in Crisis: The Rapid Decline of the AI Data Commons",
+          "by": "Shayne Longpre et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2407.14933",
+          "why": "Measures how fast websites have restricted AI crawlers and how often robots.txt and terms of service disagree, the data behind today's licensing and opt-out practice."
+        }
       ]
     }
   ],
@@ -15108,6 +15159,7 @@
       ],
       "region": "governance-and-compliance",
       "desc": "A repeatable process for finding, measuring and managing the risks of an AI system across its life cycle, organized in NIST's framework as govern, map, measure and manage.",
+      "summary": "A structured way to find and handle what could go wrong with an AI system, from design through retirement. NIST's framework splits the work into four functions: govern (who is accountable), map (where the system is used and who it affects), measure (test for bias, security and reliability problems) and manage (put controls in place and monitor them). It is voluntary but widely used as the common vocabulary for AI risk programs.",
       "parents": [
         {
           "id": "external:enterprise-risk-management",
@@ -15134,6 +15186,22 @@
         "NIST Generative AI Profile",
         "ISO/IEC 23894"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "NIST AI RMF Playbook",
+          "by": "NIST",
+          "year": 2023,
+          "url": "https://airc.nist.gov/airmf-resources/playbook/"
+        },
+        {
+          "kind": "docs",
+          "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (NIST AI 600-1)",
+          "by": "NIST",
+          "year": 2024,
+          "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf"
+        }
+      ],
       "status": "added"
     },
     {
@@ -15147,6 +15215,7 @@
       "region": "governance-and-compliance",
       "layer": "detail",
       "desc": "A certifiable standard for how an organization runs AI responsibly — policies, roles, risk and impact assessments, and controls — audited the same way as information security management.",
+      "summary": "An international standard for running AI responsibly across an organization, which outside auditors can certify. Like ISO 27001 for information security, it asks for policies, assigned roles, risk and impact assessments, and a set of controls (Annex A) covering data quality, life-cycle checks and logging. Companies use the certificate to answer customer and procurement due diligence.",
       "parents": [
         {
           "id": "ai-risk-management",
@@ -15161,8 +15230,8 @@
           "src": "ISO/IEC 42001:2023"
         }
       ],
-      "maturity": 2,
-      "maturity_note": "Published in late 2023; certifications are growing, mostly among AI vendors answering customer due diligence.",
+      "maturity": 3,
+      "maturity_note": "Published in late 2023; major AI vendors (AWS, Anthropic and others) are certified and enterprise buyers increasingly ask for it.",
       "date": "2023-12",
       "ref": {
         "title": "ISO/IEC 42001:2023 Information technology — Artificial intelligence — Management system",
@@ -15171,6 +15240,22 @@
       "examples": [
         "ISO/IEC 42001 certification",
         "ISO/IEC 42005 impact assessment"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "AI lifecycle risk management: ISO/IEC 42001:2023 for AI governance",
+          "by": "AWS Security Blog",
+          "year": 2025,
+          "url": "https://aws.amazon.com/blogs/security/ai-lifecycle-risk-management-iso-iec-420012023-for-ai-governance/"
+        },
+        {
+          "kind": "blog",
+          "title": "Anthropic achieves ISO 42001 certification for responsible AI",
+          "by": "Anthropic",
+          "year": 2025,
+          "url": "https://www.anthropic.com/news/anthropic-achieves-iso-42001-certification-for-responsible-ai"
+        }
       ],
       "status": "added"
     },
@@ -15184,6 +15269,7 @@
       ],
       "region": "governance-and-compliance",
       "desc": "The EU regulation that sorts AI systems by risk — banned practices, high-risk systems with documentation, risk management and oversight duties, and transparency rules — with separate obligations for providers of general-purpose AI models.",
+      "summary": "The European Union's AI law. It bans a few practices outright, puts strict documentation, risk management, data and human-oversight duties on high-risk systems such as those used in hiring or credit, and requires chatbots and generated media to be disclosed. Providers of general-purpose models have their own obligations, with more for the largest models. Obligations phase in between 2025 and 2027 and apply to anyone serving users in the EU.",
       "parents": [
         {
           "id": "ai-risk-management",
@@ -15216,6 +15302,29 @@
         "Colorado AI Act",
         "California SB 53"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "High-level summary of the AI Act",
+          "by": "Future of Life Institute",
+          "year": 2024,
+          "url": "https://artificialintelligenceact.eu/high-level-summary/"
+        },
+        {
+          "kind": "docs",
+          "title": "AI Act implementation timeline",
+          "by": "Future of Life Institute",
+          "year": 2024,
+          "url": "https://artificialintelligenceact.eu/implementation-timeline/"
+        },
+        {
+          "kind": "docs",
+          "title": "AI Act Explorer",
+          "by": "Future of Life Institute",
+          "year": 2024,
+          "url": "https://artificialintelligenceact.eu/ai-act-explorer/"
+        }
+      ],
       "status": "added"
     },
     {
@@ -15228,6 +15337,7 @@
       "region": "governance-and-compliance",
       "layer": "detail",
       "desc": "A voluntary EU code that spells out how providers of general-purpose models can meet the AI Act's transparency, copyright and, for the most capable models, safety and security obligations.",
+      "summary": "A voluntary EU code that tells providers of general-purpose models how to meet the AI Act in practice. Its three chapters cover transparency (a standard model documentation form), copyright (honoring robots.txt and other machine-readable opt-outs when crawling) and, for the most capable models, safety and security: a risk framework, evaluations, incident reporting and cybersecurity. Signing it is the easiest way to show compliance.",
       "parents": [
         {
           "id": "eu-ai-act",
@@ -15260,6 +15370,29 @@
         "Copyright chapter",
         "Safety and Security chapter"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Overview of the Code of Practice",
+          "by": "Future of Life Institute",
+          "year": 2025,
+          "url": "https://artificialintelligenceact.eu/code-of-practice-overview/"
+        },
+        {
+          "kind": "docs",
+          "title": "Guidelines for providers of general-purpose AI models",
+          "by": "European Commission",
+          "year": 2025,
+          "url": "https://digital-strategy.ec.europa.eu/en/policies/guidelines-gpai-providers"
+        },
+        {
+          "kind": "blog",
+          "title": "EU's General-Purpose AI Obligations Are Now in Force, With New Guidance",
+          "by": "Skadden",
+          "year": 2025,
+          "url": "https://www.skadden.com/insights/publications/2025/08/eus-general-purpose-ai-obligations"
+        }
+      ],
       "status": "added"
     },
     {
@@ -15277,6 +15410,7 @@
         "safety-and-security"
       ],
       "desc": "Tests of whether a model can meaningfully help with severe harms — bioweapons, cyberattacks, autonomous replication, undermining oversight — run before release to decide what safeguards it needs.",
+      "summary": "Tests of whether a model could meaningfully help someone cause severe harm, such as building a biological weapon or breaking into hardened computer systems, or could act on its own in dangerous ways, such as copying itself or evading oversight. Many measure uplift: how much better a person does with the model than without it. Labs and government institutes run them before major releases, and the results decide which safeguards a model needs.",
       "parents": [
         {
           "id": "red-teaming",
@@ -15303,6 +15437,36 @@
         "METR autonomy evals",
         "system card CBRN and cyber sections"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Dangerous Capability Evals: Basis for Frontier Safety",
+          "by": "Mary Phuong (Google DeepMind, FAR.AI)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=pO8IcIqhHuk"
+        },
+        {
+          "kind": "paper",
+          "title": "Evaluating Frontier Models for Dangerous Capabilities",
+          "by": "Mary Phuong et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2403.13793"
+        },
+        {
+          "kind": "paper",
+          "title": "Measuring AI Ability to Complete Long Software Tasks",
+          "by": "Thomas Kwa et al. (METR)",
+          "year": 2025,
+          "url": "https://arxiv.org/abs/2503.14499"
+        },
+        {
+          "kind": "code",
+          "title": "Inspect",
+          "by": "UK AI Security Institute",
+          "year": 2024,
+          "url": "https://inspect.aisi.org.uk/"
+        }
+      ],
       "status": "added"
     },
     {
@@ -15319,6 +15483,7 @@
         "safety-and-security"
       ],
       "desc": "A lab's published commitment that sets capability thresholds, says how they are measured, and names the safeguards required before a model that crosses one can be trained further or deployed.",
+      "summary": "A frontier lab's published if-then commitment: if testing shows a model has crossed a defined danger threshold, then specific security and deployment safeguards must be in place before it is trained further or released. Anthropic's AI Safety Levels, OpenAI's High and Critical tiers and Google DeepMind's Critical Capability Levels all work this way. Critics note that the labs write and enforce these rules themselves.",
       "parents": [
         {
           "id": "dangerous-capability-evals",
@@ -15334,7 +15499,7 @@
         }
       ],
       "maturity": 3,
-      "maturity_note": "Published by all major frontier labs and now referenced by law (EU Code of Practice, California SB 53); commitments and enforcement vary.",
+      "maturity_note": "Published by every major frontier lab and referenced by law (EU Code of Practice, California SB 53). In August 2026 OpenAI paused RL training for two weeks after it could not rule out that Astra had reached its framework's Critical cyber threshold, the first publicly reported trigger of this kind.",
       "date": "2023-09",
       "ref": {
         "title": "Introducing Anthropic's Responsible Scaling Policy",
@@ -15344,6 +15509,43 @@
         "Anthropic Responsible Scaling Policy",
         "OpenAI Preparedness Framework",
         "Google DeepMind Frontier Safety Framework"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Anthropic's Responsible Scaling Policy (current version and history)",
+          "by": "Anthropic",
+          "year": 2026,
+          "url": "https://www.anthropic.com/responsible-scaling-policy"
+        },
+        {
+          "kind": "docs",
+          "title": "Preparedness Framework (Version 2)",
+          "by": "OpenAI",
+          "year": 2025,
+          "url": "https://cdn.openai.com/pdf/18a02b5d-6b67-4cec-ab64-68cdfbddebcd/preparedness-framework-v2.pdf"
+        },
+        {
+          "kind": "blog",
+          "title": "Introducing the Frontier Safety Framework",
+          "by": "Google DeepMind",
+          "year": 2024,
+          "url": "https://deepmind.google/blog/introducing-the-frontier-safety-framework/"
+        },
+        {
+          "kind": "blog",
+          "title": "Common Elements of Frontier AI Safety Policies",
+          "by": "METR",
+          "year": 2025,
+          "url": "https://metr.org/common-elements"
+        },
+        {
+          "kind": "docs",
+          "title": "GPT-6 Astra System Card",
+          "by": "OpenAI",
+          "year": 2026,
+          "url": "https://deploymentsafety.openai.com/gpt-6-astra"
+        }
       ],
       "status": "added"
     },
@@ -15360,6 +15562,7 @@
         "multimodal-applied"
       ],
       "desc": "Attaching cryptographically signed metadata to media that records who or what made it and how it was edited, so viewers can check whether an image, video or audio clip was generated by AI.",
+      "summary": "A signed record attached to an image, video or audio file that says who or what made it and how it was edited. The C2PA standard bundles these claims into a manifest, signs it with a certificate and binds it to the file's exact bytes, so any viewer can check it offline. Its weakness is that many tools silently strip the metadata, so it is usually paired with invisible watermarks that survive re-encoding.",
       "parents": [
         {
           "id": "external:digital-signatures",
@@ -15380,6 +15583,36 @@
         "Adobe Firefly",
         "OpenAI image generation metadata"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "C2PA and Content Credentials Explainer",
+          "by": "C2PA",
+          "year": 2025,
+          "url": "https://spec.c2pa.org/specifications/specifications/2.2/explainer/Explainer.html"
+        },
+        {
+          "kind": "blog",
+          "title": "How C2PA Content Credentials Work and What Their Limits Are",
+          "by": "SoftwareSeni",
+          "year": 2026,
+          "url": "https://www.softwareseni.com/how-c2pa-content-credentials-work-and-what-their-limits-are/"
+        },
+        {
+          "kind": "docs",
+          "title": "How it works",
+          "by": "Content Authenticity Initiative",
+          "year": 2025,
+          "url": "https://contentauthenticity.org/how-it-works"
+        },
+        {
+          "kind": "code",
+          "title": "c2pa-rs: Rust SDK for C2PA",
+          "by": "Content Authenticity Initiative",
+          "year": 2025,
+          "url": "https://github.com/contentauth/c2pa-rs"
+        }
+      ],
       "status": "added"
     },
     {
@@ -15397,6 +15630,7 @@
       ],
       "layer": "detail",
       "desc": "Tracking where training data came from, under what license, and whether its owners opted out, so a team knows what it may legally train on.",
+      "summary": "Knowing where training data came from, what license it carries and whether its owners have opted out of AI training. Audits found that dataset licenses are often wrong or missing, and that a large share of the best web sources now block AI crawlers in robots.txt. Teams respond by tracking the license of every source, honoring opt-outs and buying licensed data, while courts are still deciding how copyright applies.",
       "parents": [
         {
           "id": "external:copyright-and-licensing",
@@ -15423,6 +15657,146 @@
         "robots.txt GPTBot and Google-Extended rules",
         "publisher licensing deals"
       ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Consent in Crisis: The Rapid Decline of the AI Data Commons",
+          "by": "Shayne Longpre et al.",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2407.14933"
+        },
+        {
+          "kind": "blog",
+          "title": "Discit ergo est: Training Data Provenance and Fair Use",
+          "by": "Robert Mahari, Shayne Longpre (Network Law Review)",
+          "year": 2024,
+          "url": "https://www.networklawreview.org/mahari-longpre-generative-ai/"
+        },
+        {
+          "kind": "docs",
+          "title": "Overview of OpenAI Crawlers",
+          "by": "OpenAI",
+          "year": 2025,
+          "url": "https://developers.openai.com/api/docs/bots"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "ai-bill-of-materials",
+      "name": "AI Bill of Materials",
+      "aliases": [
+        "AIBOM",
+        "AI-BOM",
+        "ML-BOM",
+        "SBOM for AI"
+      ],
+      "region": "governance-and-compliance",
+      "also": [
+        "safety-and-security"
+      ],
+      "layer": "detail",
+      "desc": "A machine-readable inventory of what an AI system is built from — models and their lineage, datasets and their licenses, code dependencies and pipelines — in a software bill of materials format.",
+      "summary": "A machine-readable parts list for an AI system: which models (with weight hashes and what they were fine-tuned from), which datasets and licenses, which libraries and pipelines. It extends the software bill of materials that security teams already use, so the same tools can flag a vulnerable dependency or a problem license. Critics note that it lists components but not what an agent is allowed to do at runtime.",
+      "parents": [
+        {
+          "id": "external:software-bill-of-materials",
+          "rel": "extends",
+          "why": "Extends SBOM formats such as CycloneDX and SPDX to models, datasets and training lineage.",
+          "src": "CycloneDX v1.5 ML-BOM (2023); SPDX 3.0 AI profile"
+        },
+        {
+          "id": "model-documentation",
+          "rel": "extends",
+          "why": "Turns the facts in a model card into structured, machine-checkable records.",
+          "src": "OWASP AI SBOM Initiative"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Formats exist (CycloneDX ML-BOM, SPDX 3.0 AI) and government guidance appeared in 2026; tooling and adoption are early.",
+      "date": "2023-06",
+      "ref": {
+        "title": "Machine Learning Bill of Materials (AI/ML-BOM), CycloneDX",
+        "url": "https://cyclonedx.org/capabilities/mlbom/"
+      },
+      "examples": [
+        "CycloneDX ML-BOM",
+        "SPDX 3.0 AI profile",
+        "OWASP AIBOM Generator"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "SPDX 3.0.1 AI profile",
+          "by": "SPDX (Linux Foundation)",
+          "year": 2024,
+          "url": "https://spdx.github.io/spdx-spec/v3.0.1/model/AI/AI/"
+        },
+        {
+          "kind": "docs",
+          "title": "AI SBOM Initiative",
+          "by": "OWASP Gen AI Security Project",
+          "year": 2025,
+          "url": "https://genai.owasp.org/initiatives/ai-sbom-initiative/"
+        },
+        {
+          "kind": "blog",
+          "title": "Introducing OWASP CycloneDX v1.5",
+          "by": "CycloneDX",
+          "year": 2023,
+          "url": "https://cyclonedx.org/news/cyclonedx-v1.5-released/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "ai-impact-assessment",
+      "name": "AI Impact Assessments",
+      "aliases": [
+        "fundamental rights impact assessment",
+        "FRIA",
+        "algorithmic impact assessment",
+        "ISO/IEC 42005"
+      ],
+      "region": "governance-and-compliance",
+      "layer": "detail",
+      "desc": "A documented review, before deployment, of how an AI system could affect the people it is used on — discrimination, loss of rights, harm to vulnerable groups — and what oversight and mitigations will address it.",
+      "summary": "A written review, done before an AI system goes live, of how it could affect the people it makes decisions about: who could be treated unfairly, what rights are at stake, and what human oversight and complaint routes exist. The EU AI Act requires one (a fundamental rights impact assessment) from certain deployers of high-risk systems such as public bodies, banks and insurers. It works like a GDPR data protection impact assessment, widened from privacy to all fundamental rights.",
+      "parents": [
+        {
+          "id": "eu-ai-act",
+          "rel": "applies",
+          "why": "Article 27 makes the assessment mandatory for certain deployers of high-risk systems.",
+          "src": "Regulation (EU) 2024/1689, Art. 27"
+        },
+        {
+          "id": "external:data-protection-impact-assessment",
+          "rel": "extends",
+          "why": "Follows the GDPR DPIA method but covers all fundamental rights, not only privacy.",
+          "src": "TechGDPR (2024)"
+        }
+      ],
+      "maturity": 2,
+      "maturity_note": "Mandatory under the EU AI Act for some deployers from August 2026; templates and practice are still forming.",
+      "date": "2024-08",
+      "ref": {
+        "title": "Article 27: Fundamental Rights Impact Assessment for High-Risk AI Systems (AI Act Explorer)",
+        "url": "https://artificialintelligenceact.eu/article/27/"
+      },
+      "examples": [
+        "EU AI Act FRIA",
+        "ISO/IEC 42005",
+        "Canada Algorithmic Impact Assessment"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Difference between Fundamental Rights Impact Assessment & Data Protection Impact Assessment",
+          "by": "TechGDPR",
+          "year": 2024,
+          "url": "https://techgdpr.com/blog/difference-fundamental-rights-impact-assessment-dpia/"
+        }
+      ],
       "status": "added"
     }
   ],
@@ -15433,6 +15807,7 @@
     "external:control-theory-state-space",
     "external:copyright-and-licensing",
     "external:crowdsourcing",
+    "external:data-protection-impact-assessment",
     "external:datasheets-and-documentation",
     "external:digital-signatures",
     "external:digital-watermarking",
@@ -15454,6 +15829,7 @@
     "external:preference-learning",
     "external:security-red-teaming",
     "external:shared-task-benchmarks",
+    "external:software-bill-of-materials",
     "external:star-self-taught-reasoner",
     "external:template-engines",
     "external:trust-in-automation",

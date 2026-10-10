@@ -16,4 +16,4 @@ One guide per applied region, generated from `backbone.yaml` by `make_guides.py`
 | AI Product and Interaction Design | [ai-product-and-interaction-design.md](ai-product-and-interaction-design.md) | 15 | 17 |
 | Multimodal | [multimodal-applied.md](multimodal-applied.md) | 17 | 18 |
 | Embodied AI and World Models | [embodied-ai-and-world-models.md](embodied-ai-and-world-models.md) | 13 | 18 |
-| Governance and Compliance | [governance-and-compliance.md](governance-and-compliance.md) | 9 | 2 |
+| Governance and Compliance | [governance-and-compliance.md](governance-and-compliance.md) | 11 | 2 |

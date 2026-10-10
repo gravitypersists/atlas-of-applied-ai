@@ -255,4 +255,6 @@ settlements:
   - {id: frontier-safety-frameworks, x: 4140, y: 990, settled: "2026-10-10"}
   - {id: training-data-licensing, x: 3880, y: 775, settled: "2026-10-10"}
   - {id: content-provenance, x: 4090, y: 1115, settled: "2026-10-10"}
+  - {id: ai-bill-of-materials, x: 3819.1, y: 913, settled: "2026-10-08"}
+  - {id: ai-impact-assessment, x: 4317.6, y: 695.1, settled: "2026-10-08"}
 retired: []
