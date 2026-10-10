@@ -17,10 +17,10 @@ The repaired, validated backbone for the atlas map, plus one deep-dive research 
 
 ## Shape of the graph
 
-- 8 root disciplines (pre-LLM ancestors) and 11 applied regions; every applied region has 8–13 anchors.
-- 84 of 194 edges cross regions; these are the land bridges.
-- 15 `external:` ancestors mark real lineage that isn't anchored yet (e.g., `external:elo-rating`, `external:minhash`). They're candidates for the next revision, not errors.
-- Node `status`: 8 kept from Gemini as-is, 76 repaired, 58 added (Decision Models was added in October 2026).
+- 9 root disciplines (pre-LLM ancestors) and 13 applied regions; applied regions have 9–21 anchors (246 nodes in all).
+- 143 of 384 edges cross regions; these are the land bridges.
+- 31 `external:` ancestors mark real lineage that isn't anchored yet (e.g., `external:elo-rating`, `external:minhash`). They're candidates for the next revision, not errors.
+- Node `status`: 8 kept from Gemini as-is, 77 repaired, 161 added.
 
 ## What changed from the Gemini run (v0.1 → v0.2)
 

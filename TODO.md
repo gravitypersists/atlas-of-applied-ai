@@ -28,14 +28,15 @@ Adding a region after acceptance means settling around permanent borders, so thi
 
 ## 3. Governance deep dive and missing roots
 
-- [ ] Governance is one node (`model-documentation`). Candidates: regulatory compliance (EU AI Act, NIST AI RMF, ISO 42001), frontier safety frameworks and dangerous-capability evals, content provenance (C2PA; only text watermarking exists today), data licensing and copyright. Probably a focused Safety re-run with `deep_dive_focus` on governance.
+- [x] Governance is one node (`model-documentation`). Candidates: regulatory compliance (EU AI Act, NIST AI RMF, ISO 42001), frontier safety frameworks and dangerous-capability evals, content provenance (C2PA; only text watermarking exists today), data licensing and copyright. Done as its own small region instead of a Safety re-run: `governance-and-compliance` ("The Chancery", `node_target: "8–14"`), with `model-documentation` moved in and 8 seeds (AI risk management, ISO/IEC 42001, EU AI Act, GPAI Code of Practice, dangerous-capability evals, frontier safety frameworks, content provenance, training-data licensing); refs opened and checked. Safety renamed to `safety-and-security` ("Safety and Security"). Four boundary rules added. Seeds hand-laid in the ledger as one island NE of the Bulwark; a 13th applied color in `build.mjs`.
+- [ ] Run `deep-dives/governance-and-compliance.md` through deep research and merge it per `MERGING.md` (summaries, overview, learning path, resources; dates and obligations move fast here)
 - [ ] **Computer Vision** root: CLIP and VLMs hang directly off `transformer-architecture`; a ViT/CNN ancestor is missing
 - [ ] Other missing ancestors, as root nodes or `external:`: virtual-memory paging (→ `paged-attention`), databases (→ text-to-SQL, caching), formal methods (→ verifiers, `llm-modulo`), statistics (calibration, A/B testing, `external:prediction-powered-inference`), scaling laws (→ `test-time-compute-scaling`)
 
 ## 4. Practitioner staples (core nodes)
 
 - [ ] Text-to-SQL / structured-data QA (Retrieval)
-- [ ] Hallucination detection and mitigation: grounding checks, semantic entropy, uncertainty estimation (Evaluation or Safety)
+- [ ] Hallucination detection and mitigation: grounding checks, semantic entropy, uncertainty estimation (Evaluation)
 - [ ] Semantic caching (Inference)
 - [ ] LLM gateways: fallback, rate limits, cost budgets (Inference; currently only `model-routing`)
 - [ ] Long-context extension: RoPE scaling, YaRN (Inference or DL-NLP root)

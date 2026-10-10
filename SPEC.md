@@ -225,7 +225,7 @@ Each build:
 
 0. **Oceanic edges.** An edge between a root-region node and an applied-region node is *oceanic*. The survey ignores oceanic edges entirely: no links, no region weights, no `descends_from` weight. They still appear in `map.json` as routes and in panels.
 1. **West–east targets.** Survey space has three x bands: `oldWorld`, `ocean`, and `newWorld` (in `CONFIG.region`). Within its world's band, each region's target comes from a curated hint in `curation.yaml` `survey.west_east` (0 = west edge, 1 = east edge) if there is one. Otherwise it comes from the rank of the region's median node date, oldest furthest west.
-2. **Region seeds.** A `d3-force` simulation over 19 region bodies (8 root and 11 applied), run for `trials` seeded restarts. The restart with the lowest energy is kept.
+2. **Region seeds.** A `d3-force` simulation over the region bodies (one per root and applied region; 22 as of October 2026), run for `trials` seeded restarts. The restart with the lowest energy is kept.
    - **Links** between region pairs, with strength proportional to their shared (non-oceanic) edge count. Every pair of root regions also gets a `rootKinship` link, which holds the Old World together.
    - **Collide** by `sqrt(nodeCount)`, plus a gap of sea.
    - **Spread:** mild many-body repulsion. Lower values let regions clump, leaving inland seas between groups.

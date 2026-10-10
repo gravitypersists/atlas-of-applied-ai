@@ -145,9 +145,11 @@ The map is a full-screen, Google Maps-style canvas.
 | **The Tempering Grounds** | Adaptation and Post-Training |
 | **The Quarries** | Data and Synthetic Data |
 | **The Watchtowers** | Evaluation and Observability |
-| **The Bulwark** | Safety, Security and Governance |
+| **The Bulwark** | Safety and Security |
 | **The Agora** | AI Product and Interaction Design |
 | **The Painted Isles** | Multimodal |
+| **The Clockwork Marches** | Embodied AI and World Models |
+| **The Chancery** | Governance and Compliance |
 
 These now live as `title` on each applied region in `backbone.yaml`. The titles can drift in style, and "Isles" may stop being literal once sea level is chosen. The subtitle is what keeps the map honest.
 

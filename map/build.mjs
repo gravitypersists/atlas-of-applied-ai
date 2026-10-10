@@ -527,6 +527,7 @@ const APPLIED_COLORS = [
   ["#c9d9de", "#4f7a8c"], ["#e3c9d3", "#8c4f6d"], ["#d3dfc4", "#6d8c4f"], ["#ecd5bd", "#b0773c"],
   ["#d0d1e6", "#5b5fa0"], ["#c4e0da", "#3c9a8a"], ["#e8c9c4", "#a05b5b"], ["#d9cfe6", "#7f6aa8"],
   ["#cde0c8", "#4c8f4c"], ["#ead0df", "#b05a8c"], ["#c6d9e8", "#2f7fb0"], ["#dedbbd", "#857a2c"],
+  ["#d6d7d2", "#5d6468"],
 ];
 function regionPalette(bb) {
   const m = new Map();
@@ -846,7 +847,7 @@ function routeOf(e, placed) {
 // ---------------------------------------------------------------- debug preview
 const DEBUG_ROOTS = ["#8c6d46", "#7a5c3a", "#9a7b4f", "#6e5a43", "#a08060", "#857055", "#76624a", "#93785a", "#7d6a52"]; // sepia family
 const DEBUG_PALETTE = [
-  "#4f7a8c", "#8c4f6d", "#6d8c4f", "#b0773c", "#5b5fa0", "#3c9a8a", "#a05b5b", "#7f6aa8", "#4c8f4c", "#b05a8c", "#2f7fb0", "#857a2c",
+  "#4f7a8c", "#8c4f6d", "#6d8c4f", "#b0773c", "#5b5fa0", "#3c9a8a", "#a05b5b", "#7f6aa8", "#4c8f4c", "#b05a8c", "#2f7fb0", "#857a2c", "#5d6468",
 ];
 function regionColors(bb) {
   const roots = bb.regions.filter((r) => r.kind === "root"), applied = bb.regions.filter((r) => r.kind !== "root");

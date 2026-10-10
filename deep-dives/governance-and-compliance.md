@@ -1,6 +1,6 @@
-# Deep dive: Safety, Security and Governance
+# Deep dive: Governance and Compliance
 
-Backbone v0.2 · 18 anchors · 17 cross-region edges
+Backbone v0.2 · 9 anchors · 2 cross-region edges
 
 ## How to use
 1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.).
@@ -9,55 +9,46 @@ Backbone v0.2 · 18 anchors · 17 cross-region edges
 
 ## Research prompt
 
-I'm building a lineage graph of applied AI engineering that will be rendered as an interactive map. Each region of the map is a discipline; each node is a technique, pattern, or method; edges record what each node was built on. This run is a DEEP DIVE into one region: **Safety, Security and Governance**. A backbone of stable ids already exists — attach everything you find to it.
+I'm building a lineage graph of applied AI engineering that will be rendered as an interactive map. Each region of the map is a discipline; each node is a technique, pattern, or method; edges record what each node was built on. This run is a DEEP DIVE into one region: **Governance and Compliance**. A backbone of stable ids already exists — attach everything you find to it.
 
 ## The region
-Keeping AI systems from causing harm — prompt injection and jailbreaks, guardrails and defenses, red teaming, sandboxing and permissions, interpretability as a control tool, documentation and governance.
+The rules, records and commitments around AI systems — model and system documentation, risk management frameworks and management-system standards, regulation such as the EU AI Act, frontier safety frameworks and the dangerous-capability evaluations that trigger them, content provenance, and training-data licensing.
 
-Boundary with neighboring regions: Primary purpose is risk reduction. Uses techniques from Prompting (guardrails) and Evaluation (red teaming) but is defined by intent.
+Boundary with neighboring regions: Defined by accountability to someone outside the engineering team (regulators, auditors, the public, rights holders). The technical controls these rules require live in their own regions (guardrails and sandboxing in Safety, eval harnesses in Evaluation, data pipelines in Data).
 
 Boundary rules (apply these exactly; if you disagree, say so in Amendments rather than breaking them):
-- Guardrails / injection defenses → safety-security-and-governance: Components whose purpose is blocking harm → Safety.
-- Agent sandboxing and permissions → safety-security-and-governance: Mechanisms whose purpose is limiting blast radius → Safety (moved from Agents in v0.2).
-- Interpretability / RepE → safety-security-and-governance: Used by engineers to detect and steer behavior → Safety (pure science stays offshore at maturity 1).
+- Regulation and standards vs. controls → governance-and-compliance: Rules, frameworks, policies and the documents that show compliance → Governance. The mechanism that implements a rule stays in its technical region (a guardrail required by policy is still Safety).
+- Dangerous-capability evals → governance-and-compliance: Evals run to decide whether a model crosses a risk threshold and needs stronger safeguards → Governance (secondary: Evaluation, Safety). General capability benchmarks → Evaluation.
+- Content provenance → governance-and-compliance: Signed metadata and disclosure standards (C2PA) → Governance. Watermarks embedded by the generator → the region of the mechanism (text watermarking → Inference), with Governance through also.
+- Training-data rights → governance-and-compliance: Licensing, consent, opt-outs and provenance audits of training data → Governance (secondary: Data). Filtering and deduplication pipelines → Data.
 
 ## Perspective and scope
 - Take the view of a practicing AI engineer building products and systems, not a model researcher.
 - Cover the field through 2026. 2024–2026 work is easy to under-represent — look for it deliberately.
 - A node is a technique, pattern, method, or discipline. Products, libraries, frameworks, benchmarks, and companies are NOT nodes; list them under `examples`.
-- Target 15–30 nodes for this region in total, counting the existing anchors below. Quality over count: leave out research-only ideas that no practitioner would meet unless they're real ancestors of something that matters.
+- Target 8–14 nodes for this region in total, counting the existing anchors below. Quality over count: leave out research-only ideas that no practitioner would meet unless they're real ancestors of something that matters.
 - Before adding a node, check the backbone index at the end (ids, names, and aliases across ALL regions). If the concept already exists anywhere, even in another region or under an alias, attach to that id (correct it, or add an alias or example). Never re-create it under a new id.
 
 ## Existing anchors in this region (keep these ids; you may correct their fields)
-- `prompt-injection` — Prompt Injection (maturity 4, 2022-09)
-- `indirect-prompt-injection` — Indirect Prompt Injection (maturity 4, 2023-02)
-- `jailbreaks` — Jailbreaks (maturity 4, 2023-07)
-- `red-teaming` — AI Red Teaming (maturity 4, 2022-02)
-- `guardrails` — Guardrails and Safety Classifiers (maturity 4, 2023-12)
-- `injection-defenses` — Prompt Injection Defenses (maturity 3, 2024-04)
-- `agent-sandboxing` — Agent Sandboxing and Permissions (maturity 4, 2023)
-- `interpretability` — Mechanistic Interpretability (maturity 1, 2021-12)
-- `sparse-autoencoders` — Sparse Autoencoders (maturity 2, 2023-10)
-- `representation-engineering` — Representation Engineering (maturity 2, 2023-10)
-- `circuit-breakers` — Circuit Breakers (maturity 1, 2024-06)
 - `model-documentation` — Model and System Cards (maturity 4, 2018-10)
-- `automated-jailbreak-generation` — Automated Jailbreak Generation (maturity 3, 2023-10)
-- `spotlighting` — Spotlighting (maturity 3, 2024-03)
-- `dual-llm-pattern` — Dual LLM Pattern (maturity 2, 2023-04)
-- `machine-unlearning` — Machine Unlearning (maturity 1, 2023-10)
-- `agent-authorization` — Agent Identity and Delegated Authorization (maturity 3, 2025-03)
-- `tool-poisoning` — Tool Poisoning (maturity 3, 2025-04)
+- `ai-risk-management` — AI Risk Management Frameworks (maturity 3, 2023-01)
+- `ai-management-systems` — AI Management Systems (ISO/IEC 42001) (maturity 2, 2023-12)
+- `eu-ai-act` — EU AI Act (maturity 3, 2024-08)
+- `gpai-code-of-practice` — General-Purpose AI Code of Practice (maturity 2, 2025-07)
+- `dangerous-capability-evals` — Dangerous Capability Evaluations (maturity 3, 2023-05)
+- `frontier-safety-frameworks` — Frontier Safety Frameworks (maturity 3, 2023-09)
+- `content-provenance` — Content Provenance and Credentials (maturity 3, 2022-01)
+- `training-data-licensing` — Training Data Licensing and Opt-Outs (maturity 3, 2023-10)
 
 Nodes homed elsewhere that also touch this region:
 - `llm-watermarking` — LLM Watermarking (home: inference-and-serving)
-- `cot-monitoring` — CoT Monitoring (home: planning-and-reasoning)
-- `constitutional-ai` — Constitutional AI and RLAIF (home: adaptation-and-post-training)
-- `pii-redaction` — PII Redaction (home: data-and-synthetic-data)
 
 ## Questions to answer
-- Prompt injection in agentic systems — attack taxonomy and the defenses that hold up
-- Agent permissions, sandboxing, and least privilege for tools and MCP servers
-- Interpretability methods that have reached engineering use
+- What compliance work actually lands on an engineering team — EU AI Act obligations for providers and deployers, GPAI obligations and the Code of Practice, and how teams map them to NIST AI RMF and ISO/IEC 42001
+- Frontier safety frameworks and dangerous-capability evaluations — capability thresholds, safeguard levels, third-party testing, and how they show up in system cards
+- Content provenance in practice — C2PA content credentials, invisible watermarks for images, audio and text, and where each breaks
+- Training-data rights — licensing, opt-outs (robots.txt, AI crawler controls), dataset provenance audits, and copyright litigation as it affects what data teams can use
+- Documentation and transparency artifacts beyond the model card (system cards, AI bills of materials, incident reporting) and which ones are becoming standard
 - What are the major sub-areas of this region, and what is the lineage within each?
 - Which techniques here were superseded, and by what?
 - Where does this region draw on other regions, and where do other regions draw on it?
@@ -107,7 +98,7 @@ nodes:
 
 Field rules:
 - `layer`: `core` if a newcomer needs this node on the region's overview map; `detail` if it's finer-grained knowledge that only shows when zoomed in. Existing anchors are `core` unless you argue otherwise in Amendments. Expect most new nodes to be `detail`.
-- `also`: allowed values are information-retrieval, deep-learning-nlp, symbolic-ai-planning, reinforcement-learning, knowledge-representation, human-computer-interaction, systems-security, software-engineering, robotics-and-control, inference-and-serving, prompting-and-context-engineering, retrieval-and-knowledge, agents-and-orchestration, planning-and-reasoning, adaptation-and-post-training, data-and-synthetic-data, evaluation-and-observability, safety-security-and-governance, ai-product-and-interaction-design, multimodal-applied, embodied-ai-and-world-models.
+- `also`: allowed values are information-retrieval, deep-learning-nlp, symbolic-ai-planning, reinforcement-learning, knowledge-representation, human-computer-interaction, systems-security, software-engineering, robotics-and-control, inference-and-serving, prompting-and-context-engineering, retrieval-and-knowledge, agents-and-orchestration, planning-and-reasoning, adaptation-and-post-training, data-and-synthetic-data, evaluation-and-observability, safety-and-security, ai-product-and-interaction-design, multimodal-applied, embodied-ai-and-world-models, governance-and-compliance.
 - `src` is required on every parent edge. If you can't cite the lineage claim, lower `confidence` and say why in `why`; don't leave `src` empty.
 - `resources` are what the map's side panel shows under "Learn more", so they're the most reader-facing part of the output. Give 2–5 per node, each with a URL you actually opened. Aim for one primary source (paper, spec, or announcement), one practitioner write-up (an engineering blog or a well-known practitioner's post), and, where one exists, one recorded talk (conference talk, YouTube lecture, or podcast episode). Prefer docs or cookbook pages that show the technique in use. Don't repeat `ref` here.
 - Never invent a URL. If you couldn't open it, append ` [unverified]` to the title. If nothing good exists for a kind, leave it out.
@@ -170,49 +161,26 @@ Prefer primary sources (papers, official engineering blogs, specifications, repo
 - adaptation-and-post-training: supervised-fine-tuning (Supervised Fine-Tuning; SFT; instruction tuning), parameter-efficient-fine-tuning (Parameter-Efficient Fine-Tuning; PEFT; adapters), low-rank-adaptation (LoRA; low-rank adaptation; QLoRA), rlhf (RLHF; reinforcement learning from human feedback; reward modeling; InstructGPT pipeline; SFT-RM-PPO), direct-preference-optimization (Direct Preference Optimization; DPO; IPO; SimPO), constitutional-ai (Constitutional AI and RLAIF; RLAIF; AI feedback), rlvr (RL with Verifiable Rewards; RLVR), grpo (Group Relative Policy Optimization; GRPO), llm-distillation (LLM Distillation; reasoning distillation; distilled CoT; small language models; SLM), dora (DoRA; weight-decomposed low-rank adaptation), reft (Representation Fine-Tuning; ReFT; LoReFT), kto (Kahneman-Tversky Optimization; KTO), orpo (Odds Ratio Preference Optimization; ORPO), online-preference-optimization (Online Preference Optimization; online DPO; iterative DPO; OAIF), model-merging (Model Merging; task arithmetic; task vectors; model soups; TIES-Merging; SLERP merging), structured-pruning (Structured Pruning; LLM pruning; width and depth pruning; Minitron; Sheared LLaMA), on-policy-distillation (On-Policy Distillation; generalized knowledge distillation; GKD; MiniLLM)
 - data-and-synthetic-data: self-instruct (Self-Instruct; synthetic instruction generation), evol-instruct (Evol-Instruct; instruction evolution), synthetic-textbook-data (Synthetic Pretraining Data; textbook-quality data; synthetic corpora), human-instruction-datasets (Crowdsourced Instruction Data; human-written demonstrations; OpenAssistant), llm-annotation (LLM-Assisted Annotation; LLM labeling; model-as-annotator), data-deduplication (Data Deduplication; near-duplicate removal; MinHash dedup), data-decontamination (Data Decontamination; test-set leakage prevention), data-quality-filtering (Data Quality Filtering; corpus curation; classifier-based filtering), golden-eval-sets (Golden and Eval Sets; golden datasets; eval datasets; test sets; reference sets), data-flywheel (Data Flywheel; production data loop; trace mining), synthetic-rag-data (Synthetic RAG Test Sets; RAG testset generation; synthetic question-answer pairs), instruction-backtranslation (Instruction Backtranslation; Humpback; self-alignment with backtranslation), instruction-data-selection (Instruction Data Selection; instruction-following difficulty; IFD; SFT data pruning), agent-trajectory-synthesis (Agent Trajectory Synthesis; agent RL environments; SWE-Gym; trajectory harvesting), pii-redaction (PII Redaction; PII scrubbing; data anonymization)
 - evaluation-and-observability: capability-benchmarks (Capability Benchmarks; static benchmarks; MMLU-style evals), long-context-evals (Long-Context Evals; needle in a haystack; NIAH), agent-benchmarks (Agent Benchmarks; SWE-bench; environment-based evals), llm-as-a-judge (LLM-as-a-Judge; model-graded evals; autoevals), pairwise-preference-eval (Pairwise Preference Evaluation; arena evals; Elo leaderboards), rag-evaluation (RAG Evaluation; faithfulness and context-relevance metrics; RAGAS), eval-driven-development (Eval-Driven Development; EDD; offline evals; prompt regression testing; assertion-based testing), llm-tracing (LLM Tracing; LLM observability; agent traces; OpenTelemetry GenAI conventions; gen_ai spans), online-evaluation (Online Evaluation and Monitoring; production evals; drift monitoring), judge-bias-mitigation (Judge Bias Mitigation; position-swap evaluation; length-controlled judging), probabilistic-judge-scoring (Probabilistic Judge Scoring; G-Eval; logprob-weighted scoring), fine-tuned-evaluators (Fine-Tuned Evaluators; judge models; open-weight judges; evaluator LMs), judge-score-correction (Judge Score Correction; prediction-powered inference; PPI; confidence intervals for judges), agent-trajectory-evaluation (Agent Trajectory Evaluation; step-level agent evals; trajectory grading; progress rate), static-context-scoring (Static Context Scoring; context quality scoring; preflight context evaluation)
-- safety-security-and-governance: prompt-injection (Prompt Injection; instruction injection), indirect-prompt-injection (Indirect Prompt Injection; data poisoning of context; tool-output injection; XPIA), jailbreaks (Jailbreaks; adversarial prompts; GCG), red-teaming (AI Red Teaming; adversarial testing), guardrails (Guardrails and Safety Classifiers; input/output filters; content moderation; Llama Guard), injection-defenses (Prompt Injection Defenses; instruction hierarchy; injection detection), agent-sandboxing (Agent Sandboxing and Permissions; secure code execution; tool permissions; least-privilege agents), interpretability (Mechanistic Interpretability; circuits; interpretability), sparse-autoencoders (Sparse Autoencoders; SAEs; dictionary learning; monosemantic features), representation-engineering (Representation Engineering; RepE; activation steering), circuit-breakers (Circuit Breakers; representation rerouting), model-documentation (Model and System Cards; model cards; system cards; transparency documentation), automated-jailbreak-generation (Automated Jailbreak Generation; PAIR; TAP; Tree of Attacks with Pruning), spotlighting (Spotlighting; datamarking; input delimiting), dual-llm-pattern (Dual LLM Pattern; privileged and quarantined LLMs), machine-unlearning (Machine Unlearning; LLM unlearning; targeted forgetting; RMU), agent-authorization (Agent Identity and Delegated Authorization; OAuth for agents; delegated authorization; agent identity; scoped credentials; on-behalf-of access; non-human identity), tool-poisoning (Tool Poisoning; MCP tool poisoning; tool description injection; MCP rug pulls; MCP supply-chain attacks)
+- safety-and-security: prompt-injection (Prompt Injection; instruction injection), indirect-prompt-injection (Indirect Prompt Injection; data poisoning of context; tool-output injection; XPIA), jailbreaks (Jailbreaks; adversarial prompts; GCG), red-teaming (AI Red Teaming; adversarial testing), guardrails (Guardrails and Safety Classifiers; input/output filters; content moderation; Llama Guard), injection-defenses (Prompt Injection Defenses; instruction hierarchy; injection detection), agent-sandboxing (Agent Sandboxing and Permissions; secure code execution; tool permissions; least-privilege agents), interpretability (Mechanistic Interpretability; circuits; interpretability), sparse-autoencoders (Sparse Autoencoders; SAEs; dictionary learning; monosemantic features), representation-engineering (Representation Engineering; RepE; activation steering), circuit-breakers (Circuit Breakers; representation rerouting), automated-jailbreak-generation (Automated Jailbreak Generation; PAIR; TAP; Tree of Attacks with Pruning), spotlighting (Spotlighting; datamarking; input delimiting), dual-llm-pattern (Dual LLM Pattern; privileged and quarantined LLMs), machine-unlearning (Machine Unlearning; LLM unlearning; targeted forgetting; RMU), agent-authorization (Agent Identity and Delegated Authorization; OAuth for agents; delegated authorization; agent identity; scoped credentials; on-behalf-of access; non-human identity), tool-poisoning (Tool Poisoning; MCP tool poisoning; tool description injection; MCP rug pulls; MCP supply-chain attacks)
 - ai-product-and-interaction-design: human-ai-interaction-guidelines (Human-AI Interaction Guidelines; HAI guidelines; AI UX principles), chat-interfaces (Chat Interfaces; conversational UI; chat assistants), streaming-responses (Streaming Responses; token streaming; server-sent events), copilots (Copilots and Inline Assistance; inline completion; AI pair programming), citation-ux (Citation and Grounding UX; source attribution; inline citations), human-in-the-loop-approval (Human-in-the-Loop Approval; HITL; tool confirmation; permission prompts; interrupts; agent breakpoints), generative-ui (Generative UI; server-driven UI from models), canvas-artifacts (Canvases and Artifacts; side-by-side editing; artifacts; canvas), reasoning-trace-display (Reasoning Trace Display; thinking UI; thought summaries; reasoning visualization), plan-preview (Plan Preview; plan mode; plan approval; intent preview), agent-action-trace (Agent Action Trace; activity feed; tool call display; action log), mid-run-steering (Mid-Run Steering; active execution participation; mid-flight intervention; agent steering), trust-calibration (Trust Calibration; appropriate reliance; uncertainty display; confidence indicators; overreliance mitigation), voice-turn-taking (Turn-Taking and Barge-In; barge-in; voice interruption handling; semantic VAD; endpointing), background-agents (Background Agents; asynchronous agents; cloud agents; agent delegation; assign-and-review)
 - multimodal-applied: contrastive-image-text-pretraining (Contrastive Image-Text Pretraining; CLIP; joint embeddings), vision-language-models (Vision-Language Models; VLMs; multimodal LLMs; visual instruction tuning; LLaVA), document-understanding (Document Understanding; PDF parsing; OCR-free parsing; layout understanding), visual-document-retrieval (Visual Document Retrieval; ColPali; page-image retrieval; visual late interaction), speech-recognition (Speech Recognition; ASR; speech-to-text; Whisper), realtime-voice (Realtime Voice Agents; speech-to-speech; voice mode), diffusion-models (Diffusion Models; DDPM; denoising diffusion), text-to-image (Text-to-Image Generation; latent diffusion; image generation), video-generation (Video Generation; text-to-video), dynamic-resolution-encoding (Dynamic Resolution Encoding; native resolution; AnyRes; image tiling; M-RoPE), video-understanding (Video Understanding; video VLMs; video-LLMs; spatiotemporal vision encoding), audio-language-models (Audio Language Models; neural codec language models; codec TTS; zero-shot TTS; AudioLM; VALL-E), full-duplex-voice (Full-Duplex Voice Models; simultaneous listening and speaking; multi-stream speech models; Moshi), diffusion-transformers (Diffusion Transformers; DiT), flow-matching (Flow Matching; rectified flow), spatial-conditioning (Spatial Conditioning; ControlNet; T2I-Adapter; controllable generation), spatial-vlms (Spatial Reasoning VLMs; SpatialVLM; embodied reasoning models; metric spatial reasoning; 3D spatial reasoning)
 - embodied-ai-and-world-models: sim-to-real-transfer (Sim-to-Real Transfer; domain randomization; sim2real; real-to-sim-to-real), latent-world-models (Latent World Models; model-based RL; Dreamer; learning in imagination; World Models (Ha & Schmidhuber)), llm-robot-planning (LLM Task Planning for Robots; SayCan; Code as Policies; language model programs; language-conditioned task planning; hierarchical robot control), diffusion-policy (Diffusion Policy; action diffusion; visuomotor diffusion policy), action-chunking (Action Chunking and Low-Cost Teleoperation; ACT; ALOHA; action chunking with transformers; teleoperation data collection), vision-language-action-models (Vision-Language-Action Models; VLA; VLAs; RT-2; OpenVLA; robot foundation models; generalist robot policies), cross-embodiment-training (Cross-Embodiment Training; Open X-Embodiment; RT-X; pooled robot datasets), interactive-world-models (Interactive World Models; generative interactive environments; action-conditioned video models; world foundation models; Genie), human-video-pretraining (Human Video Pretraining; R3M; VIP; VC-1; egocentric video pretraining; learning from human video; latent action pretraining), flow-matching-policy (Flow-Matching Action Heads; flow-matching policy; π0 action expert; action flow matching), generative-sim-to-real (Generative Sim-to-Real; LucidSim; generative augmentation; generative digital twins), dual-system-vlas (Dual-System VLAs; System 1 / System 2 robot models; slow-fast VLAs; hierarchical VLAs; Helix), vla-reinforcement-learning (RL Fine-Tuning of VLAs; VLA online RL; ReinFlow; flow policy RL)
+- governance-and-compliance: model-documentation (Model and System Cards; model cards; system cards; transparency documentation), ai-risk-management (AI Risk Management Frameworks; NIST AI RMF; AI risk assessment; ISO/IEC 23894), ai-management-systems (AI Management Systems (ISO/IEC 42001); ISO 42001; AIMS; AI management system certification), eu-ai-act (EU AI Act; Regulation (EU) 2024/1689; risk-based AI regulation; AI Act), gpai-code-of-practice (General-Purpose AI Code of Practice; GPAI Code of Practice; EU code of practice for general-purpose AI), dangerous-capability-evals (Dangerous Capability Evaluations; frontier risk evals; extreme-risk evaluation; CBRN and cyber evals; uplift studies), frontier-safety-frameworks (Frontier Safety Frameworks; responsible scaling policies; RSP; Preparedness Framework; if-then commitments), content-provenance (Content Provenance and Credentials; C2PA; Content Credentials; provenance metadata), training-data-licensing (Training Data Licensing and Opt-Outs; data provenance; AI crawler opt-outs; robots.txt for AI; data licensing)
 
 ---
 
 ## Reference: seed sources for this region
 Key references currently attached to the anchors (from the backbone runs; arXiv ids spot-checked, not exhaustively verified):
-- Prompt Injection: Ignore Previous Prompt: Attack Techniques For Language Models (Perez & Ribeiro) — arXiv:2211.09527
-- Indirect Prompt Injection: Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection (Greshake et al.) — arXiv:2302.12173
-- Jailbreaks: Jailbroken: How Does LLM Safety Training Fail? (Wei et al.) — arXiv:2307.02483
-- AI Red Teaming: Red Teaming Language Models with Language Models (Perez et al.) — arXiv:2202.03286
-- Guardrails and Safety Classifiers: Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations (Inan et al.) — arXiv:2312.06674
-- Prompt Injection Defenses: The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions (Wallace et al.) — arXiv:2404.13208
-- Agent Sandboxing and Permissions: E2B — open-source cloud sandboxes for AI agents — https://e2b.dev
-- Mechanistic Interpretability: A Mathematical Framework for Transformer Circuits (Elhage et al.) — https://transformer-circuits.pub/2021/framework/index.html
-- Sparse Autoencoders: Towards Monosemanticity: Decomposing Language Models With Dictionary Learning (Bricken et al.) — https://transformer-circuits.pub/2023/monosemantic-features
-- Representation Engineering: Representation Engineering: A Top-Down Approach to AI Transparency (Zou et al.) — arXiv:2310.01405
-- Circuit Breakers: Improving Alignment and Robustness with Circuit Breakers (Zou et al.) — arXiv:2406.04313
 - Model and System Cards: Model Cards for Model Reporting (Mitchell et al.) — arXiv:1810.03993
-- Automated Jailbreak Generation: Jailbreaking Black Box Large Language Models in Twenty Queries (Chao et al.) — arXiv:2310.08419
-- Spotlighting: Defending Against Indirect Prompt Injection Attacks With Spotlighting (Hines et al.) — arXiv:2403.14720
-- Dual LLM Pattern: The Dual LLM pattern for building AI assistants that can resist prompt injection (Willison) — https://simonwillison.net/2023/Apr/25/dual-llm-pattern/
-- Machine Unlearning: Who's Harry Potter? Approximate Unlearning in LLMs (Eldan & Russinovich) — arXiv:2310.02238
-- Agent Identity and Delegated Authorization: Model Context Protocol specification: Authorization (2025-03-26) — https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization
-- Tool Poisoning: MCP Security Notification: Tool Poisoning Attacks (Invariant Labs) — https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks
+- AI Risk Management Frameworks: Artificial Intelligence Risk Management Framework (AI RMF 1.0), NIST AI 100-1 — https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10
+- AI Management Systems (ISO/IEC 42001): ISO/IEC 42001:2023 Information technology — Artificial intelligence — Management system — https://www.iso.org/standard/42001
+- EU AI Act: AI Act (European Commission overview of Regulation (EU) 2024/1689) — https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+- General-Purpose AI Code of Practice: The General-Purpose AI Code of Practice (European Commission) — https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai
+- Dangerous Capability Evaluations: Model evaluation for extreme risks (Shevlane et al.) — arXiv:2305.15324
+- Frontier Safety Frameworks: Introducing Anthropic's Responsible Scaling Policy — https://www.anthropic.com/news/anthropics-responsible-scaling-policy
+- Content Provenance and Credentials: C2PA Technical Specification 1.0 — https://spec.c2pa.org/specifications/specifications/1.0/specs/C2PA_Specification.html
+- Training Data Licensing and Opt-Outs: The Data Provenance Initiative: A Large Scale Audit of Dataset Licensing & Attribution in AI (Longpre et al.) — arXiv:2310.16787
 
 ## Reference: cross-region edges touching this region
-- agent-authorization --applies--> least-privilege
-- agent-authorization --extends--> model-context-protocol
-- agent-sandboxing --applies--> least-privilege
-- agent-sandboxing --applies--> sandboxing-and-isolation
-- agent-sandboxing --counters--> function-calling
-- background-agents --applies--> agent-sandboxing
-- dual-llm-pattern --applies--> least-privilege
-- guardrails --applies--> llm-as-a-judge
-- indirect-prompt-injection --applies--> retrieval-augmented-generation
-- interpretability --applies--> transformer-architecture
-- jailbreaks --counters--> rlhf
-- machine-unlearning --applies--> transfer-learning-fine-tuning
-- prompt-injection --applies--> injection-attacks
-- prompt-injection --applies--> zero-shot-prompting
-- red-teaming --counters--> rlhf
-- reft --applies--> representation-engineering
-- tool-poisoning --applies--> model-context-protocol
+- dangerous-capability-evals --applies--> capability-benchmarks
+- dangerous-capability-evals --extends--> red-teaming

@@ -223,18 +223,18 @@ regions:
       - {kind: blog, title: "Evaluating the Effectiveness of LLM-Evaluators (aka LLM-as-Judge)", by: "Eugene Yan", year: 2024, url: "https://eugeneyan.com/writing/llm-evaluators/", why: "A survey of the research on model judges: their biases, when they agree with people, and the fine-tuned alternatives. Read it once you have built a judge and want to know where it can fail."}
       - {kind: blog, title: "Demystifying evals for AI agents", by: "Anthropic", year: 2026, url: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents", why: "Carries the ideas over to agents, where a task has many steps and you grade both the outcome and the path taken."}
       - {kind: docs, title: "Evaluate Production Traffic - Langfuse", by: "Langfuse", year: 2025, url: "https://langfuse.com/docs/evaluation/get-started/online", why: "Closes the loop: run the same graders on sampled live traces, so evaluation continues after you ship."}
-  - id: safety-security-and-governance
+  - id: safety-and-security
     kind: applied
-    name: Safety, Security and Governance
+    name: Safety and Security
     title: The Bulwark
-    definition: Keeping AI systems from causing harm — prompt injection and jailbreaks, guardrails and defenses, red teaming, sandboxing and permissions, interpretability as a control tool, documentation and governance.
-    distinct_from: Primary purpose is risk reduction. Uses techniques from Prompting (guardrails) and Evaluation (red teaming) but is defined by intent.
+    definition: Keeping AI systems from causing harm — prompt injection and jailbreaks, guardrails and defenses, red teaming, sandboxing and permissions, and interpretability as a control tool.
+    distinct_from: Primary purpose is risk reduction. Uses techniques from Prompting (guardrails) and Evaluation (red teaming) but is defined by intent. Policies, regulation, standards and documentation that govern AI systems live in Governance.
     descends_from: [systems-security, deep-learning-nlp, human-computer-interaction]
     deep_dive_focus:
       - Prompt injection in agentic systems — attack taxonomy and the defenses that hold up
       - Agent permissions, sandboxing, and least privilege for tools and MCP servers
       - Interpretability methods that have reached engineering use
-    overview: "Safety, Security and Governance covers keeping AI systems from causing harm, whether through attacks, mistakes or misuse. Early on that meant filtering offensive output. Once models could read outside content and take actions, it became a security field: prompt injection showed that any text a model reads can act as an instruction, and agents with tools turned that into a way to leak data or take actions for an attacker.\n\nDefenses come in layers because none is complete. Guardrails screen what goes in and out. Injection defenses help the model tell instructions from data, by training it to rank sources by privilege (the instruction hierarchy), by marking untrusted text (spotlighting), or by designing the system so the model that reads untrusted text cannot act (the dual LLM pattern). Sandboxing and scoped permissions limit how much damage a hijacked agent can do. Red teaming, increasingly automated with attacker models, looks for the gaps before release.\n\nInterpretability is starting to become a control tool as well as a research field. Sparse autoencoders and representation engineering find concepts inside a model's activations, and circuit breakers and unlearning act on them directly. Governance rests on documentation (model and system cards) and on provenance tools such as watermarking. Landmarks worth knowing: prompt injection and its indirect form, guardrails, agent sandboxing, red teaming, and model cards."
+    overview: "Safety and Security covers keeping AI systems from causing harm, whether through attacks, mistakes or misuse. Early on that meant filtering offensive output. Once models could read outside content and take actions, it became a security field: prompt injection showed that any text a model reads can act as an instruction, and agents with tools turned that into a way to leak data or take actions for an attacker.\n\nDefenses come in layers because none is complete. Guardrails screen what goes in and out. Injection defenses help the model tell instructions from data, by training it to rank sources by privilege (the instruction hierarchy), by marking untrusted text (spotlighting), or by designing the system so the model that reads untrusted text cannot act (the dual LLM pattern). Sandboxing and scoped permissions limit how much damage a hijacked agent can do. Red teaming, increasingly automated with attacker models, looks for the gaps before release.\n\nInterpretability is starting to become a control tool as well as a research field. Sparse autoencoders and representation engineering find concepts inside a model's activations, and circuit breakers and unlearning act on them directly. Landmarks worth knowing: prompt injection and its indirect form, guardrails, agent sandboxing, and red teaming."
     learning_path:
       - {kind: "docs", title: "OWASP Top 10 for LLM Applications (2025)", by: "OWASP Gen AI Security Project", year: 2025, url: "https://genai.owasp.org/llm-top-10/", why: "A checklist of the ten risks that come up most in real LLM applications, from prompt injection to excessive agency. It gives you the vocabulary and the overall picture before any one topic."}
       - {kind: "talk", title: "Prompt Injection, explained", by: "Simon Willison", year: 2023, url: "https://www.youtube.com/watch?v=FgxwCaL6UTA", why: "The person who named prompt injection explains why mixing trusted instructions with untrusted text is the root problem, and why filters and clever prompting do not fix it."}
@@ -303,6 +303,20 @@ regions:
     - {kind: talk, title: "Robot Learning 2026 – Lecture 8: World Models", by: "Oier Mees (ETH Zürich)", year: 2026, url: "https://www.youtube.com/watch?v=cTTmUZlOF2s", why: "A recent lecture that connects the two meanings of world model, learned simulators for planning and RL and generative interactive environments, and how each is used to train or test robot policies."}
     - {kind: paper, title: "A Survey on Vision-Language-Action Models for Embodied AI", by: "Yueen Ma et al.", year: 2024, url: "https://arxiv.org/abs/2405.14093", why: "A map of the field to come back to: the main model families, action representations, datasets and benchmarks in one place."}
 
+  - id: governance-and-compliance
+    kind: applied
+    name: Governance and Compliance
+    title: The Chancery
+    definition: The rules, records and commitments around AI systems — model and system documentation, risk management frameworks and management-system standards, regulation such as the EU AI Act, frontier safety frameworks and the dangerous-capability evaluations that trigger them, content provenance, and training-data licensing.
+    distinct_from: Defined by accountability to someone outside the engineering team (regulators, auditors, the public, rights holders). The technical controls these rules require live in their own regions (guardrails and sandboxing in Safety, eval harnesses in Evaluation, data pipelines in Data).
+    descends_from: [systems-security, software-engineering]
+    node_target: "8–14"
+    deep_dive_focus:
+      - What compliance work actually lands on an engineering team — EU AI Act obligations for providers and deployers, GPAI obligations and the Code of Practice, and how teams map them to NIST AI RMF and ISO/IEC 42001
+      - Frontier safety frameworks and dangerous-capability evaluations — capability thresholds, safeguard levels, third-party testing, and how they show up in system cards
+      - Content provenance in practice — C2PA content credentials, invisible watermarks for images, audio and text, and where each breaks
+      - Training-data rights — licensing, opt-outs (robots.txt, AI crawler controls), dataset provenance audits, and copyright litigation as it affects what data teams can use
+      - Documentation and transparency artifacts beyond the model card (system cards, AI bills of materials, incident reporting) and which ones are becoming standard
 
 boundary_rules:
   - {concept: ReAct, home: agents-and-orchestration, rule: "Defined by acting in an environment via tools → Agents."}
@@ -319,14 +333,14 @@ boundary_rules:
   - {concept: Reasoning distillation, home: adaptation-and-post-training, rule: "The act of training a student → Adaptation; generating the traces → Data."}
   - {concept: Model compression, home: "inference-and-serving (quantization); adaptation-and-post-training (pruning with retraining)", rule: "Compression applied to a finished model with at most light calibration → Inference. Removing structure and retraining to produce a new, smaller model → Adaptation."}
   - {concept: Model merging, home: adaptation-and-post-training, rule: "Arithmetic on fine-tuned weights changes the model after pretraining → Adaptation, even though the merge itself runs no gradient steps."}
-  - {concept: Text watermarking, home: inference-and-serving, rule: "A bias applied at the sampling step → Inference, even though its purpose (provenance) is governance; it appears in Safety through also."}
+  - {concept: Text watermarking, home: inference-and-serving, rule: "A bias applied at the sampling step → Inference, even though its purpose (provenance) is governance; it appears in Governance through also."}
   - {concept: DSPy / prompt optimization, home: prompting-and-context-engineering, rule: "No gradient updates to model weights → Prompting."}
   - {concept: Process reward models, home: planning-and-reasoning, rule: "Primarily used to score steps for search and verification → Reasoning (secondary: Adaptation)."}
   - {concept: RLVR / GRPO, home: adaptation-and-post-training, rule: "Weight-updating methods → Adaptation, even when the goal is reasoning."}
   - {concept: Reranking, home: retrieval-and-knowledge, rule: "Scoring to order results for generation → Retrieval."}
-  - {concept: Guardrails / injection defenses, home: safety-security-and-governance, rule: "Components whose purpose is blocking harm → Safety."}
-  - {concept: Agent sandboxing and permissions, home: safety-security-and-governance, rule: "Mechanisms whose purpose is limiting blast radius → Safety (moved from Agents in v0.2)."}
-  - {concept: Interpretability / RepE, home: safety-security-and-governance, rule: "Used by engineers to detect and steer behavior → Safety (pure science stays offshore at maturity 1)."}
+  - {concept: Guardrails / injection defenses, home: safety-and-security, rule: "Components whose purpose is blocking harm → Safety."}
+  - {concept: Agent sandboxing and permissions, home: safety-and-security, rule: "Mechanisms whose purpose is limiting blast radius → Safety (moved from Agents in v0.2)."}
+  - {concept: Interpretability / RepE, home: safety-and-security, rule: "Used by engineers to detect and steer behavior → Safety (pure science stays offshore at maturity 1)."}
   - {concept: LLM-as-judge, home: evaluation-and-observability, rule: "Deployed to measure → Evaluation, though implemented as a prompt."}
   - {concept: Human-in-the-loop approval, home: ai-product-and-interaction-design, rule: "Defined by the human decision point → Product (secondary: Agents)."}
   - {concept: Architectures (MoE, SSMs), home: deep-learning-nlp, rule: "Model internals stay in the root unless engineers configure them at serving time."}
@@ -334,6 +348,10 @@ boundary_rules:
   - {concept: World models vs. video generation, home: "embodied-ai-and-world-models (action-conditioned); multimodal-applied (passive)", rule: "Generates what happens next given an action, for training or evaluating policies → Embodied. Generates media from a prompt → Multimodal."}
   - {concept: Robot policy training, home: embodied-ai-and-world-models, rule: "Training a policy to output physical actions → Embodied, even when it uses RL, imitation learning or fine-tuning (secondary: Adaptation)."}
   - {concept: Spatial reasoning VLMs, home: multimodal-applied, rule: "Perception models stay in Multimodal even when built for robots (secondary: Embodied). A model that outputs actions → Embodied."}
+  - {concept: Regulation and standards vs. controls, home: governance-and-compliance, rule: "Rules, frameworks, policies and the documents that show compliance → Governance. The mechanism that implements a rule stays in its technical region (a guardrail required by policy is still Safety)."}
+  - {concept: Dangerous-capability evals, home: governance-and-compliance, rule: "Evals run to decide whether a model crosses a risk threshold and needs stronger safeguards → Governance (secondary: Evaluation, Safety). General capability benchmarks → Evaluation."}
+  - {concept: Content provenance, home: governance-and-compliance, rule: "Signed metadata and disclosure standards (C2PA) → Governance. Watermarks embedded by the generator → the region of the mechanism (text watermarking → Inference), with Governance through also."}
+  - {concept: Training-data rights, home: governance-and-compliance, rule: "Licensing, consent, opt-outs and provenance audits of training data → Governance (secondary: Data). Filtering and deduplication pipelines → Data."}
 
 nodes:
   # ======================= ROOTS: information-retrieval =======================
@@ -1000,7 +1018,7 @@ nodes:
     name: LLM Watermarking
     aliases: [text watermarking, green-list watermarking]
     region: inference-and-serving
-    also: [safety-security-and-governance]
+    also: [governance-and-compliance]
     layer: detail
     desc: Nudging a model's token choices with a secret, key-dependent bias during generation so its text can later be detected statistically.
     summary: "At each step of generation, a secret key and the preceding tokens split the vocabulary into a favored and an unfavored part, and the model is nudged toward the favored words. The text reads normally, but anyone with the key can count favored words and detect it with high confidence from a short passage. Paraphrasing weakens the signal, and it only works when the provider controls generation, so open-weight models are out of reach."
@@ -2658,7 +2676,7 @@ nodes:
     name: CoT Monitoring
     aliases: [CoT faithfulness, chain-of-thought monitorability, reasoning trace monitoring]
     region: planning-and-reasoning
-    also: [safety-security-and-governance, evaluation-and-observability]
+    also: [safety-and-security, evaluation-and-observability]
     layer: detail
     desc: Reading a reasoning model's chain of thought, usually with another model, to catch misbehavior, and checking whether the visible reasoning actually drives the answer.
     summary: "A reasoning model's thinking can reveal intentions its final answer hides, such as a plan to game a test, so a second model can read the trace and flag problems. It only works if the trace is faithful: models sometimes leave out what really drove their answer, and training them to avoid flagged thoughts can teach them to hide those thoughts instead."
@@ -2778,7 +2796,7 @@ nodes:
     name: Constitutional AI and RLAIF
     aliases: [RLAIF, AI feedback]
     region: adaptation-and-post-training
-    also: [safety-security-and-governance, data-and-synthetic-data]
+    also: [safety-and-security, data-and-synthetic-data]
     desc: Using a model guided by written principles to critique, revise, and rank outputs, replacing much of the human preference labeling.
     summary: "A model guided by a written set of principles (a constitution) critiques and revises answers and judges which of two is better, replacing most human preference labels with AI feedback (RLAIF). This makes preference data far cheaper to produce at scale, and the principles make the target behavior explicit."
     parents:
@@ -3302,7 +3320,7 @@ nodes:
     aliases: [PII scrubbing, data anonymization]
     region: data-and-synthetic-data
     layer: detail
-    also: [safety-security-and-governance]
+    also: [safety-and-security]
     desc: Detecting and masking personal information in training, eval and retrieval data before models see it.
     summary: "Finding names, emails, phone numbers, account numbers and similar details in data and masking or replacing them before the data is used for training, evals or retrieval. Detectors combine patterns for structured identifiers with named-entity models for names and places. Scrubbing reduces what a model can memorize and leak, but no detector is perfect, so it is one layer of privacy protection, not a guarantee."
     parents:
@@ -3617,11 +3635,11 @@ nodes:
     examples: [ProofAgent-Harness]
     status: added
 
-  # ======================= APPLIED: safety-security-and-governance =======================
+  # ======================= APPLIED: safety-and-security =======================
   - id: prompt-injection
     name: Prompt Injection
     aliases: [instruction injection]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Attacks in which text supplied by a user or third party is followed as instructions, overriding the developer's intent.
     summary: "Text from a user or another source is written so that the model follows it as instructions, overriding what the developer told it to do. It works because instructions and data reach the model in the same stream of text, much as SQL injection mixes code and data. There is no complete fix, so defenses aim to lower the odds and limit the damage."
     parents:
@@ -3640,7 +3658,7 @@ nodes:
   - id: indirect-prompt-injection
     name: Indirect Prompt Injection
     aliases: [data poisoning of context, tool-output injection, XPIA]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [agents-and-orchestration]
     desc: Injection delivered through retrieved documents, web pages, emails, or tool outputs rather than the user's own message.
     summary: "The attacker never talks to the model directly. The instructions are hidden in a web page, email, document or tool result that the application pulls into context. Once an assistant can both read outside content and take actions, such as sending email or calling tools, a single poisoned page can make it leak data or act for the attacker. This is the central security problem for agents."
@@ -3660,7 +3678,7 @@ nodes:
   - id: jailbreaks
     name: Jailbreaks
     aliases: [adversarial prompts, GCG]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Inputs crafted to make a model violate its own safety training.
     summary: "Inputs crafted to get a model to break its own safety training and produce content it would normally refuse. They range from hand-written role-play and persuasion to automatically optimized strings of odd tokens (adversarial suffixes such as GCG) that carry over between models. Attackers and defenders have traded moves ever since safety-tuned chat models launched."
     parents:
@@ -3679,7 +3697,7 @@ nodes:
   - id: red-teaming
     name: AI Red Teaming
     aliases: [adversarial testing]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [evaluation-and-observability]
     desc: Systematic adversarial testing by people and models to find harmful behaviors and vulnerabilities before release.
     summary: "Attacking your own system on purpose before release to find harmful outputs and security holes. People do it by hand, and models do it at scale by generating many attack attempts against a target. Major labs run it before every release, and open tools bring the same probing to application teams."
@@ -3700,7 +3718,7 @@ nodes:
   - id: guardrails
     name: Guardrails and Safety Classifiers
     aliases: [input/output filters, content moderation, Llama Guard]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Classifiers and rule layers that check inputs and outputs for policy violations, PII, or unsafe content.
     summary: "Checks placed around the model: one screens incoming requests, another screens outgoing answers, looking for policy violations, personal data (PII) or unsafe content. Many are themselves language models prompted or fine-tuned as classifiers, such as Llama Guard. They are widely deployed, but they add latency and sometimes block legitimate requests."
     parents:
@@ -3719,7 +3737,7 @@ nodes:
   - id: injection-defenses
     name: Prompt Injection Defenses
     aliases: [instruction hierarchy, injection detection]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Training, prompting, and architectural measures that make models distinguish trusted instructions from untrusted data.
     summary: "Measures that help a model tell trusted instructions from untrusted data. They work at three levels: training (the instruction hierarchy teaches a model to rank system, user and tool text by privilege), input handling (marking untrusted text, as spotlighting does, and detectors that flag likely attacks), and system design (keeping untrusted text away from the parts that can act, as in the dual LLM pattern). Each lowers attack success and none is complete, so they are layered."
     parents:
@@ -3739,7 +3757,7 @@ nodes:
   - id: agent-sandboxing
     name: Agent Sandboxing and Permissions
     aliases: [secure code execution, tool permissions, least-privilege agents]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [agents-and-orchestration]
     desc: Running agent actions in isolated environments with scoped credentials and explicit permission prompts to limit damage.
     summary: "Limits what an agent can do if it makes a mistake or is hijacked. Code it writes runs in an isolated container or VM, its credentials are scoped to the task, and risky actions need explicit permission. The design question is how much damage one bad step can do, not whether the model will behave. Standard for any agent that executes code."
@@ -3761,7 +3779,7 @@ nodes:
   - id: interpretability
     name: Mechanistic Interpretability
     aliases: [circuits, interpretability]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Reverse-engineering the internal mechanisms of neural networks into human-understandable features and circuits.
     summary: "Reverse-engineering a trained network to find the internal features and circuits behind its behavior, such as the attention heads that continue repeated patterns. It is mostly research, but it supplies the methods the applied techniques nearby build on: sparse autoencoders, reading and steering representations, and circuit breakers."
     parents:
@@ -3780,7 +3798,7 @@ nodes:
   - id: sparse-autoencoders
     name: Sparse Autoencoders
     aliases: [SAEs, dictionary learning, monosemantic features]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Decomposing model activations into many sparse, interpretable features.
     summary: "A single neuron inside a model usually responds to many unrelated things. A sparse autoencoder learns to rewrite the model's internal activations as a mix drawn from a much larger set of features, only a few active at a time, and many of those features match one recognizable concept. Labs use them to inspect what a model is representing and to steer it by turning features up or down (as in Golden Gate Claude)."
     parents:
@@ -3799,7 +3817,7 @@ nodes:
   - id: representation-engineering
     name: Representation Engineering
     aliases: [RepE, activation steering]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Reading and steering high-level concepts in activation space to monitor or control behavior without retraining.
     summary: "Instead of tracing individual circuits, find the direction in a model's activations that corresponds to a high-level concept such as honesty or harmfulness, by contrasting activations on examples with and without it. That direction can be read to monitor the model, or added or subtracted while it runs to steer its behavior, with no retraining."
     parents:
@@ -3818,7 +3836,7 @@ nodes:
   - id: circuit-breakers
     name: Circuit Breakers
     aliases: [representation rerouting]
-    region: safety-security-and-governance
+    region: safety-and-security
     desc: Training models so internal representations associated with harmful outputs are rerouted, interrupting generation.
     summary: "A training method that teaches a model to scramble its own internal representations when they start heading toward harmful output, so generation breaks down instead of completing. Because it acts on what the model is about to produce rather than on how the request was worded, it holds up against attacks it never saw in training, with little loss on normal tasks. Mostly research so far."
     parents:
@@ -3834,30 +3852,11 @@ nodes:
       - {kind: "code", title: "circuit-breakers: Improving Alignment and Robustness with Circuit Breakers", by: "Gray Swan AI", year: 2024, url: "https://github.com/GraySwanAI/circuit-breakers"}
       - {kind: "paper", title: "Obfuscated Activations Bypass LLM Latent-Space Defenses", by: "Luke Bailey et al.", year: 2024, url: "https://arxiv.org/abs/2412.09565"}
     status: repaired
-  - id: model-documentation
-    name: Model and System Cards
-    aliases: [model cards, system cards, transparency documentation]
-    region: safety-security-and-governance
-    desc: Standardized documentation of a model's intended use, evaluations, limitations, and safety testing.
-    summary: "Standard documents published with a model that state what it is for, how it was evaluated, where it falls short, and what safety testing was done. Model cards began as short reports that included results broken down by demographic group; frontier labs now publish long system cards covering red teaming and dangerous-capability tests. They are expected for major releases and referenced in regulation."
-    parents:
-      - {id: "external:datasheets-and-documentation", rel: applies, why: "Brings structured documentation practice to ML models.", src: "Model Cards for Model Reporting (Mitchell et al. 2018)"}
-    maturity: 4
-    maturity_note: Expected for major releases and referenced in regulation.
-    date: "2018-10"
-    ref: {title: "Model Cards for Model Reporting (Mitchell et al.)", arxiv: "1810.03993"}
-    examples: [frontier system cards, Hugging Face model cards]
-    resources:
-      - {kind: "docs", title: "Model Cards", by: "Hugging Face", year: 2022, url: "https://huggingface.co/docs/hub/model-cards"}
-      - {kind: "docs", title: "Model system cards", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/system-cards"}
-      - {kind: "paper", title: "Datasheets for Datasets", by: "Timnit Gebru et al.", year: 2018, url: "https://arxiv.org/abs/1803.09010"}
-    status: added
-
   # ---- deep dive (2026-10-10, Gemini run, reviewed): detail layer ----
   - id: automated-jailbreak-generation
     name: Automated Jailbreak Generation
     aliases: [PAIR, TAP, Tree of Attacks with Pruning]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [evaluation-and-observability]
     layer: detail
     desc: An attacker model iteratively rewrites a jailbreak prompt against a target model, using the target's replies as feedback, until the attack works.
@@ -3878,7 +3877,7 @@ nodes:
   - id: spotlighting
     name: Spotlighting
     aliases: [datamarking, input delimiting]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [prompting-and-context-engineering]
     layer: detail
     desc: Transforming untrusted text before it reaches the model (delimiting it, interleaving a marker, or encoding it) so the model can see which text is data and not follow it.
@@ -3898,7 +3897,7 @@ nodes:
   - id: dual-llm-pattern
     name: Dual LLM Pattern
     aliases: [privileged and quarantined LLMs]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [agents-and-orchestration]
     layer: detail
     desc: Splitting an assistant into a privileged model that calls tools but never sees untrusted text, and a quarantined model that reads untrusted text but cannot act, with ordinary code passing references between them.
@@ -3920,7 +3919,7 @@ nodes:
   - id: machine-unlearning
     name: Machine Unlearning
     aliases: [LLM unlearning, targeted forgetting, RMU]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [adaptation-and-post-training]
     layer: detail
     desc: Further training a model so it no longer reproduces specific knowledge, such as copyrighted text, personal data or hazardous know-how, without retraining from scratch.
@@ -3941,7 +3940,7 @@ nodes:
   - id: agent-authorization
     name: Agent Identity and Delegated Authorization
     aliases: [OAuth for agents, delegated authorization, agent identity, scoped credentials, on-behalf-of access, non-human identity]
-    region: safety-security-and-governance
+    region: safety-and-security
     also: [agents-and-orchestration]
     desc: Giving an agent its own identity and short-lived, narrowly scoped credentials that a user grants through a standard flow such as OAuth, instead of handing it the user's keys.
     summary: "An agent that reads your email or opens pull requests needs access, and the easy shortcut is to paste in a long-lived API key with full rights. Delegated authorization gives the agent its own identity and has the user grant it limited, expiring permissions through a standard flow like OAuth, so every action can be traced and revoked. MCP adopted OAuth for remote servers in 2025, which made this the normal way to connect agents to real accounts."
@@ -3961,7 +3960,7 @@ nodes:
   - id: tool-poisoning
     name: Tool Poisoning
     aliases: [MCP tool poisoning, tool description injection, MCP rug pulls, MCP supply-chain attacks]
-    region: safety-security-and-governance
+    region: safety-and-security
     layer: detail
     also: [agents-and-orchestration]
     desc: Hiding malicious instructions in a tool's description or metadata, or changing a trusted tool after install, so that an agent which loads the tool follows the attacker.
@@ -4902,4 +4901,144 @@ nodes:
       - {kind: code, title: "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning", by: "PRIME-RL", year: 2025, url: "https://github.com/PRIME-RL/SimpleVLA-RL"}
       - {kind: paper, title: "SimpleVLA-RL: Scaling VLA Training via Reinforcement Learning", by: "Haozhan Li et al.", year: 2025, url: "https://arxiv.org/abs/2509.09674"}
       - {kind: paper, title: "What Can RL Bring to VLA Generalization? An Empirical Study", by: "Jijia Liu et al.", year: 2025, url: "https://arxiv.org/abs/2505.19789"}
+    status: added
+
+  # ======================= APPLIED: governance-and-compliance =======================
+  - id: model-documentation
+    name: Model and System Cards
+    aliases: [model cards, system cards, transparency documentation]
+    region: governance-and-compliance
+    desc: Standardized documentation of a model's intended use, evaluations, limitations, and safety testing.
+    summary: "Standard documents published with a model that state what it is for, how it was evaluated, where it falls short, and what safety testing was done. Model cards began as short reports that included results broken down by demographic group; frontier labs now publish long system cards covering red teaming and dangerous-capability tests. They are expected for major releases and referenced in regulation."
+    parents:
+      - {id: "external:datasheets-and-documentation", rel: applies, why: "Brings structured documentation practice to ML models.", src: "Model Cards for Model Reporting (Mitchell et al. 2018)"}
+    maturity: 4
+    maturity_note: Expected for major releases and referenced in regulation.
+    date: "2018-10"
+    ref: {title: "Model Cards for Model Reporting (Mitchell et al.)", arxiv: "1810.03993"}
+    examples: [frontier system cards, Hugging Face model cards]
+    resources:
+      - {kind: "docs", title: "Model Cards", by: "Hugging Face", year: 2022, url: "https://huggingface.co/docs/hub/model-cards"}
+      - {kind: "docs", title: "Model system cards", by: "Anthropic", year: 2025, url: "https://www.anthropic.com/system-cards"}
+      - {kind: "paper", title: "Datasheets for Datasets", by: "Timnit Gebru et al.", year: 2018, url: "https://arxiv.org/abs/1803.09010"}
+    status: added
+  - id: ai-risk-management
+    name: AI Risk Management Frameworks
+    aliases: [NIST AI RMF, AI risk assessment, ISO/IEC 23894]
+    region: governance-and-compliance
+    desc: A repeatable process for finding, measuring and managing the risks of an AI system across its life cycle, organized in NIST's framework as govern, map, measure and manage.
+    parents:
+      - {id: "external:enterprise-risk-management", rel: applies, why: "Brings general risk management practice (ISO 31000) to AI-specific harms such as bias, misuse and unreliability.", src: "NIST AI RMF 1.0 (2023)"}
+      - {id: model-documentation, rel: extends, why: "Turns one-off documentation into an ongoing cycle in which documented risks are measured and managed.", src: "NIST AI RMF 1.0, Map and Measure functions"}
+    maturity: 3
+    maturity_note: The common reference for enterprise AI risk programs and the frame many teams map regulation onto; practice varies widely.
+    date: "2023-01"
+    ref: {title: "Artificial Intelligence Risk Management Framework (AI RMF 1.0), NIST AI 100-1", url: "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10"}
+    examples: [NIST AI RMF, NIST Generative AI Profile, ISO/IEC 23894]
+    status: added
+  - id: ai-management-systems
+    name: AI Management Systems (ISO/IEC 42001)
+    aliases: [ISO 42001, AIMS, AI management system certification]
+    region: governance-and-compliance
+    layer: detail
+    desc: A certifiable standard for how an organization runs AI responsibly — policies, roles, risk and impact assessments, and controls — audited the same way as information security management.
+    parents:
+      - {id: ai-risk-management, rel: extends, why: "Embeds AI risk management in an auditable organizational management system.", src: "ISO/IEC 42001:2023"}
+      - {id: "external:iso-27001-information-security-management", rel: applies, why: "Reuses the management-system structure and certification model of ISO/IEC 27001.", src: "ISO/IEC 42001:2023"}
+    maturity: 2
+    maturity_note: Published in late 2023; certifications are growing, mostly among AI vendors answering customer due diligence.
+    date: "2023-12"
+    ref: {title: "ISO/IEC 42001:2023 Information technology — Artificial intelligence — Management system", url: "https://www.iso.org/standard/42001"}
+    examples: [ISO/IEC 42001 certification, ISO/IEC 42005 impact assessment]
+    status: added
+  - id: eu-ai-act
+    name: EU AI Act
+    aliases: [Regulation (EU) 2024/1689, risk-based AI regulation, AI Act]
+    region: governance-and-compliance
+    desc: The EU regulation that sorts AI systems by risk — banned practices, high-risk systems with documentation, risk management and oversight duties, and transparency rules — with separate obligations for providers of general-purpose AI models.
+    parents:
+      - {id: ai-risk-management, rel: applies, why: "Makes a life-cycle risk management system a legal duty for high-risk AI.", src: "Regulation (EU) 2024/1689, Art. 9"}
+      - {id: model-documentation, rel: applies, why: "Requires technical documentation for high-risk systems and general-purpose models.", src: "Regulation (EU) 2024/1689, Art. 11 and 53"}
+      - {id: "external:gdpr", rel: extends, why: "Follows GDPR's model of EU-wide product regulation that reaches anyone serving EU users.", src: "Regulation (EU) 2024/1689"}
+    maturity: 3
+    maturity_note: In force since August 2024, with obligations phasing in from 2025 to 2027; the most common compliance driver for teams selling into the EU.
+    date: "2024-08"
+    ref: {title: "AI Act (European Commission overview of Regulation (EU) 2024/1689)", url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"}
+    examples: [EU AI Act, Colorado AI Act, California SB 53]
+    status: added
+  - id: gpai-code-of-practice
+    name: General-Purpose AI Code of Practice
+    aliases: [GPAI Code of Practice, EU code of practice for general-purpose AI]
+    region: governance-and-compliance
+    layer: detail
+    desc: A voluntary EU code that spells out how providers of general-purpose models can meet the AI Act's transparency, copyright and, for the most capable models, safety and security obligations.
+    parents:
+      - {id: eu-ai-act, rel: specializes, why: "Turns the Act's general-purpose model obligations into concrete commitments.", src: "General-Purpose AI Code of Practice (European Commission, 2025)"}
+      - {id: frontier-safety-frameworks, rel: applies, why: "Its Safety and Security chapter asks providers of systemic-risk models for a framework of the kind frontier labs already published.", src: "General-Purpose AI Code of Practice, Safety and Security chapter"}
+      - {id: training-data-licensing, rel: applies, why: "Its Copyright chapter asks providers to respect machine-readable opt-outs when crawling training data.", src: "General-Purpose AI Code of Practice, Copyright chapter"}
+    maturity: 2
+    maturity_note: Published July 2025 and signed by most large model providers; how the AI Office enforces it is still settling.
+    date: "2025-07"
+    ref: {title: "The General-Purpose AI Code of Practice (European Commission)", url: "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai"}
+    examples: [Transparency chapter model documentation form, Copyright chapter, Safety and Security chapter]
+    status: added
+  - id: dangerous-capability-evals
+    name: Dangerous Capability Evaluations
+    aliases: [frontier risk evals, extreme-risk evaluation, CBRN and cyber evals, uplift studies]
+    region: governance-and-compliance
+    also: [evaluation-and-observability, safety-and-security]
+    desc: Tests of whether a model can meaningfully help with severe harms — bioweapons, cyberattacks, autonomous replication, undermining oversight — run before release to decide what safeguards it needs.
+    parents:
+      - {id: red-teaming, rel: extends, why: "Moves from finding individual harmful outputs to measuring whether a capability crosses a risk threshold.", src: "Model evaluation for extreme risks (Shevlane et al. 2023)"}
+      - {id: capability-benchmarks, rel: applies, why: "Uses benchmark-style task suites, aimed at dangerous capabilities rather than general skill.", src: "Shevlane et al. 2023"}
+    maturity: 3
+    maturity_note: Run by every frontier lab and by government AI safety institutes before major releases; methods and thresholds are not standardized.
+    date: "2023-05"
+    ref: {title: "Model evaluation for extreme risks (Shevlane et al.)", arxiv: "2305.15324"}
+    examples: [UK AISI pre-deployment testing, METR autonomy evals, system card CBRN and cyber sections]
+    status: added
+  - id: frontier-safety-frameworks
+    name: Frontier Safety Frameworks
+    aliases: [responsible scaling policies, RSP, Preparedness Framework, if-then commitments]
+    region: governance-and-compliance
+    also: [safety-and-security]
+    desc: A lab's published commitment that sets capability thresholds, says how they are measured, and names the safeguards required before a model that crosses one can be trained further or deployed.
+    parents:
+      - {id: dangerous-capability-evals, rel: applies, why: "Uses dangerous-capability evals to decide when a threshold has been crossed.", src: "Anthropic's Responsible Scaling Policy (2023)"}
+      - {id: ai-risk-management, rel: specializes, why: "Risk management narrowed to severe, capability-driven risks from frontier models.", src: "Anthropic RSP; OpenAI Preparedness Framework (2023)"}
+    maturity: 3
+    maturity_note: Published by all major frontier labs and now referenced by law (EU Code of Practice, California SB 53); commitments and enforcement vary.
+    date: "2023-09"
+    ref: {title: "Introducing Anthropic's Responsible Scaling Policy", url: "https://www.anthropic.com/news/anthropics-responsible-scaling-policy"}
+    examples: [Anthropic Responsible Scaling Policy, OpenAI Preparedness Framework, Google DeepMind Frontier Safety Framework]
+    status: added
+  - id: content-provenance
+    name: Content Provenance and Credentials
+    aliases: [C2PA, Content Credentials, provenance metadata]
+    region: governance-and-compliance
+    also: [multimodal-applied]
+    desc: Attaching cryptographically signed metadata to media that records who or what made it and how it was edited, so viewers can check whether an image, video or audio clip was generated by AI.
+    parents:
+      - {id: "external:digital-signatures", rel: applies, why: "Binds a signed manifest of origin and edit history to the media file.", src: "C2PA Technical Specification 1.0"}
+    maturity: 3
+    maturity_note: Built into major image generators, cameras and some platforms; metadata is easily stripped, so it is paired with watermarks.
+    date: "2022-01"
+    ref: {title: "C2PA Technical Specification 1.0", url: "https://spec.c2pa.org/specifications/specifications/1.0/specs/C2PA_Specification.html"}
+    examples: [Content Credentials, Adobe Firefly, OpenAI image generation metadata]
+    status: added
+  - id: training-data-licensing
+    name: Training Data Licensing and Opt-Outs
+    aliases: [data provenance, AI crawler opt-outs, robots.txt for AI, data licensing]
+    region: governance-and-compliance
+    also: [data-and-synthetic-data]
+    layer: detail
+    desc: Tracking where training data came from, under what license, and whether its owners opted out, so a team knows what it may legally train on.
+    parents:
+      - {id: "external:copyright-and-licensing", rel: applies, why: "Applies copyright and license terms to datasets assembled for training.", src: "The Data Provenance Initiative (Longpre et al. 2023)"}
+      - {id: model-documentation, rel: extends, why: "Extends documentation from the model to the licenses and sources of its training data (data provenance cards).", src: "Longpre et al. 2023"}
+    maturity: 3
+    maturity_note: Opt-out controls and licensing deals are now routine for large crawls; the legal ground (fair use, text-and-data-mining exceptions) is still being decided in court.
+    date: "2023-10"
+    ref: {title: "The Data Provenance Initiative: A Large Scale Audit of Dataset Licensing & Attribution in AI (Longpre et al.)", arxiv: "2310.16787"}
+    examples: [Data Provenance Explorer, robots.txt GPTBot and Google-Extended rules, publisher licensing deals]
     status: added

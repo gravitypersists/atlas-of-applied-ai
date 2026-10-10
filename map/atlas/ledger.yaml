@@ -132,7 +132,7 @@ settlements:
   - {id: sparse-autoencoders, x: 3303.6, y: 906.7, settled: "2026-10-08"}
   - {id: representation-engineering, x: 3385.1, y: 817.2, settled: "2026-10-08"}
   - {id: circuit-breakers, x: 3387, y: 909.2, settled: "2026-10-08"}
-  - {id: model-documentation, x: 3256.1, y: 1020.8, settled: "2026-10-08"}
+  - {id: model-documentation, x: 3970, y: 880, settled: "2026-10-08"}
   - {id: human-ai-interaction-guidelines, x: 3233.2, y: 1549.7, settled: "2026-10-08"}
   - {id: chat-interfaces, x: 3151.9, y: 1407.1, settled: "2026-10-08"}
   - {id: streaming-responses, x: 3147.1, y: 1582.1, settled: "2026-10-08"}
@@ -247,4 +247,12 @@ settlements:
   - {id: dagger, x: 1120, y: 1910, settled: "2026-10-10"}
   - {id: physics-simulation, x: 1010, y: 1950, settled: "2026-10-10"}
   - {id: spatial-vlms, x: 3953.3, y: 1487.1, settled: "2026-10-08"}
+  - {id: ai-risk-management, x: 4090, y: 820, settled: "2026-10-10"}
+  - {id: eu-ai-act, x: 4220, y: 870, settled: "2026-10-10"}
+  - {id: ai-management-systems, x: 4200, y: 750, settled: "2026-10-10"}
+  - {id: gpai-code-of-practice, x: 4330, y: 960, settled: "2026-10-10"}
+  - {id: dangerous-capability-evals, x: 4000, y: 1010, settled: "2026-10-10"}
+  - {id: frontier-safety-frameworks, x: 4140, y: 990, settled: "2026-10-10"}
+  - {id: training-data-licensing, x: 3880, y: 775, settled: "2026-10-10"}
+  - {id: content-provenance, x: 4090, y: 1115, settled: "2026-10-10"}
 retired: []
