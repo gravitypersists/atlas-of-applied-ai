@@ -84,10 +84,10 @@ function init(map) {
     .attr("class", (d) => `territory ${d.group}`)
     .attr("d", (d) => d.fill)
     .attr("fill", (d) => d.tint);
-  // Old World provinces are clickable areas: the whole province opens its panel (SPEC §5.3).
-  const provinceAreas = terrainLayer.selectAll("path.territory.old-world");
-  provinceAreas.append("title").text((d) => `${d.subtitle} · The Old World`);
-  provinceAreas.on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
+  // Territories are clickable areas: the whole region or province opens its panel (SPEC §5.3).
+  const territoryAreas = terrainLayer.selectAll("path.territory");
+  territoryAreas.append("title").text((d) => (d.group === "old-world" ? `${d.subtitle} · The Old World` : d.title ? `${d.title} · ${d.subtitle}` : d.subtitle));
+  territoryAreas.on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
   if (map.coast) {
     terrainLayer.append("path").attr("class", "coast-hachure").attr("d", map.coast).attr("clip-path", "url(#land-clip)");
     terrainLayer.append("path").attr("class", "coast").attr("d", map.coast);
@@ -228,6 +228,7 @@ function init(map) {
     selected = l;
     const related = new Set([...l.parents.map((p) => p.id), ...l.children]);
     svg.classed("has-selection", true);
+    territoryAreas.classed("chosen", false);
     landmarks
       .classed("selected", (d) => d === l)
       .classed("related", (d) => related.has(d.id));
@@ -250,7 +251,7 @@ function init(map) {
     if (!t) return;
     clearSelection();
     selected = t;
-    provinceAreas.classed("chosen", (d) => d.id === id);
+    territoryAreas.classed("chosen", (d) => d.id === id);
     renderRegionPanel(t);
     setHash(`#${encodeURIComponent(id)}`);
     const members = map.landmarks.filter((l) => inRegion(l, id));
@@ -262,7 +263,7 @@ function init(map) {
     selected = null;
     svg.classed("has-selection", false);
     landmarks.classed("selected", false).classed("related", false);
-    provinceAreas.classed("chosen", false);
+    territoryAreas.classed("chosen", false);
     doodles.classed("lit", false);
     routeLayer.selectAll("path").remove();
     document.getElementById("panel").hidden = true;

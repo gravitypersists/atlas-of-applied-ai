@@ -221,10 +221,12 @@ html, body {
 #map.z1 .territory-label.province.pz1, #map.z2 .territory-label.province { opacity: 1; }
 #map.z1 .territory-label.title { opacity: 0.75; }
 #map.z2 .territory-label.title { opacity: 0.18; }
-/* Old World provinces: the whole area is a click target, with a solid border and a hover lift. */
-.territory.old-world { cursor: pointer; stroke: var(--ink-soft); stroke-opacity: 0.85; stroke-dasharray: 4 2; transition: fill-opacity 150ms; }
-.territory.old-world:hover { fill-opacity: 0.85; }
-.territory.old-world.chosen { fill-opacity: 0.9; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: none; }
+/* Territories: the whole area is a click target, with a hover lift and a solid border when chosen.
+   Old World provinces keep a firmer dashed border. */
+.territory { cursor: pointer; transition: fill-opacity 150ms; }
+.territory.old-world { stroke: var(--ink-soft); stroke-opacity: 0.85; stroke-dasharray: 4 2; }
+.territory:hover { fill-opacity: 0.85; }
+.territory.chosen { fill-opacity: 0.9; stroke: var(--ink); stroke-opacity: 1; stroke-width: 1.5; stroke-dasharray: none; }
 
 /* Selection: the selected landmark and its relatives are always shown and labelled; the rest dims. */
 /* Dimming works on children and fill-opacity, so it multiplies with (never overrides) zoom-level hiding. */

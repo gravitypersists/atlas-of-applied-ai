@@ -371,7 +371,7 @@ When a landmark is selected:
 6. **Lineage:** each parent (and external ancestor) that has a `why`, as a link with its `why` beneath.
 7. **Footer** (fixed height, pinned to the panel's bottom so its chips don't move as the reader walks the graph): a **Built on** row of parent chips and a **Led to** row of child chips. Each row is one line that scrolls sideways (the mouse wheel scrolls it too) and fades at the edge where more chips continue. An empty row reads "none charted". External ancestors appear as non-clickable dashed "beyond the map" chips.
 
-**Region panel.** Clicking an applied territory title (at z0–z1), an Old World province (anywhere on its area, or its name), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle" (for a province, "The Old World · Province"), the title (a province's name), the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
+**Region panel.** Clicking a territory anywhere on its area (an applied region or an Old World province), an applied territory title (at z0–z1), a province name, choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle" (for a province, "The Old World · Province"), the title (a province's name), the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
 
 **Old World panel.** Clicking the Old World title, choosing it in search, or `#old-world` opens the same panel for the whole continent: the subtitle as header, the Old World `overview` (top-level `old_world.overview` in `backbone.yaml`), and **Provinces**: one chip per province, opening its panel. It fits the view to all Old World landmarks.
 
@@ -381,7 +381,7 @@ When a landmark is selected:
 
 **Routes and dimming.** The selected landmark's routes are drawn in world units with a constant on-screen dotted stroke: dark ink to ancestors, lighter ink to descendants, and wider dots across the ocean. Dimming applies to child elements and fill-opacity, so it composes with zoom-level hiding rather than overriding it. A landmark hidden at the current zoom stays hidden unless it's selected or related.
 
-**Clearing selection:** Esc, the × button, or clicking empty map. d3-zoom suppresses the click that ends a drag, so panning never clears.
+**Clearing selection:** Esc, the × button, or clicking open sea. d3-zoom suppresses the click that ends a drag, so panning never clears.
 
 ### 5.4 Search
 
