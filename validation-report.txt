@@ -18,8 +18,8 @@ per region:
   applied data-and-synthetic-data              15
   applied evaluation-and-observability         17
   applied safety-and-security                  19
-  applied ai-product-and-interaction-design    15
-  applied multimodal-applied                   20
+  applied ai-product-and-interaction-design    14
+  applied multimodal-applied                   21
   applied embodied-ai-and-world-models         13
   applied governance-and-compliance            11
 errors: 0

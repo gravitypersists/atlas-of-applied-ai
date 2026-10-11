@@ -16600,80 +16600,6 @@
       "status": "added"
     },
     {
-      "id": "voice-turn-taking",
-      "name": "Turn-Taking and Barge-In",
-      "aliases": [
-        "barge-in",
-        "voice interruption handling",
-        "semantic VAD",
-        "endpointing"
-      ],
-      "region": "ai-product-and-interaction-design",
-      "also": [
-        "multimodal-applied"
-      ],
-      "layer": "detail",
-      "desc": "Deciding when a voice user has finished speaking and stopping generation the moment they interrupt, over a full-duplex audio connection.",
-      "summary": "In a voice conversation the system has to judge when you have finished speaking and stop talking the moment you interrupt. Older assistants waited for a fixed silence, which cut people off mid-thought or left awkward gaps. Realtime speech models listen while they speak, and semantic turn detection uses what you said, not just the pause, to decide whether it is their turn.",
-      "parents": [
-        {
-          "id": "realtime-voice",
-          "rel": "applies",
-          "why": "Full-duplex speech-to-speech models make interruption and fast turn-taking possible.",
-          "src": "Introducing the Realtime API (OpenAI 2024)"
-        },
-        {
-          "id": "streaming-responses",
-          "rel": "extends",
-          "why": "Barge-in is stop-on-interrupt for streamed audio instead of streamed text.",
-          "src": "OpenAI Realtime API guide",
-          "confidence": "medium"
-        }
-      ],
-      "maturity": 3,
-      "maturity_note": "Expected in voice agents since 2024; semantic turn detection is newer and still tuned per product.",
-      "date": "2024-10",
-      "ref": {
-        "title": "Introducing the Realtime API (OpenAI, October 2024)"
-      },
-      "examples": [
-        "ChatGPT Advanced Voice Mode",
-        "OpenAI semantic VAD",
-        "LiveKit turn detector"
-      ],
-      "resources": [
-        {
-          "kind": "docs",
-          "title": "Getting started with the Realtime API",
-          "by": "OpenAI",
-          "year": 2025,
-          "url": "https://developers.openai.com/api/docs/guides/realtime"
-        },
-        {
-          "kind": "blog",
-          "title": "Using a transformer to improve end of turn detection",
-          "by": "LiveKit",
-          "year": 2024,
-          "url": "https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection"
-        },
-        {
-          "kind": "talk",
-          "title": "Fix AI Voice Interruptions with Semantic Turn Detection",
-          "by": "LiveKit",
-          "year": 2026,
-          "url": "https://www.youtube.com/watch?v=XbrlOY4Z-Ow"
-        },
-        {
-          "kind": "paper",
-          "title": "Moshi: a speech-text foundation model for real-time dialogue",
-          "by": "Défossez et al. (Kyutai)",
-          "year": 2024,
-          "url": "https://arxiv.org/abs/2410.00037"
-        }
-      ],
-      "status": "added"
-    },
-    {
       "id": "background-agents",
       "name": "Background Agents",
       "aliases": [
@@ -17608,6 +17534,80 @@
           "by": "Tu Anh Nguyen et al.",
           "year": 2022,
           "url": "https://arxiv.org/abs/2203.16502"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "voice-turn-taking",
+      "name": "Turn-Taking and Barge-In",
+      "aliases": [
+        "barge-in",
+        "voice interruption handling",
+        "semantic VAD",
+        "endpointing"
+      ],
+      "region": "multimodal-applied",
+      "also": [
+        "ai-product-and-interaction-design"
+      ],
+      "layer": "detail",
+      "desc": "Deciding when a voice user has finished speaking and stopping generation the moment they interrupt, over a full-duplex audio connection.",
+      "summary": "In a voice conversation the system has to judge when you have finished speaking and stop talking the moment you interrupt. Older assistants waited for a fixed silence, which cut people off mid-thought or left awkward gaps. Realtime speech models listen while they speak, and semantic turn detection uses what you said, not just the pause, to decide whether it is their turn.",
+      "parents": [
+        {
+          "id": "realtime-voice",
+          "rel": "applies",
+          "why": "Full-duplex speech-to-speech models make interruption and fast turn-taking possible.",
+          "src": "Introducing the Realtime API (OpenAI 2024)"
+        },
+        {
+          "id": "streaming-responses",
+          "rel": "extends",
+          "why": "Barge-in is stop-on-interrupt for streamed audio instead of streamed text.",
+          "src": "OpenAI Realtime API guide",
+          "confidence": "medium"
+        }
+      ],
+      "maturity": 3,
+      "maturity_note": "Expected in voice agents since 2024; semantic turn detection is newer and still tuned per product.",
+      "date": "2024-10",
+      "ref": {
+        "title": "Introducing the Realtime API (OpenAI, October 2024)"
+      },
+      "examples": [
+        "ChatGPT Advanced Voice Mode",
+        "OpenAI semantic VAD",
+        "LiveKit turn detector"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Getting started with the Realtime API",
+          "by": "OpenAI",
+          "year": 2025,
+          "url": "https://developers.openai.com/api/docs/guides/realtime"
+        },
+        {
+          "kind": "blog",
+          "title": "Using a transformer to improve end of turn detection",
+          "by": "LiveKit",
+          "year": 2024,
+          "url": "https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection"
+        },
+        {
+          "kind": "talk",
+          "title": "Fix AI Voice Interruptions with Semantic Turn Detection",
+          "by": "LiveKit",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=XbrlOY4Z-Ow"
+        },
+        {
+          "kind": "paper",
+          "title": "Moshi: a speech-text foundation model for real-time dialogue",
+          "by": "Défossez et al. (Kyutai)",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2410.00037"
         }
       ],
       "status": "added"

@@ -157,7 +157,7 @@ settlements:
   - {id: plan-preview, x: 2959.2, y: 1523.2, settled: "2026-10-08"}
   - {id: agent-action-trace, x: 3016.7, y: 1622.9, settled: "2026-10-08"}
   - {id: trust-calibration, x: 3327, y: 1305.1, settled: "2026-10-08"}
-  - {id: voice-turn-taking, x: 3873.1, y: 1566.8, settled: "2026-10-08"}
+  - {id: voice-turn-taking, x: 4320, y: 1910, settled: "2026-10-08"}
   - {id: mid-run-steering, x: 3268, y: 1254.7, settled: "2026-10-08"}
   - {id: program-aided-reasoning, x: 2215.6, y: 1925.6, settled: "2026-10-08"}
   - {id: reasoning-via-planning, x: 1996.5, y: 2135.4, settled: "2026-10-08"}
@@ -205,7 +205,7 @@ settlements:
   - {id: grouped-query-attention, x: 3653.9, y: 2015.2, settled: "2026-10-08"}
   - {id: chunked-prefill, x: 3358, y: 2003.7, settled: "2026-10-08"}
   - {id: kv-cache-offloading, x: 3275.9, y: 1948.8, settled: "2026-10-08"}
-  - {id: multi-lora-serving, x: 3037.1, y: 1350.7, settled: "2026-10-08"}
+  - {id: multi-lora-serving, x: 3320, y: 1715, settled: "2026-10-08"}
   - {id: draft-heads, x: 3474.5, y: 2039.9, settled: "2026-10-08"}
   - {id: microscaling-formats, x: 3736.4, y: 1794, settled: "2026-10-08"}
   - {id: multi-head-latent-attention, x: 3737.5, y: 1968.8, settled: "2026-10-08"}
