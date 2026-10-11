@@ -51,7 +51,7 @@ Landed 2026-10-10: 16 nodes with summaries, arXiv refs checked against the arXiv
 
 ## 5. 2025–26 frontier
 
-Landed 2026-10-10: 7 nodes with summaries, arXiv ids checked against the arXiv API (Kiro and GitHub Spec Kit pages opened), four boundary rules. No `resources` yet; they need the separate resources pass from `MERGING.md`. `diffusion-language-models`, `agent-continual-learning` and `spec-driven-development` were hand-placed in the ledger (the automatic settle put them offshore near the Painted Isles and the Archival Reach).
+Landed 2026-10-10: 7 nodes with summaries, arXiv ids checked against the arXiv API (Kiro and GitHub Spec Kit pages opened), four boundary rules. Resources pass done the same day: 26 resources (all URLs opened and titles checked; a talk for five of the seven nodes). `diffusion-language-models`, `agent-continual-learning` and `spec-driven-development` were hand-placed in the ledger (the automatic settle put them offshore near the Painted Isles and the Archival Reach).
 
 - [x] Agentic / multi-turn RL: training agents in environments (Adaptation; `agent-trajectory-synthesis` covers only the environment side): `agentic-rl`, core, m3, `also` Agents, parents `rlvr`, `agent-trajectory-synthesis`, `grpo`
 - [x] Reasoning budget control: budget forcing (s1), adaptive thinking effort, overthinking mitigation (Reasoning or Inference): `reasoning-budget-control` in Reasoning, core, m3, `also` Inference

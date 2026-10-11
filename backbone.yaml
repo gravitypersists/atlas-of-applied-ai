@@ -561,6 +561,11 @@ nodes:
     date: "2025-02"
     ref: {title: "Native Sparse Attention: Hardware-Aligned and Natively Trainable Sparse Attention (Yuan et al.)", arxiv: "2502.11089"}
     examples: [DeepSeek-V3.2 DSA, MoBA, NSA]
+    resources:
+      - {kind: blog, title: "DeepSeek-V3.2-Exp in vLLM: Fine-Grained Sparse Attention in Action", by: "vLLM Team", year: 2025, url: "https://vllm.ai/blog/2025-09-29-deepseek-v3-2"}
+      - {kind: paper, title: "MoBA: Mixture of Block Attention for Long-Context LLMs", by: "Enzhe Lu et al.", year: 2025, url: "https://arxiv.org/abs/2502.13189"}
+      - {kind: paper, title: "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models", by: "DeepSeek-AI", year: 2025, url: "https://arxiv.org/abs/2512.02556"}
+      - {kind: paper, title: "Generating Long Sequences with Sparse Transformers", by: "Rewon Child et al.", year: 2019, url: "https://arxiv.org/abs/1904.10509"}
     status: added
 
   # ======================= ROOTS: symbolic-ai-planning =======================
@@ -1346,6 +1351,11 @@ nodes:
     date: "2025-02"
     ref: {title: "Large Language Diffusion Models (Nie et al.)", arxiv: "2502.09992"}
     examples: [LLaDA, Mercury Coder, Gemini Diffusion, Dream]
+    resources:
+      - {kind: blog, title: "Introducing Mercury, the World's First Commercial-Scale Diffusion Large Language Model", by: "Inception", year: 2025, url: "https://www.inceptionlabs.ai/blog/introducing-mercury"}
+      - {kind: blog, title: "Gemini Diffusion", by: "Google DeepMind", year: 2025, url: "https://deepmind.google/models/gemini-diffusion/"}
+      - {kind: talk, title: "The Race to Production-Grade Diffusion LLMs", by: "Stefano Ermon (TWIML AI Podcast)", year: 2026, url: "https://twimlai.com/podcast/twimlai/race-production-grade-diffusion-llms"}
+      - {kind: paper, title: "Discrete Diffusion Modeling by Estimating the Ratios of the Data Distribution", by: "Aaron Lou et al.", year: 2023, url: "https://arxiv.org/abs/2310.16834"}
     status: added
 
   # ======================= APPLIED: prompting-and-context-engineering =======================
@@ -2525,6 +2535,10 @@ nodes:
     date: "2025-07"
     ref: {title: "Introducing Kiro (AWS)", url: "https://kiro.dev/blog/introducing-kiro/"}
     examples: [Kiro specs, GitHub Spec Kit, Tessl]
+    resources:
+      - {kind: blog, title: "Spec-driven development with AI: Get started with a new open source toolkit", by: "Den Delimarsky (GitHub)", year: 2025, url: "https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/"}
+      - {kind: blog, title: "Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl", by: "Birgitta Böckeler (martinfowler.com)", year: 2025, url: "https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html"}
+      - {kind: talk, title: "The New Code", by: "Sean Grove (OpenAI, AI Engineer World's Fair)", year: 2025, url: "https://www.youtube.com/watch?v=8rABwKRsec4"}
     status: added
   - id: agent-continual-learning
     name: Continual Learning for Agents
@@ -2543,6 +2557,10 @@ nodes:
     date: "2025-04"
     ref: {title: "Sleep-time Compute: Beyond Inference Scaling at Test-time (Lin et al.)", arxiv: "2504.13171"}
     examples: [Letta sleep-time agents, ACE, ChatGPT and Claude memory]
+    resources:
+      - {kind: blog, title: "Sleep-time Compute", by: "Letta", year: 2025, url: "https://www.letta.com/blog/sleep-time-compute/"}
+      - {kind: paper, title: "Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models", by: "Qizheng Zhang et al.", year: 2025, url: "https://arxiv.org/abs/2510.04618"}
+      - {kind: paper, title: "Dynamic Cheatsheet: Test-Time Learning with Adaptive Memory", by: "Mirac Suzgun et al.", year: 2025, url: "https://arxiv.org/abs/2504.07952"}
     status: added
 
   # ======================= APPLIED: planning-and-reasoning =======================
@@ -2950,6 +2968,11 @@ nodes:
     date: "2025-01"
     ref: {title: "s1: Simple test-time scaling (Muennighoff et al.)", arxiv: "2501.19393"}
     examples: [Claude thinking budget and effort, OpenAI reasoning_effort, Gemini thinkingBudget, Qwen3 thinking switch]
+    resources:
+      - {kind: docs, title: "Extended thinking", by: "Anthropic (Claude Platform Docs)", year: 2025, url: "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"}
+      - {kind: docs, title: "Reasoning models", by: "OpenAI", year: 2025, url: "https://developers.openai.com/api/docs/guides/reasoning"}
+      - {kind: paper, title: "Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs", by: "Xingyu Chen et al.", year: 2024, url: "https://arxiv.org/abs/2412.21187"}
+      - {kind: paper, title: "Stop Overthinking: A Survey on Efficient Reasoning for Large Language Models", by: "Yang Sui et al.", year: 2025, url: "https://arxiv.org/abs/2503.16419"}
     status: added
 
   # ======================= APPLIED: adaptation-and-post-training =======================
@@ -3325,6 +3348,11 @@ nodes:
     date: "2025-03"
     ref: {title: "Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning (Jin et al.)", arxiv: "2503.09516"}
     examples: [verl, SkyRL, OpenPipe ART, prime-rl, OpenAI agent RFT]
+    resources:
+      - {kind: talk, title: "Training Agentic Reasoners", by: "Will Brown (Prime Intellect, AI Engineer World's Fair)", year: 2025, url: "https://www.youtube.com/watch?v=PbHm2qKnu10"}
+      - {kind: paper, title: "The Landscape of Agentic Reinforcement Learning for LLMs: A Survey", by: "Guibin Zhang et al.", year: 2025, url: "https://arxiv.org/abs/2509.02547"}
+      - {kind: paper, title: "RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning", by: "Zihan Wang et al.", year: 2025, url: "https://arxiv.org/abs/2504.20073"}
+      - {kind: code, title: "ART: Agent Reinforcement Trainer", by: "OpenPipe", year: 2025, url: "https://github.com/OpenPipe/ART"}
     status: added
 
   # ======================= APPLIED: data-and-synthetic-data =======================
@@ -5036,6 +5064,11 @@ nodes:
     date: "2024-05"
     ref: {title: "Chameleon: Mixed-Modal Early-Fusion Foundation Models (Chameleon Team)", arxiv: "2405.09818"}
     examples: [GPT-4o image generation, Gemini 2.5 Flash Image, BAGEL, Janus-Pro]
+    resources:
+      - {kind: blog, title: "Introducing 4o Image Generation", by: "OpenAI", year: 2025, url: "https://openai.com/index/introducing-4o-image-generation/"}
+      - {kind: blog, title: "Introducing Gemini 2.5 Flash Image, our state-of-the-art image model", by: "Google Developers Blog", year: 2025, url: "https://developers.googleblog.com/en/introducing-gemini-2-5-flash-image/"}
+      - {kind: talk, title: "Mixed-modal Language Modeling: Chameleon, Transfusion, and Mixture of Transformers", by: "Luke Zettlemoyer (Simons Institute)", year: 2025, url: "https://www.youtube.com/watch?v=JYMXlmSM_Ew"}
+      - {kind: paper, title: "Transfusion: Predict the Next Token and Diffuse Images with One Multi-Modal Model", by: "Chunting Zhou et al.", year: 2024, url: "https://arxiv.org/abs/2408.11039"}
     status: added
 
   # ======================= APPLIED: embodied-ai-and-world-models =======================

@@ -1,5 +1,5 @@
 nodes: 271  edges: 440  cross-region edges: 163  external ancestors: 43
-status: {'kept': 8, 'added': 186, 'repaired': 77}  layers: {'core': 188, 'detail': 83}  with resources: 212
+status: {'kept': 8, 'added': 186, 'repaired': 77}  layers: {'core': 188, 'detail': 83}  with resources: 219
 per region:
   root    information-retrieval                3
   root    deep-learning-nlp                    11

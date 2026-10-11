@@ -1672,7 +1672,40 @@
     "title": "Native Sparse Attention: Hardware-Aligned and Natively Trainable Sparse Attention (Yuan et al.)",
     "href": "https://arxiv.org/abs/2502.11089"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "blog",
+     "title": "DeepSeek-V3.2-Exp in vLLM: Fine-Grained Sparse Attention in Action",
+     "by": "vLLM Team",
+     "year": 2025,
+     "url": "https://vllm.ai/blog/2025-09-29-deepseek-v3-2",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "MoBA: Mixture of Block Attention for Long-Context LLMs",
+     "by": "Enzhe Lu et al.",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2502.13189",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+     "by": "DeepSeek-AI",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2512.02556",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Generating Long Sequences with Sparse Transformers",
+     "by": "Rewon Child et al.",
+     "year": 2019,
+     "url": "https://arxiv.org/abs/1904.10509",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "transformer-architecture",
@@ -4415,7 +4448,40 @@
     "title": "Large Language Diffusion Models (Nie et al.)",
     "href": "https://arxiv.org/abs/2502.09992"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "blog",
+     "title": "Introducing Mercury, the World's First Commercial-Scale Diffusion Large Language Model",
+     "by": "Inception",
+     "year": 2025,
+     "url": "https://www.inceptionlabs.ai/blog/introducing-mercury",
+     "why": null
+    },
+    {
+     "kind": "blog",
+     "title": "Gemini Diffusion",
+     "by": "Google DeepMind",
+     "year": 2025,
+     "url": "https://deepmind.google/models/gemini-diffusion/",
+     "why": null
+    },
+    {
+     "kind": "talk",
+     "title": "The Race to Production-Grade Diffusion LLMs",
+     "by": "Stefano Ermon (TWIML AI Podcast)",
+     "year": 2026,
+     "url": "https://twimlai.com/podcast/twimlai/race-production-grade-diffusion-llms",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Discrete Diffusion Modeling by Estimating the Ratios of the Data Distribution",
+     "by": "Aaron Lou et al.",
+     "year": 2023,
+     "url": "https://arxiv.org/abs/2310.16834",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "diffusion-models",
@@ -8863,7 +8929,32 @@
     "title": "Introducing Kiro (AWS)",
     "href": "https://kiro.dev/blog/introducing-kiro/"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "blog",
+     "title": "Spec-driven development with AI: Get started with a new open source toolkit",
+     "by": "Den Delimarsky (GitHub)",
+     "year": 2025,
+     "url": "https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/",
+     "why": null
+    },
+    {
+     "kind": "blog",
+     "title": "Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl",
+     "by": "Birgitta Böckeler (martinfowler.com)",
+     "year": 2025,
+     "url": "https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html",
+     "why": null
+    },
+    {
+     "kind": "talk",
+     "title": "The New Code",
+     "by": "Sean Grove (OpenAI, AI Engineer World's Fair)",
+     "year": 2025,
+     "url": "https://www.youtube.com/watch?v=8rABwKRsec4",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "coding-agents",
@@ -8921,7 +9012,32 @@
     "title": "Sleep-time Compute: Beyond Inference Scaling at Test-time (Lin et al.)",
     "href": "https://arxiv.org/abs/2504.13171"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "blog",
+     "title": "Sleep-time Compute",
+     "by": "Letta",
+     "year": 2025,
+     "url": "https://www.letta.com/blog/sleep-time-compute/",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models",
+     "by": "Qizheng Zhang et al.",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2510.04618",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Dynamic Cheatsheet: Test-Time Learning with Adaptive Memory",
+     "by": "Mirac Suzgun et al.",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2504.07952",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "agent-memory",
@@ -10380,7 +10496,40 @@
     "title": "s1: Simple test-time scaling (Muennighoff et al.)",
     "href": "https://arxiv.org/abs/2501.19393"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "docs",
+     "title": "Extended thinking",
+     "by": "Anthropic (Claude Platform Docs)",
+     "year": 2025,
+     "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+     "why": null
+    },
+    {
+     "kind": "docs",
+     "title": "Reasoning models",
+     "by": "OpenAI",
+     "year": 2025,
+     "url": "https://developers.openai.com/api/docs/guides/reasoning",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs",
+     "by": "Xingyu Chen et al.",
+     "year": 2024,
+     "url": "https://arxiv.org/abs/2412.21187",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Stop Overthinking: A Survey on Efficient Reasoning for Large Language Models",
+     "by": "Yang Sui et al.",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2503.16419",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "reasoning-models",
@@ -11754,7 +11903,40 @@
     "title": "Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning (Jin et al.)",
     "href": "https://arxiv.org/abs/2503.09516"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "talk",
+     "title": "Training Agentic Reasoners",
+     "by": "Will Brown (Prime Intellect, AI Engineer World's Fair)",
+     "year": 2025,
+     "url": "https://www.youtube.com/watch?v=PbHm2qKnu10",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "The Landscape of Agentic Reinforcement Learning for LLMs: A Survey",
+     "by": "Guibin Zhang et al.",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2509.02547",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning",
+     "by": "Zihan Wang et al.",
+     "year": 2025,
+     "url": "https://arxiv.org/abs/2504.20073",
+     "why": null
+    },
+    {
+     "kind": "code",
+     "title": "ART: Agent Reinforcement Trainer",
+     "by": "OpenPipe",
+     "year": 2025,
+     "url": "https://github.com/OpenPipe/ART",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "rlvr",
@@ -18041,7 +18223,40 @@
     "title": "Chameleon: Mixed-Modal Early-Fusion Foundation Models (Chameleon Team)",
     "href": "https://arxiv.org/abs/2405.09818"
    },
-   "resources": [],
+   "resources": [
+    {
+     "kind": "blog",
+     "title": "Introducing 4o Image Generation",
+     "by": "OpenAI",
+     "year": 2025,
+     "url": "https://openai.com/index/introducing-4o-image-generation/",
+     "why": null
+    },
+    {
+     "kind": "blog",
+     "title": "Introducing Gemini 2.5 Flash Image, our state-of-the-art image model",
+     "by": "Google Developers Blog",
+     "year": 2025,
+     "url": "https://developers.googleblog.com/en/introducing-gemini-2-5-flash-image/",
+     "why": null
+    },
+    {
+     "kind": "talk",
+     "title": "Mixed-modal Language Modeling: Chameleon, Transfusion, and Mixture of Transformers",
+     "by": "Luke Zettlemoyer (Simons Institute)",
+     "year": 2025,
+     "url": "https://www.youtube.com/watch?v=JYMXlmSM_Ew",
+     "why": null
+    },
+    {
+     "kind": "paper",
+     "title": "Transfusion: Predict the Next Token and Diffuse Images with One Multi-Modal Model",
+     "by": "Chunting Zhou et al.",
+     "year": 2024,
+     "url": "https://arxiv.org/abs/2408.11039",
+     "why": null
+    }
+   ],
    "parents": [
     {
      "id": "vision-language-models",
