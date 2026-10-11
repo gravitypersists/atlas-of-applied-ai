@@ -1,14 +1,13 @@
-nodes: 271  edges: 440  cross-region edges: 163  external ancestors: 43
-status: {'kept': 8, 'added': 186, 'repaired': 77}  layers: {'core': 188, 'detail': 83}  with resources: 219
+nodes: 281  edges: 468  cross-region edges: 168  external ancestors: 50
+status: {'kept': 8, 'added': 198, 'repaired': 75}  layers: {'core': 198, 'detail': 83}  with resources: 219
 per region:
-  root    information-retrieval                3
-  root    deep-learning-nlp                    11
-  root    symbolic-ai-planning                 4
-  root    reinforcement-learning               3
+  root    information-retrieval                4
+  root    deep-learning-nlp                    17
+  root    symbolic-ai-planning                 6
+  root    reinforcement-learning               6
   root    knowledge-representation             2
-  root    human-computer-interaction           3
-  root    systems-security                     3
-  root    software-engineering                 4
+  root    human-computer-interaction           2
+  root    computer-vision                      6
   root    robotics-and-control                 3
   applied inference-and-serving                26
   applied prompting-and-context-engineering    16

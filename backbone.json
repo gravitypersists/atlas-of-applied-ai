@@ -68,16 +68,10 @@
       "definition": "How people work with computational systems. Ancestor of conversational UX, copilots, and human oversight patterns."
     },
     {
-      "id": "systems-security",
+      "id": "computer-vision",
       "kind": "root",
-      "name": "Software and Systems Security",
-      "definition": "Protecting systems from misuse — isolation, least privilege, injection attacks. Ancestor of most AI security thinking."
-    },
-    {
-      "id": "software-engineering",
-      "kind": "root",
-      "name": "Software Engineering and Operations",
-      "definition": "Practices for building and running reliable software — testing, observability, state machines, protocols. Added in v0.2; the ancestor of evals, tracing, workflows, and MCP."
+      "name": "Computer Vision",
+      "definition": "Teaching machines to see — convolutional networks, the ImageNet breakthrough, and the generative models that learned to draw. Ancestor of vision-language models, image generation, and the deep-learning toolkit itself."
     },
     {
       "id": "robotics-and-control",
@@ -93,8 +87,7 @@
       "definition": "Running models efficiently and cheaply — memory management, batching, quantization, decoding acceleration, caching, and routing between models.",
       "distinct_from": "Treats weights as fixed (vs. Adaptation) and works below the prompt/API layer (vs. Prompting). Decoding-time mechanisms like constrained decoding live here; the practices built on them live in Prompting.",
       "descends_from": [
-        "deep-learning-nlp",
-        "software-engineering"
+        "deep-learning-nlp"
       ],
       "deep_dive_focus": [
         "The 2025–2026 serving stack (disaggregation, KV offload, multi-tier caching) and which techniques became defaults",
@@ -299,7 +292,6 @@
       "distinct_from": "Changes environment state or runs multi-step control flow (vs. Retrieval, which reads). Reasoning techniques that don't act live in Planning and Reasoning.",
       "descends_from": [
         "symbolic-ai-planning",
-        "software-engineering",
         "deep-learning-nlp"
       ],
       "deep_dive_focus": [
@@ -573,7 +565,6 @@
       "definition": "Measuring and debugging AI systems — benchmarks, LLM-as-judge, eval-driven development, RAG and agent evals, tracing, and production monitoring.",
       "distinct_from": "Measures and observes; does not change behavior. Reward models used for training or search live in Reasoning or Adaptation.",
       "descends_from": [
-        "software-engineering",
         "deep-learning-nlp"
       ],
       "deep_dive_focus": [
@@ -641,7 +632,6 @@
       "definition": "Keeping AI systems from causing harm — prompt injection and jailbreaks, guardrails and defenses, red teaming, sandboxing and permissions, and interpretability as a control tool.",
       "distinct_from": "Primary purpose is risk reduction. Uses techniques from Prompting (guardrails) and Evaluation (red teaming) but is defined by intent. Policies, regulation, standards and documentation that govern AI systems live in Governance.",
       "descends_from": [
-        "systems-security",
         "deep-learning-nlp",
         "human-computer-interaction"
       ],
@@ -915,10 +905,7 @@
       "title": "The Chancery",
       "definition": "The rules, records and commitments around AI systems — model and system documentation, risk management frameworks and management-system standards, regulation such as the EU AI Act, frontier safety frameworks and the dangerous-capability evaluations that trigger them, content provenance, and training-data licensing.",
       "distinct_from": "Defined by accountability to someone outside the engineering team (regulators, auditors, the public, rights holders). The technical controls these rules require live in their own regions (guardrails and sandboxing in Safety, eval harnesses in Evaluation, data pipelines in Data).",
-      "descends_from": [
-        "systems-security",
-        "software-engineering"
-      ],
+      "descends_from": [],
       "node_target": "8–14",
       "deep_dive_focus": [
         "What compliance work actually lands on an engineering team — EU AI Act obligations for providers and deployers, GPAI obligations and the Code of Practice, and how teams map them to NIST AI RMF and ISO/IEC 42001",
@@ -1102,8 +1089,12 @@
       "rule": "Defined by the human decision point → Product (secondary: Agents)."
     },
     {
-      "concept": "Architectures (MoE",
-      "SSMs)": null,
+      "concept": "Old World scope (non-AI ancestors)",
+      "home": "external:",
+      "rule": "The Old World holds the AI history that led to the 2020s transformer explosion. Ancestors from outside AI (software engineering, systems security, classic HCI, law and standards) stay as external: parents with a why, never as landmarks."
+    },
+    {
+      "concept": "Architectures (MoE, SSMs)",
       "home": "deep-learning-nlp",
       "rule": "Model internals stay in the root unless engineers configure them at serving time."
     },
@@ -1204,7 +1195,14 @@
       ],
       "region": "information-retrieval",
       "desc": "Probabilistic ranking function scoring documents by term frequency and inverse document frequency; the standard lexical search baseline.",
-      "parents": [],
+      "parents": [
+        {
+          "id": "tf-idf",
+          "rel": "extends",
+          "why": "Adds term-frequency saturation and document-length normalization to IDF weighting.",
+          "src": "Okapi at TREC-3 (Robertson et al. 1994)"
+        }
+      ],
       "maturity": 5,
       "maturity_note": "Decades of deployment; default lexical scorer in search engines.",
       "date": "1994",
@@ -1274,6 +1272,31 @@
       "status": "added"
     },
     {
+      "id": "tf-idf",
+      "name": "TF-IDF",
+      "aliases": [
+        "inverse document frequency",
+        "IDF",
+        "term weighting"
+      ],
+      "region": "information-retrieval",
+      "desc": "Weighting a search term by how often it appears in a document and how rare it is across the collection.",
+      "summary": "A word that appears in almost every document tells you little; a rare one tells you a lot. Inverse document frequency turns that intuition into a weight, and multiplied by how often a term appears in a document, it gives TF-IDF: the scoring idea behind decades of search engines and the direct ancestor of BM25.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Textbook baseline; lives on inside BM25 and every lexical search engine.",
+      "date": "1972",
+      "ref": {
+        "title": "A Statistical Interpretation of Term Specificity and its Application in Retrieval (Spärck Jones)",
+        "url": "https://doi.org/10.1108/eb026526"
+      },
+      "examples": [
+        "scikit-learn TfidfVectorizer",
+        "Lucene classic similarity"
+      ],
+      "status": "added"
+    },
+    {
       "id": "attention-mechanism",
       "name": "Attention Mechanism",
       "aliases": [
@@ -1303,7 +1326,14 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Training networks to map an input sequence to an output sequence end to end.",
-      "parents": [],
+      "parents": [
+        {
+          "id": "lstm",
+          "rel": "applies",
+          "why": "Encodes the input and decodes the output with deep LSTMs.",
+          "src": "Sequence to Sequence Learning with Neural Networks (Sutskever et al. 2014)"
+        }
+      ],
       "maturity": 5,
       "maturity_note": "Foundational framing for translation and generation.",
       "date": "2014-09",
@@ -1326,6 +1356,12 @@
       "region": "deep-learning-nlp",
       "desc": "Architecture built entirely on self-attention, dispensing with recurrence; the basis of all modern LLMs.",
       "parents": [
+        {
+          "id": "residual-networks",
+          "rel": "applies",
+          "why": "Wraps every attention and feed-forward sublayer in a residual connection, which lets the stack go deep.",
+          "src": "Attention Is All You Need (Vaswani et al. 2017)"
+        },
         {
           "id": "attention-mechanism",
           "rel": "extends",
@@ -1650,6 +1686,191 @@
       "status": "added"
     },
     {
+      "id": "perceptron",
+      "name": "Perceptron",
+      "aliases": [
+        "artificial neuron",
+        "Rosenblatt perceptron"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "A single artificial neuron that learns a linear decision boundary by adjusting its weights from labeled examples.",
+      "summary": "The first machine that learned from examples: weighted inputs, a threshold, and a rule that nudges the weights whenever it gets an answer wrong. One perceptron can only draw a straight line between classes, a limit that stalled the field for years, but stacking them into layers is still what a neural network is.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Historical root of every neural network.",
+      "date": "1958",
+      "ref": {
+        "title": "The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain (Rosenblatt)",
+        "url": "https://doi.org/10.1037/h0042519"
+      },
+      "examples": [
+        "Mark I Perceptron"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "backpropagation",
+      "name": "Backpropagation",
+      "aliases": [
+        "backprop",
+        "gradient descent through layers",
+        "reverse-mode differentiation"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Training multi-layer networks by passing the error gradient backwards through the layers with the chain rule.",
+      "summary": "To train a network with hidden layers you need to know how much each weight contributed to the error. Backpropagation computes that efficiently by running the chain rule backwards from the output, layer by layer. Every modern model, LLMs included, is still trained this way.",
+      "parents": [
+        {
+          "id": "perceptron",
+          "rel": "extends",
+          "why": "Makes networks of many layers of perceptron-like units trainable, escaping the single-layer limit.",
+          "src": "Learning representations by back-propagating errors (Rumelhart, Hinton & Williams 1986)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "How every neural network is trained.",
+      "date": "1986-10",
+      "ref": {
+        "title": "Learning representations by back-propagating errors (Rumelhart, Hinton & Williams)",
+        "url": "https://doi.org/10.1038/323533a0"
+      },
+      "examples": [
+        "PyTorch autograd",
+        "JAX grad"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "lstm",
+      "name": "Long Short-Term Memory",
+      "aliases": [
+        "LSTM",
+        "recurrent neural networks",
+        "RNN",
+        "GRU"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "A recurrent network with gated memory cells that can carry information across long sequences without the gradient vanishing.",
+      "summary": "Recurrent networks read a sequence one step at a time, carrying a memory forward, but plain ones forget quickly because the training signal fades over long distances. LSTM adds gates that decide what to keep, write and forget. From about 2014 to 2017 it was the workhorse of translation, speech and text generation, until the Transformer replaced it.",
+      "parents": [
+        {
+          "id": "backpropagation",
+          "rel": "specializes",
+          "why": "Trained by backpropagation through time; its gates are designed to keep that gradient from vanishing.",
+          "src": "Long Short-Term Memory (Hochreiter & Schmidhuber 1997)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Dominant sequence model before Transformers; still used in small and streaming models.",
+      "date": "1997-11",
+      "ref": {
+        "title": "Long Short-Term Memory (Hochreiter & Schmidhuber)",
+        "url": "https://doi.org/10.1162/neco.1997.9.8.1735"
+      },
+      "examples": [
+        "Google Neural Machine Translation (2016)",
+        "early Siri and Google voice recognition"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "neural-language-models",
+      "name": "Neural Language Models",
+      "aliases": [
+        "neural probabilistic language model",
+        "NPLM"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Predicting the next word with a neural network over learned word vectors instead of counting word sequences.",
+      "summary": "Older language models counted how often word sequences occurred, so they knew nothing about sentences they had never seen. Bengio's model learned a vector for each word and a network that predicts the next word from those vectors, so similar words share what they learn. Next-word prediction with learned representations is exactly what an LLM still does, at vastly larger scale.",
+      "parents": [
+        {
+          "id": "backpropagation",
+          "rel": "applies",
+          "why": "Learns word vectors and the predictor jointly by gradient descent.",
+          "src": "A Neural Probabilistic Language Model (Bengio et al. 2003)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "The objective every LLM is pretrained on.",
+      "date": "2003",
+      "ref": {
+        "title": "A Neural Probabilistic Language Model (Bengio, Ducharme, Vincent & Jauvin)",
+        "url": "https://www.jmlr.org/papers/v3/bengio03a.html"
+      },
+      "examples": [
+        "n-gram models it replaced",
+        "GPT pretraining objective"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "word-embeddings",
+      "name": "Word Embeddings",
+      "aliases": [
+        "word2vec",
+        "GloVe",
+        "word vectors",
+        "distributed representations"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Dense vectors for words, learned from co-occurrence, in which similar words lie close together and some relations become directions.",
+      "summary": "word2vec showed that a very simple model trained on billions of words gives each word a vector where meaning becomes geometry: synonyms sit close together, and \"king − man + woman\" lands near \"queen\". Pretrained word vectors became the standard first layer of NLP systems and the idea behind every embedding model used in search and RAG today.",
+      "parents": [
+        {
+          "id": "neural-language-models",
+          "rel": "specializes",
+          "why": "Strips the neural language model down to the word-vector layer and trains it fast at web scale.",
+          "src": "Efficient Estimation of Word Representations in Vector Space (Mikolov et al. 2013)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Superseded by contextual embeddings, but the concept underlies all of them.",
+      "date": "2013-01",
+      "ref": {
+        "title": "Efficient Estimation of Word Representations in Vector Space (Mikolov et al.)",
+        "arxiv": "1301.3781"
+      },
+      "examples": [
+        "word2vec",
+        "GloVe",
+        "fastText"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "scaling-laws",
+      "name": "Scaling Laws",
+      "aliases": [
+        "neural scaling laws",
+        "Chinchilla scaling",
+        "compute-optimal training"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Power-law relationships that predict a language model's loss from its size, its training data and its compute.",
+      "summary": "Loss falls smoothly and predictably as models get bigger and see more data, across many orders of magnitude. That turned building larger models from a gamble into an engineering plan, and it is the bet behind the 2020s explosion: GPT-3 and its successors were sized from these curves. Chinchilla (2022) later corrected the recipe toward more data per parameter.",
+      "parents": [
+        {
+          "id": "pretrained-language-models",
+          "rel": "extends",
+          "why": "Measures how pretrained Transformer language models improve with parameters, data and compute.",
+          "src": "Scaling Laws for Neural Language Models (Kaplan et al. 2020)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "How frontier labs size models and budgets.",
+      "date": "2020-01",
+      "ref": {
+        "title": "Scaling Laws for Neural Language Models (Kaplan et al.)",
+        "arxiv": "2001.08361"
+      },
+      "examples": [
+        "GPT-3 sizing",
+        "Chinchilla"
+      ],
+      "status": "added"
+    },
+    {
       "id": "heuristic-search",
       "name": "Heuristic Search",
       "aliases": [
@@ -1750,6 +1971,66 @@
       "status": "added"
     },
     {
+      "id": "monte-carlo-tree-search",
+      "name": "Monte Carlo Tree Search",
+      "aliases": [
+        "MCTS",
+        "UCT"
+      ],
+      "region": "symbolic-ai-planning",
+      "desc": "Growing a search tree by random playouts, choosing which branch to explore next by balancing promise against uncertainty.",
+      "summary": "Instead of evaluating every position, the search plays many quick random games from the current state and keeps statistics on which moves led to wins. A bandit rule (UCT) decides whether to dig deeper into the best-looking branch or try a less-explored one. It cracked computer Go and is the search behind AlphaGo and many LLM reasoning-search methods.",
+      "parents": [
+        {
+          "id": "heuristic-search",
+          "rel": "extends",
+          "why": "Replaces a hand-written heuristic with value estimates from random playouts.",
+          "src": "Bandit Based Monte-Carlo Planning (Kocsis & Szepesvári 2006)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Standard game-playing and planning search.",
+      "date": "2006",
+      "ref": {
+        "title": "Bandit Based Monte-Carlo Planning (Kocsis & Szepesvári)",
+        "url": "https://doi.org/10.1007/11871842_29"
+      },
+      "examples": [
+        "AlphaGo",
+        "AlphaZero",
+        "MuZero"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "classical-multi-agent-systems",
+      "name": "Multi-Agent Systems",
+      "aliases": [
+        "intelligent agents",
+        "BDI agents",
+        "agent communication languages",
+        "distributed AI"
+      ],
+      "region": "symbolic-ai-planning",
+      "desc": "Autonomous software agents that perceive, decide and act, and coordinate or negotiate with each other.",
+      "summary": "Decades before LLM agents, AI research defined an agent as software that is autonomous, reacts to its environment, pursues goals and talks to other agents. It produced belief-desire-intention architectures, agent communication languages like KQML and FIPA-ACL, and protocols for negotiation and task sharing. Today's multi-agent frameworks and agent-to-agent protocols rediscover many of the same ideas.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Mature research field; its vocabulary is reused by LLM agent frameworks.",
+      "date": "1995-06",
+      "ref": {
+        "title": "Intelligent Agents: Theory and Practice (Wooldridge & Jennings)",
+        "url": "https://doi.org/10.1017/S0269888900008122"
+      },
+      "examples": [
+        "BDI agents",
+        "KQML",
+        "FIPA-ACL",
+        "Contract Net"
+      ],
+      "status": "added"
+    },
+    {
       "id": "markov-decision-process",
       "name": "Markov Decision Process",
       "aliases": [
@@ -1824,6 +2105,323 @@
       "examples": [
         "TRL PPOTrainer",
         "OpenRLHF"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "q-learning",
+      "name": "Q-Learning",
+      "aliases": [
+        "temporal-difference learning",
+        "TD learning",
+        "value-based RL"
+      ],
+      "region": "reinforcement-learning",
+      "desc": "Learning the value of each action in each state from experience, by bootstrapping from the estimated value of the next state.",
+      "summary": "An agent keeps an estimate of how good each action is in each situation and updates it after every step, using the reward it got plus its own estimate of what comes next. It needs no model of the world and provably finds the best policy given enough exploration. It is the value-learning half of RL, alongside policy gradients.",
+      "parents": [
+        {
+          "id": "markov-decision-process",
+          "rel": "applies",
+          "why": "Learns the MDP's optimal action values without knowing its transition model.",
+          "src": "Q-learning (Watkins & Dayan 1992)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Textbook RL algorithm.",
+      "date": "1992-05",
+      "ref": {
+        "title": "Q-learning (Watkins & Dayan)",
+        "url": "https://doi.org/10.1007/BF00992698"
+      },
+      "examples": [
+        "tabular Q-learning",
+        "DQN"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "deep-q-networks",
+      "name": "Deep Q-Networks",
+      "aliases": [
+        "DQN",
+        "deep reinforcement learning",
+        "Atari DQN"
+      ],
+      "region": "reinforcement-learning",
+      "desc": "Q-learning with a deep convolutional network as the value function, trained from raw pixels with experience replay.",
+      "summary": "DeepMind trained one network to play Atari games straight from the screen pixels, using only the score as reward. A convolutional network estimated action values, and tricks like replaying past experience kept training stable. It launched deep reinforcement learning as a field.",
+      "parents": [
+        {
+          "id": "q-learning",
+          "rel": "extends",
+          "why": "Approximates the Q-function with a deep network and stabilizes it with experience replay.",
+          "src": "Playing Atari with Deep Reinforcement Learning (Mnih et al. 2013)"
+        },
+        {
+          "id": "convolutional-neural-networks",
+          "rel": "combines",
+          "why": "Uses a convolutional network to read game frames.",
+          "src": "Playing Atari with Deep Reinforcement Learning (Mnih et al. 2013)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Founding result of deep RL.",
+      "date": "2013-12",
+      "ref": {
+        "title": "Playing Atari with Deep Reinforcement Learning (Mnih et al.)",
+        "arxiv": "1312.5602"
+      },
+      "examples": [
+        "Atari DQN",
+        "Rainbow"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "alphago",
+      "name": "AlphaGo",
+      "aliases": [
+        "AlphaZero",
+        "MuZero",
+        "self-play"
+      ],
+      "region": "reinforcement-learning",
+      "desc": "Combining deep policy and value networks, trained by supervised learning and self-play RL, with Monte Carlo tree search.",
+      "summary": "AlphaGo beat a top professional Go player in 2016, a decade earlier than most expected. Neural networks proposed promising moves and judged positions, tree search looked ahead, and self-play reinforcement learning kept improving both. Its recipe of a learned model plus search plus self-improvement is a direct inspiration for today's reasoning models.",
+      "parents": [
+        {
+          "id": "monte-carlo-tree-search",
+          "rel": "combines",
+          "why": "Guides MCTS with learned move priors and position values.",
+          "src": "Mastering the game of Go with deep neural networks and tree search (Silver et al. 2016)"
+        },
+        {
+          "id": "policy-gradient-methods",
+          "rel": "applies",
+          "why": "Improves its policy network by policy-gradient RL on self-play games.",
+          "src": "Mastering the game of Go with deep neural networks and tree search (Silver et al. 2016)"
+        },
+        {
+          "id": "convolutional-neural-networks",
+          "rel": "applies",
+          "why": "Its policy and value networks are deep convolutional networks over the board.",
+          "src": "Mastering the game of Go with deep neural networks and tree search (Silver et al. 2016)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Landmark result; the recipe recurs in reasoning-model training.",
+      "date": "2016-01",
+      "ref": {
+        "title": "Mastering the game of Go with deep neural networks and tree search (Silver et al.)",
+        "url": "https://doi.org/10.1038/nature16961"
+      },
+      "examples": [
+        "AlphaGo",
+        "AlphaZero",
+        "MuZero"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "convolutional-neural-networks",
+      "name": "Convolutional Neural Networks",
+      "aliases": [
+        "CNN",
+        "ConvNet",
+        "LeNet"
+      ],
+      "region": "computer-vision",
+      "desc": "Networks that slide small learned filters across an image, sharing weights so the same pattern is recognized anywhere.",
+      "summary": "Instead of connecting every pixel to every neuron, a convolutional network learns small filters (edges, then textures, then parts) and slides them across the image. That builds in the fact that an object looks the same wherever it appears, and makes vision learnable with far fewer parameters. LeCun's network read handwritten zip codes for the US Postal Service.",
+      "parents": [
+        {
+          "id": "backpropagation",
+          "rel": "applies",
+          "why": "Trains convolutional filters end to end by backpropagation.",
+          "src": "Backpropagation Applied to Handwritten Zip Code Recognition (LeCun et al. 1989)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Standard vision architecture for two decades; still common at the edge.",
+      "date": "1989-12",
+      "ref": {
+        "title": "Backpropagation Applied to Handwritten Zip Code Recognition (LeCun et al.)",
+        "url": "https://doi.org/10.1162/neco.1989.1.4.541"
+      },
+      "examples": [
+        "LeNet",
+        "AlexNet",
+        "ResNet",
+        "EfficientNet"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "alexnet",
+      "name": "AlexNet and the ImageNet Moment",
+      "aliases": [
+        "AlexNet",
+        "ImageNet",
+        "GPU-trained deep networks",
+        "deep learning revolution"
+      ],
+      "region": "computer-vision",
+      "desc": "A deep convolutional network trained on GPUs over the ImageNet dataset that cut image-recognition error by a wide margin in 2012.",
+      "summary": "In 2012 a deep CNN trained on two gaming GPUs won the ImageNet competition by a margin that shocked the field. The ingredients (a big labeled dataset, GPU training, ReLU and dropout) showed that deep networks win once there is enough data and compute. That result started the deep-learning era that the Transformer and LLMs grew out of.",
+      "parents": [
+        {
+          "id": "convolutional-neural-networks",
+          "rel": "extends",
+          "why": "Scales a CNN up in depth, data and GPU compute.",
+          "src": "ImageNet Classification with Deep Convolutional Neural Networks (Krizhevsky, Sutskever & Hinton 2012)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "The turning point that started the deep-learning era.",
+      "date": "2012",
+      "ref": {
+        "title": "ImageNet Classification with Deep Convolutional Neural Networks (Krizhevsky, Sutskever & Hinton)",
+        "url": "https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html"
+      },
+      "examples": [
+        "AlexNet",
+        "VGG",
+        "ImageNet"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "residual-networks",
+      "name": "Residual Networks",
+      "aliases": [
+        "ResNet",
+        "residual connections",
+        "skip connections"
+      ],
+      "region": "computer-vision",
+      "desc": "Adding each layer's input back to its output, so very deep networks stay trainable.",
+      "summary": "Making networks deeper used to make them worse, because the training signal degraded through many layers. ResNet let each block learn only a correction to its input, with a shortcut that passes the input straight through. Networks jumped from about 20 to over 150 layers, and every Transformer layer since uses the same residual shortcut.",
+      "parents": [
+        {
+          "id": "alexnet",
+          "rel": "extends",
+          "why": "Takes deep CNNs from tens to hundreds of layers with identity shortcuts.",
+          "src": "Deep Residual Learning for Image Recognition (He et al. 2015)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Residual connections are in essentially every deep architecture.",
+      "date": "2015-12",
+      "ref": {
+        "title": "Deep Residual Learning for Image Recognition (He et al.)",
+        "arxiv": "1512.03385"
+      },
+      "examples": [
+        "ResNet-50",
+        "Transformer residual stream"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "variational-autoencoders",
+      "name": "Variational Autoencoders",
+      "aliases": [
+        "VAE",
+        "VQ-VAE",
+        "latent variable models"
+      ],
+      "region": "computer-vision",
+      "desc": "Learning to compress data into a smooth latent space and decode it back, so sampling the latent space generates new data.",
+      "summary": "An encoder squeezes an image into a few numbers, a decoder rebuilds it, and training keeps the space of codes smooth enough that random codes decode to plausible new images. VAEs were among the first deep generative models. Their encoders survive as the compression stage of latent diffusion and as the latent state of world models.",
+      "parents": [
+        {
+          "id": "backpropagation",
+          "rel": "applies",
+          "why": "Makes a latent-variable model trainable by gradient descent with the reparameterization trick.",
+          "src": "Auto-Encoding Variational Bayes (Kingma & Welling 2013)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Standard component of latent diffusion and world models.",
+      "date": "2013-12",
+      "ref": {
+        "title": "Auto-Encoding Variational Bayes (Kingma & Welling)",
+        "arxiv": "1312.6114"
+      },
+      "examples": [
+        "Stable Diffusion's VAE",
+        "VQ-VAE",
+        "World Models"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "generative-adversarial-networks",
+      "name": "Generative Adversarial Networks",
+      "aliases": [
+        "GAN",
+        "StyleGAN",
+        "adversarial training"
+      ],
+      "region": "computer-vision",
+      "desc": "Training a generator against a discriminator that tries to tell its samples from real data.",
+      "summary": "Two networks play a game: one makes fake images, the other tries to spot them, and each improves by beating the other. GANs produced the first photorealistic generated faces (StyleGAN) and dominated image generation from 2014 to about 2021, when diffusion models overtook them. They remain in use for fast, single-step generation and super-resolution.",
+      "parents": [
+        {
+          "id": "backpropagation",
+          "rel": "applies",
+          "why": "Trains generator and discriminator jointly by backpropagating through both.",
+          "src": "Generative Adversarial Networks (Goodfellow et al. 2014)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Largely replaced by diffusion for image generation; still used for fast decoders and upscalers.",
+      "date": "2014-06",
+      "ref": {
+        "title": "Generative Adversarial Networks (Goodfellow et al.)",
+        "arxiv": "1406.2661"
+      },
+      "examples": [
+        "StyleGAN",
+        "CycleGAN",
+        "ESRGAN"
+      ],
+      "status": "added"
+    },
+    {
+      "id": "vision-transformer",
+      "name": "Vision Transformer",
+      "aliases": [
+        "ViT"
+      ],
+      "region": "computer-vision",
+      "desc": "Applying a standard Transformer to images by cutting them into patches and treating each patch as a token.",
+      "summary": "ViT cut an image into 16×16 patches, turned each into a token, and fed them to an ordinary Transformer. With enough training data it matched or beat the best CNNs. That made text and images speak the same architecture, which is what lets CLIP, vision-language models and diffusion Transformers mix the two.",
+      "parents": [
+        {
+          "id": "transformer-architecture",
+          "rel": "applies",
+          "why": "Uses an unmodified Transformer encoder over image patches.",
+          "src": "An Image is Worth 16x16 Words (Dosovitskiy et al. 2020)"
+        },
+        {
+          "id": "convolutional-neural-networks",
+          "rel": "replaces",
+          "why": "Matches or beats CNNs at scale without convolutions.",
+          "src": "An Image is Worth 16x16 Words (Dosovitskiy et al. 2020)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Standard image encoder in multimodal models.",
+      "date": "2020-10",
+      "ref": {
+        "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale (Dosovitskiy et al.)",
+        "arxiv": "2010.11929"
+      },
+      "examples": [
+        "ViT",
+        "the image encoders of CLIP and SigLIP"
       ],
       "status": "added"
     },
@@ -1979,27 +2577,6 @@
       "status": "added"
     },
     {
-      "id": "direct-manipulation",
-      "name": "Direct Manipulation",
-      "aliases": [
-        "WYSIWYG"
-      ],
-      "region": "human-computer-interaction",
-      "desc": "Interfaces where users act on visible objects with immediate, reversible feedback.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Foundational UI principle.",
-      "date": "1983",
-      "ref": {
-        "title": "Direct Manipulation: A Step Beyond Programming Languages (Shneiderman)"
-      },
-      "examples": [
-        "GUIs",
-        "canvas editors"
-      ],
-      "status": "added"
-    },
-    {
       "id": "mixed-initiative-interaction",
       "name": "Mixed-Initiative Interaction",
       "aliases": [
@@ -2010,7 +2587,7 @@
       "desc": "Designing systems where the user and an automated agent each take initiative, with the system weighing when to act, ask, or defer.",
       "parents": [
         {
-          "id": "direct-manipulation",
+          "id": "external:direct-manipulation",
           "rel": "combines",
           "why": "Unifies direct-manipulation interfaces with automated agents.",
           "src": "Principles of Mixed-Initiative User Interfaces (Horvitz 1999)"
@@ -2025,169 +2602,6 @@
       "examples": [
         "copilots",
         "agent approval flows"
-      ],
-      "status": "added"
-    },
-    {
-      "id": "least-privilege",
-      "name": "Least Privilege",
-      "aliases": [
-        "principle of least authority"
-      ],
-      "region": "systems-security",
-      "desc": "Every component should operate with only the permissions it needs.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Core security design principle.",
-      "date": "1975",
-      "ref": {
-        "title": "The Protection of Information in Computer Systems (Saltzer & Schroeder)"
-      },
-      "examples": [
-        "capability systems",
-        "IAM scoping"
-      ],
-      "status": "added"
-    },
-    {
-      "id": "sandboxing-and-isolation",
-      "name": "Sandboxing and Isolation",
-      "aliases": [
-        "containerization",
-        "secure execution"
-      ],
-      "region": "systems-security",
-      "desc": "Running untrusted code in restricted environments that cannot affect the host.",
-      "parents": [
-        {
-          "id": "least-privilege",
-          "rel": "applies",
-          "why": "Enforces minimal authority on untrusted code.",
-          "src": "A Secure Environment for Untrusted Helper Applications (Goldberg et al. 1996)"
-        }
-      ],
-      "maturity": 5,
-      "maturity_note": "Essential infrastructure.",
-      "date": "1996",
-      "ref": {
-        "title": "A Secure Environment for Untrusted Helper Applications (Goldberg et al., USENIX Security 1996)"
-      },
-      "examples": [
-        "gVisor",
-        "Firecracker",
-        "Docker"
-      ],
-      "status": "repaired"
-    },
-    {
-      "id": "injection-attacks",
-      "name": "Injection Attacks",
-      "aliases": [
-        "SQL injection",
-        "code injection"
-      ],
-      "region": "systems-security",
-      "desc": "Attacks where untrusted data is interpreted as instructions because data and control share a channel.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Classic, well-understood vulnerability class.",
-      "date": "1998",
-      "ref": {
-        "title": "NT Web Technology Vulnerabilities (rain.forest.puppy, Phrack 54) — early public SQL injection write-up"
-      },
-      "examples": [
-        "SQL injection",
-        "XSS"
-      ],
-      "status": "added"
-    },
-    {
-      "id": "statecharts",
-      "name": "Statecharts and State Machines",
-      "aliases": [
-        "finite-state machines",
-        "workflow engines"
-      ],
-      "region": "software-engineering",
-      "desc": "Modeling system behavior as explicit states and transitions, including hierarchy and concurrency.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Standard modeling technique.",
-      "date": "1987",
-      "ref": {
-        "title": "Statecharts: A Visual Formalism for Complex Systems (Harel)"
-      },
-      "examples": [
-        "XState",
-        "AWS Step Functions",
-        "Temporal"
-      ],
-      "status": "added"
-    },
-    {
-      "id": "test-driven-development",
-      "name": "Test-Driven Development",
-      "aliases": [
-        "TDD",
-        "regression testing"
-      ],
-      "region": "software-engineering",
-      "desc": "Writing tests that define expected behavior before or alongside the code, and gating changes on them.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Established engineering practice.",
-      "date": "2002",
-      "ref": {
-        "title": "Test-Driven Development: By Example (Beck)"
-      },
-      "examples": [
-        "pytest",
-        "Jest",
-        "CI pipelines"
-      ],
-      "status": "added"
-    },
-    {
-      "id": "distributed-tracing",
-      "name": "Distributed Tracing",
-      "aliases": [
-        "spans",
-        "Dapper"
-      ],
-      "region": "software-engineering",
-      "desc": "Recording the causal tree of operations across services so latency and failures can be attributed.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Standard observability infrastructure.",
-      "date": "2010",
-      "ref": {
-        "title": "Dapper, a Large-Scale Distributed Systems Tracing Infrastructure (Sigelman et al., Google)"
-      },
-      "examples": [
-        "OpenTelemetry",
-        "Jaeger"
-      ],
-      "status": "repaired"
-    },
-    {
-      "id": "language-server-protocol",
-      "name": "Language Server Protocol",
-      "aliases": [
-        "LSP"
-      ],
-      "region": "software-engineering",
-      "desc": "A JSON-RPC protocol that decouples editors from language tooling, solving an N×M integration problem.",
-      "parents": [],
-      "maturity": 5,
-      "maturity_note": "Ubiquitous editor standard; explicit inspiration for MCP.",
-      "date": "2016-06",
-      "ref": {
-        "title": "Language Server Protocol (Microsoft)",
-        "url": "https://microsoft.github.io/language-server-protocol/"
-      },
-      "examples": [
-        "VS Code",
-        "Neovim LSP"
       ],
       "status": "added"
     },
@@ -3578,9 +3992,6 @@
         "LiteLLM"
       ],
       "region": "inference-and-serving",
-      "also": [
-        "software-engineering"
-      ],
       "desc": "A proxy between applications and model providers that gives one API over many models and adds fallback, retries, rate limits, spend budgets, keys and logging.",
       "summary": "Instead of each application calling each provider directly, every call goes through one proxy. The gateway speaks a single API for many models, retries or falls back to another provider when one fails or is rate-limited, enforces per-team keys, rate limits and spend budgets, and logs every request for cost tracking. It is the API-gateway pattern from web services applied to models, and the natural place to put routing, caching and guardrails.",
       "parents": [
@@ -4838,6 +5249,12 @@
       "desc": "Models that map text to vectors so that semantically similar texts are close together.",
       "summary": "An embedding model turns a piece of text into a list of numbers (a vector) so that texts with similar meaning end up close together. This lets software compare texts by meaning rather than by shared words, and it is the base layer of almost every semantic search and RAG system.",
       "parents": [
+        {
+          "id": "word-embeddings",
+          "rel": "extends",
+          "why": "Moves from one vector per word to one vector per sentence or passage, keeping the idea that distance means similarity.",
+          "src": "Sentence-BERT (Reimers & Gurevych 2019)"
+        },
         {
           "id": "pretrained-language-models",
           "rel": "specializes",
@@ -6566,7 +6983,7 @@
       "summary": "Writing the control flow in code, as a graph of steps and transitions, and calling the model only at the points that need judgment. Common shapes are chains, routers, parallel fan-out, orchestrator and workers, and generate-then-evaluate loops. Most production systems sit here rather than handing the model full control.",
       "parents": [
         {
-          "id": "statecharts",
+          "id": "external:statecharts",
           "rel": "applies",
           "why": "Applies state-machine modeling to LLM control flow.",
           "src": "LangGraph (2024)"
@@ -6647,7 +7064,7 @@
           "src": "Model Context Protocol specification (2024)"
         },
         {
-          "id": "language-server-protocol",
+          "id": "external:language-server-protocol",
           "rel": "applies",
           "why": "Explicitly modeled on LSP's approach to the N×M integration problem.",
           "src": "Model Context Protocol specification (2024)"
@@ -6786,7 +7203,7 @@
           "src": "AutoGen (Wu et al. 2023)"
         },
         {
-          "id": "external:classical-multi-agent-systems",
+          "id": "classical-multi-agent-systems",
           "rel": "applies",
           "why": "Revives distributed AI ideas with LLM agents.",
           "src": "AutoGen (Wu et al. 2023)",
@@ -7443,7 +7860,7 @@
           "src": "Google 2025"
         },
         {
-          "id": "external:classical-multi-agent-systems",
+          "id": "classical-multi-agent-systems",
           "rel": "replaces",
           "why": "Revives the goal of agent communication languages such as FIPA ACL and KQML with web-native transport.",
           "src": "Google 2025"
@@ -7483,7 +7900,6 @@
       ],
       "region": "agents-and-orchestration",
       "also": [
-        "software-engineering",
         "ai-product-and-interaction-design"
       ],
       "desc": "Working with coding agents by first writing and reviewing a specification (requirements, design, task list) that the agent then implements and checks against, and keeping it as the source of truth.",
@@ -8002,6 +8418,12 @@
       "summary": "Spending more computation when answering, through longer reasoning, more samples, or search against a verifier, to get better answers. Returns are predictable enough to plan around, and on hard problems extra inference compute can beat a larger model. It turned reasoning effort into a setting you trade against cost and latency.",
       "parents": [
         {
+          "id": "scaling-laws",
+          "rel": "extends",
+          "why": "Asks the scaling-law question of inference compute instead of model size and data.",
+          "src": "Scaling LLM Test-Time Compute Optimally (Snell et al. 2024)"
+        },
+        {
           "id": "self-consistency",
           "rel": "extends",
           "why": "Formalizes sampling-based gains as a scaling relationship.",
@@ -8349,6 +8771,12 @@
       "summary": "Runs Monte Carlo Tree Search, the algorithm behind game-playing programs like AlphaGo, over reasoning steps. The same model proposes the next step and predicts what state it leads to, and simulated rollouts tell the search which branches pay off. More principled than simple tree search, and more expensive.",
       "parents": [
         {
+          "id": "monte-carlo-tree-search",
+          "rel": "applies",
+          "why": "Runs UCT-style MCTS over reasoning steps.",
+          "src": "Reasoning with Language Model is Planning with World Model (Hao et al. 2023)"
+        },
+        {
           "id": "tree-of-thoughts",
           "rel": "specializes",
           "why": "Replaces breadth- or depth-first search with MCTS and a model-simulated world state.",
@@ -8504,6 +8932,12 @@
       "desc": "Monte Carlo Tree Search over an agent's actions in a real environment, using self-reflection on failed branches and model-estimated values to guide the search.",
       "summary": "Tree search for agents that act. The agent tries different action sequences in its environment, such as running code or querying a search API, scores the outcomes, writes reflections on failures, and searches toward the most promising path. It beats a single ReAct loop on coding and web tasks, but only where actions can be safely retried.",
       "parents": [
+        {
+          "id": "monte-carlo-tree-search",
+          "rel": "applies",
+          "why": "Uses MCTS to choose which action branches an agent explores.",
+          "src": "Language Agent Tree Search (Zhou et al. 2023)"
+        },
         {
           "id": "react-agent-loop",
           "rel": "extends",
@@ -11150,7 +11584,7 @@
           "src": "SWE-bench (Jimenez et al. 2023)"
         },
         {
-          "id": "test-driven-development",
+          "id": "external:test-driven-development",
           "rel": "applies",
           "why": "Grades with fail-to-pass and pass-to-pass tests.",
           "src": "SWE-bench (Jimenez et al. 2023)"
@@ -11399,7 +11833,7 @@
       "summary": "Treating evals like tests: every change to a prompt, model or pipeline runs against an eval suite, often in CI, before it ships. Suites usually layer cheap deterministic checks (valid JSON, required strings, latency) under model-graded checks for qualities like tone and correctness. It replaces \"vibe checks\" with regression testing for systems whose outputs are never exactly the same twice.",
       "parents": [
         {
-          "id": "test-driven-development",
+          "id": "external:test-driven-development",
           "rel": "applies",
           "why": "Carries test-first discipline to stochastic systems.",
           "src": "Industry practice (2023)"
@@ -11470,7 +11904,7 @@
       "summary": "Recording every step of an LLM application as nested spans: each model call with its prompt, tokens and latency, plus retrieval steps and tool calls, so you can see exactly what happened on a given request. OpenTelemetry's GenAI conventions give these spans a shared vocabulary across providers and frameworks, though the spec is still changing and has broken dashboards along the way.",
       "parents": [
         {
-          "id": "distributed-tracing",
+          "id": "external:distributed-tracing",
           "rel": "applies",
           "why": "Applies span-based tracing to LLM pipelines.",
           "src": "OpenTelemetry GenAI semantic conventions (2024)"
@@ -12054,7 +12488,7 @@
       "summary": "Text from a user or another source is written so that the model follows it as instructions, overriding what the developer told it to do. It works because instructions and data reach the model in the same stream of text, much as SQL injection mixes code and data. There is no complete fix, so defenses aim to lower the odds and limit the damage.",
       "parents": [
         {
-          "id": "injection-attacks",
+          "id": "external:injection-attacks",
           "rel": "applies",
           "why": "The classic data-as-instructions flaw, where data and instructions share one channel.",
           "src": "Ignore Previous Prompt (Perez & Ribeiro 2022)"
@@ -12439,13 +12873,13 @@
       "summary": "Limits what an agent can do if it makes a mistake or is hijacked. Code it writes runs in an isolated container or VM, its credentials are scoped to the task, and risky actions need explicit permission. The design question is how much damage one bad step can do, not whether the model will behave. Standard for any agent that executes code.",
       "parents": [
         {
-          "id": "sandboxing-and-isolation",
+          "id": "external:sandboxing-and-isolation",
           "rel": "applies",
           "why": "Applies isolation to LLM-generated code and actions.",
           "src": "E2B (2023)"
         },
         {
-          "id": "least-privilege",
+          "id": "external:least-privilege",
           "rel": "applies",
           "why": "Scopes tools and credentials to what a task needs.",
           "src": "Industry practice"
@@ -12882,7 +13316,7 @@
           "src": "The Dual LLM pattern (Willison 2023)"
         },
         {
-          "id": "least-privilege",
+          "id": "external:least-privilege",
           "rel": "applies",
           "why": "The component that reads untrusted data is given no authority.",
           "src": "The Dual LLM pattern (Willison 2023)"
@@ -13012,7 +13446,7 @@
       "summary": "An agent that reads your email or opens pull requests needs access, and the easy shortcut is to paste in a long-lived API key with full rights. Delegated authorization gives the agent its own identity and has the user grant it limited, expiring permissions through a standard flow like OAuth, so every action can be traced and revoked. MCP adopted OAuth for remote servers in 2025, which made this the normal way to connect agents to real accounts.",
       "parents": [
         {
-          "id": "least-privilege",
+          "id": "external:least-privilege",
           "rel": "applies",
           "why": "Grants an agent only the scopes a task needs, for a limited time.",
           "src": "Model Context Protocol specification, Authorization (2025-03-26)"
@@ -13588,7 +14022,7 @@
           "src": "Vercel AI SDK 3.0 (2024)"
         },
         {
-          "id": "direct-manipulation",
+          "id": "external:direct-manipulation",
           "rel": "applies",
           "why": "Returns manipulable interface elements instead of prose.",
           "src": "Vercel AI SDK 3.0 (2024)",
@@ -13645,7 +14079,7 @@
       "summary": "Moves the thing being made, such as a document, piece of code or small app, out of the chat thread into a persistent pane beside it. You and the model both edit the same object, ask for changes to a selected part, and keep versions, instead of re-generating the whole output in each reply. Claude Artifacts (2024) and ChatGPT Canvas made this standard.",
       "parents": [
         {
-          "id": "direct-manipulation",
+          "id": "external:direct-manipulation",
           "rel": "applies",
           "why": "Users edit the work product directly.",
           "src": "Claude Artifacts (2024)"
@@ -14186,6 +14620,12 @@
       "summary": "An image encoder and a text encoder are trained together on hundreds of millions of captioned images, so that a picture and a matching caption end up as nearby vectors. The result can search images by text, classify images it was never trained on, and serves as the visual front end for many vision-language and image-generation models.",
       "parents": [
         {
+          "id": "vision-transformer",
+          "rel": "applies",
+          "why": "Its strongest image encoders are Vision Transformers.",
+          "src": "CLIP (Radford et al. 2021)"
+        },
+        {
           "id": "transformer-architecture",
           "rel": "applies",
           "why": "Uses transformer encoders for both modalities.",
@@ -14586,6 +15026,12 @@
       "desc": "Generative models that learn to reverse a gradual noising process, now standard for images, audio, and video.",
       "summary": "A model is trained to remove a little noise from a noisy image. To generate, it starts from pure noise and denoises step by step until a clean image appears. The approach is stable to train and produces high-quality images, audio and video, at the cost of many sampling steps.",
       "parents": [
+        {
+          "id": "generative-adversarial-networks",
+          "rel": "replaces",
+          "why": "Overtook GANs as the default image generator: more stable to train, better coverage of the data.",
+          "src": "Diffusion Models Beat GANs on Image Synthesis (Dhariwal & Nichol 2021)"
+        },
         {
           "id": "external:nonequilibrium-thermodynamics-generative-modeling",
           "rel": "extends",
@@ -15550,6 +15996,12 @@
       "desc": "Learning a compact model of how an environment changes in response to actions, then training a policy inside that learned model instead of the real environment.",
       "summary": "The model learns to compress what it sees into a small internal state and to predict how that state, and the reward, will change after each action. A policy can then practice inside this learned model, imagining thousands of trajectories, and needs far fewer trials in the real environment. DreamerV3 made the approach work across many domains with one set of settings.",
       "parents": [
+        {
+          "id": "variational-autoencoders",
+          "rel": "applies",
+          "why": "Compresses observations into a latent state with a VAE before learning dynamics.",
+          "src": "World Models (Ha & Schmidhuber 2018)"
+        },
         {
           "id": "markov-decision-process",
           "rel": "extends",
@@ -17108,7 +17560,6 @@
     "external:api-gateways",
     "external:backdoor-attacks",
     "external:byte-pair-encoding-compression",
-    "external:classical-multi-agent-systems",
     "external:content-moderation-classifiers",
     "external:control-theory-state-space",
     "external:copyright-and-licensing",
@@ -17117,12 +17568,17 @@
     "external:datasheets-and-documentation",
     "external:digital-signatures",
     "external:digital-watermarking",
+    "external:direct-manipulation",
+    "external:distributed-tracing",
     "external:elo-rating",
     "external:enterprise-risk-management",
     "external:fasttext-classifiers",
     "external:gdpr",
     "external:held-out-test-sets",
+    "external:injection-attacks",
     "external:iso-27001-information-security-management",
+    "external:language-server-protocol",
+    "external:least-privilege",
     "external:minhash",
     "external:n-gram-overlap-detection",
     "external:named-entity-recognition",
@@ -17136,13 +17592,16 @@
     "external:preference-learning",
     "external:prompt-to-prompt",
     "external:requirements-engineering",
+    "external:sandboxing-and-isolation",
     "external:security-red-teaming",
     "external:semantic-parsing",
     "external:shared-task-benchmarks",
     "external:software-bill-of-materials",
     "external:sparse-transformers",
     "external:star-self-taught-reasoner",
+    "external:statecharts",
     "external:template-engines",
+    "external:test-driven-development",
     "external:trust-in-automation",
     "external:web-caching",
     "external:weight-averaging"

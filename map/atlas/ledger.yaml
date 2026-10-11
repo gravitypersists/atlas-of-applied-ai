@@ -30,15 +30,7 @@ settlements:
   - {id: semantic-networks, x: 952.7, y: 1374.4, settled: "2026-10-08"}
   - {id: knowledge-graphs, x: 1049.4, y: 1402.2, settled: "2026-10-08"}
   - {id: conversational-agents, x: 710.9, y: 1610.2, settled: "2026-10-08"}
-  - {id: direct-manipulation, x: 712.3, y: 1501, settled: "2026-10-08"}
   - {id: mixed-initiative-interaction, x: 813.7, y: 1565.9, settled: "2026-10-08"}
-  - {id: least-privilege, x: 1277.5, y: 1817.3, settled: "2026-10-08"}
-  - {id: sandboxing-and-isolation, x: 1382.7, y: 1826.1, settled: "2026-10-08"}
-  - {id: injection-attacks, x: 1327.6, y: 1910.2, settled: "2026-10-08"}
-  - {id: statecharts, x: 672, y: 1170.7, settled: "2026-10-08"}
-  - {id: test-driven-development, x: 691, y: 1274.5, settled: "2026-10-08"}
-  - {id: distributed-tracing, x: 794.3, y: 1252.5, settled: "2026-10-08"}
-  - {id: language-server-protocol, x: 771.3, y: 1154.6, settled: "2026-10-08"}
   - {id: autoregressive-decoding, x: 3495.6, y: 1770.5, settled: "2026-10-08"}
   - {id: kv-cache, x: 3586.8, y: 1944.2, settled: "2026-10-08"}
   - {id: paged-attention, x: 3413.4, y: 1836.8, settled: "2026-10-08"}
@@ -280,4 +272,22 @@ settlements:
   - {id: reasoning-budget-control, x: 2897, y: 2367.5, settled: "2026-10-08"}
   - {id: agentic-rl, x: 2639.2, y: 1149.8, settled: "2026-10-08"}
   - {id: unified-multimodal-generation, x: 4112.4, y: 1606, settled: "2026-10-08"}
+  - {id: tf-idf, x: 1000, y: 1080, settled: "2026-10-11"}
+  - {id: perceptron, x: 1150, y: 1440, settled: "2026-10-11"}
+  - {id: backpropagation, x: 1170, y: 1520, settled: "2026-10-11"}
+  - {id: lstm, x: 1220, y: 1600, settled: "2026-10-11"}
+  - {id: neural-language-models, x: 1280, y: 1270, settled: "2026-10-11"}
+  - {id: word-embeddings, x: 1380, y: 1260, settled: "2026-10-11"}
+  - {id: scaling-laws, x: 1530, y: 1380, settled: "2026-10-11"}
+  - {id: convolutional-neural-networks, x: 1230, y: 1700, settled: "2026-10-11"}
+  - {id: alexnet, x: 1320, y: 1760, settled: "2026-10-11"}
+  - {id: residual-networks, x: 1420, y: 1720, settled: "2026-10-11"}
+  - {id: variational-autoencoders, x: 1290, y: 1860, settled: "2026-10-11"}
+  - {id: generative-adversarial-networks, x: 1390, y: 1850, settled: "2026-10-11"}
+  - {id: vision-transformer, x: 1480, y: 1790, settled: "2026-10-11"}
+  - {id: q-learning, x: 930, y: 1650, settled: "2026-10-11"}
+  - {id: deep-q-networks, x: 1150, y: 1650, settled: "2026-10-11"}
+  - {id: alphago, x: 1170, y: 1790, settled: "2026-10-11"}
+  - {id: monte-carlo-tree-search, x: 900, y: 1980, settled: "2026-10-11"}
+  - {id: classical-multi-agent-systems, x: 680, y: 1970, settled: "2026-10-11"}
 retired: []

@@ -17,10 +17,10 @@ The repaired, validated backbone for the atlas map, plus one deep-dive research 
 
 ## Shape of the graph
 
-- 9 root disciplines (pre-LLM ancestors) and 13 applied regions; applied regions have 9–21 anchors (246 nodes in all).
-- 143 of 384 edges cross regions; these are the land bridges.
-- 31 `external:` ancestors mark real lineage that isn't anchored yet (e.g., `external:elo-rating`, `external:minhash`). They're candidates for the next revision, not errors.
-- Node `status`: 8 kept from Gemini as-is, 77 repaired, 161 added.
+- 8 root disciplines (the AI history that led to the 2020s transformer explosion) and 13 applied regions; applied regions have 11–26 anchors (281 nodes in all).
+- 168 of 468 edges cross regions; these are the land bridges.
+- 50 `external:` ancestors mark real lineage that has no landmark. Some are AI ideas not anchored yet (candidates for the next revision); others are deliberately external because they aren't AI (e.g., `external:test-driven-development`, `external:least-privilege`, `external:oauth`).
+- Node `status`: 8 kept from Gemini as-is, 75 repaired, 198 added.
 
 ## What changed from the Gemini run (v0.1 → v0.2)
 
