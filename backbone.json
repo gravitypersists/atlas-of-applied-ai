@@ -30,54 +30,401 @@
       "code"
     ]
   },
+  "old_world": {
+    "overview": "The Old World holds seventy years of AI research that came together in the 2020s. Its provinces grew up as separate fields: symbolic AI reasoned with explicit rules and search, information retrieval ranked documents, reinforcement learning learned from reward, and neural networks, from the perceptron to backpropagation, learned patterns from data. For decades the neural line was a minority view. That changed in the 2010s, when large datasets, GPUs and a few key tricks made deep networks win, first in vision with AlexNet and then in language with word vectors, LSTMs and attention. The Transformer (2017) made training parallel enough to scale, and pretraining plus scaling laws turned it into the large language models that the New World is built on. Many Old World ideas are being rediscovered there: retrieval feeds RAG, RL trains reasoning models, search guides agents, and imitation learning trains robots."
+  },
   "regions": [
     {
       "id": "information-retrieval",
       "kind": "root",
       "name": "Information Retrieval",
-      "definition": "Finding relevant material in large collections. Origin of ranking, indexing, and question answering over corpora."
+      "definition": "Finding relevant material in large collections. Origin of ranking, indexing, and question answering over corpora.",
+      "overview": "Information retrieval is the old craft of finding the few documents that matter in a huge collection. It began with library indexing and the statistical idea that rare words carry the most meaning (TF-IDF, 1972), which led to the BM25 scoring function still used by Elasticsearch today. Web search added learning to rank: models that combine hundreds of signals to order results. Two threads from this province run straight into today's RAG systems. Open-domain question answering showed that you can answer questions by first retrieving passages and then reading them with a neural model. Approximate nearest-neighbor indexes made it practical to search millions of embedding vectors in milliseconds, and they are the engine inside every vector database. Most of retrieval-augmented generation is this province's machinery with an LLM as the reader.",
+      "learning_path": [
+        {
+          "kind": "docs",
+          "title": "Tf-idf weighting",
+          "by": "Manning, Raghavan & Schütze (Introduction to Information Retrieval)",
+          "year": 2008,
+          "url": "https://nlp.stanford.edu/IR-book/html/htmledition/tf-idf-weighting-1.html",
+          "why": "The textbook starting point: how weighting words by rarity turned keyword matching into ranking. Short, with the formulas you will see everywhere after."
+        },
+        {
+          "kind": "blog",
+          "title": "Practical BM25 - Part 2: The BM25 Algorithm and its Variables",
+          "by": "Elastic",
+          "year": 2018,
+          "url": "https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables",
+          "why": "Walks through BM25 term by term, including what k1 and b actually do. This is still the default scorer in Elasticsearch and the sparse half of most hybrid RAG search."
+        },
+        {
+          "kind": "talk",
+          "title": "3 Vector-based Methods for Similarity Search (TF-IDF, BM25, SBERT)",
+          "by": "James Briggs",
+          "year": 2021,
+          "url": "https://www.youtube.com/watch?v=ziiF1eFM3_4",
+          "why": "Implements TF-IDF, BM25 and sentence-embedding search side by side in Python. It shows how sparse retrieval relates to the dense vectors used today."
+        },
+        {
+          "kind": "blog",
+          "title": "Hierarchical Navigable Small Worlds (HNSW)",
+          "by": "Pinecone (James Briggs)",
+          "year": 2022,
+          "url": "https://www.pinecone.io/learn/series/faiss/hnsw/",
+          "why": "Explains, with diagrams, the graph index inside most vector databases. It shows why searching millions of embeddings takes milliseconds."
+        },
+        {
+          "kind": "blog",
+          "title": "How to Build an Open-Domain Question Answering System?",
+          "by": "Lilian Weng",
+          "year": 2020,
+          "url": "https://lilianweng.github.io/posts/2020-10-29-odqa/",
+          "why": "A survey of the retriever-reader systems (DrQA, DPR, REALM, RAG) that link classic search to today's retrieval-augmented generation."
+        }
+      ]
     },
     {
       "id": "deep-learning-nlp",
       "kind": "root",
       "name": "Deep Learning and NLP",
-      "definition": "Neural networks for language — attention, sequence models, pretraining, transfer learning — that produced the transformer and LLMs. Also holds the few architecture choices engineers actually make (MoE, SSMs)."
+      "definition": "Neural networks for language — attention, sequence models, pretraining, transfer learning — that produced the transformer and LLMs. Also holds the few architecture choices engineers actually make (MoE, SSMs).",
+      "overview": "This is the province where the explosion was built. It starts with the perceptron (1958) and backpropagation (1986), the methods that made layered neural networks trainable, and with Shannon's idea that language can be modeled by predicting the next word. For decades language was handled with counts and probabilities: n-gram models, hidden Markov models for speech, and statistical machine translation. The neural turn came in steps: neural language models (2003), the deep-learning revival (2006), word2vec's word vectors (2013), and LSTM encoder-decoders with attention for translation (2014). The Transformer (2017) dropped recurrence for pure attention, which made training parallel enough to scale. Pretraining on huge text corpora (GPT and BERT, 2018) and scaling laws (2020) turned that architecture into today's LLMs. The province also holds the architecture choices engineers still make: mixture of experts, state-space models, rotary positions and sparse attention.",
+      "learning_path": [
+        {
+          "kind": "talk",
+          "title": "The spelled-out intro to language modeling: building makemore",
+          "by": "Andrej Karpathy",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=PaCmpygFfXo",
+          "why": "Builds a character-level language model from bigram counts up to a trained neural net, in code. You see what predicting the next token actually means before any of the history."
+        },
+        {
+          "kind": "blog",
+          "title": "The Illustrated Word2vec",
+          "by": "Jay Alammar",
+          "year": 2019,
+          "url": "https://jalammar.github.io/illustrated-word2vec/",
+          "why": "Shows how words became vectors learned from context. The idea of an embedding runs through everything that came after, including today's vector search."
+        },
+        {
+          "kind": "blog",
+          "title": "Visualizing A Neural Machine Translation Model (Mechanics of Seq2seq Models With Attention)",
+          "by": "Jay Alammar",
+          "year": 2018,
+          "url": "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/",
+          "why": "Animates the encoder-decoder RNNs of 2014 and the attention step bolted onto them. It makes clear which problem the Transformer was built to solve."
+        },
+        {
+          "kind": "paper",
+          "title": "Attention Is All You Need",
+          "by": "Ashish Vaswani et al.",
+          "year": 2017,
+          "url": "https://arxiv.org/abs/1706.03762",
+          "why": "The paper that dropped recurrence and kept only attention. It is short and readable once the previous steps make sense."
+        },
+        {
+          "kind": "talk",
+          "title": "Let's build GPT: from scratch, in code, spelled out.",
+          "by": "Andrej Karpathy",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
+          "why": "Writes a small GPT line by line and trains it. It ties the earlier pieces (tokens, embeddings, attention) into the model shape every LLM uses today."
+        }
+      ]
     },
     {
       "id": "symbolic-ai-planning",
       "kind": "root",
       "name": "Symbolic AI and Planning",
-      "definition": "Explicit representations, search, and formal planning. Ancestor of tool use, planning-with-verifiers, and neuro-symbolic hybrids."
+      "definition": "Explicit representations, search, and formal planning. Ancestor of tool use, planning-with-verifiers, and neuro-symbolic hybrids.",
+      "overview": "Before learning dominated, AI meant explicit reasoning: represent the problem in symbols and search for a solution. This province holds that tradition. Heuristic search (A*, 1968) explores the most promising paths first. Theorem proving (1965) mechanized logic and led to Prolog and formal verification. STRIPS (1971) described actions by preconditions and effects, the basis of classical planning and of the PDDL standard. Expert systems captured specialist knowledge as rules and gave AI its first commercial boom in the 1980s, then its first winter when they proved brittle. Monte Carlo tree search (2006) cracked Go-playing programs, and multi-agent systems research worked out how autonomous agents coordinate. Much of this has come back: LLM agents call tools like expert-system modules, reasoning methods search over generated steps, and LLM+planner systems hand problems to PDDL solvers.",
+      "learning_path": [
+        {
+          "kind": "paper",
+          "title": "The Quest for Artificial Intelligence",
+          "by": "Nils J. Nilsson",
+          "year": 2009,
+          "url": "https://ai.stanford.edu/~nilsson/QAI/qai.pdf",
+          "why": "A free history of AI written by an author of A* and STRIPS. Its chapters on search, Shakey and expert systems give the context for this whole province."
+        },
+        {
+          "kind": "tutorial",
+          "title": "Introduction to the A* Algorithm",
+          "by": "Amit Patel (Red Blob Games)",
+          "year": 2014,
+          "url": "https://www.redblobgames.com/pathfinding/a-star/introduction.html",
+          "why": "An interactive explanation of breadth-first search, Dijkstra and A*. Heuristic search is the idea most of this province builds on."
+        },
+        {
+          "kind": "talk",
+          "title": "Shakey: Experiments in Robot Planning and Learning (1972)",
+          "by": "SRI International (Stanford University Libraries)",
+          "year": 1972,
+          "url": "https://www.youtube.com/watch?v=GmU7SimFkpU",
+          "why": "The original SRI film of the robot that A* and STRIPS were invented for. It shows plan-then-act agents years before LLM agents."
+        },
+        {
+          "kind": "talk",
+          "title": "Hands-on-Introduction (via PDDL) to Automated Planning",
+          "by": "Pascal Bercher",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=pfNb0IAkbcQ",
+          "why": "An introduction to classical planning that assumes no background. You write PDDL domains and run a planner on them, the same setup LLM+P-style agents use today."
+        },
+        {
+          "kind": "paper",
+          "title": "A Survey of Monte Carlo Tree Search Methods",
+          "by": "Browne et al.",
+          "year": 2012,
+          "url": "https://doi.org/10.1109/TCIAIG.2012.2186810",
+          "why": "The standard reference on MCTS, the search method behind AlphaGo and much recent test-time search over LLM reasoning."
+        }
+      ]
     },
     {
       "id": "reinforcement-learning",
       "kind": "root",
       "name": "Reinforcement Learning",
-      "definition": "Learning from reward through interaction. Ancestor of every preference- and verifier-based post-training method."
+      "definition": "Learning from reward through interaction. Ancestor of every preference- and verifier-based post-training method.",
+      "overview": "Reinforcement learning is learning from reward rather than from labeled examples: an agent acts, sees what happens, and adjusts. Its mathematical frame, the Markov decision process, dates to Bellman's dynamic programming in the 1950s. Two families of methods grew from it. Value-based methods such as Q-learning (1989–92) learn how good each action is. Policy-gradient methods (REINFORCE, 1992; actor-critic, 1999) adjust the policy directly. Deep learning joined in 2013, when DQN learned Atari games from pixels, and AlphaGo (2016) combined deep networks, self-play and tree search to beat a Go champion. PPO (2017) became the stable, simple default. This province hands the New World its training machinery: RLHF, RL with verifiable rewards and reasoning-model training are all policy-gradient methods applied to language models.",
+      "learning_path": [
+        {
+          "kind": "docs",
+          "title": "Part 1: Key Concepts in RL",
+          "by": "OpenAI (Spinning Up)",
+          "year": 2018,
+          "url": "https://spinningup.openai.com/en/latest/spinningup/rl_intro.html",
+          "why": "A short, code-minded introduction to the RL vocabulary (states, policies, returns, value functions) used by RLHF and RLVR papers."
+        },
+        {
+          "kind": "talk",
+          "title": "RL Course by David Silver - Lecture 1: Introduction to Reinforcement Learning",
+          "by": "David Silver (Google DeepMind)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=2pWv7GOvuf0",
+          "why": "The first lecture of the most widely watched RL course, given by AlphaGo's lead researcher. The later lectures cover MDPs, Q-learning and policy gradients in order."
+        },
+        {
+          "kind": "paper",
+          "title": "Reinforcement Learning: An Introduction (2nd edition)",
+          "by": "Richard S. Sutton & Andrew G. Barto",
+          "year": 2018,
+          "url": "http://incompleteideas.net/book/the-book-2nd.html",
+          "why": "The field's textbook, free online. Read chapters 3 (MDPs), 6 (TD and Q-learning) and 13 (policy gradients) for the background to RLHF."
+        },
+        {
+          "kind": "paper",
+          "title": "Human-level control through deep reinforcement learning",
+          "by": "Mnih et al.",
+          "year": 2015,
+          "url": "https://doi.org/10.1038/nature14236",
+          "why": "The Nature DQN paper, where a neural network learned 49 Atari games from pixels. It started the deep RL era."
+        },
+        {
+          "kind": "talk",
+          "title": "AlphaGo - The Movie | Full award-winning documentary",
+          "by": "Google DeepMind",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=WXuK6gekU1Y",
+          "why": "The story of the 2016 match against Lee Sedol, which put learned policies combined with search into the public eye."
+        }
+      ]
     },
     {
       "id": "knowledge-representation",
       "kind": "root",
       "name": "Knowledge Representation",
-      "definition": "Structured, machine-usable models of facts and relations — semantic networks, ontologies, knowledge graphs."
+      "definition": "Structured, machine-usable models of facts and relations — semantic networks, ontologies, knowledge graphs.",
+      "overview": "Knowledge representation asks how to store what a machine knows so that it can reason with it. Semantic networks (1968) drew knowledge as a graph of concepts and labeled relations, and frames, ontologies and the Semantic Web's RDF and OWL followed. Bayesian networks (1988) added uncertainty, attaching probabilities to the links so a system can reason from evidence to likely causes. Google's Knowledge Graph (2012) brought large entity graphs into everyday products, and Wikidata and enterprise graphs followed. Neural networks overtook hand-built knowledge for most tasks, but structured knowledge is back in the New World: GraphRAG builds knowledge graphs from documents to answer questions that span them, and agents query graphs and databases for facts a model shouldn't guess.",
+      "learning_path": [
+        {
+          "kind": "paper",
+          "title": "What is a Knowledge Representation?",
+          "by": "Randall Davis, Howard Shrobe & Peter Szolovits",
+          "year": 1993,
+          "url": "https://groups.csail.mit.edu/medg/ftp/psz/k-rep.html",
+          "why": "A classic essay on what a representation commits you to. It is useful background for thinking about structured memory and tool schemas for LLMs."
+        },
+        {
+          "kind": "blog",
+          "title": "Semantic Networks",
+          "by": "John F. Sowa",
+          "year": 1992,
+          "url": "http://www.jfsowa.com/pubs/semnet.htm",
+          "why": "An encyclopedia survey of nodes-and-links knowledge, from Quillian's semantic memory to frames and conceptual graphs."
+        },
+        {
+          "kind": "talk",
+          "title": "Introduction to Semantic Networks - Georgia Tech - KBAI: Part1",
+          "by": "Ashok Goel (Georgia Tech / Udacity)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=TWGTJyK2BJA",
+          "why": "A short lecture that builds a semantic network by hand, so the idea is concrete before reading about knowledge graphs at scale."
+        },
+        {
+          "kind": "paper",
+          "title": "Knowledge Graphs",
+          "by": "Aidan Hogan et al.",
+          "year": 2020,
+          "url": "https://arxiv.org/abs/2003.02320",
+          "why": "The comprehensive modern survey: data models, schemas, reasoning, embeddings and how enterprise KGs are built. It is the background for GraphRAG."
+        },
+        {
+          "kind": "talk",
+          "title": "The History of Wikidata",
+          "by": "Denny Vrandečić",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=P3-nklyrDx4",
+          "why": "Wikidata's creator tells how the largest open knowledge graph was built. It is one of the structured sources LLMs are now grounded on."
+        }
+      ]
     },
     {
       "id": "human-computer-interaction",
       "kind": "root",
       "name": "Human-Computer Interaction",
-      "definition": "How people work with computational systems. Ancestor of conversational UX, copilots, and human oversight patterns."
+      "definition": "How people work with computational systems. Ancestor of conversational UX, copilots, and human oversight patterns.",
+      "overview": "This province holds the AI side of how people work with computers. ELIZA (1966) was the first chatbot, and its users' readiness to confide in a few pattern-matching rules was an early warning about how easily people credit machines with understanding. Dialogue systems and voice assistants carried the idea forward for decades. Mixed-initiative interaction (1999) asked when an assistant should act on its own, ask first, or stay quiet, weighing its uncertainty against the cost of interrupting. Both ideas are now everywhere in the New World: chat is the default interface to LLMs, and copilots, approval prompts and agent check-ins are mixed-initiative design problems. Classic HCI that isn't AI, such as direct manipulation, appears on the map only as an external ancestor.",
+      "learning_path": [
+        {
+          "kind": "talk",
+          "title": "The Chatbot Inventor’s Cautionary Alert (1978)",
+          "by": "GBH Archives (Joseph Weizenbaum)",
+          "year": 1978,
+          "url": "https://www.youtube.com/watch?v=GxSJQnWzJOs",
+          "why": "ELIZA's creator, in his own words, on why people's readiness to confide in a simple program alarmed him."
+        },
+        {
+          "kind": "paper",
+          "title": "ELIZA Reinterpreted: The world's first chatbot was not intended as a chatbot at all",
+          "by": "Jeff Shrager",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.17650",
+          "why": "A recent history, drawing on the recovered original code, of what ELIZA was actually for and how it became the archetypal chatbot."
+        },
+        {
+          "kind": "paper",
+          "title": "Mixed-initiative interaction",
+          "by": "James Allen, Curry Guinn & Eric Horvitz",
+          "year": 1999,
+          "url": "https://doi.org/10.1109/5254.796083",
+          "why": "A short framing of when the human or the machine should take the lead in a dialogue. It is the core question in designing copilots and agents."
+        },
+        {
+          "kind": "paper",
+          "title": "Guidelines for Human-AI Interaction",
+          "by": "Saleema Amershi et al.",
+          "year": 2019,
+          "url": "https://doi.org/10.1145/3290605.3300233",
+          "why": "Microsoft's 18 tested guidelines, drawn from two decades of mixed-initiative research. They are a practical checklist for AI product UX."
+        },
+        {
+          "kind": "talk",
+          "title": "KDD2023 - Keynote: People and Machines: Pathways to Deeper Human-AI Synergy",
+          "by": "Eric Horvitz (ACM)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=HDfxgKcnX9w",
+          "why": "The originator of mixed-initiative interfaces revisits its principles for the LLM era, covering who acts when, complementarity and grounding."
+        }
+      ]
     },
     {
       "id": "computer-vision",
       "kind": "root",
       "name": "Computer Vision",
-      "definition": "Teaching machines to see — convolutional networks, the ImageNet breakthrough, and the generative models that learned to draw. Ancestor of vision-language models, image generation, and the deep-learning toolkit itself."
+      "definition": "Teaching machines to see — convolutional networks, the ImageNet breakthrough, and the generative models that learned to draw. Ancestor of vision-language models, image generation, and the deep-learning toolkit itself.",
+      "overview": "Computer vision is where deep learning first proved itself. Convolutional networks (1989) built in the fact that an object looks the same wherever it appears in an image, and read handwritten zip codes for the US Postal Service. The field's turning point came in 2012, when AlexNet, trained on GPUs over the ImageNet dataset, beat every hand-engineered system by a wide margin and set off the deep-learning era. Residual networks (2015) made networks hundreds of layers deep, and their shortcut connections are in every Transformer. Generative models grew here too: variational autoencoders (2013) and GANs (2014) were the first deep networks that could draw. The Vision Transformer (2020) then showed images could be handled as sequences of patches, which let vision and language share one architecture.",
+      "learning_path": [
+        {
+          "kind": "talk",
+          "title": "How we teach computers to understand pictures",
+          "by": "Fei-Fei Li",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=40riCqvRoMs",
+          "why": "The ImageNet story from the person who built it. It explains why a big labeled dataset was the missing ingredient for deep learning in vision."
+        },
+        {
+          "kind": "blog",
+          "title": "Deep Neural Nets: 33 years ago and 33 years from now",
+          "by": "Andrej Karpathy",
+          "year": 2022,
+          "url": "https://karpathy.github.io/2022/03/14/lecun1989/",
+          "why": "Reproduces LeCun's 1989 convolutional net in modern PyTorch and asks what changed since. It shows that the architecture barely moved and that data and compute did the rest."
+        },
+        {
+          "kind": "paper",
+          "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+          "by": "Alex Krizhevsky, Ilya Sutskever & Geoffrey Hinton",
+          "year": 2012,
+          "url": "https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html",
+          "why": "AlexNet, the 2012 result that convinced the field. Reading it shows how much of the modern recipe (GPUs, ReLU, dropout, data augmentation) was already there."
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 9 | CNN Architectures",
+          "by": "Stanford University School of Engineering (CS231n)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=DAOcjicFr1Y",
+          "why": "Walks through AlexNet, VGG, GoogLeNet and ResNet in order. You see why each design appeared and why residual connections stuck."
+        },
+        {
+          "kind": "blog",
+          "title": "Transformers for Image Recognition at Scale",
+          "by": "Neil Houlsby & Dirk Weissenborn (Google Research)",
+          "year": 2020,
+          "url": "https://research.google/blog/transformers-for-image-recognition-at-scale/",
+          "why": "Explains how cutting an image into patches let a plain Transformer replace convolutions. This is where vision joined the same architecture as language models."
+        }
+      ]
     },
     {
       "id": "robotics-and-control",
       "kind": "root",
       "name": "Robotics and Control",
-      "definition": "Getting machines to sense and move in the physical world — control, physics simulation, and learning from demonstration. Ancestor of robot foundation models, sim-to-real transfer, and imitation-based training."
+      "definition": "Getting machines to sense and move in the physical world — control, physics simulation, and learning from demonstration. Ancestor of robot foundation models, sim-to-real transfer, and imitation-based training.",
+      "overview": "Robotics is the oldest test of AI in the physical world, and the hardest, because mistakes compound and real trials are slow and expensive. This province holds the ideas that today's robot foundation models inherited. Behavior cloning (ALVINN, 1989) taught a vehicle to steer by imitating a human driver, and showed both the promise and the weakness of imitation: small errors drift into situations the demonstrations never covered. DAgger (2010) fixed that drift by asking the expert to correct the learner in the states it actually reaches. Fast physics simulators such as MuJoCo (2012) let robots practice millions of times in software before touching hardware. Imitation learning, interactive correction and simulation are still the core of robot learning, and DAgger's idea reappears in on-policy distillation of LLMs.",
+      "learning_path": [
+        {
+          "kind": "talk",
+          "title": "CS 285: Lecture 2, Imitation Learning. Part 1",
+          "by": "Sergey Levine (RAIL, UC Berkeley)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=tbLaFtYpWWU",
+          "why": "Opens Berkeley's deep RL course with behavior cloning, the supervised imitation recipe that SFT on demonstrations repeats for language models."
+        },
+        {
+          "kind": "talk",
+          "title": "Imitation Learning Tutorial ICML 2018",
+          "by": "Yisong Yue & Hoang M. Le",
+          "year": 2018,
+          "url": "https://www.youtube.com/watch?v=WjFdD7PDGw0",
+          "why": "A two-hour tutorial covering behavior cloning, why it compounds errors, and interactive fixes like DAgger."
+        },
+        {
+          "kind": "paper",
+          "title": "An Algorithmic Perspective on Imitation Learning",
+          "by": "Takayuki Osa et al.",
+          "year": 2018,
+          "url": "https://arxiv.org/abs/1811.06711",
+          "why": "A survey of imitation learning for robotics that organizes behavior cloning, DAgger and inverse RL into one framework."
+        },
+        {
+          "kind": "blog",
+          "title": "Opening up a physics simulator for robotics",
+          "by": "Google DeepMind",
+          "year": 2021,
+          "url": "https://deepmind.google/blog/opening-up-a-physics-simulator-for-robotics/",
+          "why": "Why MuJoCo became the standard simulator for learning control, and why DeepMind made it free and open source."
+        },
+        {
+          "kind": "paper",
+          "title": "End to End Learning for Self-Driving Cars",
+          "by": "Bojarski et al. (NVIDIA)",
+          "year": 2016,
+          "url": "https://arxiv.org/abs/1604.07316",
+          "why": "NVIDIA's revival of ALVINN's idea with a deep CNN. It shows behavior cloning from pixels working on real roads."
+        }
+      ]
     },
     {
       "id": "inference-and-serving",
@@ -1195,6 +1542,7 @@
       ],
       "region": "information-retrieval",
       "desc": "Probabilistic ranking function scoring documents by term frequency and inverse document frequency; the standard lexical search baseline.",
+      "summary": "Scores how well a document matches a query from the query words it contains: rare words count more, repeats help with diminishing returns, and long documents aren't rewarded just for being long. Tuned in the Okapi system in the early 1990s, it is still the default ranking in Lucene and Elasticsearch and the lexical half of most hybrid search behind RAG.",
       "parents": [
         {
           "id": "tf-idf",
@@ -1207,12 +1555,43 @@
       "maturity_note": "Decades of deployment; default lexical scorer in search engines.",
       "date": "1994",
       "ref": {
-        "title": "Okapi at TREC-3 (Robertson et al.)"
+        "title": "Okapi at TREC-3 (Robertson et al.), in the TREC-3 proceedings",
+        "url": "https://trec.nist.gov/pubs/trec3/t3_proceedings.html"
       },
       "examples": [
         "Lucene",
         "Elasticsearch",
         "OpenSearch"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Practical BM25 - Part 2: The BM25 Algorithm and its Variables",
+          "by": "Elastic",
+          "year": 2018,
+          "url": "https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables"
+        },
+        {
+          "kind": "talk",
+          "title": "BM25 : The Most Important Text Metric in Data Science",
+          "by": "ritvikmath",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=ruBm9WywevM"
+        },
+        {
+          "kind": "docs",
+          "title": "Okapi BM25: a non-binary model",
+          "by": "Manning, Raghavan & Schütze (Introduction to Information Retrieval)",
+          "year": 2008,
+          "url": "https://nlp.stanford.edu/IR-book/html/htmledition/okapi-bm25-a-non-binary-model-1.html"
+        },
+        {
+          "kind": "paper",
+          "title": "The Probabilistic Relevance Framework: BM25 and Beyond",
+          "by": "Stephen Robertson & Hugo Zaragoza",
+          "year": 2009,
+          "url": "https://doi.org/10.1561/1500000019"
+        }
       ],
       "status": "kept"
     },
@@ -1226,6 +1605,7 @@
       ],
       "region": "information-retrieval",
       "desc": "Index structures that find near neighbors in high-dimensional vector spaces quickly at slight accuracy cost; the engine inside vector databases.",
+      "summary": "Finding the exact closest vectors among millions means comparing against all of them, which is too slow. Approximate nearest-neighbor indexes give up a little accuracy for very large speedups, by hashing, clustering, or (in HNSW) walking a layered graph of neighbors. Every vector database runs on one, and they are what made embedding search practical at scale.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Standard infrastructure in every vector store.",
@@ -1240,6 +1620,36 @@
         "pgvector",
         "Qdrant"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Hierarchical Navigable Small Worlds (HNSW)",
+          "by": "Pinecone (James Briggs)",
+          "year": 2022,
+          "url": "https://www.pinecone.io/learn/series/faiss/hnsw/"
+        },
+        {
+          "kind": "talk",
+          "title": "What is the future of vector search? A fireside chat with HNSW author Yury Malkov",
+          "by": "Zilliz",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=Fwf9JOYVY1o"
+        },
+        {
+          "kind": "paper",
+          "title": "Billion-scale similarity search with GPUs",
+          "by": "Jeff Johnson, Matthijs Douze & Hervé Jégou",
+          "year": 2017,
+          "url": "https://arxiv.org/abs/1702.08734"
+        },
+        {
+          "kind": "code",
+          "title": "ANN-Benchmarks",
+          "by": "Erik Bernhardsson, Martin Aumüller & Alexander Faithfull",
+          "year": 2018,
+          "url": "https://ann-benchmarks.com/index.html"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1251,6 +1661,7 @@
       ],
       "region": "information-retrieval",
       "desc": "Answering questions by retrieving passages from a large corpus and reading them with a neural model; the direct architectural ancestor of RAG.",
+      "summary": "Answering a question from a whole library rather than from a given paragraph: a retriever finds a few relevant passages, then a reader model pulls the answer out of them. DrQA did this over all of Wikipedia in 2017, and this retrieve-then-read pattern is the direct ancestor of retrieval-augmented generation.",
       "parents": [
         {
           "id": "bm25",
@@ -1268,6 +1679,36 @@
       },
       "examples": [
         "DrQA"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "How to Build an Open-Domain Question Answering System?",
+          "by": "Lilian Weng",
+          "year": 2020,
+          "url": "https://lilianweng.github.io/posts/2020-10-29-odqa/"
+        },
+        {
+          "kind": "talk",
+          "title": "Danqi Chen: From Reading Comprehension to Open-Domain Question Answering",
+          "by": "Danqi Chen (Ai2)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=1RN88O9C13U"
+        },
+        {
+          "kind": "tutorial",
+          "title": "ACL2020 Tutorial: Open-Domain Question Answering",
+          "by": "Danqi Chen & Wen-tau Yih",
+          "year": 2020,
+          "url": "https://github.com/danqi/acl2020-openqa-tutorial"
+        },
+        {
+          "kind": "paper",
+          "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+          "by": "Karpukhin et al.",
+          "year": 2020,
+          "url": "https://arxiv.org/abs/2004.04906"
+        }
       ],
       "status": "added"
     },
@@ -1294,6 +1735,101 @@
         "scikit-learn TfidfVectorizer",
         "Lucene classic similarity"
       ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Tf-idf weighting",
+          "by": "Manning, Raghavan & Schütze (Introduction to Information Retrieval)",
+          "year": 2008,
+          "url": "https://nlp.stanford.edu/IR-book/html/htmledition/tf-idf-weighting-1.html"
+        },
+        {
+          "kind": "talk",
+          "title": "TFIDF : Data Science Concepts",
+          "by": "ritvikmath",
+          "year": 2020,
+          "url": "https://www.youtube.com/watch?v=OymqCnh-APA"
+        },
+        {
+          "kind": "paper",
+          "title": "Understanding inverse document frequency: on theoretical arguments for IDF",
+          "by": "Stephen Robertson",
+          "year": 2004,
+          "url": "https://doi.org/10.1108/00220410410560582"
+        },
+        {
+          "kind": "docs",
+          "title": "TfidfVectorizer",
+          "by": "scikit-learn",
+          "year": 2011,
+          "url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "learning-to-rank",
+      "name": "Learning to Rank",
+      "aliases": [
+        "LTR",
+        "RankNet",
+        "LambdaMART",
+        "ranking models"
+      ],
+      "region": "information-retrieval",
+      "layer": "detail",
+      "desc": "Training a model on relevance judgments to order documents, using many features (BM25 scores, link signals, click data) instead of one hand-tuned formula.",
+      "summary": "Rather than ranking results with a single formula like BM25, train a model on examples of which results people judged more relevant, feeding it dozens of signals at once. RankNet (2005) and its successors LambdaRank and LambdaMART ran commercial web search for years. Neural rerankers in today's RAG stacks are the same idea with a Transformer as the model.",
+      "parents": [
+        {
+          "id": "bm25",
+          "rel": "extends",
+          "why": "Learns how to combine lexical scores such as BM25 with many other relevance signals.",
+          "src": "Learning to Rank using Gradient Descent (Burges et al. 2005)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Standard in web and e-commerce search; the stage that neural rerankers now fill.",
+      "date": "2005",
+      "ref": {
+        "title": "Learning to Rank using Gradient Descent (Burges et al.)",
+        "url": "https://doi.org/10.1145/1102351.1102363"
+      },
+      "examples": [
+        "LambdaMART",
+        "XGBoost ranking",
+        "Elasticsearch LTR plugin"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "From RankNet to LambdaRank to LambdaMART: An Overview",
+          "by": "Christopher J. C. Burges (Microsoft Research)",
+          "year": 2010,
+          "url": "https://www.microsoft.com/en-us/research/publication/from-ranknet-to-lambdarank-to-lambdamart-an-overview/"
+        },
+        {
+          "kind": "talk",
+          "title": "Learning to Rank - The ML Problem You've Probably Never Heard Of",
+          "by": "ritvikmath",
+          "year": 2021,
+          "url": "https://www.youtube.com/watch?v=YroewVVp7SM"
+        },
+        {
+          "kind": "docs",
+          "title": "Learning to Rank",
+          "by": "XGBoost",
+          "year": 2023,
+          "url": "https://xgboost.readthedocs.io/en/stable/tutorials/learning_to_rank.html"
+        },
+        {
+          "kind": "paper",
+          "title": "Learning to Rank for Information Retrieval",
+          "by": "Tie-Yan Liu",
+          "year": 2009,
+          "url": "https://doi.org/10.1561/1500000016"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1304,6 +1840,7 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Lets a network weight different parts of its input dynamically when producing each output.",
+      "summary": "Instead of squeezing a whole input sentence into one fixed vector, attention lets the model look back at every input word and decide, for each word it produces, which inputs matter most. Introduced for machine translation in 2014, it fixed the long-sentence problem of encoder-decoder models and became the core operation of the Transformer.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Prerequisite for the transformer.",
@@ -1314,6 +1851,36 @@
       },
       "examples": [
         "seq2seq with attention"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Attention? Attention!",
+          "by": "Lilian Weng",
+          "year": 2018,
+          "url": "https://lilianweng.github.io/posts/2018-06-24-attention/"
+        },
+        {
+          "kind": "blog",
+          "title": "Attention and Augmented Recurrent Neural Networks",
+          "by": "Chris Olah & Shan Carter",
+          "year": 2016,
+          "url": "https://distill.pub/2016/augmented-rnns/"
+        },
+        {
+          "kind": "talk",
+          "title": "Attention in transformers, step-by-step | Deep Learning Chapter 6",
+          "by": "3Blue1Brown",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=eMlx5fFNoYc"
+        },
+        {
+          "kind": "paper",
+          "title": "Effective Approaches to Attention-based Neural Machine Translation",
+          "by": "Minh-Thang Luong et al.",
+          "year": 2015,
+          "url": "https://arxiv.org/abs/1508.04025"
+        }
       ],
       "status": "added"
     },
@@ -1326,7 +1893,14 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Training networks to map an input sequence to an output sequence end to end.",
+      "summary": "One network reads an input sequence into an internal representation and a second writes an output sequence from it, trained end to end on pairs such as sentences and their translations. This encoder-decoder framing replaced hand-built translation pipelines, and set up the problem that attention and then the Transformer solved better.",
       "parents": [
+        {
+          "id": "statistical-machine-translation",
+          "rel": "replaces",
+          "why": "Learns translation end to end with one network, matching phrase-based statistical MT on English-French.",
+          "src": "Sequence to Sequence Learning with Neural Networks (Sutskever et al. 2014)"
+        },
         {
           "id": "lstm",
           "rel": "applies",
@@ -1345,6 +1919,29 @@
         "T5",
         "BART"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Visualizing A Neural Machine Translation Model (Mechanics of Seq2seq Models With Attention)",
+          "by": "Jay Alammar",
+          "year": 2018,
+          "url": "https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/"
+        },
+        {
+          "kind": "talk",
+          "title": "Sequence to sequence learning with neural networks: what a decade",
+          "by": "Ilya Sutskever (NeurIPS 2024)",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=1yvBqasHLZs"
+        },
+        {
+          "kind": "paper",
+          "title": "Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation",
+          "by": "Kyunghyun Cho et al.",
+          "year": 2014,
+          "url": "https://arxiv.org/abs/1406.1078"
+        }
+      ],
       "status": "kept"
     },
     {
@@ -1355,6 +1952,7 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Architecture built entirely on self-attention, dispensing with recurrence; the basis of all modern LLMs.",
+      "summary": "A sequence model built entirely from attention, with no recurrence: every token looks at every other token at once, through many stacked layers joined by residual connections. Dropping recurrence made training massively parallel on GPUs, which is what let models scale to billions of parameters. Nearly every modern language, vision and multimodal model is a Transformer.",
       "parents": [
         {
           "id": "residual-networks",
@@ -1387,6 +1985,36 @@
         "BERT",
         "Llama"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Illustrated Transformer",
+          "by": "Jay Alammar",
+          "year": 2018,
+          "url": "https://jalammar.github.io/illustrated-transformer/"
+        },
+        {
+          "kind": "talk",
+          "title": "Let's build GPT: from scratch, in code, spelled out.",
+          "by": "Andrej Karpathy",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY"
+        },
+        {
+          "kind": "code",
+          "title": "The Annotated Transformer",
+          "by": "Harvard NLP (Sasha Rush et al.)",
+          "year": 2022,
+          "url": "https://nlp.seas.harvard.edu/annotated-transformer/"
+        },
+        {
+          "kind": "talk",
+          "title": "Transformers, the tech behind LLMs | Deep Learning Chapter 5",
+          "by": "3Blue1Brown",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=wjZofJX0v4M"
+        }
+      ],
       "status": "repaired"
     },
     {
@@ -1395,10 +2023,14 @@
       "aliases": [
         "LLMs",
         "foundation models",
-        "generative pretraining"
+        "generative pretraining",
+        "BERT",
+        "ELMo",
+        "masked language modeling"
       ],
       "region": "deep-learning-nlp",
       "desc": "Transformers pretrained on large text corpora with a language-modeling objective, then used directly or adapted; the base every applied technique builds on.",
+      "summary": "Train a large Transformer to predict the next (or a masked) word over a huge amount of text, and it picks up grammar, facts and some reasoning along the way; then reuse that one model for many tasks. GPT and BERT (2018) showed pretraining beat task-specific models across NLP, and scaled-up GPT-style models became today's LLMs, the base every applied technique builds on.",
       "parents": [
         {
           "id": "transformer-architecture",
@@ -1420,6 +2052,36 @@
         "Gemini",
         "Llama"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Illustrated BERT, ELMo, and co. (How NLP Cracked Transfer Learning)",
+          "by": "Jay Alammar",
+          "year": 2018,
+          "url": "https://jalammar.github.io/illustrated-bert/"
+        },
+        {
+          "kind": "talk",
+          "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "by": "Yannic Kilcher",
+          "year": 2019,
+          "url": "https://www.youtube.com/watch?v=-9evrZnBorM"
+        },
+        {
+          "kind": "paper",
+          "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "by": "Jacob Devlin et al.",
+          "year": 2018,
+          "url": "https://arxiv.org/abs/1810.04805"
+        },
+        {
+          "kind": "paper",
+          "title": "Language Models are Unsupervised Multitask Learners",
+          "by": "Alec Radford et al. (OpenAI)",
+          "year": 2019,
+          "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1431,6 +2093,7 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Adapting a model pretrained on one task or corpus to a new task by continuing training on targeted data.",
+      "summary": "Instead of training from scratch, start from a model already trained on a large general dataset and train it a little more on your task. ImageNet-pretrained networks made this standard in vision, and ULMFiT (2018) showed it works for language. It is why a small labeled dataset can be enough, and fine-tuning an LLM is the same idea.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Standard practice across deep learning.",
@@ -1442,6 +2105,36 @@
       "examples": [
         "Hugging Face Trainer"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "NLP's ImageNet moment has arrived",
+          "by": "Sebastian Ruder",
+          "year": 2018,
+          "url": "https://www.ruder.io/nlp-imagenet/"
+        },
+        {
+          "kind": "blog",
+          "title": "Introducing state of the art text classification with universal language models",
+          "by": "Jeremy Howard & Sebastian Ruder",
+          "year": 2018,
+          "url": "https://nlp.fast.ai/classification/2018/05/15/introducing-ulmfit.html"
+        },
+        {
+          "kind": "talk",
+          "title": "Sebastian Ruder: Transfer Learning in Open-Source Natural Language Processing (spaCy IRL 2019)",
+          "by": "Sebastian Ruder (Explosion)",
+          "year": 2019,
+          "url": "https://www.youtube.com/watch?v=hNPwRPg9BrQ"
+        },
+        {
+          "kind": "paper",
+          "title": "Deep contextualized word representations",
+          "by": "Matthew E. Peters et al.",
+          "year": 2018,
+          "url": "https://arxiv.org/abs/1802.05365"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1452,6 +2145,7 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Training a smaller student model to match the outputs of a larger teacher.",
+      "summary": "A small student model is trained to imitate a large teacher's full output probabilities rather than just the right answers, which tell it much more about how the teacher generalizes. The student keeps much of the teacher's quality at a fraction of the size and cost. Many small, fast models, LLMs included, are made this way.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Long-established compression technique.",
@@ -1462,6 +2156,22 @@
       },
       "examples": [
         "DistilBERT"
+      ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Knowledge Distillation Tutorial",
+          "by": "Alexandros Chariton (PyTorch)",
+          "year": 2023,
+          "url": "https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html"
+        },
+        {
+          "kind": "paper",
+          "title": "DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter",
+          "by": "Victor Sanh et al.",
+          "year": 2019,
+          "url": "https://arxiv.org/abs/1910.01108"
+        }
       ],
       "status": "added"
     },
@@ -1477,6 +2187,7 @@
         "inference-and-serving"
       ],
       "desc": "Replaces dense layers with many expert subnetworks and a router that activates a few per token, scaling parameters without proportional compute.",
+      "summary": "Instead of sending every input through the whole network, a learned router sends each token to a few of many expert sub-networks. The model can hold far more parameters while each token only pays for the experts it uses. Proposed in 1991 and scaled up in 2017, it is now the design of many frontier and large open models, with consequences for serving memory and parallelism.",
       "parents": [
         {
           "id": "external:adaptive-mixtures-of-local-experts",
@@ -1497,6 +2208,36 @@
         "DeepSeek-V3",
         "Qwen MoE"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Mixture of Experts Explained",
+          "by": "Omar Sanseviero et al. (Hugging Face)",
+          "year": 2023,
+          "url": "https://huggingface.co/blog/moe"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS25: V1 I Mixture of Experts (MoE) paradigm and the Switch Transformer",
+          "by": "Stanford Online (CS25)",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=U8J32Z3qV8s"
+        },
+        {
+          "kind": "paper",
+          "title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity",
+          "by": "William Fedus et al.",
+          "year": 2021,
+          "url": "https://arxiv.org/abs/2101.03961"
+        },
+        {
+          "kind": "paper",
+          "title": "Adaptive Mixtures of Local Experts",
+          "by": "Robert Jacobs, Michael Jordan, Steven Nowlan & Geoffrey Hinton",
+          "year": 1991,
+          "url": "https://doi.org/10.1162/neco.1991.3.1.79"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1510,6 +2251,7 @@
       ],
       "region": "deep-learning-nlp",
       "desc": "Sequence models derived from control theory with linear-time scaling in sequence length, used alone or in hybrids with attention.",
+      "summary": "Sequence models from control theory that carry a fixed-size state forward through the sequence, so cost grows linearly with length instead of quadratically as with attention. S4 (2021) made them work on long sequences and Mamba (2023) made them competitive on language. They mostly ship in hybrids that mix state-space layers with attention.",
       "parents": [
         {
           "id": "external:control-theory-state-space",
@@ -1529,6 +2271,36 @@
         "Mamba",
         "Jamba",
         "Nemotron-H"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "A Visual Guide to Mamba and State Space Models",
+          "by": "Maarten Grootendorst",
+          "year": 2024,
+          "url": "https://www.maartengrootendorst.com/blog/mamba/"
+        },
+        {
+          "kind": "code",
+          "title": "The Annotated S4",
+          "by": "Sasha Rush & Sidd Karamcheti",
+          "year": 2022,
+          "url": "https://srush.github.io/annotated-s4/"
+        },
+        {
+          "kind": "talk",
+          "title": "Efficiently Modeling Long Sequences with Structured State Spaces - Albert Gu | Stanford MLSys #46",
+          "by": "Stanford MLSys Seminars",
+          "year": 2021,
+          "url": "https://www.youtube.com/watch?v=EvQ3ncuriCM"
+        },
+        {
+          "kind": "paper",
+          "title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+          "by": "Albert Gu & Tri Dao",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2312.00752"
+        }
       ],
       "status": "added"
     },
@@ -1573,6 +2345,29 @@
         "Hugging Face tokenizers",
         "token-counting APIs"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Let's build the GPT Tokenizer",
+          "by": "Andrej Karpathy",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=zduSFxRajkE"
+        },
+        {
+          "kind": "docs",
+          "title": "Tokenization algorithms",
+          "by": "Hugging Face",
+          "year": 2020,
+          "url": "https://huggingface.co/docs/transformers/tokenizer_summary"
+        },
+        {
+          "kind": "paper",
+          "title": "SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing",
+          "by": "Taku Kudo & John Richardson",
+          "year": 2018,
+          "url": "https://arxiv.org/abs/1808.06226"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1606,6 +2401,29 @@
         "Qwen",
         "Mistral",
         "GPT-NeoX"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Rotary Embeddings: A Relative Revolution",
+          "by": "Stella Biderman et al. (EleutherAI)",
+          "year": 2021,
+          "url": "https://blog.eleuther.ai/rotary-embeddings/"
+        },
+        {
+          "kind": "talk",
+          "title": "Rotary Positional Embeddings: Combining Absolute and Relative",
+          "by": "Efficient NLP",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=o29P0Kpobz0"
+        },
+        {
+          "kind": "paper",
+          "title": "Extending Context Window of Large Language Models via Positional Interpolation",
+          "by": "Shouyuan Chen et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2306.15595"
+        }
       ],
       "status": "added"
     },
@@ -1706,6 +2524,29 @@
       "examples": [
         "Mark I Perceptron"
       ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Neural networks and deep learning, Chapter 1: Using neural nets to recognize handwritten digits",
+          "by": "Michael Nielsen",
+          "year": 2015,
+          "url": "http://neuralnetworksanddeeplearning.com/chap1.html"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 5 \"Perceptron\" -Cornell CS4780 SP17",
+          "by": "Kilian Weinberger",
+          "year": 2018,
+          "url": "https://www.youtube.com/watch?v=wl7gVvI-HuY"
+        },
+        {
+          "kind": "paper",
+          "title": "A Sociological Study of the Official History of the Perceptrons Controversy",
+          "by": "Mikel Olazaran",
+          "year": 1996,
+          "url": "https://doi.org/10.1177/030631296026003005"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1737,6 +2578,36 @@
       "examples": [
         "PyTorch autograd",
         "JAX grad"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Calculus on Computational Graphs: Backpropagation",
+          "by": "Christopher Olah",
+          "year": 2015,
+          "url": "https://colah.github.io/posts/2015-08-Backprop/"
+        },
+        {
+          "kind": "talk",
+          "title": "The spelled-out intro to neural networks and backpropagation: building micrograd",
+          "by": "Andrej Karpathy",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=VMj-3S1tku0"
+        },
+        {
+          "kind": "talk",
+          "title": "Backpropagation, intuitively | Deep Learning Chapter 3",
+          "by": "3Blue1Brown",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U"
+        },
+        {
+          "kind": "paper",
+          "title": "Deep Learning in Neural Networks: An Overview",
+          "by": "Juergen Schmidhuber",
+          "year": 2014,
+          "url": "https://arxiv.org/abs/1404.7828"
+        }
       ],
       "status": "added"
     },
@@ -1771,6 +2642,36 @@
         "Google Neural Machine Translation (2016)",
         "early Siri and Google voice recognition"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Understanding LSTM Networks",
+          "by": "Christopher Olah",
+          "year": 2015,
+          "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/"
+        },
+        {
+          "kind": "blog",
+          "title": "The Unreasonable Effectiveness of Recurrent Neural Networks",
+          "by": "Andrej Karpathy",
+          "year": 2015,
+          "url": "http://karpathy.github.io/2015/05/21/rnn-effectiveness/"
+        },
+        {
+          "kind": "talk",
+          "title": "MIT 6.S191 (2023): Recurrent Neural Networks, Transformers, and Attention",
+          "by": "Ava Amini (MIT 6.S191)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=ySEx_Bqxvvo"
+        },
+        {
+          "kind": "paper",
+          "title": "Learning long-term dependencies with gradient descent is difficult",
+          "by": "Yoshua Bengio, Patrice Simard & Paolo Frasconi",
+          "year": 1994,
+          "url": "https://doi.org/10.1109/72.279181"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1784,6 +2685,12 @@
       "desc": "Predicting the next word with a neural network over learned word vectors instead of counting word sequences.",
       "summary": "Older language models counted how often word sequences occurred, so they knew nothing about sentences they had never seen. Bengio's model learned a vector for each word and a network that predicts the next word from those vectors, so similar words share what they learn. Next-word prediction with learned representations is exactly what an LLM still does, at vastly larger scale.",
       "parents": [
+        {
+          "id": "n-gram-language-models",
+          "rel": "replaces",
+          "why": "Shares statistics between similar words through learned vectors, beating smoothed n-gram counts.",
+          "src": "A Neural Probabilistic Language Model (Bengio et al. 2003)"
+        },
         {
           "id": "backpropagation",
           "rel": "applies",
@@ -1801,6 +2708,29 @@
       "examples": [
         "n-gram models it replaced",
         "GPT pretraining objective"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "A Review of the Recent History of Natural Language Processing",
+          "by": "Sebastian Ruder",
+          "year": 2018,
+          "url": "https://www.ruder.io/a-review-of-the-recent-history-of-nlp/"
+        },
+        {
+          "kind": "talk",
+          "title": "Building makemore Part 2: MLP",
+          "by": "Andrej Karpathy",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=TCH_1BHY58I"
+        },
+        {
+          "kind": "paper",
+          "title": "Recurrent neural network based language model",
+          "by": "Tomas Mikolov et al.",
+          "year": 2010,
+          "url": "https://www.isca-archive.org/interspeech_2010/mikolov10_interspeech.html"
+        }
       ],
       "status": "added"
     },
@@ -1836,6 +2766,36 @@
         "GloVe",
         "fastText"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Illustrated Word2vec",
+          "by": "Jay Alammar",
+          "year": 2019,
+          "url": "https://jalammar.github.io/illustrated-word2vec/"
+        },
+        {
+          "kind": "blog",
+          "title": "Deep Learning, NLP, and Representations",
+          "by": "Christopher Olah",
+          "year": 2014,
+          "url": "https://colah.github.io/posts/2014-07-NLP-RNNs-Representations/"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS224N: NLP with Deep Learning | Winter 2021 | Lecture 1 - Intro & Word Vectors",
+          "by": "Christopher Manning (Stanford Online)",
+          "year": 2021,
+          "url": "https://www.youtube.com/watch?v=rmVRLeJRkl4"
+        },
+        {
+          "kind": "paper",
+          "title": "GloVe: Global Vectors for Word Representation",
+          "by": "Jeffrey Pennington, Richard Socher & Christopher Manning",
+          "year": 2014,
+          "url": "https://aclanthology.org/D14-1162/"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1868,6 +2828,330 @@
         "GPT-3 sizing",
         "Chinchilla"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Scaling Hypothesis",
+          "by": "Gwern Branwen",
+          "year": 2020,
+          "url": "https://gwern.net/scaling-hypothesis"
+        },
+        {
+          "kind": "blog",
+          "title": "The Bitter Lesson",
+          "by": "Rich Sutton",
+          "year": 2019,
+          "url": "http://www.incompleteideas.net/IncIdeas/BitterLesson.html"
+        },
+        {
+          "kind": "talk",
+          "title": "Neural Scaling Laws and GPT-3",
+          "by": "Jared Kaplan (Physics Meets ML)",
+          "year": 2020,
+          "url": "https://www.youtube.com/watch?v=QMqPAM_knrE"
+        },
+        {
+          "kind": "paper",
+          "title": "Training Compute-Optimal Large Language Models",
+          "by": "Jordan Hoffmann et al.",
+          "year": 2022,
+          "url": "https://arxiv.org/abs/2203.15556"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "n-gram-language-models",
+      "name": "N-gram Language Models",
+      "aliases": [
+        "statistical language models",
+        "Markov language models",
+        "Shannon's model of English"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Estimating the probability of the next word from counts of the few words before it, with smoothing for unseen sequences.",
+      "summary": "Shannon showed in 1948 that English can be modeled as a chain of probabilities, each letter or word predicted from the few before it, and generated surprisingly English-like text that way. Counting word sequences in large corpora made these n-gram models the workhorse of speech recognition and machine translation for decades. LLMs keep the same goal, predicting the next token, with a neural network in place of counts.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Replaced by neural models, but the next-token objective is unchanged.",
+      "date": "1948-07",
+      "ref": {
+        "title": "A Mathematical Theory of Communication (Shannon)",
+        "url": "https://doi.org/10.1002/j.1538-7305.1948.tb01338.x"
+      },
+      "examples": [
+        "KenLM",
+        "SRILM",
+        "Google Web 1T 5-gram corpus"
+      ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Speech and Language Processing, Chapter 3: N-gram Language Models",
+          "by": "Dan Jurafsky & James H. Martin",
+          "year": 2026,
+          "url": "https://web.stanford.edu/~jurafsky/slp3/3.pdf"
+        },
+        {
+          "kind": "talk",
+          "title": "The spelled-out intro to language modeling: building makemore",
+          "by": "Andrej Karpathy",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=PaCmpygFfXo"
+        },
+        {
+          "kind": "paper",
+          "title": "Prediction and Entropy of Printed English",
+          "by": "Claude Shannon",
+          "year": 1951,
+          "url": "https://doi.org/10.1002/j.1538-7305.1951.tb01366.x"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "statistical-machine-translation",
+      "name": "Statistical Machine Translation",
+      "aliases": [
+        "SMT",
+        "IBM models",
+        "phrase-based translation",
+        "noisy-channel translation"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Learning translation from parallel text with probabilistic alignment and translation models, combined with an n-gram language model of the target language.",
+      "summary": "IBM's researchers treated translation as a probability problem: learn from millions of translated sentence pairs which words and phrases correspond, then pick the output that is both a likely translation and likely English. It replaced hand-written grammar rules, ran Google Translate until 2016, and marked NLP's turn to learning from data, which neural translation then took over.",
+      "parents": [
+        {
+          "id": "n-gram-language-models",
+          "rel": "applies",
+          "why": "Scores candidate translations with an n-gram model of the target language (the noisy-channel model).",
+          "src": "The Mathematics of Statistical Machine Translation (Brown et al. 1993)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Historical; replaced by neural machine translation around 2016.",
+      "date": "1993",
+      "ref": {
+        "title": "The Mathematics of Statistical Machine Translation: Parameter Estimation (Brown et al.)",
+        "url": "https://aclanthology.org/J93-2003/"
+      },
+      "examples": [
+        "Moses",
+        "Google Translate (2006–2016)"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Machine Translation - Lecture 4: IBM Model 1 and the EM Algorithm",
+          "by": "Philipp Koehn",
+          "year": 2020,
+          "url": "https://www.youtube.com/watch?v=5etGx8OZE7I"
+        },
+        {
+          "kind": "paper",
+          "title": "Statistical machine translation",
+          "by": "Adam Lopez (ACM Computing Surveys)",
+          "year": 2008,
+          "url": "https://doi.org/10.1145/1380584.1380586"
+        },
+        {
+          "kind": "paper",
+          "title": "Statistical Phrase-Based Translation",
+          "by": "Philipp Koehn, Franz Josef Och & Daniel Marcu",
+          "year": 2003,
+          "url": "https://aclanthology.org/N03-1017/"
+        },
+        {
+          "kind": "blog",
+          "title": "A Neural Network for Machine Translation, at Production Scale",
+          "by": "Quoc V. Le & Mike Schuster (Google)",
+          "year": 2016,
+          "url": "https://research.google/blog/a-neural-network-for-machine-translation-at-production-scale/"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "hidden-markov-models",
+      "name": "Hidden Markov Models for Speech",
+      "aliases": [
+        "HMM",
+        "HMM-GMM acoustic models",
+        "Baum-Welch",
+        "Viterbi decoding"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Modeling speech as a sequence of hidden states (sounds) that emit observed acoustic features, trained with expectation-maximization and decoded with the Viterbi algorithm.",
+      "summary": "Speech is a sequence of sounds you can't see directly, only through the audio they produce. Hidden Markov models capture that: hidden states for the sounds, probabilities for moving between them and for what each sounds like. From the 1970s to the 2010s nearly every speech recognizer was built this way, before end-to-end neural models like Whisper replaced them.",
+      "parents": [
+        {
+          "id": "n-gram-language-models",
+          "rel": "combines",
+          "why": "Pairs an acoustic HMM with an n-gram language model of which words are likely to follow.",
+          "src": "A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition (Rabiner 1989)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Historical in speech; the date is the 1970s work at IBM and CMU, and the ref is the 1989 tutorial that spread it.",
+      "date": "1975",
+      "ref": {
+        "title": "A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition (Rabiner)",
+        "url": "https://doi.org/10.1109/5.18626"
+      },
+      "examples": [
+        "Dragon NaturallySpeaking",
+        "HTK",
+        "Kaldi"
+      ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Speech and Language Processing, Appendix A: Hidden Markov Models",
+          "by": "Dan Jurafsky & James H. Martin",
+          "year": 2026,
+          "url": "https://web.stanford.edu/~jurafsky/slp3/A.pdf"
+        },
+        {
+          "kind": "talk",
+          "title": "A Basic Introduction to Speech Recognition (Hidden Markov Model & Neural Networks)",
+          "by": "Hannes van Lier",
+          "year": 2018,
+          "url": "https://www.youtube.com/watch?v=U0XtE4_QLXI"
+        },
+        {
+          "kind": "paper",
+          "title": "Continuous speech recognition by statistical methods",
+          "by": "Frederick Jelinek",
+          "year": 1976,
+          "url": "https://doi.org/10.1109/PROC.1976.10159"
+        },
+        {
+          "kind": "paper",
+          "title": "An introduction to hidden Markov models",
+          "by": "Lawrence Rabiner & Biing-Hwang Juang",
+          "year": 1986,
+          "url": "https://doi.org/10.1109/MASSP.1986.1165342"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "hopfield-boltzmann-networks",
+      "name": "Hopfield Networks and Boltzmann Machines",
+      "aliases": [
+        "Hopfield network",
+        "Boltzmann machine",
+        "restricted Boltzmann machine",
+        "RBM",
+        "energy-based models"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Recurrent networks that store patterns as low-energy states of a physical-style energy function; Boltzmann machines add randomness and a learning rule for hidden units.",
+      "summary": "Hopfield (1982) showed a network of simple neurons could act as a memory: store patterns as valleys in an energy landscape and recall a whole pattern from a fragment. Boltzmann machines (1985) added randomness and hidden units that learn their own features. Their restricted form powered the 2006 deep-learning revival, and the work earned Hopfield and Hinton the 2024 Nobel Prize in Physics.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Historical; their energy-based view lives on in research and in modern Hopfield layers.",
+      "date": "1982-04",
+      "ref": {
+        "title": "Neural networks and physical systems with emergent collective computational abilities (Hopfield)",
+        "url": "https://doi.org/10.1073/pnas.79.8.2554"
+      },
+      "examples": [
+        "restricted Boltzmann machines",
+        "modern Hopfield networks"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "The Nobel Prize in Physics 2024 - Popular science background",
+          "by": "Royal Swedish Academy of Sciences",
+          "year": 2024,
+          "url": "https://www.nobelprize.org/prizes/physics/2024/popular-information/"
+        },
+        {
+          "kind": "talk",
+          "title": "2024 Nobel Prize lectures in physics | John Hopfield and Geoffrey Hinton",
+          "by": "Nobel Prize",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=lPIVl5eBPh8"
+        },
+        {
+          "kind": "paper",
+          "title": "A Learning Algorithm for Boltzmann Machines",
+          "by": "David Ackley, Geoffrey Hinton & Terrence Sejnowski",
+          "year": 1985,
+          "url": "https://doi.org/10.1207/s15516709cog0901_7"
+        },
+        {
+          "kind": "paper",
+          "title": "Hopfield Networks is All You Need",
+          "by": "Hubert Ramsauer et al.",
+          "year": 2020,
+          "url": "https://arxiv.org/abs/2008.02217"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "deep-belief-networks",
+      "name": "Deep Belief Networks",
+      "aliases": [
+        "DBN",
+        "greedy layer-wise pretraining",
+        "unsupervised pretraining"
+      ],
+      "region": "deep-learning-nlp",
+      "desc": "Training a deep network one layer at a time as stacked restricted Boltzmann machines, then fine-tuning the whole stack with backpropagation.",
+      "summary": "In 2006 deep networks were considered nearly impossible to train. Hinton's group showed that training them one layer at a time, each layer learning to model the one below without labels, gave a starting point that backpropagation could then fine-tune. It restarted interest in deep networks and coined 'deep learning' as a movement, though better activations, more data and GPUs soon made the layer-wise trick unnecessary.",
+      "parents": [
+        {
+          "id": "hopfield-boltzmann-networks",
+          "rel": "extends",
+          "why": "Stacks restricted Boltzmann machines into a deep generative model.",
+          "src": "A Fast Learning Algorithm for Deep Belief Nets (Hinton, Osindero & Teh 2006)"
+        },
+        {
+          "id": "backpropagation",
+          "rel": "combines",
+          "why": "Fine-tunes the pretrained stack with backpropagation.",
+          "src": "Reducing the Dimensionality of Data with Neural Networks (Hinton & Salakhutdinov 2006)"
+        }
+      ],
+      "maturity": 5,
+      "maturity_note": "Historical; superseded within a few years, but it started the deep-learning revival.",
+      "date": "2006-07",
+      "ref": {
+        "title": "A Fast Learning Algorithm for Deep Belief Nets (Hinton, Osindero & Teh)",
+        "url": "https://doi.org/10.1162/neco.2006.18.7.1527"
+      },
+      "examples": [
+        "DBN digit recognition",
+        "RBM pretraining"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Deep belief networks",
+          "by": "Geoffrey E. Hinton (Scholarpedia)",
+          "year": 2009,
+          "url": "http://www.scholarpedia.org/article/Deep_belief_networks"
+        },
+        {
+          "kind": "talk",
+          "title": "Nobel Prize lecture: Geoffrey Hinton, Nobel Prize in Physics",
+          "by": "Nobel Prize",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=XDE9DjpcSdI"
+        },
+        {
+          "kind": "paper",
+          "title": "Reducing the Dimensionality of Data with Neural Networks",
+          "by": "Geoffrey Hinton & Ruslan Salakhutdinov",
+          "year": 2006,
+          "url": "https://doi.org/10.1126/science.1127647"
+        }
+      ],
       "status": "added"
     },
     {
@@ -1880,16 +3164,41 @@
       ],
       "region": "symbolic-ai-planning",
       "desc": "Searching a space of states guided by an estimate of distance to the goal.",
+      "summary": "Searching through possible states toward a goal, guided by an estimate of how far each state is from it, so the most promising paths are tried first. A* (1968) guarantees the shortest path when the estimate never overshoots. It underlies route finding, game playing and planning, and returns in LLM reasoning as search over generated steps.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Textbook foundation of AI planning.",
       "date": "1968",
       "ref": {
-        "title": "A Formal Basis for the Heuristic Determination of Minimum Cost Paths (Hart, Nilsson & Raphael)"
+        "title": "A Formal Basis for the Heuristic Determination of Minimum Cost Paths (Hart, Nilsson & Raphael)",
+        "url": "https://doi.org/10.1109/TSSC.1968.300136"
       },
       "examples": [
         "A*",
         "MCTS variants"
+      ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Introduction to the A* Algorithm",
+          "by": "Amit Patel (Red Blob Games)",
+          "year": 2014,
+          "url": "https://www.redblobgames.com/pathfinding/a-star/introduction.html"
+        },
+        {
+          "kind": "talk",
+          "title": "[CS188 SP24] LEC03 - Search: Informed Search, A*, Heuristics",
+          "by": "CS 188 (Artificial Intelligence) at UC Berkeley",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=zRFZwAUQT8U"
+        },
+        {
+          "kind": "paper",
+          "title": "The Quest for Artificial Intelligence",
+          "by": "Nils J. Nilsson",
+          "year": 2009,
+          "url": "https://ai.stanford.edu/~nilsson/QAI/qai.pdf"
+        }
       ],
       "status": "added"
     },
@@ -1901,7 +3210,14 @@
       ],
       "region": "symbolic-ai-planning",
       "desc": "Planning with explicit states, goals, and actions defined by preconditions and effects.",
+      "summary": "Describes the world as a set of facts and each action by what must be true beforehand and what it adds or removes, so a program can search for a sequence of actions that reaches a goal. Built for the Shakey robot at SRI, it set the vocabulary of classical planning that PDDL later standardized.",
       "parents": [
+        {
+          "id": "automated-theorem-proving",
+          "rel": "applies",
+          "why": "Began as an application of resolution theorem proving to robot problem solving, then separated the search for plans from the proving.",
+          "src": "STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving (Fikes & Nilsson 1971)"
+        },
         {
           "id": "heuristic-search",
           "rel": "applies",
@@ -1913,10 +3229,34 @@
       "maturity_note": "Historical foundation of symbolic planning.",
       "date": "1971",
       "ref": {
-        "title": "STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving (Fikes & Nilsson)"
+        "title": "STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving (Fikes & Nilsson)",
+        "url": "https://doi.org/10.1016/0004-3702(71)90010-5"
       },
       "examples": [
         "classical planners"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Shakey: Experiments in Robot Planning and Learning (1972)",
+          "by": "SRI International (Stanford University Libraries)",
+          "year": 1972,
+          "url": "https://www.youtube.com/watch?v=GmU7SimFkpU"
+        },
+        {
+          "kind": "paper",
+          "title": "The Quest for Artificial Intelligence",
+          "by": "Nils J. Nilsson",
+          "year": 2009,
+          "url": "https://ai.stanford.edu/~nilsson/QAI/qai.pdf"
+        },
+        {
+          "kind": "docs",
+          "title": "Planning.wiki - The AI Planning & PDDL Wiki",
+          "by": "Planning.wiki",
+          "year": 2019,
+          "url": "https://planning.wiki/"
+        }
       ],
       "status": "repaired"
     },
@@ -1928,6 +3268,7 @@
       ],
       "region": "symbolic-ai-planning",
       "desc": "Standard language for describing planning domains and problems so general-purpose solvers can find plans.",
+      "summary": "A standard language for writing down planning problems: the available actions with their preconditions and effects, the starting state and the goal. Because any general-purpose planner can read it, one problem description works with many solvers. LLM+planner systems use it as the bridge: the model translates a request into PDDL and a classical planner solves it.",
       "parents": [
         {
           "id": "strips-planning",
@@ -1940,11 +3281,42 @@
       "maturity_note": "Established standard; the interface for LLM+planner hybrids.",
       "date": "1998",
       "ref": {
-        "title": "PDDL — The Planning Domain Definition Language (McDermott et al.)"
+        "title": "PDDL — The Planning Domain Definition Language, version 1.2 (McDermott et al.)",
+        "url": "https://ipc08.icaps-conference.org/deterministic/data/mcdermott-et-al-tr-1998.pdf"
       },
       "examples": [
         "Fast Downward",
         "VAL"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "What is PDDL?",
+          "by": "Planning.wiki",
+          "year": 2019,
+          "url": "https://planning.wiki/guide/whatis/pddl"
+        },
+        {
+          "kind": "talk",
+          "title": "Hands-on-Introduction (via PDDL) to Automated Planning",
+          "by": "Pascal Bercher",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=pfNb0IAkbcQ"
+        },
+        {
+          "kind": "paper",
+          "title": "PDDL2.1: An Extension to PDDL for Expressing Temporal Planning Domains",
+          "by": "Maria Fox & Derek Long",
+          "year": 2003,
+          "url": "https://arxiv.org/abs/1106.4561"
+        },
+        {
+          "kind": "paper",
+          "title": "LLM+P: Empowering Large Language Models with Optimal Planning Proficiency",
+          "by": "Bo Liu et al.",
+          "year": 2023,
+          "url": "https://arxiv.org/abs/2304.11477"
+        }
       ],
       "status": "repaired"
     },
@@ -1957,16 +3329,48 @@
       ],
       "region": "symbolic-ai-planning",
       "desc": "Systems that encode domain expertise as explicit rules and route problems through them; an ancestor of modular neuro-symbolic architectures.",
+      "summary": "Programs that hold a specialist's knowledge as hundreds of if-then rules and chain through them to reach and explain a conclusion. MYCIN recommended treatments for blood infections about as well as specialists in the 1970s, and expert systems drove AI's first commercial boom. They proved brittle and costly to maintain, but routing problems to explicit modules lives on in tool-using agents.",
       "parents": [],
       "maturity": 5,
-      "maturity_note": "Historical; ideas persist in routing and tool modules.",
+      "maturity_note": "Historical; ideas persist in routing and tool modules. The ref is the 1984 MYCIN retrospective, free online; MYCIN itself dates from 1972–76.",
       "date": "1976",
       "ref": {
-        "title": "Computer-Based Medical Consultations: MYCIN (Shortliffe)"
+        "title": "Rule-Based Expert Systems: The MYCIN Experiments of the Stanford Heuristic Programming Project (Buchanan & Shortliffe, eds.)",
+        "url": "https://people.dbmi.columbia.edu/~ehs7001/Buchanan-Shortliffe-1984/MYCIN%20Book.htm"
       },
       "examples": [
         "MYCIN",
         "CLIPS"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Computer Chronicles: Artificial Intelligence and Expert Systems (1984) Part 1",
+          "by": "Computer Chronicles (PBS)",
+          "year": 1984,
+          "url": "https://www.youtube.com/watch?v=6xpcES-ueKw"
+        },
+        {
+          "kind": "talk",
+          "title": "Knowledge Engineering: Artificial Intelligence (AI) Research at the Stanford Heuristic Programming Project (HPP)",
+          "by": "Edward A. Feigenbaum (Stanford Digital Repository)",
+          "year": 1985,
+          "url": "https://purl.stanford.edu/vv363xw4382"
+        },
+        {
+          "kind": "code",
+          "title": "CLIPS: A Tool for Building Expert Systems",
+          "by": "NASA / Gary Riley",
+          "year": 1985,
+          "url": "https://clipsrules.net/"
+        },
+        {
+          "kind": "paper",
+          "title": "The Quest for Artificial Intelligence",
+          "by": "Nils J. Nilsson",
+          "year": 2009,
+          "url": "https://ai.stanford.edu/~nilsson/QAI/qai.pdf"
+        }
       ],
       "status": "added"
     },
@@ -2000,6 +3404,29 @@
         "AlphaZero",
         "MuZero"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Introduction to Monte Carlo Tree Search",
+          "by": "Jeff Bradberry",
+          "year": 2015,
+          "url": "https://jeffbradberry.com/posts/2015/09/intro-to-monte-carlo-tree-search/"
+        },
+        {
+          "kind": "talk",
+          "title": "Monte Carlo Tree Search",
+          "by": "John Levine (University of Strathclyde)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=UXW2yZndl7U"
+        },
+        {
+          "kind": "paper",
+          "title": "A Survey of Monte Carlo Tree Search Methods",
+          "by": "Browne et al.",
+          "year": 2012,
+          "url": "https://doi.org/10.1109/TCIAIG.2012.2186810"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2028,6 +3455,82 @@
         "FIPA-ACL",
         "Contract Net"
       ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Multiagent Systems: Algorithmic, Game-Theoretic, and Logical Foundations",
+          "by": "Yoav Shoham & Kevin Leyton-Brown",
+          "year": 2009,
+          "url": "https://www.masfoundations.org/"
+        },
+        {
+          "kind": "talk",
+          "title": "Agentic AI: A brief history and what comes next",
+          "by": "Michael Wooldridge & Matthias Holweg (Saïd Business School, University of Oxford)",
+          "year": 2026,
+          "url": "https://www.youtube.com/watch?v=qyuEgP52R-o"
+        },
+        {
+          "kind": "talk",
+          "title": "History of MAS research in UK - Michael Wooldridge, University of Oxford",
+          "by": "The Alan Turing Institute",
+          "year": 2020,
+          "url": "https://www.youtube.com/watch?v=PFuGQ8dpUOw"
+        }
+      ],
+      "status": "added"
+    },
+    {
+      "id": "automated-theorem-proving",
+      "name": "Automated Theorem Proving",
+      "aliases": [
+        "resolution",
+        "logic programming",
+        "Prolog",
+        "formal verification",
+        "proof assistants"
+      ],
+      "region": "symbolic-ai-planning",
+      "desc": "Mechanically deriving conclusions from logical axioms; resolution gave a single complete inference rule that made first-order proving practical and led to logic programming.",
+      "summary": "Can a machine prove theorems? Robinson's resolution principle (1965) reduced first-order logic to one mechanical rule, which made automated provers practical and led directly to the Prolog language. The same tradition produced formal verification and proof assistants like Lean, which now check the math and code that LLMs generate.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Mature field; proof assistants are now a verifier for LLM reasoning.",
+      "date": "1965-01",
+      "ref": {
+        "title": "A Machine-Oriented Logic Based on the Resolution Principle (Robinson)",
+        "url": "https://doi.org/10.1145/321250.321253"
+      },
+      "examples": [
+        "Prolog",
+        "Vampire",
+        "Z3",
+        "Lean",
+        "Coq"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Automated Reasoning",
+          "by": "Frederic Portoraro (Stanford Encyclopedia of Philosophy)",
+          "year": 2001,
+          "url": "https://plato.stanford.edu/entries/reasoning-automated/"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 1 | A survey of automated theorem proving | John Harrison",
+          "by": "John Harrison (Лекториум)",
+          "year": 2013,
+          "url": "https://www.youtube.com/watch?v=Nydg-N83VYc"
+        },
+        {
+          "kind": "paper",
+          "title": "Generative Language Modeling for Automated Theorem Proving",
+          "by": "Stanislas Polu & Ilya Sutskever",
+          "year": 2020,
+          "url": "https://arxiv.org/abs/2009.03393"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2038,15 +3541,47 @@
       ],
       "region": "reinforcement-learning",
       "desc": "Formal model of sequential decision making with states, actions, transitions, and rewards.",
+      "summary": "The math of making a sequence of decisions under uncertainty: states, actions, the chance that an action leads to each next state, and a reward. Bellman's dynamic programming showed how to compute the best policy when all of that is known. Every reinforcement learning method, including the RL used to train LLMs, is set in this framework.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Theoretical foundation of RL.",
       "date": "1957",
       "ref": {
-        "title": "A Markovian Decision Process (Bellman)"
+        "title": "A Markovian Decision Process (Bellman)",
+        "url": "https://www.rand.org/pubs/papers/P1066.html"
       },
       "examples": [
         "Gymnasium environments"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "RL Course by David Silver - Lecture 2: Markov Decision Process",
+          "by": "David Silver (Google DeepMind)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=lfHX2hHRMVQ"
+        },
+        {
+          "kind": "docs",
+          "title": "Part 1: Key Concepts in RL",
+          "by": "OpenAI (Spinning Up)",
+          "year": 2018,
+          "url": "https://spinningup.openai.com/en/latest/spinningup/rl_intro.html"
+        },
+        {
+          "kind": "paper",
+          "title": "Reinforcement Learning: An Introduction (2nd edition)",
+          "by": "Richard S. Sutton & Andrew G. Barto",
+          "year": 2018,
+          "url": "http://incompleteideas.net/book/the-book-2nd.html"
+        },
+        {
+          "kind": "talk",
+          "title": "RL Course by David Silver - Lecture 3: Planning by Dynamic Programming",
+          "by": "David Silver (Google DeepMind)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=Nd1-UUMVfz4"
+        }
       ],
       "status": "kept"
     },
@@ -2059,6 +3594,7 @@
       ],
       "region": "reinforcement-learning",
       "desc": "Optimizing a parameterized policy directly by gradient ascent on expected reward.",
+      "summary": "Instead of learning how good each action is, adjust the policy directly: make actions that led to high reward more likely, following the gradient of expected reward. REINFORCE (1992) gave the basic estimator, and the 1999 policy gradient theorem showed how to pair it with a learned value estimate (actor-critic). It copes with huge action spaces like an LLM's vocabulary, which is why RLHF and reasoning-model training are built on it.",
       "parents": [
         {
           "id": "markov-decision-process",
@@ -2071,11 +3607,42 @@
       "maturity_note": "Mathematical basis of LLM RL fine-tuning.",
       "date": "1999",
       "ref": {
-        "title": "Policy Gradient Methods for Reinforcement Learning with Function Approximation (Sutton et al.)"
+        "title": "Policy Gradient Methods for Reinforcement Learning with Function Approximation (Sutton et al.)",
+        "url": "https://proceedings.neurips.cc/paper_files/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html"
       },
       "examples": [
         "Stable Baselines3",
         "TRL"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Policy Gradient Algorithms",
+          "by": "Lilian Weng",
+          "year": 2018,
+          "url": "https://lilianweng.github.io/posts/2018-04-08-policy-gradient/"
+        },
+        {
+          "kind": "talk",
+          "title": "RL Course by David Silver - Lecture 7: Policy Gradient Methods",
+          "by": "David Silver (Google DeepMind)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=KHZVXao4qXs"
+        },
+        {
+          "kind": "docs",
+          "title": "Part 3: Intro to Policy Optimization",
+          "by": "OpenAI (Spinning Up)",
+          "year": 2018,
+          "url": "https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html"
+        },
+        {
+          "kind": "paper",
+          "title": "Simple statistical gradient-following algorithms for connectionist reinforcement learning",
+          "by": "Ronald J. Williams",
+          "year": 1992,
+          "url": "https://doi.org/10.1007/BF00992696"
+        }
       ],
       "status": "repaired"
     },
@@ -2087,6 +3654,7 @@
       ],
       "region": "reinforcement-learning",
       "desc": "A policy-gradient algorithm that clips updates to stay near the previous policy, giving stable training.",
+      "summary": "A policy-gradient method that limits how far each update can move the policy from the previous one by clipping its objective. That made training far more stable and forgiving than earlier methods while staying simple. It became the default deep RL algorithm and the optimizer in the classic RLHF recipe for chat models.",
       "parents": [
         {
           "id": "policy-gradient-methods",
@@ -2105,6 +3673,29 @@
       "examples": [
         "TRL PPOTrainer",
         "OpenRLHF"
+      ],
+      "resources": [
+        {
+          "kind": "docs",
+          "title": "Proximal Policy Optimization",
+          "by": "OpenAI (Spinning Up)",
+          "year": 2018,
+          "url": "https://spinningup.openai.com/en/latest/algorithms/ppo.html"
+        },
+        {
+          "kind": "talk",
+          "title": "Deep RL Bootcamp Lecture 5: Natural Policy Gradients, TRPO, PPO",
+          "by": "John Schulman (Deep RL Bootcamp)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=xvRrgxcpaHY"
+        },
+        {
+          "kind": "blog",
+          "title": "The 37 Implementation Details of Proximal Policy Optimization",
+          "by": "Shengyi Huang et al. (ICLR Blog Track)",
+          "year": 2022,
+          "url": "https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/"
+        }
       ],
       "status": "added"
     },
@@ -2136,7 +3727,31 @@
       },
       "examples": [
         "tabular Q-learning",
-        "DQN"
+        "DQN",
+        "TD-Gammon"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Reinforcement Learning: An Introduction (2nd edition)",
+          "by": "Richard S. Sutton & Andrew G. Barto",
+          "year": 2018,
+          "url": "http://incompleteideas.net/book/the-book-2nd.html"
+        },
+        {
+          "kind": "talk",
+          "title": "RL Course by David Silver - Lecture 5: Model Free Control",
+          "by": "David Silver (Google DeepMind)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=0g4j2k_Ggc4"
+        },
+        {
+          "kind": "paper",
+          "title": "Learning from Delayed Rewards",
+          "by": "Christopher J. C. H. Watkins",
+          "year": 1989,
+          "url": "https://www.cs.rhul.ac.uk/~chrisw/thesis.pdf"
+        }
       ],
       "status": "added"
     },
@@ -2175,6 +3790,36 @@
       "examples": [
         "Atari DQN",
         "Rainbow"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Deep RL Bootcamp Lecture 3: Deep Q-Networks",
+          "by": "Vlad Mnih (Deep RL Bootcamp)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=fevMOp5TDQs"
+        },
+        {
+          "kind": "tutorial",
+          "title": "Reinforcement Learning (DQN) Tutorial",
+          "by": "PyTorch",
+          "year": 2017,
+          "url": "https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html"
+        },
+        {
+          "kind": "paper",
+          "title": "Human-level control through deep reinforcement learning",
+          "by": "Mnih et al.",
+          "year": 2015,
+          "url": "https://doi.org/10.1038/nature14236"
+        },
+        {
+          "kind": "talk",
+          "title": "RL Course by David Silver - Lecture 6: Value Function Approximation",
+          "by": "David Silver (Google DeepMind)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=UoPei5o4fps"
+        }
       ],
       "status": "added"
     },
@@ -2221,6 +3866,36 @@
         "AlphaZero",
         "MuZero"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "AlphaGo - The Movie | Full award-winning documentary",
+          "by": "Google DeepMind",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=WXuK6gekU1Y"
+        },
+        {
+          "kind": "blog",
+          "title": "AlphaGo",
+          "by": "Google DeepMind",
+          "year": 2016,
+          "url": "https://deepmind.google/research/alphago/"
+        },
+        {
+          "kind": "talk",
+          "title": "David Silver - Deep Reinforcement Learning from AlphaGo to AlphaStar (Talk back at UAlberta) Part 1",
+          "by": "David Silver (AlbertaAI)",
+          "year": 2019,
+          "url": "https://www.youtube.com/watch?v=pMJPv-WIzk4"
+        },
+        {
+          "kind": "paper",
+          "title": "Mastering the game of Go without human knowledge",
+          "by": "Silver et al.",
+          "year": 2017,
+          "url": "https://doi.org/10.1038/nature24270"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2254,6 +3929,36 @@
         "AlexNet",
         "ResNet",
         "EfficientNet"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Deep Neural Nets: 33 years ago and 33 years from now",
+          "by": "Andrej Karpathy",
+          "year": 2022,
+          "url": "https://karpathy.github.io/2022/03/14/lecun1989/"
+        },
+        {
+          "kind": "tutorial",
+          "title": "CS231n Convolutional Neural Networks for Visual Recognition: Convolutional Networks",
+          "by": "Andrej Karpathy (Stanford CS231n)",
+          "year": 2015,
+          "url": "https://cs231n.github.io/convolutional-networks/"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 5 | Convolutional Neural Networks",
+          "by": "Stanford University School of Engineering (CS231n)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=bNb2fEVKeEo"
+        },
+        {
+          "kind": "paper",
+          "title": "Gradient-based learning applied to document recognition",
+          "by": "Yann LeCun, Léon Bottou, Yoshua Bengio & Patrick Haffner",
+          "year": 1998,
+          "url": "https://doi.org/10.1109/5.726791"
+        }
       ],
       "status": "added"
     },
@@ -2289,6 +3994,36 @@
         "VGG",
         "ImageNet"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "CHM Releases AlexNet Source Code",
+          "by": "Hansen Hsu (Computer History Museum)",
+          "year": 2025,
+          "url": "https://computerhistory.org/blog/chm-releases-alexnet-source-code/"
+        },
+        {
+          "kind": "talk",
+          "title": "The moment we stopped understanding AI [AlexNet]",
+          "by": "Welch Labs",
+          "year": 2024,
+          "url": "https://www.youtube.com/watch?v=UZDiGooFs54"
+        },
+        {
+          "kind": "talk",
+          "title": "How we teach computers to understand pictures",
+          "by": "Fei-Fei Li (TED)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=40riCqvRoMs"
+        },
+        {
+          "kind": "paper",
+          "title": "ImageNet: A large-scale hierarchical image database",
+          "by": "Jia Deng et al.",
+          "year": 2009,
+          "url": "https://doi.org/10.1109/CVPR.2009.5206848"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2320,6 +4055,36 @@
       "examples": [
         "ResNet-50",
         "Transformer residual stream"
+      ],
+      "resources": [
+        {
+          "kind": "tutorial",
+          "title": "Residual Networks (ResNet) and ResNeXt",
+          "by": "Aston Zhang et al. (Dive into Deep Learning)",
+          "year": 2023,
+          "url": "https://d2l.ai/chapter_convolutional-modern/resnet.html"
+        },
+        {
+          "kind": "talk",
+          "title": "[Classic] Deep Residual Learning for Image Recognition (Paper Explained)",
+          "by": "Yannic Kilcher",
+          "year": 2020,
+          "url": "https://www.youtube.com/watch?v=GWt6Fu05voI"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 9 | CNN Architectures",
+          "by": "Stanford University School of Engineering (CS231n)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=DAOcjicFr1Y"
+        },
+        {
+          "kind": "paper",
+          "title": "Identity Mappings in Deep Residual Networks",
+          "by": "Kaiming He et al.",
+          "year": 2016,
+          "url": "https://arxiv.org/abs/1603.05027"
+        }
       ],
       "status": "added"
     },
@@ -2354,6 +4119,29 @@
         "VQ-VAE",
         "World Models"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "From Autoencoder to Beta-VAE",
+          "by": "Lilian Weng",
+          "year": 2018,
+          "url": "https://lilianweng.github.io/posts/2018-08-12-vae/"
+        },
+        {
+          "kind": "talk",
+          "title": "Variational Autoencoders",
+          "by": "Arxiv Insights",
+          "year": 2018,
+          "url": "https://www.youtube.com/watch?v=9zKuYvjFFS8"
+        },
+        {
+          "kind": "paper",
+          "title": "An Introduction to Variational Autoencoders",
+          "by": "Diederik P. Kingma & Max Welling",
+          "year": 2019,
+          "url": "https://arxiv.org/abs/1906.02691"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2386,6 +4174,36 @@
         "StyleGAN",
         "CycleGAN",
         "ESRGAN"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "From GAN to WGAN",
+          "by": "Lilian Weng",
+          "year": 2017,
+          "url": "https://lilianweng.github.io/posts/2017-08-20-gan/"
+        },
+        {
+          "kind": "talk",
+          "title": "Ian Goodfellow: Generative Adversarial Networks (NIPS 2016 tutorial)",
+          "by": "Ian Goodfellow",
+          "year": 2016,
+          "url": "https://www.youtube.com/watch?v=HGYYEUSm-0Q"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 13 | Generative Models",
+          "by": "Stanford University School of Engineering (CS231n)",
+          "year": 2017,
+          "url": "https://www.youtube.com/watch?v=5WoItGTWV54"
+        },
+        {
+          "kind": "paper",
+          "title": "Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks",
+          "by": "Alec Radford, Luke Metz & Soumith Chintala",
+          "year": 2015,
+          "url": "https://arxiv.org/abs/1511.06434"
+        }
       ],
       "status": "added"
     },
@@ -2423,6 +4241,36 @@
         "ViT",
         "the image encoders of CLIP and SigLIP"
       ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Transformers for Image Recognition at Scale",
+          "by": "Neil Houlsby & Dirk Weissenborn (Google Research)",
+          "year": 2020,
+          "url": "https://research.google/blog/transformers-for-image-recognition-at-scale/"
+        },
+        {
+          "kind": "talk",
+          "title": "Stanford CS25: V1 I Transformers in Vision: Tackling problems in Computer Vision",
+          "by": "Lucas Beyer (Stanford Online)",
+          "year": 2022,
+          "url": "https://www.youtube.com/watch?v=BP5CM0YxbP8"
+        },
+        {
+          "kind": "tutorial",
+          "title": "Fine-Tune ViT for Image Classification with 🤗 Transformers",
+          "by": "Nate Raw (Hugging Face)",
+          "year": 2022,
+          "url": "https://huggingface.co/blog/fine-tune-vit"
+        },
+        {
+          "kind": "paper",
+          "title": "Training data-efficient image transformers & distillation through attention",
+          "by": "Hugo Touvron et al.",
+          "year": 2020,
+          "url": "https://arxiv.org/abs/2012.12877"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2435,16 +4283,41 @@
       ],
       "region": "robotics-and-control",
       "desc": "Training a policy by supervised learning on recorded state–action pairs from an expert, so the model copies what the demonstrator did.",
+      "summary": "The simplest way to teach a machine a skill: record an expert doing it and train a model, by ordinary supervised learning, to output the same action in the same situation. ALVINN (1989) learned to steer a van from camera images this way. Its weakness is compounding error: small mistakes lead to situations the demonstrations never covered.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "The default starting point for learning robot skills from demonstrations.",
       "date": "1989",
       "ref": {
-        "title": "ALVINN: An Autonomous Land Vehicle in a Neural Network (Pomerleau)"
+        "title": "ALVINN: An Autonomous Land Vehicle in a Neural Network (Pomerleau)",
+        "url": "https://papers.nips.cc/paper/1988/hash/812b4ba287f5ee0bc9d43bbf5bbe87fb-Abstract.html"
       },
       "examples": [
         "ALVINN",
         "LeRobot"
+      ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "CS 285: Lecture 2, Imitation Learning. Part 1",
+          "by": "Sergey Levine (RAIL, UC Berkeley)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=tbLaFtYpWWU"
+        },
+        {
+          "kind": "paper",
+          "title": "End to End Learning for Self-Driving Cars",
+          "by": "Bojarski et al. (NVIDIA)",
+          "year": 2016,
+          "url": "https://arxiv.org/abs/1604.07316"
+        },
+        {
+          "kind": "paper",
+          "title": "An Algorithmic Perspective on Imitation Learning",
+          "by": "Takayuki Osa et al.",
+          "year": 2018,
+          "url": "https://arxiv.org/abs/1811.06711"
+        }
       ],
       "status": "added"
     },
@@ -2458,6 +4331,7 @@
       ],
       "region": "robotics-and-control",
       "desc": "Imitation learning that runs the learner's own policy, asks the expert what it should have done in the states it reached, and retrains on the growing dataset, fixing the compounding errors of plain behavior cloning.",
+      "summary": "Fixes behavior cloning's compounding errors by letting the learner drive, asking the expert what it should have done in the situations the learner actually reached, and retraining on the growing set of corrections. Unlike plain imitation, it comes with guarantees. The same idea, training on the student's own outputs with a teacher's corrections, is behind on-policy distillation of LLMs.",
       "parents": [
         {
           "id": "behavior-cloning",
@@ -2477,6 +4351,29 @@
         "human-gated DAgger",
         "HG-DAgger"
       ],
+      "resources": [
+        {
+          "kind": "talk",
+          "title": "Imitation Learning Tutorial ICML 2018",
+          "by": "Yisong Yue & Hoang M. Le",
+          "year": 2018,
+          "url": "https://www.youtube.com/watch?v=WjFdD7PDGw0"
+        },
+        {
+          "kind": "talk",
+          "title": "CS 285: Lecture 2, Imitation Learning. Part 2",
+          "by": "Sergey Levine (RAIL, UC Berkeley)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=YivJ9KDjn-o"
+        },
+        {
+          "kind": "paper",
+          "title": "An Algorithmic Perspective on Imitation Learning",
+          "by": "Takayuki Osa et al.",
+          "year": 2018,
+          "url": "https://arxiv.org/abs/1811.06711"
+        }
+      ],
       "status": "added"
     },
     {
@@ -2489,18 +4386,50 @@
       ],
       "region": "robotics-and-control",
       "desc": "Fast simulators of rigid-body dynamics and contact, used to design controllers and to train and test robot policies without real hardware.",
+      "summary": "Software that simulates rigid bodies, joints and contact fast enough to run thousands of robot trials in the time one real trial takes. MuJoCo (2012) became the standard for robot learning research, and GPU simulators now run thousands of environments in parallel. Policies trained in simulation are the starting point of most sim-to-real robot pipelines.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Every robot learning pipeline uses one.",
       "date": "2012",
       "ref": {
-        "title": "MuJoCo: A physics engine for model-based control (Todorov, Erez & Tassa)"
+        "title": "MuJoCo: A physics engine for model-based control (Todorov, Erez & Tassa)",
+        "url": "https://doi.org/10.1109/IROS.2012.6386109"
       },
       "examples": [
         "MuJoCo",
         "Isaac Sim",
         "PyBullet",
         "Genesis"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Opening up a physics simulator for robotics",
+          "by": "Google DeepMind",
+          "year": 2021,
+          "url": "https://deepmind.google/blog/opening-up-a-physics-simulator-for-robotics/"
+        },
+        {
+          "kind": "talk",
+          "title": "Emo Todorov: Model-based Optimization with MuJoCo Physics",
+          "by": "Emo Todorov (Deployable@CoRL2023)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=lJCwGKa1v8k"
+        },
+        {
+          "kind": "docs",
+          "title": "Overview - MuJoCo Documentation",
+          "by": "Google DeepMind",
+          "year": 2021,
+          "url": "https://mujoco.readthedocs.io/en/stable/overview.html"
+        },
+        {
+          "kind": "paper",
+          "title": "Isaac Gym: High Performance GPU-Based Physics Simulation For Robot Learning",
+          "by": "Viktor Makoviychuk et al.",
+          "year": 2021,
+          "url": "https://arxiv.org/abs/2108.10470"
+        }
       ],
       "status": "added"
     },
@@ -2513,16 +4442,48 @@
       ],
       "region": "knowledge-representation",
       "desc": "Representing concepts as nodes and relations as labeled edges.",
+      "summary": "Knowledge drawn as a graph: concepts are nodes and relationships such as is-a or has-part are labeled edges, so a program can infer that a canary can fly because it is a bird. Quillian's model of human memory (1968) started the idea, and frames, ontologies and WordNet followed. Knowledge graphs are their large-scale descendant.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Historical foundation of graph-structured knowledge.",
       "date": "1968",
       "ref": {
-        "title": "Semantic Memory (Quillian)"
+        "title": "Semantic Memory (Quillian), reprinted in Readings in Cognitive Science",
+        "url": "https://doi.org/10.1016/B978-1-4832-1446-7.50013-3"
       },
       "examples": [
         "WordNet",
         "OWL ontologies"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "Semantic Networks",
+          "by": "John F. Sowa",
+          "year": 1992,
+          "url": "http://www.jfsowa.com/pubs/semnet.htm"
+        },
+        {
+          "kind": "talk",
+          "title": "Introduction to Semantic Networks - Georgia Tech - KBAI: Part1",
+          "by": "Ashok Goel (Georgia Tech / Udacity)",
+          "year": 2015,
+          "url": "https://www.youtube.com/watch?v=TWGTJyK2BJA"
+        },
+        {
+          "kind": "paper",
+          "title": "Retrieval time from semantic memory",
+          "by": "Allan M. Collins & M. Ross Quillian",
+          "year": 1969,
+          "url": "https://doi.org/10.1016/S0022-5371(69)80069-1"
+        },
+        {
+          "kind": "paper",
+          "title": "What is a Knowledge Representation?",
+          "by": "Randall Davis, Howard Shrobe & Peter Szolovits",
+          "year": 1993,
+          "url": "https://groups.csail.mit.edu/medg/ftp/psz/k-rep.html"
+        }
       ],
       "status": "added"
     },
@@ -2530,10 +4491,15 @@
       "id": "knowledge-graphs",
       "name": "Knowledge Graphs",
       "aliases": [
-        "property graphs"
+        "property graphs",
+        "Semantic Web",
+        "RDF",
+        "OWL",
+        "description logics"
       ],
       "region": "knowledge-representation",
       "desc": "Large graphs of entities and typed relationships used to store and query structured knowledge.",
+      "summary": "Large graphs of real-world entities and the typed relationships between them, such as a person, the company they founded and the city it is based in. Google's 2012 Knowledge Graph brought the term into wide use, and Wikidata and enterprise graphs followed. Today they ground LLM answers in GraphRAG and give agents structured facts to query.",
       "parents": [
         {
           "id": "semantic-networks",
@@ -2546,13 +4512,93 @@
       "maturity_note": "Established enterprise and web infrastructure.",
       "date": "2012-05",
       "ref": {
-        "title": "Introducing the Knowledge Graph: things, not strings (Singhal, Google)"
+        "title": "Introducing the Knowledge Graph: things, not strings (Singhal, Google)",
+        "url": "https://blog.google/products/search/introducing-knowledge-graph-things-not/"
       },
       "examples": [
         "Wikidata",
         "Neo4j"
       ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Knowledge Graphs",
+          "by": "Aidan Hogan et al.",
+          "year": 2020,
+          "url": "https://arxiv.org/abs/2003.02320"
+        },
+        {
+          "kind": "talk",
+          "title": "The History of Wikidata",
+          "by": "Denny Vrandečić",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=P3-nklyrDx4"
+        },
+        {
+          "kind": "paper",
+          "title": "Wikidata: a free collaborative knowledgebase",
+          "by": "Denny Vrandečić & Markus Krötzsch",
+          "year": 2014,
+          "url": "https://doi.org/10.1145/2629489"
+        }
+      ],
       "status": "repaired"
+    },
+    {
+      "id": "bayesian-networks",
+      "name": "Bayesian Networks",
+      "aliases": [
+        "probabilistic graphical models",
+        "belief networks",
+        "causal graphs"
+      ],
+      "region": "knowledge-representation",
+      "desc": "Representing uncertain knowledge as a graph of variables with conditional probabilities, so a system can update beliefs from evidence.",
+      "summary": "Rule-based AI struggled with uncertainty. Pearl's Bayesian networks draw what depends on what as a graph and attach probabilities to each link, so a system can reason from evidence to likely causes, as in medical diagnosis or spam filtering. They made probability the standard language of AI reasoning, and Pearl's later causal work grew from them.",
+      "parents": [],
+      "maturity": 5,
+      "maturity_note": "Foundational for probabilistic reasoning; used in diagnosis and causal inference.",
+      "date": "1988",
+      "ref": {
+        "title": "Probabilistic Reasoning in Intelligent Systems: Networks of Plausible Inference (Pearl)",
+        "url": "https://doi.org/10.1016/C2009-0-27609-4"
+      },
+      "examples": [
+        "medical diagnosis systems",
+        "Microsoft Office Assistant",
+        "pgmpy"
+      ],
+      "resources": [
+        {
+          "kind": "blog",
+          "title": "A Brief Introduction to Graphical Models and Bayesian Networks",
+          "by": "Kevin Murphy",
+          "year": 1998,
+          "url": "https://www.cs.ubc.ca/~murphyk/Bayes/bnintro.html"
+        },
+        {
+          "kind": "talk",
+          "title": "Lecture 16: Bayes Nets",
+          "by": "Pieter Abbeel (CS188 Spring 2014)",
+          "year": 2014,
+          "url": "https://www.youtube.com/watch?v=gMQZq2O8yDA"
+        },
+        {
+          "kind": "talk",
+          "title": "Judea Pearl, 2012 ACM A.M. Turing Award Lecture \"The Mechanization of Causal Inference\"",
+          "by": "Judea Pearl (ACM)",
+          "year": 2012,
+          "url": "https://www.youtube.com/watch?v=iNm4nFBFmvo"
+        },
+        {
+          "kind": "paper",
+          "title": "A Tutorial on Learning With Bayesian Networks",
+          "by": "David Heckerman",
+          "year": 1995,
+          "url": "https://arxiv.org/abs/2002.00269"
+        }
+      ],
+      "status": "added"
     },
     {
       "id": "conversational-agents",
@@ -2563,16 +4609,48 @@
       ],
       "region": "human-computer-interaction",
       "desc": "Programs that interact with people through natural-language dialogue.",
+      "summary": "Programs that hold a conversation in natural language. ELIZA (1966) imitated a therapist with simple pattern-matching rules, yet people confided in it, an early lesson in how readily users credit a chatbot with understanding. Rule-based and statistical dialogue systems and voice assistants followed, before LLMs made open-ended conversation work.",
       "parents": [],
       "maturity": 5,
       "maturity_note": "Long-standing interaction paradigm.",
       "date": "1966",
       "ref": {
-        "title": "ELIZA — A Computer Program for the Study of Natural Language Communication (Weizenbaum)"
+        "title": "ELIZA — A Computer Program for the Study of Natural Language Communication Between Man and Machine (Weizenbaum)",
+        "url": "https://doi.org/10.1145/365153.365168"
       },
       "examples": [
         "ELIZA",
         "voice assistants"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "ELIZA Reinterpreted: The world's first chatbot was not intended as a chatbot at all",
+          "by": "Jeff Shrager",
+          "year": 2024,
+          "url": "https://arxiv.org/abs/2406.17650"
+        },
+        {
+          "kind": "talk",
+          "title": "The Chatbot Inventor’s Cautionary Alert (1978)",
+          "by": "GBH Archives (Joseph Weizenbaum)",
+          "year": 1978,
+          "url": "https://www.youtube.com/watch?v=GxSJQnWzJOs"
+        },
+        {
+          "kind": "talk",
+          "title": "The ELIZA Effect",
+          "by": "99% Invisible",
+          "year": 2019,
+          "url": "https://99percentinvisible.org/episode/the-eliza-effect/"
+        },
+        {
+          "kind": "blog",
+          "title": "ELIZAGEN",
+          "by": "Jeff Shrager et al.",
+          "year": 2021,
+          "url": "https://sites.google.com/view/elizagen-org"
+        }
       ],
       "status": "added"
     },
@@ -2585,6 +4663,7 @@
       ],
       "region": "human-computer-interaction",
       "desc": "Designing systems where the user and an automated agent each take initiative, with the system weighing when to act, ask, or defer.",
+      "summary": "Designing an assistant so that either the person or the AI can take the lead, with the system weighing its own uncertainty and the cost of interrupting before it acts, asks, or stays quiet. Horvitz's 1999 principles came from building assistants such as Microsoft's Lookout. They read as a blueprint for today's copilots, approval prompts and agent check-ins.",
       "parents": [
         {
           "id": "external:direct-manipulation",
@@ -2597,11 +4676,42 @@
       "maturity_note": "Established HCI framework, newly central with LLM assistants.",
       "date": "1999",
       "ref": {
-        "title": "Principles of Mixed-Initiative User Interfaces (Horvitz, CHI 1999)"
+        "title": "Principles of Mixed-Initiative User Interfaces (Horvitz, CHI 1999)",
+        "url": "https://doi.org/10.1145/302979.303030"
       },
       "examples": [
         "copilots",
         "agent approval flows"
+      ],
+      "resources": [
+        {
+          "kind": "paper",
+          "title": "Guidelines for Human-AI Interaction",
+          "by": "Saleema Amershi et al.",
+          "year": 2019,
+          "url": "https://doi.org/10.1145/3290605.3300233"
+        },
+        {
+          "kind": "talk",
+          "title": "KDD2023 - Keynote: People and Machines: Pathways to Deeper Human-AI Synergy",
+          "by": "Eric Horvitz (ACM)",
+          "year": 2023,
+          "url": "https://www.youtube.com/watch?v=HDfxgKcnX9w"
+        },
+        {
+          "kind": "paper",
+          "title": "Mixed-initiative interaction",
+          "by": "James Allen, Curry Guinn & Eric Horvitz",
+          "year": 1999,
+          "url": "https://doi.org/10.1109/5254.796083"
+        },
+        {
+          "kind": "docs",
+          "title": "Guidelines for Human-AI Interaction",
+          "by": "Microsoft Research",
+          "year": 2019,
+          "url": "https://www.microsoft.com/en-us/research/project/guidelines-for-human-ai-interaction/"
+        }
       ],
       "status": "added"
     },
@@ -5574,6 +7684,12 @@
       "desc": "Rescoring a candidate set by passing query and document jointly through a transformer for a precise relevance score.",
       "summary": "A fast first-stage search pulls a few dozen to a few hundred candidates, then a cross-encoder reads the question and each candidate together and scores how relevant it is. Reading them jointly is much more accurate than comparing separate vectors, but too slow to run over a whole corpus, so it is used only on the shortlist.",
       "parents": [
+        {
+          "id": "learning-to-rank",
+          "rel": "extends",
+          "why": "Replaces hand-built ranking features with a pretrained Transformer that reads the query and document together.",
+          "src": "Passage Re-ranking with BERT (Nogueira & Cho 2019)"
+        },
         {
           "id": "pretrained-language-models",
           "rel": "applies",
@@ -14904,6 +17020,12 @@
       "desc": "Transcribing spoken audio to text with large weakly supervised transformer models.",
       "summary": "Turning spoken audio into text. Whisper showed that an encoder-decoder transformer trained on hundreds of thousands of hours of loosely labeled web audio handles accents, noise and many languages without per-task tuning. It is a commodity API today and the first stage of most voice pipelines.",
       "parents": [
+        {
+          "id": "hidden-markov-models",
+          "rel": "replaces",
+          "why": "End-to-end neural recognizers displaced the HMM-based acoustic models that ran speech recognition for decades.",
+          "src": "Robust Speech Recognition via Large-Scale Weak Supervision (Radford et al. 2022)"
+        },
         {
           "id": "sequence-to-sequence-learning",
           "rel": "applies",

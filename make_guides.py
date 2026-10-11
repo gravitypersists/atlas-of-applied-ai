@@ -25,24 +25,7 @@ LEADS = {
 
 # Candidate Old World landmarks for the Old World guide to evaluate (include, fold into an anchor, or reject).
 # Several are AI ideas currently cited only as external: parents.
-OLD_WORLD_LEADS = [
-    ("Dropout, batch/layer normalization and Adam: the deep-learning training toolkit (one node or several?)", None),
-    ("GPUs and CUDA as the enabler of deep learning (or fold into alexnet)", None),
-    ("Deep belief nets / greedy layer-wise pretraining (2006), the start of the deep-learning revival", None),
-    ("Hopfield networks and Boltzmann machines", None),
-    ("n-gram language models and Shannon's information theory of language", None),
-    ("Statistical machine translation (IBM models), the data-driven turn in NLP", None),
-    ("Hidden Markov models and CTC for speech recognition (ancestor of speech-recognition)", None),
-    ("Contextual embeddings (ELMo) and BERT-style masked pretraining: separate from pretrained-language-models?", None),
-    ("GPT-3 and in-context learning: Old World landmark, or already covered by few-shot-prompting?", None),
-    ("Bayesian networks and probabilistic graphical models", None),
-    ("Support vector machines and kernel methods", None),
-    ("Actor-critic methods and TD-Gammon", None),
-    ("Logic programming (Prolog) and automated theorem proving (ancestor of verifiers and formal-methods work)", None),
-    ("Ontologies, description logics and the Semantic Web", None),
-    ("PageRank and learning to rank", None),
-    ("Promote AI externals to anchors: adaptive-mixtures-of-local-experts (1991), sparse-transformers (2019), semantic-parsing, named-entity-recognition, network-pruning (Optimal Brain Damage), predictive-uncertainty / calibration, nonequilibrium-thermodynamics-generative-modeling (diffusion's origin, 2015), preference-learning", None),
-]
+OLD_WORLD_LEADS = []  # all evaluated in the 2026-10-11 enrichment pass (see that commit)
 
 
 def ref_str(ref):
@@ -264,7 +247,7 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
             + ")" for n in ns))
     ow_rules = [b for b in data["boundary_rules"] if any(rid in str(b["home"]) for rid in root_ids) or "Old World" in str(b["concept"])]
     ow_rule_lines = "\n".join(f"- {b['concept']} → {b['home']}: {b['rule']}" for b in ow_rules)
-    ow_lead_lines = "\n".join(f"- {t}" + (f" (arXiv:{a})" if a else "") for t, a in OLD_WORLD_LEADS)
+    ow_lead_lines = "\n".join(f"- {t}" + (f" (arXiv:{a})" if a else "") for t, a in OLD_WORLD_LEADS) or "- none"
     ow_bridges = sorted(
         f"{n['id']} --{p['rel']}--> {p['id']}"
         for n in nodes if n["region"] not in root_ids

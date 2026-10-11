@@ -290,4 +290,12 @@ settlements:
   - {id: alphago, x: 1170, y: 1790, settled: "2026-10-11"}
   - {id: monte-carlo-tree-search, x: 900, y: 1980, settled: "2026-10-11"}
   - {id: classical-multi-agent-systems, x: 680, y: 1970, settled: "2026-10-11"}
+  - {id: n-gram-language-models, x: 1300, y: 1180, settled: "2026-10-11"}
+  - {id: statistical-machine-translation, x: 1400, y: 1170, settled: "2026-10-11"}
+  - {id: hidden-markov-models, x: 1500, y: 1240, settled: "2026-10-11"}
+  - {id: hopfield-boltzmann-networks, x: 1080, y: 1500, settled: "2026-10-11"}
+  - {id: deep-belief-networks, x: 1100, y: 1570, settled: "2026-10-11"}
+  - {id: automated-theorem-proving, x: 720, y: 1770, settled: "2026-10-11"}
+  - {id: bayesian-networks, x: 980, y: 1290, settled: "2026-10-11"}
+  - {id: learning-to-rank, x: 1100, y: 1030, settled: "2026-10-11"}
 retired: []

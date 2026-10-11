@@ -98,8 +98,8 @@ function init(map) {
   const titles = titleLayer.selectAll("text").data(titled).join("text")
     .attr("class", (d) => `territory-label ${d.kind}`)
     .style("fill", (d) => d.ink);
-  // Applied titles open their region's panel (SPEC §5.3).
-  titles.filter((d) => d.kind === "title").on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
+  // Titles and province names open their region's panel (SPEC §5.3).
+  titles.on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
   titles.each(function (d) {
     const t = d3.select(this);
     if (d.kind === "province") { t.append("tspan").attr("class", "province-name").text(d.subtitle.toUpperCase()); return; }
@@ -208,9 +208,14 @@ function init(map) {
   // ---------------------------------------------------------------- selection (SPEC §5.3)
   const routesFor = (id) => map.routes.filter((r) => r.from === id || r.to === id);
   let selected = null;
+  // The Old World as a whole gets a region panel too: its overview, and its provinces as chips.
+  const OLD_WORLD = "old-world";
+  const oldWorldRegion = { id: OLD_WORLD, group: "world", title: map.oldWorld?.title ?? "The Old World", subtitle: map.oldWorld?.subtitle ?? "", about: map.oldWorld?.about ?? null, learningPath: [] };
+  const regionById = (id) => (id === OLD_WORLD ? oldWorldRegion : territoryById.get(id));
+  const inRegion = (l, id) => (id === OLD_WORLD ? territoryById.get(l.region)?.group === "old-world" : l.region === id);
 
   function select(id, { fly = true, instant = false } = {}) {
-    if (territoryById.get(id)?.group === "applied") { selectRegion(id, { instant }); return; }
+    if (regionById(id)) { selectRegion(id, { instant }); return; }
     const l = byId.get(id);
     if (!l) return;
     selected = l;
@@ -234,13 +239,13 @@ function init(map) {
 
   // A region: its panel (overview, learning path, landmarks), framed on the map. Landmarks stay undimmed.
   function selectRegion(id, { instant = false } = {}) {
-    const t = territoryById.get(id);
+    const t = regionById(id);
     if (!t) return;
     clearSelection();
     selected = t;
     renderRegionPanel(t);
     setHash(`#${encodeURIComponent(id)}`);
-    const members = map.landmarks.filter((l) => l.region === id);
+    const members = map.landmarks.filter((l) => inRegion(l, id));
     fitBox(d3.min(members, (l) => l.x), d3.min(members, (l) => l.y), d3.max(members, (l) => l.x), d3.max(members, (l) => l.y), instant ? 0 : FLY_MS);
   }
 
@@ -323,14 +328,20 @@ function init(map) {
   function renderRegionPanel(t) {
     for (const id of LANDMARK_ONLY) el(id).hidden = true;
     for (const id of REGION_ONLY) el(id).hidden = false;
-    el("panel-where").textContent = t.title ? `Region · ${t.subtitle}` : "Region";
-    el("panel-name").textContent = t.title ?? t.subtitle;
+    el("panel-where").textContent = t.id === OLD_WORLD ? t.subtitle
+      : t.group === "old-world" ? `${oldWorldRegion.title} · Province`
+      : t.title ? `Region · ${t.subtitle}` : "Region";
+    el("panel-name").textContent = t.group === "old-world" ? t.subtitle : (t.title ?? t.subtitle);
     el("panel-summary").textContent = t.about ?? "";
     el("panel-summary").hidden = !t.about;
     fillResources("panel-path", "panel-path-section", t.learningPath);
-    // Core landmarks first (the overview), deep-dive detail after; each group oldest first.
-    const members = map.landmarks.filter((l) => l.region === t.id)
-      .sort((a, b) => (a.layer === "detail") - (b.layer === "detail") || String(a.date).localeCompare(String(b.date)));
+    // The Old World lists its provinces. A region lists its landmarks: core first (the overview),
+    // deep-dive detail after, each group oldest first.
+    el("panel-members-heading").textContent = t.id === OLD_WORLD ? "Provinces" : "Landmarks";
+    const members = t.id === OLD_WORLD
+      ? map.territories.filter((p) => p.group === "old-world").map((p) => ({ id: p.id, name: p.subtitle }))
+      : map.landmarks.filter((l) => l.region === t.id)
+        .sort((a, b) => (a.layer === "detail") - (b.layer === "detail") || String(a.date).localeCompare(String(b.date)));
     el("panel-members").replaceChildren(...members.map((l) => {
       const c = chip(l.name, l.id);
       if (l.layer === "detail") c.classList.add("detail");
@@ -413,9 +424,9 @@ function init(map) {
   // ---------------------------------------------------------------- search (SPEC §5.4)
   const searchInput = el("search");
   const resultsEl = el("search-results");
-  const territoryEntries = map.territories.map((t) => ({
+  const territoryEntries = [oldWorldRegion, ...map.territories].map((t) => ({
     kind: "territory", id: t.id, name: t.group === "old-world" ? t.subtitle : (t.title ?? t.subtitle),
-    sub: t.group === "old-world" ? (map.oldWorld?.title ?? "The Old World") : (t.title ? t.subtitle : ""),
+    sub: t.group === "old-world" ? oldWorldRegion.title : (t.title ? t.subtitle : ""),
     haystack: [t.title, t.subtitle].filter(Boolean).join(" ").toLowerCase(),
   }));
   const landmarkEntries = map.landmarks.map((l) => ({
@@ -489,10 +500,7 @@ function init(map) {
     searchInput.value = "";
     results = []; active = -1; renderResults();
     searchInput.blur();
-    if (r.kind === "landmark" || territoryById.get(r.id)?.group === "applied") { select(r.id); return; }
-    clearSelection();
-    const members = map.landmarks.filter((l) => l.region === r.id);
-    fitBox(d3.min(members, (l) => l.x), d3.min(members, (l) => l.y), d3.max(members, (l) => l.x), d3.max(members, (l) => l.y));
+    select(r.id);
   }
   searchInput.addEventListener("input", () => { results = search(searchInput.value); active = results.length ? 0 : -1; renderResults(); });
   searchInput.addEventListener("keydown", (e) => {
@@ -508,7 +516,7 @@ function init(map) {
 
   // ---------------------------------------------------------------- deep links (SPEC §5.5)
   const fromHash = () => decodeURIComponent(location.hash.slice(1));
-  const linkable = (id) => byId.has(id) || territoryById.get(id)?.group === "applied";
+  const linkable = (id) => byId.has(id) || !!regionById(id);
   if (linkable(fromHash())) select(fromHash(), { instant: true });
   window.addEventListener("hashchange", () => { if (linkable(fromHash()) && fromHash() !== selected?.id) select(fromHash()); });
 

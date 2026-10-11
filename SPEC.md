@@ -148,7 +148,7 @@ Curation never touches settled geography. The `survey` block only shapes the fou
     "about": "…", "learningPath": [{"kind": "paper", "title": "…", "by": "…", "year": 2022, "url": "…", "why": "…"}]   // region overview (falls back to the definition)
   }],
   "view": {"levels": [2, 5], "margin": {"x": 150, "y": 60}},   // zoom thresholds and fit margin used for label placement
-  "oldWorld": {"title": "The Old World", "subtitle": "Ancestral Disciplines", "label": [x, y], "titleLines": ["THE OLD WORLD"]},
+  "oldWorld": {"title": "The Old World", "subtitle": "Ancestral Disciplines", "about": "…", "label": [x, y], "titleLines": ["THE OLD WORLD"]},
   "landmarks": [{
     "id": "graph-rag", "name": "GraphRAG", "region": "retrieval-and-knowledge",
     "x": 0, "y": 0, "tier": "outpost", "score": 2.58, "minZoom": 2, "labelSide": "right",
@@ -368,7 +368,9 @@ When a landmark is selected:
 6. **Lineage:** each parent (and external ancestor) that has a `why`, as a link with its `why` beneath.
 7. **Footer** (fixed height, pinned to the panel's bottom so its chips don't move as the reader walks the graph): a **Built on** row of parent chips and a **Led to** row of child chips. Each row is one line that scrolls sideways (the mouse wheel scrolls it too) and fades at the edge where more chips continue. An empty row reads "none charted". External ancestors appear as non-clickable dashed "beyond the map" chips.
 
-**Region panel.** Clicking an applied territory title (at z0–z1), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle", the title, the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
+**Region panel.** Clicking an applied territory title (at z0–z1) or an Old World province name (at z2), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle" (for a province, "The Old World · Province"), the title (a province's name), the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
+
+**Old World panel.** Clicking the Old World title, choosing it in search, or `#old-world` opens the same panel for the whole continent: the subtitle as header, the Old World `overview` (top-level `old_world.overview` in `backbone.yaml`), and **Provinces**: one chip per province, opening its panel. It fits the view to all Old World landmarks.
 
 **Chip behavior:** clicking a chip flies there (600ms, eased, to at least z1) and selects that landmark.
 
@@ -384,7 +386,7 @@ When a landmark is selected:
 - When a result matched on something other than its name, a second line says why: "Also called …", "Example: Jev (TypeSafe AI)", or a short excerpt of the matching description.
 - It shows up to 8 results, each with its territory title.
 - Ranking: name prefix, then name, alias, and example matches; then regions; then description-only matches.
-- Arrow keys and Enter work, Esc clears, and `/` focuses the search box. Choosing a landmark flies to it and selects it. Choosing an applied territory opens its region panel (§5.3); choosing an Old World province clears any selection and fits the view to its landmarks. Both frame the region between z1 (so its towns show) and just short of z2 (so its title stays visible). On a phone the region can be wider than the screen, and the reader pans.
+- Arrow keys and Enter work, Esc clears, and `/` focuses the search box. Choosing a landmark flies to it and selects it. Choosing a territory (applied region or Old World province) or the Old World itself opens its panel (§5.3). Each frames the region between z1 (so its towns show) and just short of z2 (so its title stays visible). On a phone the region can be wider than the screen, and the reader pans.
 
 ### 5.5 Deep links
 

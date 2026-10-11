@@ -168,6 +168,8 @@ html, body {
 #map.has-selection .doodle:not(.lit) { opacity: 0.3; }
 /* Region titles open the region's panel while they're prominent (z0–z1). */
 #map.z0 .territory-label.title, #map.z1 .territory-label.title { pointer-events: visiblePainted; cursor: pointer; }
+/* Province names open their panel where they show (z2). */
+#map.z2 .territory-label.province { pointer-events: visiblePainted; cursor: pointer; }
 #map.z0 .landmark:not(.lz0) .label,
 #map.z1 .landmark.lz2 .label { opacity: 0; }
 .territory-label.province { opacity: 0; }

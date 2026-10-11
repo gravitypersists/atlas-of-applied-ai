@@ -473,7 +473,7 @@ function render(model, curation) {
   }));
   const colors = regionPalette(bb);
   for (const t of territories) Object.assign(t, colors.get(t.id));
-  const oldWorld = { title: "The Old World", subtitle: "Ancestral Disciplines", ...curation.old_world };
+  const oldWorld = { title: "The Old World", subtitle: "Ancestral Disciplines", ...curation.old_world, about: bb.old_world?.overview ?? null };
   oldWorld.labelCurated = oldWorld.label ?? null;
 
   let geometry = {}, terrain = null;

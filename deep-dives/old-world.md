@@ -1,6 +1,6 @@
 # Deep dive: The Old World
 
-Backbone v0.2 · 8 provinces · 46 landmarks · 80 edges into the New World
+Backbone v0.2 · 8 provinces · 54 landmarks · 82 edges into the New World
 
 An enrichment pass rather than a coverage pass: summaries, dates, linked refs and resources for the existing landmarks, province overviews and learning paths, and only the obvious missing history.
 
@@ -28,21 +28,22 @@ Boundary rules (apply these exactly; if you disagree, say so in Amendments):
 ## The provinces and their current landmarks (keep these ids; you may correct their fields)
 ### Information Retrieval (`information-retrieval`)
 Finding relevant material in large collections. Origin of ranking, indexing, and question answering over corpora.
-- `bm25` — BM25 (1994, maturity 5; ref has no link)
-- `approximate-nearest-neighbor-search` — Approximate Nearest Neighbor Search (2016-03, maturity 5)
-- `open-domain-qa` — Open-Domain Question Answering (2017-04, maturity 4)
+- `bm25` — BM25 (1994, maturity 5; has summary)
+- `approximate-nearest-neighbor-search` — Approximate Nearest Neighbor Search (2016-03, maturity 5; has summary)
+- `open-domain-qa` — Open-Domain Question Answering (2017-04, maturity 4; has summary)
 - `tf-idf` — TF-IDF (1972, maturity 5; has summary)
+- `learning-to-rank` — Learning to Rank (2005, maturity 5; has summary)
 
 ### Deep Learning and NLP (`deep-learning-nlp`)
 Neural networks for language — attention, sequence models, pretraining, transfer learning — that produced the transformer and LLMs. Also holds the few architecture choices engineers actually make (MoE, SSMs).
-- `attention-mechanism` — Attention Mechanism (2014-09, maturity 5)
-- `sequence-to-sequence-learning` — Sequence-to-Sequence Learning (2014-09, maturity 5)
-- `transformer-architecture` — Transformer (2017-06, maturity 5)
-- `pretrained-language-models` — Pretrained Language Models (2018-06, maturity 5)
-- `transfer-learning-fine-tuning` — Transfer Learning and Fine-Tuning (2018-01, maturity 5)
-- `knowledge-distillation` — Knowledge Distillation (2015-03, maturity 5)
-- `mixture-of-experts` — Mixture of Experts (2017-01, maturity 4)
-- `state-space-models` — State-Space Models (2021-10, maturity 3)
+- `attention-mechanism` — Attention Mechanism (2014-09, maturity 5; has summary)
+- `sequence-to-sequence-learning` — Sequence-to-Sequence Learning (2014-09, maturity 5; has summary)
+- `transformer-architecture` — Transformer (2017-06, maturity 5; has summary)
+- `pretrained-language-models` — Pretrained Language Models (2018-06, maturity 5; has summary)
+- `transfer-learning-fine-tuning` — Transfer Learning and Fine-Tuning (2018-01, maturity 5; has summary)
+- `knowledge-distillation` — Knowledge Distillation (2015-03, maturity 5; has summary)
+- `mixture-of-experts` — Mixture of Experts (2017-01, maturity 4; has summary)
+- `state-space-models` — State-Space Models (2021-10, maturity 3; has summary)
 - `subword-tokenization` — Subword Tokenization (2015-08, maturity 5; has summary)
 - `rotary-position-embeddings` — Rotary Position Embeddings (2021-04, maturity 5; has summary)
 - `sparse-attention` — Sparse Attention (2025-02, maturity 3; has summary)
@@ -52,34 +53,41 @@ Neural networks for language — attention, sequence models, pretraining, transf
 - `neural-language-models` — Neural Language Models (2003, maturity 5; has summary)
 - `word-embeddings` — Word Embeddings (2013-01, maturity 5; has summary)
 - `scaling-laws` — Scaling Laws (2020-01, maturity 5; has summary)
+- `n-gram-language-models` — N-gram Language Models (1948-07, maturity 5; has summary)
+- `statistical-machine-translation` — Statistical Machine Translation (1993, maturity 5; has summary)
+- `hidden-markov-models` — Hidden Markov Models for Speech (1975, maturity 5; has summary)
+- `hopfield-boltzmann-networks` — Hopfield Networks and Boltzmann Machines (1982-04, maturity 5; has summary)
+- `deep-belief-networks` — Deep Belief Networks (2006-07, maturity 5; has summary)
 
 ### Symbolic AI and Planning (`symbolic-ai-planning`)
 Explicit representations, search, and formal planning. Ancestor of tool use, planning-with-verifiers, and neuro-symbolic hybrids.
-- `heuristic-search` — Heuristic Search (1968, maturity 5; ref has no link)
-- `strips-planning` — STRIPS Planning (1971, maturity 5; ref has no link)
-- `pddl` — PDDL (1998, maturity 4; ref has no link)
-- `expert-systems` — Expert Systems (1976, maturity 5; ref has no link)
+- `heuristic-search` — Heuristic Search (1968, maturity 5; has summary)
+- `strips-planning` — STRIPS Planning (1971, maturity 5; has summary)
+- `pddl` — PDDL (1998, maturity 4; has summary)
+- `expert-systems` — Expert Systems (1976, maturity 5; has summary)
 - `monte-carlo-tree-search` — Monte Carlo Tree Search (2006, maturity 5; has summary)
 - `classical-multi-agent-systems` — Multi-Agent Systems (1995-06, maturity 5; has summary)
+- `automated-theorem-proving` — Automated Theorem Proving (1965-01, maturity 5; has summary)
 
 ### Reinforcement Learning (`reinforcement-learning`)
 Learning from reward through interaction. Ancestor of every preference- and verifier-based post-training method.
-- `markov-decision-process` — Markov Decision Process (1957, maturity 5; ref has no link)
-- `policy-gradient-methods` — Policy Gradient Methods (1999, maturity 5; ref has no link)
-- `ppo` — Proximal Policy Optimization (2017-07, maturity 5)
+- `markov-decision-process` — Markov Decision Process (1957, maturity 5; has summary)
+- `policy-gradient-methods` — Policy Gradient Methods (1999, maturity 5; has summary)
+- `ppo` — Proximal Policy Optimization (2017-07, maturity 5; has summary)
 - `q-learning` — Q-Learning (1992-05, maturity 5; has summary)
 - `deep-q-networks` — Deep Q-Networks (2013-12, maturity 5; has summary)
 - `alphago` — AlphaGo (2016-01, maturity 5; has summary)
 
 ### Knowledge Representation (`knowledge-representation`)
 Structured, machine-usable models of facts and relations — semantic networks, ontologies, knowledge graphs.
-- `semantic-networks` — Semantic Networks (1968, maturity 5; ref has no link)
-- `knowledge-graphs` — Knowledge Graphs (2012-05, maturity 5; ref has no link)
+- `semantic-networks` — Semantic Networks (1968, maturity 5; has summary)
+- `knowledge-graphs` — Knowledge Graphs (2012-05, maturity 5; has summary)
+- `bayesian-networks` — Bayesian Networks (1988, maturity 5; has summary)
 
 ### Human-Computer Interaction (`human-computer-interaction`)
 How people work with computational systems. Ancestor of conversational UX, copilots, and human oversight patterns.
-- `conversational-agents` — Conversational Agents (1966, maturity 5; ref has no link)
-- `mixed-initiative-interaction` — Mixed-Initiative Interaction (1999, maturity 4; ref has no link)
+- `conversational-agents` — Conversational Agents (1966, maturity 5; has summary)
+- `mixed-initiative-interaction` — Mixed-Initiative Interaction (1999, maturity 4; has summary)
 
 ### Computer Vision (`computer-vision`)
 Teaching machines to see — convolutional networks, the ImageNet breakthrough, and the generative models that learned to draw. Ancestor of vision-language models, image generation, and the deep-learning toolkit itself.
@@ -92,9 +100,9 @@ Teaching machines to see — convolutional networks, the ImageNet breakthrough, 
 
 ### Robotics and Control (`robotics-and-control`)
 Getting machines to sense and move in the physical world — control, physics simulation, and learning from demonstration. Ancestor of robot foundation models, sim-to-real transfer, and imitation-based training.
-- `behavior-cloning` — Behavior Cloning (1989, maturity 5; ref has no link)
-- `dagger` — DAgger (2010-11, maturity 4)
-- `physics-simulation` — Physics Simulation for Robotics (2012, maturity 5; ref has no link)
+- `behavior-cloning` — Behavior Cloning (1989, maturity 5; has summary)
+- `dagger` — DAgger (2010-11, maturity 4; has summary)
+- `physics-simulation` — Physics Simulation for Robotics (2012, maturity 5; has summary)
 
 ## What to do for every existing landmark
 - Write a `summary` (2–3 plain-language sentences) where it has none, and check the ones that exist.
@@ -110,22 +118,7 @@ Getting machines to sense and move in the physical world — control, physics si
 
 ## Leads to evaluate
 For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
-- Dropout, batch/layer normalization and Adam: the deep-learning training toolkit (one node or several?)
-- GPUs and CUDA as the enabler of deep learning (or fold into alexnet)
-- Deep belief nets / greedy layer-wise pretraining (2006), the start of the deep-learning revival
-- Hopfield networks and Boltzmann machines
-- n-gram language models and Shannon's information theory of language
-- Statistical machine translation (IBM models), the data-driven turn in NLP
-- Hidden Markov models and CTC for speech recognition (ancestor of speech-recognition)
-- Contextual embeddings (ELMo) and BERT-style masked pretraining: separate from pretrained-language-models?
-- GPT-3 and in-context learning: Old World landmark, or already covered by few-shot-prompting?
-- Bayesian networks and probabilistic graphical models
-- Support vector machines and kernel methods
-- Actor-critic methods and TD-Gammon
-- Logic programming (Prolog) and automated theorem proving (ancestor of verifiers and formal-methods work)
-- Ontologies, description logics and the Semantic Web
-- PageRank and learning to rank
-- Promote AI externals to anchors: adaptive-mixtures-of-local-experts (1991), sparse-transformers (2019), semantic-parsing, named-entity-recognition, network-pruning (Optimal Brain Damage), predictive-uncertainty / calibration, nonequilibrium-thermodynamics-generative-modeling (diffusion's origin, 2015), preference-learning
+- none
 
 ## Output
 
@@ -223,11 +216,11 @@ Prefer primary sources (papers, author pages, publisher DOIs, university course 
 external:adaptive-mixtures-of-local-experts, external:algorithmic-fairness, external:api-gateways, external:backdoor-attacks, external:byte-pair-encoding-compression, external:content-moderation-classifiers, external:control-theory-state-space, external:copyright-and-licensing, external:crowdsourcing, external:data-protection-impact-assessment, external:datasheets-and-documentation, external:digital-signatures, external:digital-watermarking, external:direct-manipulation, external:distributed-tracing, external:elo-rating, external:enterprise-risk-management, external:fasttext-classifiers, external:gdpr, external:held-out-test-sets, external:injection-attacks, external:iso-27001-information-security-management, external:language-server-protocol, external:least-privilege, external:minhash, external:n-gram-overlap-detection, external:named-entity-recognition, external:network-pruning, external:neural-audio-codecs, external:nonequilibrium-thermodynamics-generative-modeling, external:oauth, external:ocr, external:prediction-powered-inference, external:predictive-uncertainty, external:preference-learning, external:prompt-to-prompt, external:requirements-engineering, external:sandboxing-and-isolation, external:security-red-teaming, external:semantic-parsing, external:shared-task-benchmarks, external:software-bill-of-materials, external:sparse-transformers, external:star-self-taught-reasoner, external:statecharts, external:template-engines, external:test-driven-development, external:trust-in-automation, external:web-caching, external:weight-averaging
 
 ## Backbone index (all regions: id, then name and aliases; use these ids for cross-region parents)
-- information-retrieval: bm25 (BM25; Okapi BM25; sparse retrieval; TF-IDF ranking), approximate-nearest-neighbor-search (Approximate Nearest Neighbor Search; ANN; HNSW; vector indexing), open-domain-qa (Open-Domain Question Answering; retriever-reader QA; DrQA), tf-idf (TF-IDF; inverse document frequency; IDF; term weighting)
-- deep-learning-nlp: attention-mechanism (Attention Mechanism; neural attention), sequence-to-sequence-learning (Sequence-to-Sequence Learning; seq2seq; encoder-decoder), transformer-architecture (Transformer; transformers), pretrained-language-models (Pretrained Language Models; LLMs; foundation models; generative pretraining), transfer-learning-fine-tuning (Transfer Learning and Fine-Tuning; fine-tuning; ULMFiT), knowledge-distillation (Knowledge Distillation; teacher-student training), mixture-of-experts (Mixture of Experts; MoE; sparse MoE), state-space-models (State-Space Models; SSMs; S4; Mamba; linear-time sequence models), subword-tokenization (Subword Tokenization; tokenization; BPE; byte-pair encoding; tokenizers; SentencePiece; token counting), rotary-position-embeddings (Rotary Position Embeddings; RoPE; RoFormer; rotary embeddings), sparse-attention (Sparse Attention; NSA; Native Sparse Attention; DSA; DeepSeek Sparse Attention; MoBA; block-sparse attention; trainable sparse attention), perceptron (Perceptron; artificial neuron; Rosenblatt perceptron), backpropagation (Backpropagation; backprop; gradient descent through layers; reverse-mode differentiation), lstm (Long Short-Term Memory; LSTM; recurrent neural networks; RNN; GRU), neural-language-models (Neural Language Models; neural probabilistic language model; NPLM), word-embeddings (Word Embeddings; word2vec; GloVe; word vectors; distributed representations), scaling-laws (Scaling Laws; neural scaling laws; Chinchilla scaling; compute-optimal training)
-- symbolic-ai-planning: heuristic-search (Heuristic Search; A*; best-first search; state-space search), strips-planning (STRIPS Planning; classical planning), pddl (PDDL; Planning Domain Definition Language), expert-systems (Expert Systems; rule-based systems; production systems), monte-carlo-tree-search (Monte Carlo Tree Search; MCTS; UCT), classical-multi-agent-systems (Multi-Agent Systems; intelligent agents; BDI agents; agent communication languages; distributed AI)
+- information-retrieval: bm25 (BM25; Okapi BM25; sparse retrieval; TF-IDF ranking), approximate-nearest-neighbor-search (Approximate Nearest Neighbor Search; ANN; HNSW; vector indexing), open-domain-qa (Open-Domain Question Answering; retriever-reader QA; DrQA), tf-idf (TF-IDF; inverse document frequency; IDF; term weighting), learning-to-rank (Learning to Rank; LTR; RankNet; LambdaMART; ranking models)
+- deep-learning-nlp: attention-mechanism (Attention Mechanism; neural attention), sequence-to-sequence-learning (Sequence-to-Sequence Learning; seq2seq; encoder-decoder), transformer-architecture (Transformer; transformers), pretrained-language-models (Pretrained Language Models; LLMs; foundation models; generative pretraining; BERT; ELMo; masked language modeling), transfer-learning-fine-tuning (Transfer Learning and Fine-Tuning; fine-tuning; ULMFiT), knowledge-distillation (Knowledge Distillation; teacher-student training), mixture-of-experts (Mixture of Experts; MoE; sparse MoE), state-space-models (State-Space Models; SSMs; S4; Mamba; linear-time sequence models), subword-tokenization (Subword Tokenization; tokenization; BPE; byte-pair encoding; tokenizers; SentencePiece; token counting), rotary-position-embeddings (Rotary Position Embeddings; RoPE; RoFormer; rotary embeddings), sparse-attention (Sparse Attention; NSA; Native Sparse Attention; DSA; DeepSeek Sparse Attention; MoBA; block-sparse attention; trainable sparse attention), perceptron (Perceptron; artificial neuron; Rosenblatt perceptron), backpropagation (Backpropagation; backprop; gradient descent through layers; reverse-mode differentiation), lstm (Long Short-Term Memory; LSTM; recurrent neural networks; RNN; GRU), neural-language-models (Neural Language Models; neural probabilistic language model; NPLM), word-embeddings (Word Embeddings; word2vec; GloVe; word vectors; distributed representations), scaling-laws (Scaling Laws; neural scaling laws; Chinchilla scaling; compute-optimal training), n-gram-language-models (N-gram Language Models; statistical language models; Markov language models; Shannon's model of English), statistical-machine-translation (Statistical Machine Translation; SMT; IBM models; phrase-based translation; noisy-channel translation), hidden-markov-models (Hidden Markov Models for Speech; HMM; HMM-GMM acoustic models; Baum-Welch; Viterbi decoding), hopfield-boltzmann-networks (Hopfield Networks and Boltzmann Machines; Hopfield network; Boltzmann machine; restricted Boltzmann machine; RBM; energy-based models), deep-belief-networks (Deep Belief Networks; DBN; greedy layer-wise pretraining; unsupervised pretraining)
+- symbolic-ai-planning: heuristic-search (Heuristic Search; A*; best-first search; state-space search), strips-planning (STRIPS Planning; classical planning), pddl (PDDL; Planning Domain Definition Language), expert-systems (Expert Systems; rule-based systems; production systems), monte-carlo-tree-search (Monte Carlo Tree Search; MCTS; UCT), classical-multi-agent-systems (Multi-Agent Systems; intelligent agents; BDI agents; agent communication languages; distributed AI), automated-theorem-proving (Automated Theorem Proving; resolution; logic programming; Prolog; formal verification; proof assistants)
 - reinforcement-learning: markov-decision-process (Markov Decision Process; MDP), policy-gradient-methods (Policy Gradient Methods; REINFORCE; actor-critic), ppo (Proximal Policy Optimization; PPO), q-learning (Q-Learning; temporal-difference learning; TD learning; value-based RL), deep-q-networks (Deep Q-Networks; DQN; deep reinforcement learning; Atari DQN), alphago (AlphaGo; AlphaZero; MuZero; self-play)
-- knowledge-representation: semantic-networks (Semantic Networks; ontologies; frames), knowledge-graphs (Knowledge Graphs; property graphs)
+- knowledge-representation: semantic-networks (Semantic Networks; ontologies; frames), knowledge-graphs (Knowledge Graphs; property graphs; Semantic Web; RDF; OWL; description logics), bayesian-networks (Bayesian Networks; probabilistic graphical models; belief networks; causal graphs)
 - human-computer-interaction: conversational-agents (Conversational Agents; chatbots; dialogue systems), mixed-initiative-interaction (Mixed-Initiative Interaction; human-AI collaboration; intelligent assistance)
 - computer-vision: convolutional-neural-networks (Convolutional Neural Networks; CNN; ConvNet; LeNet), alexnet (AlexNet and the ImageNet Moment; AlexNet; ImageNet; GPU-trained deep networks; deep learning revolution), residual-networks (Residual Networks; ResNet; residual connections; skip connections), variational-autoencoders (Variational Autoencoders; VAE; VQ-VAE; latent variable models), generative-adversarial-networks (Generative Adversarial Networks; GAN; StyleGAN; adversarial training), vision-transformer (Vision Transformer; ViT)
 - robotics-and-control: behavior-cloning (Behavior Cloning; imitation learning; learning from demonstration; ALVINN), dagger (DAgger; dataset aggregation; interactive imitation learning; on-policy imitation), physics-simulation (Physics Simulation for Robotics; robot simulators; MuJoCo; rigid-body simulation)
@@ -266,6 +259,7 @@ external:adaptive-mixtures-of-local-experts, external:algorithmic-fairness, exte
 - cross-embodiment-training --applies--> transfer-learning-fine-tuning
 - cross-encoder-reranking --applies--> pretrained-language-models
 - cross-encoder-reranking --extends--> bm25
+- cross-encoder-reranking --extends--> learning-to-rank
 - decision-models --specializes--> pretrained-language-models
 - dense-retrieval --combines--> approximate-nearest-neighbor-search
 - dense-retrieval --replaces--> bm25
@@ -317,6 +311,7 @@ external:adaptive-mixtures-of-local-experts, external:algorithmic-fairness, exte
 - sim-to-real-transfer --applies--> physics-simulation
 - sim-to-real-transfer --applies--> policy-gradient-methods
 - speech-recognition --applies--> sequence-to-sequence-learning
+- speech-recognition --replaces--> hidden-markov-models
 - supervised-fine-tuning --specializes--> transfer-learning-fine-tuning
 - test-time-compute-scaling --extends--> scaling-laws
 - text-embeddings --extends--> word-embeddings

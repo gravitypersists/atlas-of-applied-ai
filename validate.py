@@ -160,6 +160,7 @@ def main():
 
     out = {
         "meta": data["meta"],
+        "old_world": data.get("old_world", {}),
         "regions": data["regions"],
         "boundary_rules": data["boundary_rules"],
         "nodes": nodes,
