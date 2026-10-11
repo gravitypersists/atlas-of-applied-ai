@@ -446,7 +446,7 @@ function readDoodles() {
   if (!fs.existsSync(file)) return [];
   const sandbox = { window: {} };
   vm.runInNewContext(fs.readFileSync(file, "utf8"), sandbox);
-  return (sandbox.window.DOODLES ?? []).map(({ id, at, dx = 0, dy = 0, minZoom = 0 }) => ({ id, at, dx, dy, minZoom }));
+  return (sandbox.window.DOODLES ?? []).map(({ id, at, dx = 0, dy = 0, minZoom = 0, box }) => ({ id, at, dx, dy, minZoom, box }));
 }
 
 // Reader content for the panel (SPEC §5.3): one shape for node resources and region learning paths.

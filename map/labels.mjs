@@ -33,7 +33,7 @@ export const LABELS = {
   symbol: { capital: 7, city: 5, town: 3, outpost: 3.5, hamlet: 2.5, old: 3.5 },   // radius in px
   gap: 4,                           // px between a symbol and its label
   pad: 1.5,                         // px of clearance around every box
-  doodle: [-4, -32, 40, 6],         // px box of a doodle's drawing around its pin plus offset (doodles.js)
+  doodle: [-4, -32, 40, 6],         // px box of a doodle's drawing around its pin plus offset, unless it gives its own `box`
 };
 
 const TIER_ORDER = { capital: 0, city: 1, town: 2, old: 2, outpost: 3, hamlet: 3 };
@@ -170,13 +170,13 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
   // that clears the titles already placed and the capitals at z0, and every symbol visible at z1.
   const s0 = scales[0], s1 = scales[1];
   const capitals = landmarks.filter((l) => l.tier === "capital");
-  // Doodles shown at z0 (pinned to a capital or to the sea), as boxes. A doodle's drawing spans about
-  // LABELS.doodle px from its pin plus offset; titles keep clear of it.
+  // Doodles shown at z0 (pinned to a capital or to the sea), as boxes. A doodle's drawing spans its `box`
+  // (or about LABELS.doodle) px from its pin plus offset; titles keep clear of it.
   const byId = new Map(landmarks.map((l) => [l.id, l]));
   const doodleBoxes = doodles.filter((d) => d.minZoom === 0).flatMap((d) => {
     const pin = typeof d.at === "string" ? byId.get(d.at) : { x: d.at[0], y: d.at[1], tier: null };
     if (!pin || (pin.tier && pin.tier !== "capital")) return [];
-    const [x0, y0, x1, y1] = LABELS.doodle;
+    const [x0, y0, x1, y1] = d.box ?? LABELS.doodle;
     return [{ x0: pin.x + (d.dx + x0) / s0, y0: pin.y + (d.dy + y0) / s0, x1: pin.x + (d.dx + x1) / s0, y1: pin.y + (d.dy + y1) / s0 }];
   });
   const z1Symbols = landmarks.filter((l) => !LOCAL_ONLY.has(l.tier));

@@ -119,7 +119,7 @@ settlements:
   - {id: red-teaming, x: 3305.8, y: 1087.9, settled: "2026-10-08"}
   - {id: guardrails, x: 3387.5, y: 1070.5, settled: "2026-10-08"}
   - {id: injection-defenses, x: 3226, y: 943, settled: "2026-10-08"}
-  - {id: agent-sandboxing, x: 3123, y: 1103.5, settled: "2026-10-08"}
+  - {id: agent-sandboxing, x: 3102, y: 1196, settled: "2026-10-08"}
   - {id: interpretability, x: 3279.7, y: 812.7, settled: "2026-10-08"}
   - {id: sparse-autoencoders, x: 3303.6, y: 906.7, settled: "2026-10-08"}
   - {id: representation-engineering, x: 3385.1, y: 817.2, settled: "2026-10-08"}

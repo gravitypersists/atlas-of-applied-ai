@@ -7,7 +7,7 @@ The drawings and their placement live in `map/public/doodles.js`. Line, fill and
 ## What makes a good doodle
 
 - **One idea, one glance.** A doodle shows the landmark's concept as a physical object or creature, not as a diagram. Autoregressive decoding becomes an engine house whose chimney puffs one token at a time. RAG becomes a stack of tomes with a magnifying glass still searching them.
-- **A quiet joke beats a label.** The best doodles have a second look: a ladder someone has left against the Bulwark's wall (prompt injection), or a serpent of hallucinations in the open sea. Keep it gentle. Never mock a technique, a person or a company.
+- **A quiet joke beats a label.** The best doodles have a second look: a ladder someone has left against the Bulwark's wall (prompt injection), or a serpent of hallucinations in the open sea. Keep it gentle.
 - **Fantasy-map vocabulary.** Towers, workshops, mills, bridges, ships, lighthouses, sea creatures, scrolls. Nothing modern: no computers, no robots, no brain icons, no logos.
 - **Text is rare.** At most one short italic caption, and only for sea creatures and marginalia in the classic "here be" tradition.
 
@@ -16,16 +16,16 @@ The drawings and their placement live in `map/public/doodles.js`. Line, fill and
 - **Frame.** Draw in screen pixels, with the base line at `y = 0` and the drawing rising into negative `y`. Most doodles are 25–40 px wide and 25–40 px tall. The map keeps them at a constant size on screen, and shrinks them with the symbols on small screens.
 - **Ink only.** Strokes are `--ink`, 1.1 px, with round caps and joins (the default for every `path` and `circle`). Use these classes for everything else:
 
-  | class | use |
-  | --- | --- |
-  | `solid` | a closed shape filled with parchment, so it hides what is behind it (walls, books, sails, humps) |
-  | `fill-ink` | small solid ink details: doors, eyes, stripes, spikes |
-  | `hatch` | short soft lines for texture: bricks, planks, windows |
-  | `ground` | a slightly uneven base line under things on land |
-  | `water` | little wave arcs and dashes under things at sea |
-  | `wake` | a dotted trail behind something moving |
-  | `flag` | a soft-ink pennant; it flutters |
-  | `caption` | the one line of italic text |
+  | class      | use                                                                                              |
+  | ---------- | ------------------------------------------------------------------------------------------------ |
+  | `solid`    | a closed shape filled with parchment, so it hides what is behind it (walls, books, sails, humps) |
+  | `fill-ink` | small solid ink details: doors, eyes, stripes, spikes                                            |
+  | `hatch`    | short soft lines for texture: bricks, planks, windows                                            |
+  | `ground`   | a slightly uneven base line under things on land                                                 |
+  | `water`    | little wave arcs and dashes under things at sea                                                  |
+  | `wake`     | a dotted trail behind something moving                                                           |
+  | `flag`     | a soft-ink pennant; it flutters                                                                  |
+  | `caption`  | the one line of italic text                                                                      |
 
 - **Colour.** The only colour on the map is the lighthouse's warm lamp and beam (`#f2d488`). Keep colour that rare: one small warm accent at most, and only where light is the point.
 - **Draw from simple shapes.** Rectangles with crenellations, arches, bezier humps and a few hatch lines are enough. Detail below about 1.5 px disappears at world zoom, so leave it out.
@@ -43,6 +43,7 @@ The drawings and their placement live in `map/public/doodles.js`. Line, fill and
 ## Placement
 
 - **Pin and offset.** `at: "<landmark id>"` pins a doodle to a landmark; `at: [x, y]` pins it to a world point (sea creatures, ships, scenery). `dx, dy` then move it in screen pixels.
+- **Give z0 doodles a box.** The build keeps region titles clear of every doodle shown at world zoom (one pinned to a capital or to a world point, without `minZoom`). It assumes the drawing spans `[-4, -32, 40, 6]` px around the pin plus offset, so a doodle that reaches further, or sits left of its origin, or has a caption, should give its own `box: [x0, y0, x1, y1]` in its drawing frame. Rebuild (`node map/build.mjs`) after adding or moving one.
 - **Opposite the label.** A landmark doodle sits in the gap on the side away from its label (see `labelSide` in `map.json`), close enough to read as belonging to it.
 - **Stay on the right surface.** A doodle on land stays on land and doesn't cross a coastline or a region title. A doodle at sea stays in open water.
 - **Check every zoom level.** Look at world (z0), region (z1) and local (z2) zoom, and at a phone-sized width. If a doodle only fits once the map spreads out, give it `minZoom: 1` (or `2`) rather than squeezing it.

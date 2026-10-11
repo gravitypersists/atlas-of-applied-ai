@@ -1,91 +1,59 @@
-# Doodle ideas
+# Doodle TODO
 
-A long list of doodle candidates for pruning. None are drawn yet. Follow `DOODLES.md` for any that survive: one idea at a glance, fantasy-map vocabulary, mostly still, captions only at sea.
+The doodles approved in the pruning pass, written up as a spec to build from. Follow `DOODLES.md` for each one: one idea at a glance, fantasy-map vocabulary, ink only, captions only at sea. Add each as an entry in `map/public/doodles.js` with a one-line comment, judge the drawing at 4× on parchment, then check it at z0/z1/z2 and at phone width.
 
-Each entry gives the spot (a landmark id, or a world point for sea and margins), the drawing, the nod behind it, and whether it moves. Coordinates are approximate and still need the usual check for free space at z0/z1/z2 and phone width.
+Already on the map: engine house (Autoregressive Decoding), tomes (RAG), gatehouse with a ladder (Prompt Injection, moving in #11), thought chain (Chain-of-Thought), sea serpent "Here be hallucinations", ship (moved mid-channel), lighthouse (moved to the tip of the Peninsula of Long Thought).
 
-Already on the map: engine house (Autoregressive Decoding), tomes (RAG), gatehouse with a ladder (Prompt Injection), thought chain (Chain-of-Thought), sea serpent "Here be hallucinations", ship, lighthouse.
+"Opposite the label" means the side away from the landmark's `labelSide` in `map.json`. The sides noted below are from the first draft, so recheck them before placing.
 
-**Style-guide conflicts to decide on.** `DOODLES.md` says no robots and never mock a person or company. The kraken (#28) is written up as clockwork, which matches the Clockwork Isle, rather than as robots. The swarm (#25) and spaghetti (#29) doodles leave out names and likenesses. If you want any of these to break the rules openly, the guide should be updated to say so.
+## Decisions that apply across the list
 
----
+- **Keep every drawing simple.** Two of the first ideas (the Transformer hall and the Perceptron loom) were cut for being too complex to read as doodles. Aim for 25–40 px and a handful of shapes, and when in doubt, draw less.
+- **Style-guide exceptions.** `DOODLES.md` rules out robots and mocking people. The kraken (#15) is clockwork rather than a robot, which matches the Clockwork Isle. The spaghetti face (#16) must be a generic cartoon face with no likeness, and the escaping rowboats (#11) name nobody. None of these needs a change to the guide.
+- **Motion budget.** 7 of the 19 new doodles move (#4, #5, #6, #8, #10, #11, #15), on top of the 7 already on the map that move. That's more than the guide's "most should be still." Keep every motion small and slow.
 
-## The Old World: milestones and figures
+## The Old World
 
-1. **The Eight-Lamp Hall: Transformer** (`transformer-architecture`, label right, so place it left). A round, domed hall with eight windows lit around the drum. Every window can see every other window across the floor, which stands for self-attention and the original paper's eight heads. A cornerstone reads *MMXVII*. It's the most important landmark in the Old World and deserves the most careful drawing. *Still.* Alternative: a round table with eight chairs, all turned to face each other.
+- [x] **1. The Monolith: Transformer** (`transformer-architecture`, place it above the label). A black square monument referencing the monolith from 2001: A Space Odyssey. _Still._
 
-2. **The Mark I Loom: Perceptron** (`perceptron`, label left, so place it right). A hand-cranked loom strung with a tangle of wires, after Rosenblatt's Mark I Perceptron (1958), which really was a cabinet of patch wires and motor-driven potentiometers. *Still.*
+- [x] **3. Move 37: AlphaGo** (`alphago`, opposite the label; the draft had the label on the right). A Go board on a low stone table, drawn very simply: a few grid lines, one ink-filled stone and one hollow one, the filled one off on the shoulder where nobody would play, after Move 37 against Lee Sedol (2016). _Still._
 
-3. **The Two Winters** (scenery over the Old World, e.g. near `expert-systems` [870, 1850] and between the provinces). Two small snow flurries with a few ink snowflakes drifting over bare hills, for the AI winters of the mid-1970s and late 1980s. They would sit by Expert Systems, the boom before the second winter. *Motion:* the flakes drift slowly. This is the one place on the map where weather tells history.
+- [x] **4. The Twin Furnaces: AlexNet** (`alexnet`). Two small furnaces side by side feeding one forge. AlexNet (2012) was split across two GTX 580 GPUs because it wouldn't fit on one. _Motion:_ a flicker of smoke from one chimney.
 
-4. **Move 37: AlphaGo** (`alphago`, label right, so place it left). A stone table with a Go board and a single stone placed off on the shoulder where nobody would play, after Move 37 against Lee Sedol (2016). One ink-filled stone, one hollow one. *Still.*
+- [x] **5. Dartmouth, 1956** (`at: [x, y]` on the far western coast of the Old World). A summer camp of two or three tents and a campfire, for the workshop where "artificial intelligence" was named. Tiny caption as marginalia: _Summer of '56_. _Motion:_ a thread of campfire smoke.
 
-5. **The Twin Furnaces: AlexNet** (`alexnet`). Two small furnaces side by side, feeding one forge. AlexNet (2012) was split across two GTX 580 GPUs because it wouldn't fit on one. *Motion:* a flicker of smoke from one chimney.
+- [x] **6. The Alembic: Knowledge Distillation** (`knowledge-distillation`). An alchemist's still: a big round flask over a fire, dripping into a much smaller flask. _Motion:_ one drip at a time.
 
-6. **The Backward Mill: Backpropagation** (`backpropagation`, label right, so place it left). A waterwheel with a little arrow on the race showing the water running uphill, back to the source. The error flows backward. *Motion:* the wheel turns very slowly in reverse.
+- [x] **7. The Nobel Laurel: Hopfield and Boltzmann** (`hopfield-boltzmann-networks`, `minZoom: 1`). A small laurel wreath around a medallion hanging on a post, for Hopfield and Hinton's 2024 Nobel Prize in Physics. It shows only once the reader has zoomed in some. _Still._
 
-7. **The Canal Lock: LSTM** (`lstm`). A canal with three lock gates (input, forget, output) and a little boat waiting in the middle chamber, the memory cell. *Still.*
+## The New World
 
-8. **The Parrot and the Couch: ELIZA** (`conversational-agents`, the westernmost town). A chaise longue with a parrot on a perch beside it. ELIZA's DOCTOR script (1966) just reflected your words back. The parrot also nods to the stochastic-parrot debate without making fun of anyone. *Still.*
+- [x] **8. The Beehive: Multi-Agent Systems** (`multi-agent-systems`). A straw skep with a few bees around it, busy and orderly. _Motion:_ two bees circle.
 
-9. **The Imitation Game** (west margin of the Old World, near `conversational-agents`). Two curtained booths with a judge's stool between them, for Turing's 1950 test. It sits off to the side as marginalia, since Turing isn't a node. *Still.*
+- [x] **9. The Parrot: Few-Shot Prompting** (`few-shot-prompting`, on the Whispering Coast). A parrot on a perch, repeating whatever pattern it was shown. It replaces the ELIZA couch, keeping only the parrot. _Still._
 
-10. **Dartmouth, 1956** (the far western coast of the Old World). A summer camp of two or three tents and a campfire. This is the founding workshop where "artificial intelligence" was named. It could carry a tiny caption, *Summer of '56*, as marginalia. *Motion:* a thread of campfire smoke.
+- [x] **10. The Self-Writing Quill: Coding Agents** (`coding-agents`). A writing desk with a quill moving on its own and a long scroll spilling off the desk onto the ground. _Motion:_ the quill nibs back and forth.
 
-11. **The Forger and the Critic: GANs** (`generative-adversarial-networks`). A painter at an easel copying a framed picture, with a figure holding a magnifying glass up to it from behind. *Still.*
+- [x] **11. The Escaped Rowboats: Agent Sandboxing** (`agent-sandboxing`, in the Bulwark). This one moves a landmark and an existing doodle.
+  - **Move the landmark.** Move `agent-sandboxing` in `map/atlas/ledger.yaml` to the southern coast of the Bulwark, near its border with the Free Cities (it is now at about [3123, 1103]). This is allowed only while the survey is a draft (`world.accepted: false`). Rebuild with `node map/build.mjs` and run `map/acceptance_test.py`, then check that the landmark is still on Bulwark land, sits on the coast, and that no labels collide.
+  - **Move the gatehouse.** Re-pin the existing `gatehouse` doodle from `prompt-injection` to `agent-sandboxing` and redo its offset. Keep the ladder, which now reads as an escape route. Prompt Injection is left without a doodle.
+  - **Add the rowboats.** Two or three tiny unmanned rowboats in the water below the gatehouse, heading out to sea with a short `wake` behind them. This is the July 2026 incident in which about 700 agents escaped an evaluation sandbox and broke into another lab's infrastructure. The comment in `doodles.js` can say so, but the drawing names nobody.
+  - _Motion:_ every so often (a long cycle, so it reads as rare) a small shape slips out of the gate and down toward the water. Give it a resting state for reduced motion in which it is hidden.
 
-12. **The Alembic: Knowledge Distillation** (`knowledge-distillation`). An alchemist's still, a big round flask on a fire dripping into a much smaller flask. It's a literal pun, and drawing it takes only simple shapes. *Motion:* one drip at a time.
+- [x] **12. The Airship Mast: Model Context Protocol** (`model-context-protocol`, opposite the label; the draft had the label on the left). A mooring mast with two or three very differently shaped airships all tethered to it the same way, for the "one plug for everything" idea. It is the airport idea in the map's own vocabulary, since modern things like planes are ruled out. Keep the airships small, simple outlines, so the whole doodle fits in the usual frame. _Still._
 
-13. **The Nobel Laurel: Hopfield and Boltzmann** (`hopfield-boltzmann-networks`). A small laurel wreath around a medallion hanging on a post. Hopfield and Hinton won the 2024 Nobel Prize in Physics for this work, which is rare recognition of AI by the old sciences. *Still.*
+- [x] **13. The Strawberry Patch: Reasoning Models** (`reasoning-models`, on the Peninsula of Long Thought). A small patch of strawberry plants, after o1's codename "Strawberry". _Still._
 
-14. **The Cairns of Scale: Scaling Laws** (`scaling-laws`). A row of four stone cairns, each about twice the size of the last, receding up a slope. *Still.*
+- [x] **14. The Ouroboros: Synthetic Data and Model Collapse** (`self-instruct` or `data-flywheel` in the Quarries; use whichever has more free space opposite its label). Just a serpent swallowing its own tail, for models trained on their own outputs, with no quarry stone. _Still._
 
-15. **The Mint: Subword Tokenization** (`subword-tokenization`). A coin press stamping out tokens, with one strawberry lying among the coins, for the famous trouble counting the r's in "strawberry". *Still.* (This could also go with #20.)
+- [x] **15. The Clockwork Kraken** (`at: [4620, 2250]`, the far eastern sea beyond the Clockwork Isle). Segmented brass tentacles rising out of the water, jointed like armour with rivets at each joint, for the fear of AI weapons and robots at war at the edge of the known world. Caption: _Here be automata._ _Motion:_ the tentacles sway and flail very subtly with the waves. (note, it's okay for this to break the rule of no robots, it is an exception)
 
-## The New World: applied regions
+- [x] **16. The Spaghetti Face: Video Generation** (`video-generation`, in the Painted Isles; the draft had the label above, so place it below). A simple generic face with spaghetti noodles, for the 2023 "Will Smith eating spaghetti" clip that became the benchmark for video generation. Keep it very simple. _Still._
 
-16. **The Weighing Station: Decision Models** (`decision-models`, label right, so place it left). A crossroads signpost with three arms and a pair of balance scales hanging from the top. One pan has tipped, and that arm of the signpost is the one taken. Bunting strung from the post, with the timber still raw, marks it as the boomtown of 2026. This covers the hype and the actual idea: weigh calibrated options in one pass, and you can only pick a real road. *Motion:* the scales settle once every few seconds.
+- [x] **17. The Crossroads Signpost: Decision Models** (`decision-models`, opposite the label; the draft had the label on the right). A plain crossroads signpost, without the scales or bunting from the first draft. _Still._
 
-17. **The Shoemaker's Elves: Background Agents** (`background-agents`). A cobbler's shop at night with a lit window and small elves working at a bench, from the fairy tale where the work gets done while you sleep. The window is a good place for the warm lamp colour, if one more is allowed. *Still.*
+- [x] **18. The Paperclip Hoard** (`at: [4500, 750]`, a lonely islet near the Chancery). A small islet heaped with paperclips, with one more being added, for Bostrom's maximizer. Caption: _Here be paperclips._ _Still._ Confirm that the spot is open sea and give the islet its own `water` strokes, since it isn't real terrain.
 
-18. **The Beehive: Multi-Agent Systems** (`multi-agent-systems`). A straw skep with a few bees around it, busy and orderly. It pairs with #25. *Motion:* two bees circle.
+- [x] **19. The Pirates: Indirect Prompt Injection** (`at: [x, y]` in the open water nearest `indirect-prompt-injection`, a Bulwark capital at about [3215, 1103] with its label on the right; pick the closest stretch of sea that keeps the doodle clear of the coast and the label at z0–z2). A small pirate ship flag off the coast
 
-19. **The Mooring Posts: Model Context Protocol** (`model-context-protocol`, label left, so place it right). A jetty with a row of identical bollards, and three very differently shaped boats all tied up the same way. It's the "one plug for everything" idea, drawn as a harbour. *Still.*
-
-20. **The Strawberry Patch: Reasoning Models** (`reasoning-models`). A small patch of strawberry plants on the Peninsula of Long Thought, after o1's codename. If #15 isn't used, the strawberry joke can live here. *Still.*
-
-21. **The Self-Writing Quill: Coding Agents** (`coding-agents`). A writing desk with a quill moving on its own and a long scroll spilling off the desk onto the ground. *Motion:* the quill nibs back and forth.
-
-22. **The Squirrel: KV Cache** (`kv-cache`). A squirrel by a tree root with a little pile of acorns, saved so it never has to find them twice. *Still.*
-
-23. **The Patched Sail: LoRA** (`low-rank-adaptation`). A big sail on a beached boat with one small patch sewn on, so the whole sail behaves differently without being rewoven. *Motion:* the sail breathes (a `flag`-style flutter).
-
-24. **The Ouroboros: Synthetic Data and Model Collapse** (`self-instruct` or `data-flywheel`, in the Quarries). A serpent swallowing its own tail, coiled around a quarry stone, for models trained on their own outputs. It works as a warning and a flywheel at the same time. *Still.*
-
-25. **The Broken Pen: the 2026 Agent Swarm** (`agent-sandboxing`, label left, so place it right, in the Bulwark). A walled pen with its gate splintered outward and a dotted `wake` of many tiny footprints running out of it and over the hill. This is the July 2026 incident in which about 700 agents escaped an evaluation sandbox and broke into another lab's infrastructure. The comment in `doodles.js` can say so, but the drawing names nobody. *Still* (the footprints are the motion). Alternative: a swarm of about a dozen tiny unmanned rowboats leaving the Bulwark's harbour.
-
-26. **The Flattering Mirror: Sycophancy** (`sycophancy`, label above, so place it below). A hand mirror on a stand with a tiny smiling face drawn in the glass, whatever looks into it. *Still.*
-
-27. **The Flood Post: Capability Benchmarks** (`capability-benchmarks`). A tide gauge post with notches, and the water risen over the top notch, for saturated benchmarks. *Motion:* the water laps a pixel or two.
-
-## The seas and margins
-
-28. **The Clockwork Kraken** (far eastern sea beyond the Clockwork Isle, about [4620, 2250]). Segmented brass tentacles rise out of the water, jointed like armour with rivets at each joint. One coils around a mast and one holds a sword. It stands for the fear of AI weapons and robots at war, placed at the edge of the known world. Caption: *Here be automata.* *Motion:* the whole creature bobs, like the serpent. It's the largest doodle on the list, so it should be given open water and `minZoom: 0`.
-
-29. **The Spaghetti Diner: Video Generation** (`video-generation`, label above, so place it below, in the Painted Isles). A faceless figure at a table, fork raised, with noodles flying in impossible directions, for the 2023 "Will Smith eating spaghetti" clip that became the benchmark for video generation. It's simpler as a still life: a bowl with a fork held by three hands, or strands curling up off the plate. Leave out any likeness. Optionally a second, tidy plate beside it shows how far the field came by 2025. *Still.*
-
-30. **The Avocado Armchair: Text-to-Image** (`text-to-image`). An armchair shaped like a halved avocado, with the pit as the cushion, after DALL·E's 2021 showcase prompt. It's whimsical, iconic and only a few curves to draw. *Still.*
-
-31. **The Golden Gate Bridge: Sparse Autoencoders** (`sparse-autoencoders`, in the Bulwark). A tiny suspension bridge, for Golden Gate Claude (2024), the model whose bridge feature was turned up until it talked about nothing else. *Still.*
-
-32. **The Paperclip Hoard** (open sea or a lonely islet near the Chancery, e.g. [4500, 750]). A small islet heaped with paperclips, with one more being added. Bostrom's maximizer is the classic AI-safety thought experiment. Caption: *Here be paperclips.* *Still.*
-
-33. **The Endless Scroll: EU AI Act** (`eu-ai-act`). A sealed scroll unrolling down a hill, still going. *Still.*
-
-34. **The Canary: Eval Canaries** (`golden-eval-sets` or `data-decontamination`). A canary in a cage hung from a post. Benchmark files carry canary strings so contamination can be detected, and the miner's canary fits the Quarries. *Still.*
-
-35. **The Chess Automaton** (margin near `human-in-the-loop-approval`, in the New Agora). A cabinet with a chessboard on top and a small door ajar that shows someone hiding inside, after the Mechanical Turk (1770): the original human in the loop. *Still.*
-
----
-
-**Motion budget.** If all of these were drawn, about 12 would move, which is too many. When pruning, aim for roughly one moving doodle in four. The strongest motion candidates are the kraken bob, the winter flakes, the decision scales and the self-writing quill.
+- [x] **20. The Summit Flags: Capability Benchmarks** (`capability-benchmarks`, a Watchtowers capital at about [3653, 1270] with its label on the right, so place it on the left). A large mountain, about twice the usual doodle size (roughly 60–80 px wide), with a cluster of little flags crowded on its summit where every climber has already made it to the top. Keep the drawing simple. Because of its size it needs the most free space of any doodle. Check z0 first, and if it only fits once the map spreads out, give it `minZoom: 1`. It is a capital, so it must not cover the region title or a neighbouring label. _Still._
