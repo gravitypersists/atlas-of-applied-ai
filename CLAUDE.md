@@ -57,7 +57,7 @@ The map gives these fields meaning, so treat them carefully:
 - Maturity and cross-region edges raise a hidden elevation field, and a sea level cuts it into land and sea. Maturity 1–2 nodes start as islets and join the mainland as they mature. Strongly connected regions end up sharing land.
 - Dates are approximate (sometimes the paper, sometimes the first product). They're good enough for layout and replay, not for presenting as precise.
 
-## Deep-dive workflow (from README.md)
+## Deep-dive workflow (from BACKBONE.md)
 
 Follow `MERGING.md` when merging a deep-research report: it has the review checklist, the separate resources pass, and the map checks.
 
