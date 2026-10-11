@@ -10,6 +10,24 @@ const SHEET_BREAKPOINT = 640;   // at or below this width the panel is a bottom 
 const MAX_RESULTS = 8;
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+// The sea's currents (#sea in style.css) are an SVG noise image. Drawn once onto a canvas, so that
+// resizing the bitmap as the map zooms is cheap and doesn't re-run the noise filter every frame.
+const CURRENTS_TILE = 600;
+const sea = document.getElementById("sea");
+{
+  const src = getComputedStyle(sea).backgroundImage.match(/url\("(.*)"\)/)?.[1];
+  if (src) {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = CURRENTS_TILE * 2;
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => { if (blob) sea.style.backgroundImage = `url(${URL.createObjectURL(blob)})`; });
+    };
+    img.src = src;
+  }
+}
+
 const svg = d3.select("#map");
 const defs = svg.append("defs");
 const terrainLayer = svg.append("g").attr("class", "terrain");
@@ -87,9 +105,17 @@ function init(map) {
   const scales = map.view?.scales ?? null;
 
   // ---------------------------------------------------------------- terrain
-  // Bottom to top: shallows, land, territory tints, inner coast hachure, coastline.
+  // Bottom to top: shallows, surf, land, territory tints, inner coast hachure. No inked coastline: the
+  // land meets the water at the surf.
   if (map.coast) defs.append("clipPath").attr("id", "land-clip").append("path").attr("d", map.coast);
   if (map.shallows) terrainLayer.append("path").attr("class", "shallows").attr("d", map.shallows);
+  // Surf: a light band at the shore and a faint ink line at the edge of the shallows, which slowly
+  // take turns (style.css), so the water seems to lap at the coast. The land drawn next covers the
+  // inner half of the band.
+  if (map.shallows) terrainLayer.append("path").attr("class", "surf-line").attr("d", map.shallows);
+  if (map.coast) terrainLayer.append("path").attr("class", "surf").attr("d", map.coast);
+  // The sea's swell starts with the surf, so the two keep time.
+  sea.classList.add("swell");
   if (map.coast) terrainLayer.append("path").attr("class", "land").attr("d", map.coast);
   terrainLayer.selectAll("path.territory").data(map.territories.filter((t) => t.fill)).join("path")
     .attr("class", (d) => `territory ${d.group}`)
@@ -99,10 +125,7 @@ function init(map) {
   const territoryAreas = terrainLayer.selectAll("path.territory");
   territoryAreas.append("title").text((d) => (d.group === "old-world" ? `${d.subtitle} · The Old World` : d.title ? `${d.title} · ${d.subtitle}` : d.subtitle));
   territoryAreas.on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
-  if (map.coast) {
-    terrainLayer.append("path").attr("class", "coast-hachure").attr("d", map.coast).attr("clip-path", "url(#land-clip)");
-    terrainLayer.append("path").attr("class", "coast").attr("d", map.coast);
-  }
+  if (map.coast) terrainLayer.append("path").attr("class", "coast-hachure").attr("d", map.coast).attr("clip-path", "url(#land-clip)");
 
   // ---------------------------------------------------------------- water names
   // Hand-placed in curation; each shows from its kind's zoom level (wz0–wz2). Text with an `arc` runs
@@ -170,6 +193,11 @@ function init(map) {
     transform = t;
     terrainLayer.attr("transform", t);
     routeLayer.attr("transform", t);
+    // The sea's currents are fixed to the world, so they pan and zoom with the map. #sea overhangs the
+    // screen by 8px (style.css), so the offset includes that.
+    const tile = CURRENTS_TILE * t.k / (scales ? scales[0] : fitK);
+    sea.style.backgroundPosition = `${t.x + 8}px ${t.y + 8}px`;
+    sea.style.backgroundSize = `${tile}px ${tile}px`;
     const f = scales ? Math.max(MIN_MARK_SCALE, Math.min(1, t.k / scales[0])) : 1;
     landmarks.attr("transform", (d) => `translate(${t.applyX(d.x)},${t.applyY(d.y)}) scale(${f})`);
     doodles.attr("transform", (d) => `translate(${t.applyX(d.pin.x)},${t.applyY(d.pin.y)}) scale(${f})`);
