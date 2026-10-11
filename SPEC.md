@@ -307,7 +307,7 @@ Labels are cartography, not geography, so they can change between builds. Even s
 
 - **Screen-space placement.** Symbols and text are drawn at a constant screen size, so collisions depend on zoom. Placement works in pixels for a reference 1440×860 viewport at each level's lowest scale: fit-to-world for z0, ×2 for z1, ×5 for z2. That's each level's most crowded moment. Text widths are estimated per character, with capitals and digits counted wider. The widths were measured in the browser against the real fonts and rounded up. If fonts or sizes change, re-measure and update `LABELS.text` along with `style.css`. The build writes the fit margin, the zoom thresholds, and the absolute scales (px per world unit) where z0, z1 and z2 begin to `map.json` under `view`.
 - **Any screen size.** The viewer switches zoom levels at those absolute scales rather than relative to its own fit-to-world. Below the z0 reference scale, symbols, labels and titles shrink in proportion, down to 55%. A smaller screen therefore shows the same collision-free layout, just smaller. Only below 55% (phone-sized screens at full zoom-out) can marks crowd again.
-- **Titles first.** Applied territories get titles; the Old World gets one title over the union of its provinces. Each title has one fixed anchor. Candidates are points inside its territory, most interior first (from a distance transform of the territory's claims). Larger territories choose first. A title may not overlap a placed title or a capital at z0, and it prefers the candidate that covers the fewest symbols visible at z1. Titles longer than 14 characters wrap onto two lines. Province names show only at z2. They're placed last, at the most interior point of their province that clears every landmark label and symbol at that scale. Curation can pin any of these with `regions.<id>.label` or `old_world.label`.
+- **Titles first.** Applied territories get titles; the Old World gets one title over the union of its provinces. Each title has one fixed anchor. Candidates are points inside its territory, most interior first (from a distance transform of the territory's claims). Larger territories choose first. A title may not overlap a placed title, a capital or a doodle at z0 (doodles are read from `map/public/doodles.js`). It prefers the candidate with the largest share of its box on its own territory, less 0.06 for each symbol visible at z1 that it covers. Titles longer than 14 characters wrap onto two lines, or stay on one line when that fits the territory better. A title grows above 16px (up to 24px) only when it can sit at least 90% on its territory and cover at most one z1 symbol. Province names are placed last. Each takes the most interior point of its province that keeps most of the name on the province and clears every label and symbol visible at z1 (and the Old World title) and at z2. A name that can't fit at z1 shows from z2 (`labelZoom`). Curation can pin any of these with `regions.<id>.label` or `old_world.label`.
 
 - **Placement.** Labels are placed greedily for z = 0, 1, 2.
 - **Order.** Landmarks are taken in tier order (capital > city > town > outpost), then by `settled` (oldest first), then by score.
@@ -345,8 +345,8 @@ Zoom is the d3-zoom scale `k`, clamped to [0.8, 12] × fit-to-world. Levels swit
 | Level | `k` | Shown |
 |---|---|---|
 | z0 World | < 2 | coast, territory titles and subtitles, the Old World title, capitals with labels |
-| z1 Region | 2–5 | adds city and town symbols, and labels where `minZoom ≤ 1` |
-| z2 Local | ≥ 5 | adds outposts and hamlets, all labels, Old World province names, and internal borders at full strength |
+| z1 Region | 2–5 | adds city and town symbols, labels where `minZoom ≤ 1`, and Old World province names that fit (`labelZoom: 1`) |
+| z2 Local | ≥ 5 | adds outposts and hamlets, all labels, and the remaining Old World province names |
 
 - Territory titles fade between z1 and z2.
 - Symbols and text stay a constant screen size.
@@ -371,7 +371,7 @@ When a landmark is selected:
 6. **Lineage:** each parent (and external ancestor) that has a `why`, as a link with its `why` beneath.
 7. **Footer** (fixed height, pinned to the panel's bottom so its chips don't move as the reader walks the graph): a **Built on** row of parent chips and a **Led to** row of child chips. Each row is one line that scrolls sideways (the mouse wheel scrolls it too) and fades at the edge where more chips continue. An empty row reads "none charted". External ancestors appear as non-clickable dashed "beyond the map" chips.
 
-**Region panel.** Clicking an applied territory title (at z0–z1) or an Old World province name (at z2), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle" (for a province, "The Old World · Province"), the title (a province's name), the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
+**Region panel.** Clicking an applied territory title (at z0–z1), an Old World province (anywhere on its area, or its name), choosing a region in search, or a `#<region-id>` deep link opens the region panel and fits the view to the region. It shows "Region · subtitle" (for a province, "The Old World · Province"), the title (a province's name), the `overview` (or the definition), **Start here** (the numbered `learning_path`, each with its `why`), and **Landmarks**: chips for every landmark in the region, core first, then detail in a lighter style. The region panel has no lineage footer.
 
 **Old World panel.** Clicking the Old World title, choosing it in search, or `#old-world` opens the same panel for the whole continent: the subtitle as header, the Old World `overview` (top-level `old_world.overview` in `backbone.yaml`), and **Provinces**: one chip per province, opening its panel. It fits the view to all Old World landmarks.
 
@@ -399,7 +399,7 @@ When a landmark is selected:
 
 - **Fonts:** an old-style serif for titles (e.g. IM Fell English SC) and a readable serif for labels and the panel (e.g. EB Garamond).
 - **Ink:** one dark sepia for all lines and text.
-- **Territory tints:** 19 muted, low-saturation tints, distinct in hue and close in lightness. Root provinces use a shared, slightly darker family of tints.
+- **Territory tints:** 19 muted, low-saturation tints, distinct in hue and close in lightness. Root provinces use earthier, older hues (ochre, rust, olive, slate and so on), distinct enough that each province reads on its own. Titles are drawn in a darker shade of their region's ink, over a solid parchment halo.
 - **Coast:** about 1.5px ink stroke, with a faint inner hachure. Shallows are a pale band. Internal borders are 0.75px dashed.
 - **Symbols:** sizes on screen are capital 14px, city 10px, town 6px, outpost 7px (hollow), hamlet 5px (soft ink), old 7px (square).
 

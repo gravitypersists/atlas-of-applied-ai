@@ -1,13 +1,13 @@
 # Cartography choices for the atlas map (SPEC.md §3.4).
 # Freely editable. Nothing here moves a settled landmark.
 
-old_world: {title: The Old World, subtitle: Ancestral Disciplines}
+old_world: { title: The Old World, subtitle: Ancestral Disciplines }
 
 # Terrain style per region (styles are defined in TERRAIN.styles in map/terrain.mjs).
 # Shapes the land every build. Once the survey is accepted, land only grows, so a style change can add
 # land but never remove it.
 terrain:
-  multimodal-applied: archipelago   # The Painted Isles: a scatter of islands, Cyclades-style
+  multimodal-applied: archipelago # The Painted Isles: a scatter of islands, Cyclades-style
   # The Old World (2026-10-11): sounds, a fjord and two peninsulas break up its round outline.
   # Inlets are curated channels of sea, mouth first; spines raise land.
   inlets:
@@ -20,13 +20,13 @@ terrain:
     spine: {points: [[860, 1000], [760, 890], [660, 815]]}   # a horn to the north-west
   symbolic-ai-planning:
     spine: {points: [[640, 2010], [560, 2100], [490, 2160]]} # an arm to the south-west
-  # The Peninsula of Long Thought: a long arm hanging from the Whispering Coast and running south-east,
-  # Italy-style, to end under the Archival Reach's west end with a sea between them. The spine holds the
-  # arm together; its landmarks were laid along it by date in the ledger (2026-10-09).
+  # The Peninsula of Long Thought: an arm hanging from the Whispering Coast and running south-east,
+  # to end near the Archival Reach's west end with a sea between them. The spine holds the
+  # arm together; its landmarks were laid along it by date in the ledger (2026-10-09). Halved in length,
+  # with its landmarks moved along it, on 2026-10-11.
   planning-and-reasoning:
-    spine:
-      points: [[2230, 1790], [2200, 1960], [2250, 2130], [2370, 2270], [2540, 2370], [2730, 2440], [2920, 2465], [3080, 2435]]
-  # The Clockwork Marches: one long island running west to east, Crete-style, south of the Painted Isles.
+    spine: {points: [[2230, 1790], [2212, 1960], [2245, 2120], [2330, 2245], [2440, 2315], [2550, 2340]]}
+  # The Clockwork Isle: one long island running west to east, Crete-style, south of the Painted Isles.
   # Its landmarks were laid along the spine by date in the ledger (2026-10-10).
   embodied-ai-and-world-models:
     spine:
@@ -44,7 +44,7 @@ survey:
   # Spread a region's landmarks out from their centroid by `scale`, then move them by `shift` (world units).
   spread:
     # The Painted Isles: room for sea between the islands.
-    multimodal-applied: {scale: 1.6, shift: [170, 0], jitter: 45}   # jitter: seeded nudge so spacing isn't too even
+    multimodal-applied: { scale: 1.6, shift: [170, 0], jitter: 45 } # jitter: seeded nudge so spacing isn't too even
 
 # Symbol tier overrides (SPEC.md §4.7).
 nodes:
@@ -55,28 +55,16 @@ nodes:
   pretrained-language-models: {tier: old}
   knowledge-graphs: {tier: capital}
   semantic-networks: {tier: old}
-  # The Agora's deep dive (2026-10-09) gave Streaming Responses two children, outscoring Chat Interfaces.
+  # The New Agora's deep dive (2026-10-09) gave Streaming Responses two children, outscoring Chat Interfaces.
   # Chat stays the capital: it is the region's defining surface. Exactly one capital per region.
-  chat-interfaces: {tier: capital}
-  streaming-responses: {tier: town}
+  chat-interfaces: { tier: capital }
+  streaming-responses: { tier: town }
   # The Peninsula's deep dive (2026-10-09) gave LLM-as-a-Judge a child (CoT Monitoring), outscoring
   # Capability Benchmarks. Benchmarks stay the capital: the region grew out of them.
-  capability-benchmarks: {tier: capital}
-  llm-as-a-judge: {tier: city}
+  capability-benchmarks: { tier: capital }
+  llm-as-a-judge: { tier: city }
 
-# Title anchors (world units). Pinned when a new landmark pushes a neighbouring title into a clash.
-regions:
-  # The Whispering Coast's title moved north for Zero-Shot CoT (2026-10-09) and crowded this one.
-  agents-and-orchestration: {label: [2762, 1518]}
-  # Reasoning Trace Display (2026-10-09) settled under The Agora's title; moved east to clear it.
-  ai-product-and-interaction-design: {label: [3250, 1690]}
-  # The Bulwark's deep dive (2026-10-10) shifted terrain and pushed this title south; kept at its old spot.
-  adaptation-and-post-training: {label: [2774, 754]}
-  # The Engine Works' deep dive (2026-10-10) shifted terrain and pushed this title north onto a town; kept at its old spot.
-  retrieval-and-knowledge: {label: [2990, 2214]}
-  # The Clockwork Marches: its landmarks fill the island's length, so the title sits offshore to the south.
-  embodied-ai-and-world-models: {label: [4150, 2590]}
-  # Hallucination Detection (2026-10-10) shifted terrain and pulled this title onto LLM-as-a-Judge; kept at its old spot.
-  evaluation-and-observability: {label: [3662, 1498]}
-  # The practitioner-staple nodes (2026-10-10) shifted terrain and pulled this title west onto Model Routing's label; kept at its old spot.
-  inference-and-serving: {label: [3710, 1962]}
+# Title anchors (world units). Pin one when the automatic placement (labels.mjs: the largest size that
+# fits inside the territory, clear of other titles and capitals) picks a poor spot.
+# The earlier pins were cleared on 2026-10-11, when titles started sizing to fit inside their territory.
+regions: {}

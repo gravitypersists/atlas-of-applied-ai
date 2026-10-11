@@ -21,14 +21,19 @@ export const LABELS = {
     outpost: { size: 11, em: 0.47, caps: 0.68 },
     hamlet: { size: 11, em: 0.46, caps: 0.68 },
     old: { size: 11.5, em: 0.46, caps: 0.68 },
-    title: { size: 16, em: 0.9, caps: 0.9, lineHeight: 1.1 },   // IM Fell English SC, spaced caps
+    title: { size: 16, em: 0.9, caps: 0.9, lineHeight: 1.1 },   // IM Fell English SC, spaced caps; size varies, see titleSizes
     subtitle: { size: 11, em: 0.5, caps: 0.68 },                // EB Garamond italic
-    province: { size: 10.5, em: 0.88, caps: 0.88 },             // spaced caps
+    province: { size: 12, em: 0.88, caps: 0.88 },               // spaced caps
   },
-  titleWrap: 14,                    // titles longer than this many characters break onto two lines
+  titleWrap: 14,                    // titles longer than this many characters break onto two lines (or stay on one, if that fits better)
+  titleSizes: [24, 22, 20, 18, 16], // px, largest first: a title grows when its territory has room
+  titleInside: 0.9,                 // share of a title's box on its own territory needed to go above 16px
+  provinceInside: 0.8,              // share of a province name's box (at z1) that must lie on its province
+  titleCoverCost: 0.06,             // a z1 symbol under a title costs this much of that share
   symbol: { capital: 7, city: 5, town: 3, outpost: 3.5, hamlet: 2.5, old: 3.5 },   // radius in px
   gap: 4,                           // px between a symbol and its label
   pad: 1.5,                         // px of clearance around every box
+  doodle: [-4, -32, 40, 6],         // px box of a doodle's drawing around its pin plus offset (doodles.js)
 };
 
 const TIER_ORDER = { capital: 0, city: 1, town: 2, old: 2, outpost: 3, hamlet: 3 };
@@ -110,7 +115,7 @@ function symbolBox(l, s) {
 }
 
 function titleBox(t, s) {
-  const st = LABELS.text.title, sub = LABELS.text.subtitle;
+  const st = { ...LABELS.text.title, size: t.titleSize ?? LABELS.text.title.size }, sub = LABELS.text.subtitle;
   const lines = t.titleLines;
   const w = Math.max(...lines.map((line) => textWidth(line, st)), t.subtitleText ? textWidth(t.subtitleText, sub) : 0);
   const h = lines.length * st.size * st.lineHeight + (t.subtitleText ? sub.size * 1.4 : 0);
@@ -138,7 +143,7 @@ function interiorCandidates(grid, mask, limit = 1500) {
 // ---------------------------------------------------------------- placement (§4.8)
 // Places territory titles (z0–z1), Old World province names (z2), and landmark labels with a minZoom
 // each. Mutates territories, oldWorld and landmarks; returns a report.
-export function placeLabels({ landmarks, territories, oldWorld, terrain, overrides = {} }) {
+export function placeLabels({ landmarks, territories, oldWorld, terrain, overrides = {}, doodles = [] }) {
   const scales = levelScales(landmarks);
   const report = { titleOverlaps: [], titleCovers: [], unplaced: [] };
   const applied = territories.filter((t) => t.group === "applied");
@@ -165,36 +170,75 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
   // that clears the titles already placed and the capitals at z0, and every symbol visible at z1.
   const s0 = scales[0], s1 = scales[1];
   const capitals = landmarks.filter((l) => l.tier === "capital");
+  // Doodles shown at z0 (pinned to a capital or to the sea), as boxes. A doodle's drawing spans about
+  // LABELS.doodle px from its pin plus offset; titles keep clear of it.
+  const byId = new Map(landmarks.map((l) => [l.id, l]));
+  const doodleBoxes = doodles.filter((d) => d.minZoom === 0).flatMap((d) => {
+    const pin = typeof d.at === "string" ? byId.get(d.at) : { x: d.at[0], y: d.at[1], tier: null };
+    if (!pin || (pin.tier && pin.tier !== "capital")) return [];
+    const [x0, y0, x1, y1] = LABELS.doodle;
+    return [{ x0: pin.x + (d.dx + x0) / s0, y0: pin.y + (d.dy + y0) / s0, x1: pin.x + (d.dx + x1) / s0, y1: pin.y + (d.dy + y1) / s0 }];
+  });
   const z1Symbols = landmarks.filter((l) => !LOCAL_ONLY.has(l.tier));
   const titled = [
     ...applied.map((t) => ({ t, titleLines: titleLines(t.title ?? t.subtitle), subtitleText: t.title ? t.subtitle : null, size: landmarks.filter((l) => l.region === t.id).length })),
     { t: oldWorld, id: "old-world", titleLines: titleLines(oldWorld.title), subtitleText: oldWorld.subtitle, size: Infinity },
   ].sort((a, b) => b.size - a.size);
   const placedTitles = [];
+  // Share of a box (world units) that lies on the cells of `owners`, from a grid of sample points.
+  const insideShare = (box, owners) => {
+    if (!terrain || !owners) return 1;
+    const { grid } = terrain;
+    let hit = 0, n = 0;
+    for (let i = 0; i <= 15; i++) for (let j = 0; j <= 5; j++) {
+      const x = box.x0 + ((box.x1 - box.x0) * i) / 15, y = box.y0 + ((box.y1 - box.y0) * j) / 5;
+      const gi = Math.floor((x - grid.x0) / grid.cell), gj = Math.floor((y - grid.y0) / grid.cell);
+      n++;
+      if (gi >= 0 && gj >= 0 && gi < grid.width && gj < grid.height && owners.has(terrain.owner[gj * grid.width + gi])) hit++;
+    }
+    return hit / n;
+  };
   for (const item of titled) {
     const id = item.id ?? item.t.id;
     const cands = candidates.get(id);
     if (!cands.length) continue;
     const curated = item.t.labelCurated;
-    // Hard: no overlap with placed titles or capitals at z0. Soft: cover as few z1 symbols as possible,
-    // breaking ties toward the more interior candidate (candidates come most interior first).
-    let chosen = null, chosenBox = null, fewest = Infinity;
-    for (const c of curated ? [curated] : cands) {
-      const box = titleBox({ ...item, label: c }, s0);
-      if (!curated && (placedTitles.some((b) => overlaps(b, box)) || capitals.some((l) => overlaps(symbolBox(l, s0), box)))) continue;
-      const box1 = titleBox({ ...item, label: c }, s1);
-      const covered = z1Symbols.filter((l) => overlaps(symbolBox(l, s1), box1)).length;
-      if (covered < fewest) { chosen = c; chosenBox = box; fewest = covered; }
-      if (covered === 0 || curated) break;
+    const owners = terrain ? (id === "old-world" ? rootIdx : new Set([terrain.regions.indexOf(id)])) : null;
+    // Hard: no overlap with placed titles, capitals or doodles at z0. Soft: as much of the box as possible on
+    // the territory itself, then as few z1 symbols covered as possible (each costs `titleCoverCost` of
+    // share), then the most interior candidate. Sizes go largest first, each in its wrapped and one-line
+    // form; a size above the smallest is taken only when its best candidate is at least `titleInside`
+    // on the territory and covers at most one z1 symbol.
+    const forms = item.titleLines.length > 1 ? [item.titleLines, [item.titleLines.join(" ")]] : [item.titleLines];
+    let pick = null;
+    for (const titleSize of LABELS.titleSizes) {
+      let best = null;
+      for (const titleLines of forms) {
+        const it = { ...item, titleSize, titleLines };
+        for (const c of curated ? [curated] : cands) {
+          const box = titleBox({ ...it, label: c }, s0);
+          if (!curated && (placedTitles.some((b) => overlaps(b, box)) || capitals.some((l) => overlaps(symbolBox(l, s0), box)) ||
+            doodleBoxes.some((b) => overlaps(b, box)))) continue;
+          const inside = insideShare(box, owners);
+          const covered = z1Symbols.filter((l) => overlaps(symbolBox(l, s1), titleBox({ ...it, label: c }, s1))).length;
+          const score = inside - LABELS.titleCoverCost * covered;
+          if (!best || score > best.score + 1e-9) best = { c, box, covered, inside, score, opt: { titleSize, titleLines } };
+        }
+      }
+      const smallest = titleSize === LABELS.titleSizes.at(-1);
+      if (best && (smallest || (best.inside >= LABELS.titleInside && best.covered <= 1))) { pick = best; break; }
     }
-    if (!chosen) {
-      chosen = cands[0]; chosenBox = titleBox({ ...item, label: chosen }, s0);
+    if (!pick) {
+      const opt = { titleSize: LABELS.titleSizes.at(-1), titleLines: item.titleLines };
+      pick = { c: cands[0], box: titleBox({ ...item, ...opt, label: cands[0] }, s0), covered: 0, opt };
       report.titleOverlaps.push(id);
     }
-    if (fewest > 0 && fewest < Infinity) report.titleCovers.push(`${id} (${fewest})`);
-    item.t.label = chosen;
+    if (pick.covered > 0) report.titleCovers.push(`${id} (${pick.covered})`);
+    Object.assign(item, pick.opt);
+    item.t.label = pick.c;
     item.t.titleLines = item.titleLines;
-    placedTitles.push(chosenBox);
+    item.t.titleSize = item.titleSize;
+    placedTitles.push(pick.box);
   }
 
   // Landmark labels. Priority: tier, then settlement order (older first), then score.
@@ -225,21 +269,36 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
   }
   for (const l of landmarks) if (l.minZoom === null) { l.minZoom = 2; report.unplaced.push(l.id); }
 
-  // Old World province names show only at z2: each takes its most interior point that clears every
-  // landmark label and symbol at that scale, and the province names already placed.
+  // Old World province names show from z1 where they fit, else from z2 (`labelZoom`). Each takes its
+  // most interior point that keeps most of the name on its province and clears every label and symbol
+  // visible from that level (at z1 also the Old World title), and the province names already placed.
   const s2 = scales[2], st = LABELS.text.province;
-  const z2Boxes = [...landmarks.map((l) => labelBox(l, l.labelSide, s2)), ...landmarks.map((l) => symbolBox(l, s2))];
-  const provinceBox = (t, c) => {
+  const owTitle = titled.find((item) => item.id === "old-world");
+  const obstacles = [
+    [s1, [...landmarks.filter((l) => l.minZoom <= 1).map((l) => labelBox(l, l.labelSide, s1)), ...z1Symbols.map((l) => symbolBox(l, s1)),
+      ...(owTitle?.t.label ? [titleBox({ ...owTitle, label: owTitle.t.label }, s1)] : [])]],
+    [s2, [...landmarks.map((l) => labelBox(l, l.labelSide, s2)), ...landmarks.map((l) => symbolBox(l, s2))]],
+  ];
+  const provinceBox = (t, c, s) => {
     const w = textWidth(t.subtitle, st) / 2 + LABELS.pad, h = st.size / 2 + LABELS.pad;
-    return { x0: c[0] - w / s2, x1: c[0] + w / s2, y0: c[1] - (h + st.size * 0.3) / s2, y1: c[1] + (h - st.size * 0.3) / s2 };
+    return { x0: c[0] - w / s, x1: c[0] + w / s, y0: c[1] - (h + st.size * 0.3) / s, y1: c[1] + (h - st.size * 0.3) / s };
   };
+  const clearFrom = (t, c, z) => obstacles.slice(z - 1).every(([s, boxes]) => !boxes.some((b) => overlaps(b, provinceBox(t, c, s))));
   for (const t of provinces) {
     const cands = candidates.get(t.id);
-    if (t.labelCurated) { t.label = t.labelCurated; z2Boxes.push(provinceBox(t, t.label)); continue; }
-    const c = cands.find((c) => !z2Boxes.some((b) => overlaps(b, provinceBox(t, c)))) ?? cands[0] ?? null;
-    if (c && c === cands[0] && z2Boxes.some((b) => overlaps(b, provinceBox(t, c)))) report.unplaced.push(`province ${t.id}`);
+    const owners = terrain ? new Set([terrain.regions.indexOf(t.id)]) : null;
+    let c = t.labelCurated, z = 1;
+    if (!c) {
+      // Most of the name on the province if possible; a narrower province accepts more overhang.
+      for (const share of [LABELS.provinceInside, LABELS.provinceInside - 0.2]) {
+        c ??= cands.filter((c) => insideShare(provinceBox(t, c, s1), owners) >= share).find((c) => clearFrom(t, c, 1));
+      }
+      if (!c) { z = 2; c = cands.find((c) => clearFrom(t, c, 2)); }
+      if (!c) { c = cands[0] ?? null; if (c) report.unplaced.push(`province ${t.id}`); }
+    } else if (!clearFrom(t, c, 1)) z = 2;
     t.label = c;
-    if (c) z2Boxes.push(provinceBox(t, c));
+    t.labelZoom = z;
+    if (c) for (const [s, boxes] of obstacles) boxes.push(provinceBox(t, c, s));
   }
   return report;
 }

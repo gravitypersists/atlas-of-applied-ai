@@ -84,6 +84,10 @@ function init(map) {
     .attr("class", (d) => `territory ${d.group}`)
     .attr("d", (d) => d.fill)
     .attr("fill", (d) => d.tint);
+  // Old World provinces are clickable areas: the whole province opens its panel (SPEC §5.3).
+  const provinceAreas = terrainLayer.selectAll("path.territory.old-world");
+  provinceAreas.append("title").text((d) => `${d.subtitle} · The Old World`);
+  provinceAreas.on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
   if (map.coast) {
     terrainLayer.append("path").attr("class", "coast-hachure").attr("d", map.coast).attr("clip-path", "url(#land-clip)");
     terrainLayer.append("path").attr("class", "coast").attr("d", map.coast);
@@ -96,15 +100,18 @@ function init(map) {
     ...map.territories.filter((t) => t.group === "old-world" && t.label).map((t) => ({ ...t, kind: "province" })),
   ];
   const titles = titleLayer.selectAll("text").data(titled).join("text")
-    .attr("class", (d) => `territory-label ${d.kind}`)
-    .style("fill", (d) => d.ink);
+    .attr("class", (d) => `territory-label ${d.kind}${d.kind === "province" ? ` pz${d.labelZoom ?? 2}` : ""}`)
+    // Region inks are mid-tone, made for symbols; titles take a darker shade so they read over the tints.
+    .style("fill", (d) => (d.ink ? d3.color(d.ink).darker(0.7).formatHex() : null));
   // Titles and province names open their region's panel (SPEC §5.3).
   titles.on("click", (event, d) => { event.stopPropagation(); selectRegion(d.id); });
   titles.each(function (d) {
     const t = d3.select(this);
     if (d.kind === "province") { t.append("tspan").attr("class", "province-name").text(d.subtitle.toUpperCase()); return; }
     const lines = d.titleLines ?? [(d.title ?? d.subtitle).toUpperCase()];
-    lines.forEach((line, i) => t.append("tspan").attr("class", "title-line").attr("x", 0).attr("dy", i ? "1.1em" : 0).text(line));
+    // The build sizes each title to its territory (labels.mjs titleSizes); 16px is the CSS default.
+    lines.forEach((line, i) => t.append("tspan").attr("class", "title-line").attr("x", 0).attr("dy", i ? "1.1em" : 0)
+      .style("font-size", d.titleSize ? `${d.titleSize}px` : null).text(line));
     if (d.title) t.append("tspan").attr("class", "subtitle").attr("x", 0).attr("dy", "1.45em").text(d.subtitle);
   });
 
@@ -243,6 +250,7 @@ function init(map) {
     if (!t) return;
     clearSelection();
     selected = t;
+    provinceAreas.classed("chosen", (d) => d.id === id);
     renderRegionPanel(t);
     setHash(`#${encodeURIComponent(id)}`);
     const members = map.landmarks.filter((l) => inRegion(l, id));
@@ -254,6 +262,7 @@ function init(map) {
     selected = null;
     svg.classed("has-selection", false);
     landmarks.classed("selected", false).classed("related", false);
+    provinceAreas.classed("chosen", false);
     doodles.classed("lit", false);
     routeLayer.selectAll("path").remove();
     document.getElementById("panel").hidden = true;

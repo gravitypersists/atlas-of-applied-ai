@@ -7,6 +7,7 @@
 // See ../SPEC.md for the contracts this implements.
 
 import fs from "node:fs";
+import vm from "node:vm";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
@@ -438,6 +439,16 @@ function hrefFor(ref) {
   return ref.url ?? null;
 }
 
+// The viewer's doodles (map/public/doodles.js, a browser script setting window.DOODLES), so titles can
+// keep clear of the ones shown at world zoom.
+function readDoodles() {
+  const file = path.join(HERE, "public", "doodles.js");
+  if (!fs.existsSync(file)) return [];
+  const sandbox = { window: {} };
+  vm.runInNewContext(fs.readFileSync(file, "utf8"), sandbox);
+  return (sandbox.window.DOODLES ?? []).map(({ id, at, dx = 0, dy = 0, minZoom = 0 }) => ({ id, at, dx, dy, minZoom }));
+}
+
 // Reader content for the panel (SPEC §5.3): one shape for node resources and region learning paths.
 const resourceOf = (r) => ({ kind: r.kind, title: r.title, by: r.by ?? null, year: r.year ?? null, url: r.url, why: r.why ?? null });
 
@@ -487,7 +498,7 @@ function render(model, curation) {
   // Cartography: tiers, title anchors, and label zoom thresholds (SPEC §4.7–4.8).
   for (const l of landmarks) l.settledIndex = settledIndex.get(l.id);
   assignTiers(landmarks, curation.nodes ?? {});
-  const labelReport = placeLabels({ landmarks, territories, oldWorld, terrain, overrides: curation.nodes ?? {} });
+  const labelReport = placeLabels({ landmarks, territories, oldWorld, terrain, overrides: curation.nodes ?? {}, doodles: readDoodles() });
   for (const l of landmarks) delete l.settledIndex;
   for (const t of [...territories, oldWorld]) delete t.labelCurated;
   const tierCounts = {};
@@ -517,11 +528,12 @@ function render(model, curation) {
 }
 
 // ---------------------------------------------------------------- terrain (SPEC §4.1–4.2, §4.5–4.6)
-// Muted territory tints (fills) and stronger inks (symbols). Root provinces share a sepia family.
+// Muted territory tints (fills) and stronger inks (symbols). Root provinces take earthier, older hues
+// (ochre, rust, olive, slate…), distinct enough that each province reads on its own.
 const ROOT_COLORS = [
-  ["#e3d3b4", "#8c6d46"], ["#ddcaa6", "#7a5c3a"], ["#e6d6b6", "#9a7b4f"], ["#d9c7a8", "#6e5a43"],
-  ["#e8d9bd", "#a08060"], ["#dfcdb0", "#857055"], ["#dbc8aa", "#76624a"], ["#e4d2b3", "#93785a"],
-  ["#ddcfb6", "#7d6a52"],
+  ["#e4d0a2", "#86672a"], ["#e0c0a6", "#8e5236"], ["#d5d3a6", "#686630"], ["#c9d4b5", "#52663c"],
+  ["#c8d0d3", "#4c5c67"], ["#dac4c9", "#76505e"], ["#e6cdb6", "#956146"], ["#d4c2a7", "#6a5238"],
+  ["#c3d3c9", "#46685a"],
 ];
 const APPLIED_COLORS = [
   ["#c9d9de", "#4f7a8c"], ["#e3c9d3", "#8c4f6d"], ["#d3dfc4", "#6d8c4f"], ["#ecd5bd", "#b0773c"],

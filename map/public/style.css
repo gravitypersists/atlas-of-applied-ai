@@ -81,16 +81,16 @@ html, body {
   text-anchor: middle;
   pointer-events: none;
   paint-order: stroke;
-  stroke: color-mix(in srgb, var(--parchment) 70%, transparent);
-  stroke-width: 3px;
+  /* A solid parchment halo, so titles read over borders, tints and coastlines. */
+  stroke: var(--parchment);
+  stroke-width: 4px;
   stroke-linejoin: round;
+  stroke-opacity: 0.92;
 }
 .territory-label .title-line { font-size: 16px; letter-spacing: 0.12em; }
 .territory-label .subtitle { font-family: var(--body-font); font-style: italic; font-size: 11px; letter-spacing: 0.02em; }
-.territory-label.old-world-title { fill: var(--ink-soft); }
-.territory-label.old-world-title .title-line { font-size: 16px; letter-spacing: 0.12em; }
-.territory-label.province { fill: var(--ink-soft); }
-.territory-label .province-name { font-size: 10.5px; letter-spacing: 0.14em; }
+.territory-label.old-world-title { fill: #5e4d36; }
+.territory-label .province-name { font-size: 12px; letter-spacing: 0.14em; }
 
 /* Doodles (doodles.js): ink line drawings at a constant screen size, under the landmarks. Each part
    animates in its own box (transform-box: fill-box), so the motion stays put as the map pans and zooms. */
@@ -168,15 +168,21 @@ html, body {
 #map.has-selection .doodle:not(.lit) { opacity: 0.3; }
 /* Region titles open the region's panel while they're prominent (z0–z1). */
 #map.z0 .territory-label.title, #map.z1 .territory-label.title { pointer-events: visiblePainted; cursor: pointer; }
-/* Province names open their panel where they show (z2). */
-#map.z2 .territory-label.province { pointer-events: visiblePainted; cursor: pointer; }
+/* Province names open their panel where they show: from z1 when they fit there (pz1), else z2. */
+#map.z1 .territory-label.province.pz1, #map.z2 .territory-label.province { pointer-events: visiblePainted; cursor: pointer; }
 #map.z0 .landmark:not(.lz0) .label,
-#map.z1 .landmark.lz2 .label { opacity: 0; }
+#map.z1 .landmark.lz2 .label { opacity: 0; pointer-events: none; }
+/* A hidden landmark's parts must not catch clicks meant for titles and provinces under them. */
+#map.z0 .landmark:not(.capital):not(.selected, .related) *,
+#map.z1 :is(.landmark.outpost, .landmark.hamlet):not(.selected, .related) * { pointer-events: none; }
 .territory-label.province { opacity: 0; }
-#map.z2 .territory-label.province { opacity: 1; }
+#map.z1 .territory-label.province.pz1, #map.z2 .territory-label.province { opacity: 1; }
 #map.z1 .territory-label.title { opacity: 0.75; }
 #map.z2 .territory-label.title { opacity: 0.18; }
-#map.z0 .territory.old-world, #map.z1 .territory.old-world { stroke-opacity: 0.25; }
+/* Old World provinces: the whole area is a click target, with a solid border and a hover lift. */
+.territory.old-world { cursor: pointer; stroke: var(--ink-soft); stroke-opacity: 0.85; stroke-dasharray: 4 2; transition: fill-opacity 150ms; }
+.territory.old-world:hover { fill-opacity: 0.85; }
+.territory.old-world.chosen { fill-opacity: 0.9; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: none; }
 
 /* Selection: the selected landmark and its relatives are always shown and labelled; the rest dims. */
 /* Dimming works on children and fill-opacity, so it multiplies with (never overrides) zoom-level hiding. */

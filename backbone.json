@@ -1043,7 +1043,7 @@
       "id": "ai-product-and-interaction-design",
       "kind": "applied",
       "name": "AI Product and Interaction Design",
-      "title": "The Agora",
+      "title": "The New Agora",
       "definition": "How AI shows up for users — chat and copilot patterns, streaming, citations and grounding, human-in-the-loop approval, generative UI and canvases, trust and error recovery.",
       "distinct_from": "Defined by the human-facing experience, not the backend mechanism.",
       "descends_from": [
@@ -1177,7 +1177,7 @@
       "id": "embodied-ai-and-world-models",
       "kind": "applied",
       "name": "Embodied AI and World Models",
-      "title": "The Clockwork Marches",
+      "title": "The Clockwork Isle",
       "definition": "Foundation models that act in the physical world or simulate it — vision-language-action policies, robot learning from demonstrations, language-model task planning for robots, sim-to-real transfer, and world models that predict how an environment responds to actions.",
       "distinct_from": "Agents that act through software (APIs, browsers, desktops) stay in Agents. Perception-only vision and passive video generation stay in Multimodal. RL algorithms themselves stay in the Reinforcement Learning root.",
       "descends_from": [
