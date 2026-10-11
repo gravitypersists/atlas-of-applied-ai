@@ -344,8 +344,8 @@ The build prints:
 - The map fills the viewport. Sea and land are two parchment tones, and territories carry their muted tints.
 - **Top left:** search box.
 - **Bottom right:** + / − / fit-world buttons.
-- **Side panel:** 360px, on the right; the zoom buttons move left of it while it's open. On screens 640px wide or narrower it becomes a bottom sheet up to 55% of the screen's height, the zoom buttons sit above it, and the cartouche is hidden.
-- **Bottom left:** a small cartouche reading "Applied AI Engineering Atlas" with the edition date. There is no legend.
+- **Side panel:** 360px, on the right; the zoom buttons move left of it while it's open. On screens 640px wide or narrower it becomes a bottom sheet up to 55% of the screen's height, the zoom buttons sit above it, and the cartouche is hidden while it's open.
+- **Bottom left:** a small cartouche reading "Atlas of Applied AI" with the survey month ("Surveyed: October 2026"). There is no legend. Clicking it opens a short About dialog: how the data was charted, and a link to the GitHub project.
 
 ### 5.2 Semantic zoom
 

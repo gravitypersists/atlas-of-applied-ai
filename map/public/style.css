@@ -801,10 +801,19 @@ body::before {
   position: fixed;
   left: 16px;
   bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 8px 12px;
   border: 1px solid var(--ink-soft);
   background: color-mix(in srgb, var(--panel) 88%, transparent);
-  pointer-events: none;
+  color: var(--ink);
+  font-family: var(--body-font);
+  text-align: left;
+  cursor: pointer;
+}
+.cartouche:hover {
+  background: var(--panel);
 }
 .cartouche-title {
   font-family: var(--title-font);
@@ -815,6 +824,47 @@ body::before {
   font-size: 12px;
   font-style: italic;
   color: var(--ink-soft);
+}
+.cartouche-more {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- about */
+.about {
+  width: min(440px, calc(100vw - 32px));
+  padding: 28px 28px 22px;
+  border: 1px solid var(--ink-soft);
+  background: var(--panel);
+  color: var(--ink);
+  font: 16px/1.5 var(--body-font);
+  box-shadow: 0 8px 32px rgb(59 47 32 / 0.25);
+}
+.about::backdrop {
+  background: rgb(59 47 32 / 0.25);
+}
+.about-title {
+  margin: 0 0 10px;
+  font: 22px/1.2 var(--title-font);
+  letter-spacing: 0.04em;
+}
+.about h2 {
+  margin: 18px 0 4px;
+  font: 13px/1.3 var(--title-font);
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+.about p {
+  margin: 0 0 10px;
+}
+.about a {
+  color: var(--ink);
+}
+.about-link {
+  margin-top: 16px !important;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 15px;
 }
 
 /* ---------------------------------------------------------------- search (SPEC §5.4) */
@@ -1254,7 +1304,7 @@ body:has(.panel:not([hidden])) .controls {
     right: 16px;
     bottom: calc(55dvh + 12px);
   }
-  .cartouche {
+  body:has(.panel:not([hidden])) .cartouche {
     display: none;
   }
   .controls {

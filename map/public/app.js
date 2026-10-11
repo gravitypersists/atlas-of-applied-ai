@@ -8,6 +8,7 @@ const FLY_MS = 600;
 const MIN_MARK_SCALE = 0.55;
 const SHEET_BREAKPOINT = 640;   // at or below this width the panel is a bottom sheet
 const MAX_RESULTS = 8;
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const svg = d3.select("#map");
 const defs = svg.append("defs");
@@ -22,6 +23,13 @@ let fitK = 1;
 
 // no-store: the map is rebuilt often during curation, and a stale cached copy hides layout changes.
 d3.json("map.json", { cache: "no-store" }).then(init);
+
+// About: the cartouche opens a modal note on how the atlas was charted. The dialog closes itself on Escape;
+// a click on its backdrop (the dialog element itself, outside its content) closes it too.
+const about = document.getElementById("about");
+document.getElementById("about-open").onclick = () => about.showModal();
+document.getElementById("about-close").onclick = () => about.close();
+about.addEventListener("click", (e) => { if (e.target === about) about.close(); });
 
 // Five-pointed star centred on 0,0 with outer radius r.
 function starPath(r) {
@@ -67,7 +75,9 @@ function setHash(url) {
 }
 
 function init(map) {
-  document.getElementById("edition").textContent = `${map.stage === "accepted" ? "Edition" : "Survey draft"} · ${map.built}`;
+  const [year, month] = map.built.split("-");
+  const surveyed = `${MONTHS[month - 1]} ${year}`;
+  document.getElementById("edition").textContent = map.stage === "accepted" ? `Surveyed: ${surveyed}` : `Survey draft · ${surveyed}`;
   const byId = new Map(map.landmarks.map((l) => [l.id, l]));
   const territoryById = new Map(map.territories.map((t) => [t.id, t]));
   const margin = map.view?.margin ?? { x: 150, y: 60 };
@@ -294,7 +304,7 @@ function init(map) {
   svg.on("click", () => clearSelection()); // d3-zoom suppresses the click that ends a drag
   document.getElementById("panel-close").onclick = () => clearSelection();
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && document.activeElement !== searchInput) clearSelection();
+    if (e.key === "Escape" && document.activeElement !== searchInput && !about.open) clearSelection();
   });
 
   // ---------------------------------------------------------------- panel

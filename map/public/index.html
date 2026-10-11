@@ -57,10 +57,22 @@
     <button id="zoom-out" aria-label="Zoom out">−</button>
     <button id="zoom-fit" aria-label="Fit world">⤢</button>
   </div>
-  <div class="cartouche">
-    <div class="cartouche-title">Applied AI Engineering Atlas</div>
-    <div class="cartouche-sub" id="edition"></div>
-  </div>
+  <button class="cartouche" id="about-open" aria-haspopup="dialog" aria-controls="about">
+    <span class="cartouche-title">Atlas of Applied AI</span>
+    <span class="cartouche-sub"><span id="edition"></span> · <span class="cartouche-more">About</span></span>
+  </button>
+
+  <dialog id="about" class="about" aria-labelledby="about-title">
+    <button class="panel-close" id="about-close" aria-label="Close">×</button>
+    <h1 class="about-title" id="about-title">Atlas of Applied AI</h1>
+    <p>A map of applied AI engineering: its techniques and approaches, each placed near what it grew out of.</p>
+    <h2>How it was charted</h2>
+    <p>Claude Opus drafted the starting point: the regions, the landmarks and the lineage between them. Each region
+      then went through a Gemini Deep Research run to flesh it out. A final pass with Opus merged and enriched the
+      results.</p>
+    <p class="about-link"><a href="https://github.com/gravitypersists/atlas-of-applied-ai" target="_blank" rel="noopener">The project on GitHub</a>
+      for contributions, or to see the code.</p>
+  </dialog>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
   <script src="doodles.js"></script>
   <script src="app.js"></script>
