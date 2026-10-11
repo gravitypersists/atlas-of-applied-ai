@@ -365,6 +365,10 @@ boundary_rules:
   - {concept: Embedding fine-tuning, home: retrieval-and-knowledge, rule: "Training a retriever or embedder for a search system → Retrieval (secondary: Adaptation). Training the generator → Adaptation."}
   - {concept: Hallucination detection, home: evaluation-and-observability, rule: "Scoring whether an answer is supported or confident → Evaluation, even when the score gates answers at runtime (secondary: Safety). Ways of grounding answers in the first place (RAG, citations) stay in their regions."}
   - {concept: Data poisoning vs. indirect prompt injection, home: safety-and-security, rule: "Both Safety. Malicious content in training or fine-tuning data that changes the weights → data poisoning. Malicious content read at inference time → indirect prompt injection."}
+  - {concept: Agentic RL, home: adaptation-and-post-training, rule: "Training the model over multi-turn episodes → Adaptation (secondary: Agents). Building the environments and collecting trajectories → Data."}
+  - {concept: Reasoning budget control, home: planning-and-reasoning, rule: "How long a reasoning model thinks → Reasoning, alongside test-time compute scaling, even when set as an API parameter (secondary: Inference)."}
+  - {concept: Agents learning from experience, home: agents-and-orchestration, rule: "Improving by rewriting memory, notes or playbooks between tasks → Agents, with agent memory. Updating the weights from deployment data → Adaptation."}
+  - {concept: Diffusion language models, home: inference-and-serving, rule: "Engineers meet them as a faster way to generate text, so → Inference (secondary: DL-NLP). Diffusion for images, audio and video stays Multimodal."}
 
 nodes:
   # ======================= ROOTS: information-retrieval =======================
@@ -539,6 +543,24 @@ nodes:
     date: "2021-04"
     ref: {title: "RoFormer: Enhanced Transformer with Rotary Position Embedding (Su et al.)", arxiv: "2104.09864"}
     examples: [Llama, Qwen, Mistral, GPT-NeoX]
+    status: added
+
+  # ---- 2025–26 frontier (2026-10-10) ----
+  - id: sparse-attention
+    name: Sparse Attention
+    aliases: [NSA, Native Sparse Attention, DSA, DeepSeek Sparse Attention, MoBA, block-sparse attention, trainable sparse attention]
+    region: deep-learning-nlp
+    also: [inference-and-serving]
+    desc: Letting each query attend to a small, learned selection of earlier tokens or blocks instead of all of them, trained into the model so long contexts cost far less compute.
+    summary: "Full attention compares every token with every earlier token, so cost grows with the square of the context length. Sparse attention has each token look at only a selected subset: a compressed summary of the whole context, a few blocks picked as most relevant, and a local window. Early fixed patterns hurt quality; the 2025 designs learn which blocks to pick during training and are built around GPU kernels, so they keep quality while making 100K-token contexts much cheaper. DeepSeek's sparse attention brought it to a production API."
+    parents:
+      - {id: transformer-architecture, rel: extends, why: "Replaces dense attention over all earlier tokens with attention over a learned selection.", src: "Native Sparse Attention (Yuan et al. 2025)"}
+      - {id: "external:sparse-transformers", rel: extends, why: "Makes the fixed sparse patterns of Sparse Transformers learnable and trainable end to end.", src: "Generating Long Sequences with Sparse Transformers (Child et al. 2019); NSA (Yuan et al. 2025)"}
+    maturity: 3
+    maturity_note: In production in DeepSeek-V3.2 (DSA) and Kimi (MoBA); most open models still use dense attention.
+    date: "2025-02"
+    ref: {title: "Native Sparse Attention: Hardware-Aligned and Natively Trainable Sparse Attention (Yuan et al.)", arxiv: "2502.11089"}
+    examples: [DeepSeek-V3.2 DSA, MoBA, NSA]
     status: added
 
   # ======================= ROOTS: symbolic-ai-planning =======================
@@ -1306,6 +1328,24 @@ nodes:
     date: "2019-09"
     ref: {title: "Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism (Shoeybi et al.)", arxiv: "1909.08053"}
     examples: [Megatron-LM, vLLM --tensor-parallel-size, DeepSpeed, SGLang expert parallelism]
+    status: added
+
+  # ---- 2025–26 frontier (2026-10-10) ----
+  - id: diffusion-language-models
+    name: Diffusion Language Models
+    aliases: [dLLMs, text diffusion, masked diffusion language models, LLaDA, Mercury, Gemini Diffusion]
+    region: inference-and-serving
+    also: [deep-learning-nlp]
+    desc: Generating text by starting from a fully masked sequence and unmasking many tokens in parallel over a few refinement steps, instead of one token at a time left to right.
+    summary: "Ordinary LLMs write one token after another, so long outputs take many sequential steps. A diffusion language model starts with a block of blank (masked) tokens and fills them in over a handful of passes, committing many tokens per pass and revising as it goes. That makes generation several times faster on the same hardware and lets the model edit the middle of a text. Quality has caught up for code and short tasks but not yet at the frontier, and serving engines are still built around autoregressive decoding."
+    parents:
+      - {id: diffusion-models, rel: applies, why: "Applies the iterative denoising idea to discrete text, with masking as the noise.", src: "Large Language Diffusion Models (Nie et al. 2025)"}
+      - {id: autoregressive-decoding, rel: replaces, why: "Generates many tokens per step in parallel instead of one at a time.", src: "Mercury (Inception Labs 2025)"}
+    maturity: 2
+    maturity_note: Commercial models (Mercury, Gemini Diffusion) and open ones (LLaDA, Dream) exist; frontier models remain autoregressive.
+    date: "2025-02"
+    ref: {title: "Large Language Diffusion Models (Nie et al.)", arxiv: "2502.09992"}
+    examples: [LLaDA, Mercury Coder, Gemini Diffusion, Dream]
     status: added
 
   # ======================= APPLIED: prompting-and-context-engineering =======================
@@ -2468,6 +2508,43 @@ nodes:
       - {kind: docs, title: "A2A Protocol", by: "A2A Project (Linux Foundation)", year: 2025, url: "https://a2a-protocol.org/latest/"}
     status: added
 
+  # ---- 2025–26 frontier (2026-10-10) ----
+  - id: spec-driven-development
+    name: Spec-Driven Development
+    aliases: [SDD, spec-first development, specs, Spec Kit, requirements-first agent coding]
+    region: agents-and-orchestration
+    also: [software-engineering, ai-product-and-interaction-design]
+    desc: Working with coding agents by first writing and reviewing a specification (requirements, design, task list) that the agent then implements and checks against, and keeping it as the source of truth.
+    summary: "Prompting an agent feature by feature leaves the decisions undocumented and the requirements fuzzy. In spec-driven development the agent first drafts a spec: what the feature must do, how it will be built, and a list of tasks. You review and edit it, and the agent works through the tasks, testing against the spec. The spec stays in the repository and is updated when plans change, so it carries intent across sessions and agents. It is newer than plan mode and debated: some teams find it heavy for small changes."
+    parents:
+      - {id: coding-agents, rel: applies, why: "Gives coding agents a reviewed specification to implement and check against.", src: "Introducing Kiro (AWS 2025)"}
+      - {id: plan-preview, rel: extends, why: "Turns a one-off plan for approval into a lasting, versioned spec.", src: "Spec-driven development with AI (GitHub 2025)"}
+      - {id: "external:requirements-engineering", rel: applies, why: "Brings requirements and design documents back as the agent's input.", src: "Introducing Kiro (AWS 2025)", confidence: medium}
+    maturity: 2
+    maturity_note: Built into Kiro and GitHub Spec Kit and copied by other agents; practice still settling.
+    date: "2025-07"
+    ref: {title: "Introducing Kiro (AWS)", url: "https://kiro.dev/blog/introducing-kiro/"}
+    examples: [Kiro specs, GitHub Spec Kit, Tessl]
+    status: added
+  - id: agent-continual-learning
+    name: Continual Learning for Agents
+    aliases: [sleep-time compute, sleep-time agents, learning from experience, self-improving agents, memory consolidation, evolving playbooks, Agentic Context Engineering, ACE]
+    region: agents-and-orchestration
+    also: [adaptation-and-post-training]
+    layer: detail
+    desc: Agents that improve from their own experience by spending idle time reviewing past work and rewriting their memory, notes or playbooks, without retraining the model.
+    summary: "Most agents start every task as new and forget what went wrong last time. Continual learning lets them carry lessons forward. Between tasks, while the user isn't waiting, a background process (sleep-time compute) reviews transcripts and outcomes and rewrites the agent's memory or playbook: strategies that worked, mistakes to avoid, facts about the user's setup. Updating the weights themselves is still research; in practice this is learning in context, which keeps it inspectable and easy to undo."
+    parents:
+      - {id: agent-memory, rel: extends, why: "Revises stored memory during idle time instead of only appending to it.", src: "Sleep-time Compute (Lin et al. 2025)"}
+      - {id: reflexion, rel: extends, why: "Keeps reflections on failures across tasks as a growing playbook.", src: "Agentic Context Engineering (Zhang et al. 2025)"}
+      - {id: test-time-compute-scaling, rel: applies, why: "Moves inference compute to the time between requests, so answers need less of it later.", src: "Sleep-time Compute (Lin et al. 2025)"}
+    maturity: 2
+    maturity_note: Shipping as memory features in assistants and agent platforms (Letta sleep-time agents); methods and evaluation still early.
+    date: "2025-04"
+    ref: {title: "Sleep-time Compute: Beyond Inference Scaling at Test-time (Lin et al.)", arxiv: "2504.13171"}
+    examples: [Letta sleep-time agents, ACE, ChatGPT and Claude memory]
+    status: added
+
   # ======================= APPLIED: planning-and-reasoning =======================
   - id: scratchpads
     name: Scratchpads
@@ -2857,6 +2934,24 @@ nodes:
       - {kind: paper, title: "Measuring Faithfulness in Chain-of-Thought Reasoning", by: "Tamera Lanham et al.", year: 2023, url: "https://arxiv.org/abs/2307.13702"}
     status: added
 
+  # ---- 2025–26 frontier (2026-10-10) ----
+  - id: reasoning-budget-control
+    name: Reasoning Budget Control
+    aliases: [budget forcing, s1, thinking budget, reasoning effort, adaptive thinking, overthinking, efficient reasoning]
+    region: planning-and-reasoning
+    also: [inference-and-serving]
+    desc: Controlling how long a reasoning model thinks per request, by a token budget, an effort level or the model's own judgment of difficulty, to avoid wasting tokens on easy questions.
+    summary: "Reasoning models tend to overthink: they spend thousands of tokens checking an answer to 2+3. Budget control sets how much thinking a request gets. The s1 paper showed the simplest form, cutting thinking off at a budget or appending \"Wait\" to extend it. APIs now expose a thinking-token budget or an effort setting, and newer models adapt on their own, thinking briefly on easy prompts and at length on hard ones. It is the main dial for trading answer quality against cost and latency."
+    parents:
+      - {id: reasoning-models, rel: extends, why: "Adds control over how long a reasoning model thinks.", src: "s1: Simple test-time scaling (Muennighoff et al. 2025)"}
+      - {id: test-time-compute-scaling, rel: applies, why: "Sets the point on the compute-quality curve per request.", src: "s1 (Muennighoff et al. 2025); Do NOT Think That Much for 2+3=? (Chen et al. 2024)"}
+    maturity: 3
+    maturity_note: Every major reasoning API exposes a budget or effort setting; adaptive thinking is newer and still uneven.
+    date: "2025-01"
+    ref: {title: "s1: Simple test-time scaling (Muennighoff et al.)", arxiv: "2501.19393"}
+    examples: [Claude thinking budget and effort, OpenAI reasoning_effort, Gemini thinkingBudget, Qwen3 thinking switch]
+    status: added
+
   # ======================= APPLIED: adaptation-and-post-training =======================
   - id: supervised-fine-tuning
     name: Supervised Fine-Tuning
@@ -3211,6 +3306,25 @@ nodes:
     date: "2020-04"
     ref: {title: "Don't Stop Pretraining: Adapt Language Models to Domains and Tasks (Gururangan et al.)", arxiv: "2004.10964"}
     examples: [Code Llama, BloombergGPT, Meditron, SaulLM]
+    status: added
+
+  # ---- 2025–26 frontier (2026-10-10) ----
+  - id: agentic-rl
+    name: Agentic RL
+    aliases: [multi-turn RL, agent RL, RL in environments, tool-integrated RL, Search-R1, RAGEN, agentic RFT]
+    region: adaptation-and-post-training
+    also: [agents-and-orchestration]
+    desc: Training a model with reinforcement learning over whole multi-step episodes in which it calls tools and sees their results, rewarded on whether the task was completed.
+    summary: "Reasoning RL rewards a single answer. Agentic RL rewards a whole episode: the model searches, runs code or edits files, reads the results, and keeps going until the task is done or fails, and the outcome is scored. Training this way teaches models to use tools well, recover from errors and work over long horizons, and it is how current agentic and coding models are trained. Tool outputs must be masked out of the loss, and rollouts are slow and costly, so environment and harness design matter as much as the algorithm."
+    parents:
+      - {id: rlvr, rel: extends, why: "Extends verifiable-reward RL from single answers to multi-turn episodes with tool calls.", src: "Search-R1 (Jin et al. 2025); RAGEN (Wang et al. 2025)"}
+      - {id: agent-trajectory-synthesis, rel: applies, why: "Trains in sandboxed environments with automatic checks.", src: "The Landscape of Agentic Reinforcement Learning for LLMs (Zhang et al. 2025)"}
+      - {id: grpo, rel: applies, why: "Usually optimized with GRPO or PPO over full trajectories.", src: "Search-R1 (Jin et al. 2025)"}
+    maturity: 3
+    maturity_note: How frontier agentic and coding models are trained; open frameworks and hosted RL fine-tuning bring it to smaller teams.
+    date: "2025-03"
+    ref: {title: "Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning (Jin et al.)", arxiv: "2503.09516"}
+    examples: [verl, SkyRL, OpenPipe ART, prime-rl, OpenAI agent RFT]
     status: added
 
   # ======================= APPLIED: data-and-synthetic-data =======================
@@ -4905,6 +5019,23 @@ nodes:
     date: "2022-11"
     ref: {title: "InstructPix2Pix: Learning to Follow Image Editing Instructions (Brooks et al.)", arxiv: "2211.09800"}
     examples: [InstructPix2Pix, FLUX.1 Kontext, Qwen-Image-Edit, Photoshop Generative Fill]
+    status: added
+
+  # ---- 2025–26 frontier (2026-10-10) ----
+  - id: unified-multimodal-generation
+    name: Unified Multimodal Generation
+    aliases: [native image generation, any-to-any models, mixed-modal models, Chameleon, Transfusion, BAGEL, GPT-4o image generation, Nano Banana]
+    region: multimodal-applied
+    desc: One model that both understands and generates text and images in the same sequence, so it can draw, edit and explain within a conversation.
+    summary: "Most image generation pairs a language model with a separate image model that only sees a text prompt. Unified models read and produce both: image tokens or image patches share one sequence with text, so the model draws with everything it knows from the conversation. That makes text rendering, following detailed instructions and multi-turn editing much better, such as changing one detail while keeping a character the same. GPT-4o image generation and Gemini's image models brought it to the mainstream in 2025."
+    parents:
+      - {id: vision-language-models, rel: extends, why: "Lets a model that reads images also produce them.", src: "Chameleon (Meta 2024)"}
+      - {id: text-to-image, rel: combines, why: "Folds image generation into the language model, often with a diffusion head.", src: "Transfusion (Zhou et al. 2024)"}
+    maturity: 3
+    maturity_note: Shipped in ChatGPT and Gemini and open models such as BAGEL and Janus; most dedicated image pipelines still use separate diffusion models.
+    date: "2024-05"
+    ref: {title: "Chameleon: Mixed-Modal Early-Fusion Foundation Models (Chameleon Team)", arxiv: "2405.09818"}
+    examples: [GPT-4o image generation, Gemini 2.5 Flash Image, BAGEL, Janus-Pro]
     status: added
 
   # ======================= APPLIED: embodied-ai-and-world-models =======================

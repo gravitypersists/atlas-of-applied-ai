@@ -273,4 +273,11 @@ settlements:
   - {id: data-poisoning, x: 3055.9, y: 981.7, settled: "2026-10-08"}
   - {id: instruction-image-editing, x: 4196, y: 1456.4, settled: "2026-10-08"}
   - {id: context-window-extension, x: 3409.2, y: 1649, settled: "2026-10-08"}
+  - {id: diffusion-language-models, x: 3420, y: 2120, settled: "2026-10-10"}
+  - {id: agent-continual-learning, x: 2680, y: 1800, settled: "2026-10-10"}
+  - {id: spec-driven-development, x: 2830, y: 1340, settled: "2026-10-10"}
+  - {id: sparse-attention, x: 1117.1, y: 1328.1, settled: "2026-10-08"}
+  - {id: reasoning-budget-control, x: 2897, y: 2367.5, settled: "2026-10-08"}
+  - {id: agentic-rl, x: 2639.2, y: 1149.8, settled: "2026-10-08"}
+  - {id: unified-multimodal-generation, x: 4112.4, y: 1606, settled: "2026-10-08"}
 retired: []

@@ -51,13 +51,15 @@ Landed 2026-10-10: 16 nodes with summaries, arXiv refs checked against the arXiv
 
 ## 5. 2025–26 frontier
 
-- [ ] Agentic / multi-turn RL: training agents in environments (Adaptation; `agent-trajectory-synthesis` covers only the environment side)
-- [ ] Reasoning budget control: budget forcing (s1), adaptive thinking effort, overthinking mitigation (Reasoning or Inference)
-- [ ] Sleep-time compute / continual learning for agents (Agents or Adaptation)
-- [ ] Diffusion language models (Inference)
-- [ ] Sparse attention (NSA, DSA) (DL-NLP root, `also` Inference)
-- [ ] Unified multimodal generation: native image generation and editing in LLMs (Multimodal)
-- [ ] Spec-driven development (Agents)
+Landed 2026-10-10: 7 nodes with summaries, arXiv ids checked against the arXiv API (Kiro and GitHub Spec Kit pages opened), four boundary rules. No `resources` yet; they need the separate resources pass from `MERGING.md`. `diffusion-language-models`, `agent-continual-learning` and `spec-driven-development` were hand-placed in the ledger (the automatic settle put them offshore near the Painted Isles and the Archival Reach).
+
+- [x] Agentic / multi-turn RL: training agents in environments (Adaptation; `agent-trajectory-synthesis` covers only the environment side): `agentic-rl`, core, m3, `also` Agents, parents `rlvr`, `agent-trajectory-synthesis`, `grpo`
+- [x] Reasoning budget control: budget forcing (s1), adaptive thinking effort, overthinking mitigation (Reasoning or Inference): `reasoning-budget-control` in Reasoning, core, m3, `also` Inference
+- [x] Sleep-time compute / continual learning for agents (Agents or Adaptation): `agent-continual-learning` in Agents, detail, m2; weight-level continual learning goes to Adaptation (boundary rule)
+- [x] Diffusion language models (Inference): `diffusion-language-models`, core, m2, `also` DL-NLP
+- [x] Sparse attention (NSA, DSA) (DL-NLP root, `also` Inference): `sparse-attention`, m3, parent `external:sparse-transformers`
+- [x] Unified multimodal generation: native image generation and editing in LLMs (Multimodal): `unified-multimodal-generation`, core, m3, dated to Chameleon (2024-05)
+- [x] Spec-driven development (Agents): `spec-driven-development`, core, m2, parents `coding-agents` and `plan-preview`
 
 ## 6. Prune or re-justify niche nodes
 
