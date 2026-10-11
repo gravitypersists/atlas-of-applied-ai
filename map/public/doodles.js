@@ -123,11 +123,13 @@ window.DOODLES = [
         <path class="wing" d="M-4.4 -14.6 q-0.9 -1.8 0.4 -1.8 q0.9 0 0.2 1.6"/>
       </g>`,
   },
-  // The Whispering Coast, beside Few-Shot Prompting: a parrot on its perch, repeating whatever it was shown.
+  // The Whispering Coast's north shore, on the bay above Zero-Shot Prompting: a parrot on its perch by the
+  // water, repeating whatever it was shown.
   {
-    id: "parrot", at: "few-shot-prompting", dx: -42, dy: 12,
+    id: "parrot", at: [2128, 1443], dx: 0, dy: 0, minZoom: 1,
     svg: `
       <path class="ground" d="M-6 0.4 Q1 -0.5 6 0.4 T13 0.2"/>
+      <path class="water" d="M-19 1.6 q2.5 -1.6 5 0 M-15 5 h6"/>
       <path d="M1.5 0 V-14 M-2 0 H5 M-5 -14 H9"/>
       <path class="solid" d="M-1 -15.5 L-5.5 -5.5 L-2.6 -6 L1.2 -14.5 Z"/>
       <path class="solid" d="M-1 -14.2 Q-3.8 -18 -2.2 -22.6 Q-0.6 -27 2.8 -27 Q6.2 -27 6.6 -23.8 Q6.6 -20.6 4.6 -18.2 Q3 -15.4 1 -14.2 Z"/>
@@ -137,7 +139,7 @@ window.DOODLES = [
   },
   // The Free Cities, beside Coding Agents: a quill writing on its own, its scroll already spilling onto the floor.
   {
-    id: "quill", at: "coding-agents", dx: -30, dy: 6,
+    id: "quill", at: "coding-agents", dx: -26, dy: -12,
     svg: `
       <path class="ground" d="M-18 0.4 Q-6 -0.5 4 0.4 T20 0.2"/>
       <path d="M4 -10.5 V0 M16.5 -10.5 V0"/>
@@ -248,7 +250,7 @@ window.DOODLES = [
   },
   // A lonely islet off the Chancery, heaped with paperclips and one more on its way: Bostrom's maximizer.
   {
-    id: "paperclips", at: [4560, 800], dx: 0, dy: 0, box: [-48, -24, 48, 23],
+    id: "paperclips", at: [4560, 800], dx: 16, dy: 0, box: [-48, -24, 48, 23],
     svg: `
       <path class="solid" d="M-15 1 Q-12 -3 -6 -3.6 Q0 -4.6 6 -3.6 Q12 -3 15 1 Z"/>
       <path class="solid" d="M-9.5 -3.4 Q-7 -12.5 0 -14 Q7 -12.5 9.5 -3.4 Z"/>
@@ -269,19 +271,28 @@ window.DOODLES = [
       <path class="water" d="M-21 1.2 q2.5 -1.6 5 0 M16 1.2 q2.5 -1.6 5 0 M-12 5 h9 M4 6 h11"/>
       <text class="caption" x="0" y="19" text-anchor="middle">Here be paperclips</text>`,
   },
-  // The bay below Indirect Prompt Injection: a pirate ship lying off the Bulwark, black flag up.
+  // The bay below Indirect Prompt Injection: a pirate ship lying off the Bulwark, two masts, gunports run out,
+  // a torn mainsail and the black flag up.
   {
-    id: "pirates", at: [3310, 1160], dx: 0, dy: 0, minZoom: 1,
-    svg: `
+    id: "pirates", at: [3310, 1160], dx: 0, dy: 4, minZoom: 1,
+    svg: `<g transform="scale(0.85)">
       <g class="rock">
-        <path class="solid" d="M-12 -2.5 H12 L8.5 3 H-8.5 Z"/>
-        <path class="hatch" d="M-6 0.2 h2 M-1 0.2 h2 M4 0.2 h2"/>
-        <path d="M0 -2.5 V-25"/>
-        <path class="solid" d="M-7 -21 Q0 -19 7 -21 Q8 -14 7 -7 L3.4 -6.2 L2 -8.6 L0.4 -5.8 L-7 -7 Q-8 -14 -7 -21 Z"/>
-        <path class="fill-ink" d="M0 -25 H7.5 V-20.5 H0 Z"/>
-        <path class="glint" d="M2.4 -24 L5.2 -21.5 M5.2 -24 L2.4 -21.5"/>
+        <path d="M-20 -6 L-27 -10.5 M-27 -10.5 L-9 -31 M-9 -31 L4 -35"/>
+        <path class="solid" d="M-10 -29 L-25.5 -10.5 L-16.5 -10.5 Z"/>
+        <path d="M-9 -6 V-31 M4 -6 V-35"/>
+        <path class="solid" d="M-14 -29 Q-9 -27.6 -4 -29 Q-3.2 -25 -4 -21 Q-9 -19.8 -14 -21 Q-14.8 -25 -14 -29 Z"/>
+        <path class="solid" d="M-15 -19 Q-9 -17.4 -3 -19 Q-2 -14.5 -3 -10 Q-9 -8.6 -15 -10 Q-16 -14.5 -15 -19 Z"/>
+        <path class="solid" d="M-1 -32 Q4 -30.6 9 -32 Q9.8 -28 9 -24 Q4 -22.8 -1 -24 Q-1.8 -28 -1 -32 Z"/>
+        <path class="solid" d="M-2 -22 Q4 -20.4 10 -22 Q11 -17 10 -12 L7.2 -11.5 L5.8 -14 L4.2 -11.1 L-2 -12 Q-3 -17 -2 -22 Z"/>
+        <path class="solid" d="M-20 -6 H13 L14 -11 H21 L19.5 -3 Q18 2.5 13 3 H-12 Q-17 1.5 -20 -6 Z"/>
+        <path d="M-18.6 -2.6 H19.2"/>
+        <path class="fill-ink" d="M-12.5 -5.2 h2.4 v1.8 h-2.4 Z M-6.5 -5.2 h2.4 v1.8 h-2.4 Z M-0.5 -5.2 h2.4 v1.8 h-2.4 Z M5.5 -5.2 h2.4 v1.8 h-2.4 Z"/>
+        <path class="hatch" d="M15.6 -8.4 h3.2"/>
+        <path class="fill-ink" d="M4 -35 H12 V-29.6 H4 Z"/>
+        <path class="glint" d="M6 -33.6 L10 -31 M10 -33.6 L6 -31"/>
       </g>
-      <path class="water" d="M-17 4 q3 -1.8 6 0 M11 4 q3 -1.8 6 0 M-5 6 h11"/>`,
+      <path class="water" d="M-25 4.5 q3 -1.8 6 0 M19 4.5 q3 -1.8 6 0 M-8 6.5 h16"/>
+    </g>`,
   },
   // The Watchtowers, beside Capability Benchmarks: a great mountain whose summit is crowded with flags, since
   // every climber has already made it to the top.

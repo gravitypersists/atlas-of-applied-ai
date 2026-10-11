@@ -12,6 +12,7 @@ export const LABELS = {
   viewport: [1440, 860],            // reference screen for placement
   margin: { x: 150, y: 60 },        // fit-to-world margin; the viewer uses the same
   levels: [2, 5],                   // relative zoom where z1 and z2 begin; the viewer uses the same
+  markScale: 1.1,                  // every mark (symbol, label, title, water name, doodle) is drawn this much larger than its px size below; the viewer uses the same
   // Text: px size, and glyph width in em for lowercase (`em`) and capitals/digits (`caps`), letter-spacing
   // included. Measured in the browser against the real fonts and rounded up (see SPEC §4.8).
   text: {
@@ -177,7 +178,9 @@ function interiorCandidates(grid, mask, limit = 1500) {
 // Places territory titles (z0–z1), Old World province names (z2), and landmark labels with a minZoom
 // each. Mutates territories, oldWorld and landmarks; returns a report.
 export function placeLabels({ landmarks, territories, oldWorld, terrain, overrides = {}, doodles = [], waters = [] }) {
-  const scales = levelScales(landmarks);
+  // Marks are drawn markScale times their px sizes, which takes as much room as placing them at a scale
+  // that much smaller.
+  const scales = levelScales(landmarks).map((s) => s / LABELS.markScale);
   const report = { titleOverlaps: [], titleCovers: [], unplaced: [], waterOnLand: [] };
 
   // Water names are placed by hand (curation `waters`). Each shows from its kind's zoom level; the build

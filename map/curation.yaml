@@ -1,7 +1,8 @@
 # Cartography choices for the atlas map (SPEC.md §3.4).
 # Freely editable. Nothing here moves a landmark's terrain anchor or reshapes settled land.
 
-old_world: { title: The Old World, subtitle: Ancestral Disciplines }
+# The title sits in the north of the Old World: its middle is crowded with province capitals.
+old_world: { title: The Old World, subtitle: Ancestral Disciplines, label: [1280, 1230] }
 
 # Terrain style per region (styles are defined in TERRAIN.styles in map/terrain.mjs).
 # Shapes the land every build. Once the survey is accepted, land only grows, so a style change can add
@@ -68,7 +69,7 @@ nodes:
   # line down the arm by date; these loosen it: Chain-of-Thought's family gathers at the neck, the search
   # and verification work spreads down both shores, and the reasoning-model towns share the southern bulb.
   # The islet outposts stay on their anchors.
-  scratchpads: {at: [2178, 1832]}
+  scratchpads: {at: [2242, 1838]}   # right of Chain-of-Thought, clear of its thought-chain doodle
   chain-of-thought: {at: [2214, 1866]}
   self-consistency: {at: [2270, 1882]}
   program-aided-reasoning: {at: [2186, 1930]}
@@ -96,20 +97,20 @@ regions: {}
 # zoom), sea (region zoom: seas, gulfs, straits, sounds, bays), lake (local zoom). `at` is the name's
 # centre in world units, `angle` tilts it (degrees, clockwise), `arc` bows it (px of sag at the middle;
 # negative bows up). The build fails if `at` is on land and warns when much of the text is.
-# Named 2026-10-11: the four oceans keep time's compass (the winters behind in the west, the preprints
-# arriving in the east); inner waters are named for what lies between their shores.
+# Named 2026-10-11: the four oceans keep time's compass (the winters behind in the west, the uncharted
+# future in the east); inner waters are named for what lies between their shores.
 waters:
   # Oceans
   - {name: The Sea of Attention, kind: ocean, at: [1760, 742], arc: 6}         # between the Old World and the New: the crossing the Transformer made
   - {name: The Winter Sea, kind: ocean, at: [400, 1180], angle: -90}            # west of the Old World: the AI winters
-  - {name: The Preprint Sea, kind: ocean, at: [4620, 1480], angle: 90}          # the eastern edge, where new work washes in
+  - {name: The Uncharted Unknown, kind: ocean, at: [4620, 1480], angle: 90}    # the eastern edge, where the map runs out
   - {name: The Common Crawl, kind: ocean, at: [3150, 2540], arc: -6}            # the open southern ocean everything was scraped from
   # Seas, gulfs, straits and bays
   - {name: Gulf of Two More Years, kind: sea, at: [2520, 2020], arc: 5}        # off the Peninsula of Long Thought: AGI, always just across it
   - {name: The Modality Gap, kind: sea, at: [3868, 1845], angle: 90}           # the Painted Isles' channel from the mainland
   - {name: Sim-to-Real Strait, kind: sea, at: [4000, 2215], arc: 4}            # between the Clockwork Isle and the rest
   - {name: Red Tape Narrows, kind: sea, at: [3640, 1010]}                      # the Chancery's channel from the Bulwark
-  - {name: Jailbreak Bay, kind: sea, at: [3236, 1183], angle: -12}                         # the Bulwark's inner bay, pirates and all
+  - {name: Jailbreak Bay, kind: sea, at: [3226, 1184], angle: -12}                         # the Bulwark's inner bay, pirates and all
   - {name: Lighthill Fjord, kind: sea, at: [725, 1703]}                        # the Old World's western fjord (the 1973 report)
   - {name: Moravec Sound, kind: sea, at: [1205, 2120], angle: -90}             # between Robotics and Computer Vision
   - {name: The Vanishing Gulf, kind: sea, at: [1559, 1658]}                    # narrows to nothing between Deep Learning and Vision

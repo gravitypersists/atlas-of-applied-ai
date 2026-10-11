@@ -103,6 +103,8 @@ function init(map) {
   // screen. Zoom levels switch at the same scales on every screen, and below the reference scale the
   // marks shrink in proportion, so a smaller screen shows the same layout, just smaller.
   const scales = map.view?.scales ?? null;
+  // Every mark is drawn this much larger than its CSS size; the build placed labels for it.
+  const markScale = map.view?.markScale ?? 1;
 
   // ---------------------------------------------------------------- terrain
   // Bottom to top: shallows, surf, land, territory tints, inner coast hachure. No inked coastline: the
@@ -198,7 +200,7 @@ function init(map) {
     const tile = CURRENTS_TILE * t.k / (scales ? scales[0] : fitK);
     sea.style.backgroundPosition = `${t.x + 8}px ${t.y + 8}px`;
     sea.style.backgroundSize = `${tile}px ${tile}px`;
-    const f = scales ? Math.max(MIN_MARK_SCALE, Math.min(1, t.k / scales[0])) : 1;
+    const f = (scales ? Math.max(MIN_MARK_SCALE, Math.min(1, t.k / scales[0])) : 1) * markScale;
     landmarks.attr("transform", (d) => `translate(${t.applyX(d.x)},${t.applyY(d.y)}) scale(${f})`);
     doodles.attr("transform", (d) => `translate(${t.applyX(d.pin.x)},${t.applyY(d.pin.y)}) scale(${f})`);
     waters.attr("transform", (d) => `translate(${t.applyX(d.at[0])},${t.applyY(d.at[1])}) scale(${f}) rotate(${d.angle})`);

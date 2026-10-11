@@ -534,7 +534,7 @@ function render(model, curation) {
     bounds: ledger.world.bounds,
     stage: ledger.world.accepted ? "accepted" : "survey-draft",
     // scales: px per world unit where z0, z1 and z2 begin, for the reference viewport labels were placed in.
-    view: { levels: LABELS.levels, margin: LABELS.margin, scales: levelScales(landmarks).map((v) => Math.round(v * 1e6) / 1e6) },
+    view: { levels: LABELS.levels, margin: LABELS.margin, markScale: LABELS.markScale, scales: levelScales(landmarks).map((v) => Math.round(v * 1e6) / 1e6) },
     oldWorld,
     ...geometry,
     territories,
