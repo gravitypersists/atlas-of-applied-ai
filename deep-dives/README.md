@@ -1,9 +1,10 @@
 # Deep-dive guides
 
-One guide per applied region, generated from `backbone.yaml` by `make_guides.py`. Re-run the script after changing the backbone so anchor lists and id indexes stay current.
+One guide per applied region, plus one for the Old World's root provinces, generated from `backbone.yaml` by `make_guides.py`. Re-run the script after changing the backbone so anchor lists and id indexes stay current.
 
 | Region | Guide | Anchors | Cross-region edges |
 |---|---|---|---|
+| The Old World (all root provinces) | [old-world.md](old-world.md) | 46 | 80 |
 | Inference and Serving | [inference-and-serving.md](inference-and-serving.md) | 26 | 19 |
 | Prompting and Context Engineering | [prompting-and-context-engineering.md](prompting-and-context-engineering.md) | 16 | 22 |
 | Retrieval and Knowledge | [retrieval-and-knowledge.md](retrieval-and-knowledge.md) | 24 | 32 |

@@ -1,4 +1,4 @@
-"""Generate one deep-dive research guide per applied region from backbone.yaml.
+"""Generate one deep-dive research guide per applied region, plus one for the Old World, from backbone.yaml.
 
 Each guide is a ready-to-paste research prompt plus a reference appendix. Guides
 are regenerated from the backbone, so re-run this after any backbone change.
@@ -23,6 +23,27 @@ LEADS = {
     ],
 }
 
+# Candidate Old World landmarks for the Old World guide to evaluate (include, fold into an anchor, or reject).
+# Several are AI ideas currently cited only as external: parents.
+OLD_WORLD_LEADS = [
+    ("Dropout, batch/layer normalization and Adam: the deep-learning training toolkit (one node or several?)", None),
+    ("GPUs and CUDA as the enabler of deep learning (or fold into alexnet)", None),
+    ("Deep belief nets / greedy layer-wise pretraining (2006), the start of the deep-learning revival", None),
+    ("Hopfield networks and Boltzmann machines", None),
+    ("n-gram language models and Shannon's information theory of language", None),
+    ("Statistical machine translation (IBM models), the data-driven turn in NLP", None),
+    ("Hidden Markov models and CTC for speech recognition (ancestor of speech-recognition)", None),
+    ("Contextual embeddings (ELMo) and BERT-style masked pretraining: separate from pretrained-language-models?", None),
+    ("GPT-3 and in-context learning: Old World landmark, or already covered by few-shot-prompting?", None),
+    ("Bayesian networks and probabilistic graphical models", None),
+    ("Support vector machines and kernel methods", None),
+    ("Actor-critic methods and TD-Gammon", None),
+    ("Logic programming (Prolog) and automated theorem proving (ancestor of verifiers and formal-methods work)", None),
+    ("Ontologies, description logics and the Semantic Web", None),
+    ("PageRank and learning to rank", None),
+    ("Promote AI externals to anchors: adaptive-mixtures-of-local-experts (1991), sparse-transformers (2019), semantic-parsing, named-entity-recognition, network-pruning (Optimal Brain Damage), predictive-uncertainty / calibration, nonequilibrium-thermodynamics-generative-modeling (diffusion's origin, 2015), preference-learning", None),
+]
+
 
 def ref_str(ref):
     s = ref["title"]
@@ -31,6 +52,51 @@ def ref_str(ref):
     elif ref.get("url"):
         s += f" — {ref['url']}"
     return s
+
+
+def node_spec(region_ids, rel_lines, tier_lines):
+    """Section 2 of every guide: the node YAML shape, field rules, enums and parent rules."""
+    return f"""Return every node — existing anchors (with any corrections) and new ones — as one YAML list:
+
+```yaml
+nodes:
+  - id: <kebab-case; reuse backbone ids exactly>
+    name: <name>
+    aliases: [<alias>, ...]
+    region: <region id>
+    also: [<secondary REGION ids only, never node ids>]
+    layer: <core | detail>
+    desc: <1–2 sentences, technical>
+    summary: <2–3 plain-language sentences for map readers: what it is and why it matters>
+    parents:
+      - {{id: <backbone id, new node id from this run, or external:<name>>, rel: <relationship type>, why: "<one sentence>", src: "<citation supporting the lineage claim>", confidence: <high | medium | low>}}
+    maturity: <1–5>
+    maturity_note: <one-sentence justification>
+    date: "<YYYY or YYYY-MM of origin>"
+    ref: {{title: "<originating paper or announcement>", arxiv: "<id>"}}   # or url: "<url>" when there's no arXiv id
+    resources:
+      - {{kind: <paper | talk | blog | docs | tutorial | code>, title: "<title>", by: "<author or org>", year: <YYYY>, url: "<url>"}}
+    examples: [<products, libraries, systems>]
+    status: <existing | new>
+```
+
+Field rules:
+- `layer`: `core` if a newcomer needs this node on the region's overview map; `detail` if it's finer-grained knowledge that only shows when zoomed in. Existing anchors are `core` unless you argue otherwise in Amendments. Expect most new nodes to be `detail`.
+- `also`: allowed values are {region_ids}.
+- `src` is required on every parent edge. If you can't cite the lineage claim, lower `confidence` and say why in `why`; don't leave `src` empty.
+- `resources` are what the map's side panel shows under "Learn more", so they're the most reader-facing part of the output. Give 2–5 per node, each with a URL you actually opened. Aim for one primary source (paper, spec, or announcement), one practitioner write-up (an engineering blog or a well-known practitioner's post), and, where one exists, one recorded talk (conference talk, YouTube lecture, or podcast episode). Prefer docs or cookbook pages that show the technique in use. Don't repeat `ref` here.
+- Never invent a URL. If you couldn't open it, append ` [unverified]` to the title. If nothing good exists for a kind, leave it out.
+
+Relationship types (use only these):
+{rel_lines}
+
+Maturity tiers:
+{tier_lines}
+
+Rules for parents:
+- Prefer the TRUE ancestor over the nearest available node. If the real ancestor isn't in the backbone or this run, use `external:<name>` — do not force an edge.
+- A node may not be older than its parents. Check dates.
+- Cross-region edges are the most valuable part of the dataset. Record them whenever they're real."""
 
 
 def main():
@@ -134,47 +200,7 @@ learning_path:
 ```
 
 ### Section 2: Nodes
-Return every node — existing anchors (with any corrections) and new ones — as one YAML list:
-
-```yaml
-nodes:
-  - id: <kebab-case; reuse backbone ids exactly>
-    name: <name>
-    aliases: [<alias>, ...]
-    region: <region id>
-    also: [<secondary REGION ids only, never node ids>]
-    layer: <core | detail>
-    desc: <1–2 sentences, technical>
-    summary: <2–3 plain-language sentences for map readers: what it is and why it matters>
-    parents:
-      - {{id: <backbone id, new node id from this run, or external:<name>>, rel: <relationship type>, why: "<one sentence>", src: "<citation supporting the lineage claim>", confidence: <high | medium | low>}}
-    maturity: <1–5>
-    maturity_note: <one-sentence justification>
-    date: "<YYYY or YYYY-MM of origin>"
-    ref: {{title: "<originating paper or announcement>", arxiv: "<id>"}}   # or url: "<url>" when there's no arXiv id
-    resources:
-      - {{kind: <paper | talk | blog | docs | tutorial | code>, title: "<title>", by: "<author or org>", year: <YYYY>, url: "<url>"}}
-    examples: [<products, libraries, systems>]
-    status: <existing | new>
-```
-
-Field rules:
-- `layer`: `core` if a newcomer needs this node on the region's overview map; `detail` if it's finer-grained knowledge that only shows when zoomed in. Existing anchors are `core` unless you argue otherwise in Amendments. Expect most new nodes to be `detail`.
-- `also`: allowed values are {region_ids}.
-- `src` is required on every parent edge. If you can't cite the lineage claim, lower `confidence` and say why in `why`; don't leave `src` empty.
-- `resources` are what the map's side panel shows under "Learn more", so they're the most reader-facing part of the output. Give 2–5 per node, each with a URL you actually opened. Aim for one primary source (paper, spec, or announcement), one practitioner write-up (an engineering blog or a well-known practitioner's post), and, where one exists, one recorded talk (conference talk, YouTube lecture, or podcast episode). Prefer docs or cookbook pages that show the technique in use. Don't repeat `ref` here.
-- Never invent a URL. If you couldn't open it, append ` [unverified]` to the title. If nothing good exists for a kind, leave it out.
-
-Relationship types (use only these):
-{rel_lines}
-
-Maturity tiers:
-{tier_lines}
-
-Rules for parents:
-- Prefer the TRUE ancestor over the nearest available node. If the real ancestor isn't in the backbone or this run, use `external:<name>` — do not force an edge.
-- A node may not be older than its parents. Check dates.
-- Cross-region edges are the most valuable part of the dataset. Record them whenever they're real.
+{node_spec(region_ids, rel_lines, tier_lines)}
 
 ### Section 3: Backbone amendments
 Anchors that should be split, merged, renamed, re-homed, or re-dated, and any boundary rules that don't hold up — each with a reason.
@@ -225,7 +251,131 @@ Key references currently attached to the anchors (from the backbone runs; arXiv 
         (OUT / fname).write_text(doc)
         index_rows.append((r["name"], fname, len(anchors), len(bridges)))
 
-    readme = ["# Deep-dive guides", "", "One guide per applied region, generated from `backbone.yaml` by `make_guides.py`. Re-run the script after changing the backbone so anchor lists and id indexes stay current.", "", "| Region | Guide | Anchors | Cross-region edges |", "|---|---|---|---|"]
+    # ---- The Old World: one guide for every root province ----
+    roots = [r for r in regions.values() if r["kind"] == "root"]
+    root_ids = {r["id"] for r in roots}
+    ow_nodes = [n for n in nodes if n["region"] in root_ids]
+    province_lines = []
+    for r in roots:
+        ns = [n for n in ow_nodes if n["region"] == r["id"]]
+        province_lines.append(f"### {r['name']} (`{r['id']}`)\n{r['definition']}\n" + "\n".join(
+            f"- `{n['id']}` — {n['name']} ({n['date']}, maturity {n['maturity']}"
+            + ("; has summary" if n.get("summary") else "") + ("" if (n["ref"].get("arxiv") or n["ref"].get("url")) else "; ref has no link")
+            + ")" for n in ns))
+    ow_rules = [b for b in data["boundary_rules"] if any(rid in str(b["home"]) for rid in root_ids) or "Old World" in str(b["concept"])]
+    ow_rule_lines = "\n".join(f"- {b['concept']} → {b['home']}: {b['rule']}" for b in ow_rules)
+    ow_lead_lines = "\n".join(f"- {t}" + (f" (arXiv:{a})" if a else "") for t, a in OLD_WORLD_LEADS)
+    ow_bridges = sorted(
+        f"{n['id']} --{p['rel']}--> {p['id']}"
+        for n in nodes if n["region"] not in root_ids
+        for p in n.get("parents") or [] if p["id"] in by_id and by_id[p["id"]]["region"] in root_ids
+    )
+    ow_externals = sorted({p["id"] for n in nodes for p in n.get("parents") or [] if p["id"].startswith("external:")})
+    nl = "\n"
+
+    ow_prompt = f"""I'm building a lineage graph of applied AI engineering that will be rendered as an interactive map. The map has a New World of applied regions (prompting, RAG, agents, post-training and so on) and, across an ocean to the west, **the Old World**: the AI history that led to the 2020s explosion built on the transformer. Each Old World province is an older discipline; each node is a landmark idea; edges record what each node was built on. A backbone of stable ids already exists. This run ENRICHES the Old World: it writes reader content for the landmarks that are already there, fixes their facts, and fills only the obvious gaps.
+
+## Scope
+- The Old World holds AI history that led to the transformer-era explosion. It is not a general computing history. Ancestors from outside AI (software engineering, systems security, classic HCI, law and standards) stay as `external:` parents and never become nodes, even when they are real ancestors.
+- The line between Old World and New World is "what fed the explosion" versus "the explosion itself". It is a judgment call. Where an existing anchor seems to sit on the wrong side (several post-2020 architecture nodes live here), say so in Amendments rather than moving it.
+- Readers are engineers who know today's tools and want to know how we got here. Write for them, not for historians: why the idea mattered, what it unlocked, and where it shows up in today's systems.
+- A node is an idea, method or landmark result. Products, datasets, libraries and benchmarks are NOT nodes (list them under `examples`), with one allowed kind of exception: a landmark result that changed the field's direction (AlexNet, AlphaGo) can be a node, named for the result.
+- Add new nodes sparingly: about 10–20 across all provinces in total, only for ideas a well-read AI engineer would be surprised to find missing. Before adding one, check the backbone index at the end (ids, names and aliases across ALL regions); never re-create an existing concept under a new id.
+
+Boundary rules (apply these exactly; if you disagree, say so in Amendments):
+{ow_rule_lines}
+
+## The provinces and their current landmarks (keep these ids; you may correct their fields)
+{(nl + nl).join(province_lines)}
+
+## What to do for every existing landmark
+- Write a `summary` (2–3 plain-language sentences) where it has none, and check the ones that exist.
+- Check `date`. Use the date of the idea's origin, not of a later popular version, and when the anchor is named for a later landmark, say so in `maturity_note`. Flag disagreements in Section 4.
+- Give `ref` a link: an arXiv id, a DOI URL (https://doi.org/...) or a publisher or author page you opened. Many current refs are title-only.
+- Give 2–4 `resources`: a readable retrospective or explainer, a recorded lecture or talk where one exists (well-known course lectures and Turing Award lectures count), and the primary paper only if it is readable and not already the `ref`.
+- Check each anchor's parents, and add Old World parents that are missing. Don't remove an existing edge without arguing for it in Amendments.
+
+## Questions to answer
+- For each province: what were its 3–5 turning points, which ideas were superseded, and what did it hand to the transformer era?
+- Which threads run between provinces (for example backpropagation into vision and RL, search into game-playing and reasoning, retrieval into question answering)?
+- Which Old World ideas are being rediscovered by today's applied regions under new names?
+
+## Leads to evaluate
+For each: add it as a node, fold it into an existing anchor as an alias or example, or reject it with a reason.
+{ow_lead_lines}
+
+## Output
+
+Sections 1 and 2 are parsed by a script. Put each in ONE fenced ```yaml block, exactly in the shapes below, with nothing else inside the block. Prose goes outside the blocks.
+
+### Section 1: The Old World and its provinces (for map readers)
+First, 150–250 words on the Old World as a whole: how these disciplines, many of them decades old, converged into the deep-learning revival and then the transformer explosion. Then, for each province, 120–200 words of overview and a learning path of 3–5 resources in the order a newcomer should take them.
+
+```yaml
+old_world:
+  overview: "<150–250 words>"
+provinces:
+  - id: <province id>
+    overview: "<120–200 words>"
+    learning_path:
+      - {{kind: <paper | talk | blog | docs | tutorial | code>, title: "<title>", by: "<author or org>", year: <YYYY>, url: "<url>", why: "<one sentence: what the reader gets from it>"}}
+```
+
+### Section 2: Nodes
+{node_spec(region_ids, rel_lines, tier_lines)}
+Old World specifics:
+- `region` is a province id: {", ".join(r["id"] for r in roots)}. New nodes go in an existing province unless you argue for a new one in Amendments.
+- Old World landmarks are usually `core` and maturity 5 (they are settled history). Use `detail` only for minor refinements.
+- `also` may name an applied region when an Old World idea is still a live, configurable choice there.
+
+### Section 3: Backbone amendments
+Anchors to split, merge, rename, re-home or re-date; provinces that are too thin to stand alone (Knowledge Representation and Human-Computer Interaction have 2 landmarks each) or should be renamed; anchors on the wrong side of the Old World / New World line; and `external:` ancestors (listed below) that are really AI and deserve a landmark. Give a reason for each.
+
+### Section 4: Contested history
+Cases where credit or dating is disputed (for example backpropagation, attention, LSTM versus earlier recurrent work, who invented the transformer's pieces). Present each side with sources.
+
+### Section 5: Self-check
+Report honestly; this output will be verified mechanically afterward.
+- every parent id is a backbone id (listed below), a node in this run, or `external:`
+- every parent edge has a non-empty `src`
+- no new node duplicates an existing backbone node (check names and aliases, not just ids)
+- no new node is a non-AI idea
+- every `also` value is a region id
+- every resource and ref URL was opened, or is marked [unverified]
+- every rel value is one of the six allowed
+- no child is dated earlier than its parent
+
+Prefer primary sources (papers, author pages, publisher DOIs, university course pages, recorded lectures) over aggregators. Mark anything you could not verify. Do not invent citations.
+
+## Current external: ancestors (real lineage with no landmark yet)
+{", ".join(ow_externals)}
+
+## Backbone index (all regions: id, then name and aliases; use these ids for cross-region parents)
+{id_index}
+"""
+
+    ow_doc = f"""# Deep dive: The Old World
+
+Backbone v{data['meta']['version']} · {len(roots)} provinces · {len(ow_nodes)} landmarks · {len(ow_bridges)} edges into the New World
+
+An enrichment pass rather than a coverage pass: summaries, dates, linked refs and resources for the existing landmarks, province overviews and learning paths, and only the obvious missing history.
+
+## How to use
+1. Paste everything between **Research prompt** and the horizontal rule into a deep-research run (Gemini, Claude Research, etc.). It is long; if the tool truncates, run it once per group of provinces and say so in the prompt.
+2. Save the output and hand it to a Claude agent for merging per `MERGING.md`: validate ids, enums and date order with `validate.py`, then fold Section 3 amendments into `backbone.yaml` by hand.
+3. Section 1 goes on the root regions (`overview`, `learning_path`). Each node's `summary` and `resources` are the content for the map's side panel.
+
+## Research prompt
+
+{ow_prompt}
+---
+
+## Reference: edges from the Old World into the New World
+""" + "\n".join(f"- {b}" for b in ow_bridges) + "\n"
+    (OUT / "old-world.md").write_text(ow_doc)
+    index_rows.insert(0, ("The Old World (all root provinces)", "old-world.md", len(ow_nodes), len(ow_bridges)))
+
+    readme = ["# Deep-dive guides", "", "One guide per applied region, plus one for the Old World's root provinces, generated from `backbone.yaml` by `make_guides.py`. Re-run the script after changing the backbone so anchor lists and id indexes stay current.", "", "| Region | Guide | Anchors | Cross-region edges |", "|---|---|---|---|"]
     for name, f, a, b in index_rows:
         readme.append(f"| {name} | [{f}]({f}) | {a} | {b} |")
     (OUT / "README.md").write_text("\n".join(readme) + "\n")
