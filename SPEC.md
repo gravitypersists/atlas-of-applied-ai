@@ -98,6 +98,8 @@ settlements:                           # append-only; order = settlement order; 
 retired: []                            # ids removed from the backbone; their positions stay reserved, their land stays
 ```
 
+Ledger positions are **terrain anchors**: the elevation field, claims, settlement simulation and the high-water mark all use them. Where a landmark is drawn is its curated `at` (§3.4) when it has one, else its anchor. Moving an anchor raises new land around it, so to move a landmark, set `at` instead.
+
 ### 3.3 `map/atlas/terrain.json` (permanent)
 
 ```jsonc
@@ -127,12 +129,16 @@ terrain:                               # per-region terrain style (TERRAIN.style
     - {points: [[1200, 2120], [1205, 1990], [1215, 1870]], depth: 1.4, width: 28}
 nodes:
   bm25: {label: left}                  # label side: right (default) | left | above | below
+  chain-of-thought: {at: [2240, 1905]} # where the landmark is drawn (world units); its anchor stays in the ledger
   react-agent-loop: {tier: capital}    # force a symbol tier
 regions:
   retrieval-and-knowledge: {label: [1820, 700]}   # territory label position override
+waters:                                # water names, placed by hand at sea
+  - {name: The Sea of Attention, kind: ocean, at: [1760, 742], arc: 6}   # kind: ocean (z0) | sea (z1) | lake (z2)
+  - {name: The Modality Gap, kind: sea, at: [3868, 1845], angle: 90}      # angle: degrees clockwise; arc: px of sag at the middle
 ```
 
-Curation never touches settled geography. The `survey` block only shapes the founding survey; `survey --redo` keeps the chosen sea level. The `terrain` block shapes land on every build. Once the survey is accepted, land only grows, so a style change there can add land but never remove it. To move a settled landmark you edit the ledger, as described in 3.2.
+Curation never touches settled geography. The `survey` block only shapes the founding survey; `survey --redo` keeps the chosen sea level. The `terrain` block shapes land on every build. Once the survey is accepted, land only grows, so a style change there can add land but never remove it. To move a settled landmark, set its `at`: the symbol, label, routes and doodles follow it, and the terrain doesn't change. The build fails if an `at` is at sea or in another region's territory, and warns when a moved landmark is drawn within 25 units of another. New nodes settle near their parents as drawn, and keep clear of drawn positions.
 
 ### 3.5 `map/public/map.json` (viewer contract)
 
@@ -163,12 +169,15 @@ Curation never touches settled geography. The `survey` block only shapes the fou
     "external": [{"name": "minhash", "why": "…"}],
     "children": ["…"]
   }],
+  "waters": [{"name": "The Modality Gap", "kind": "sea", "at": [x, y], "angle": 90, "arc": 0,
+    "minZoom": 1, "text": "The Modality Gap", "width": 108}],   // text: as drawn (oceans in capitals); width: estimated px
   "routes": [{"from": "…", "to": "…", "path": "M…"}]
 }
 ```
 
 - `ref.href` is built from `arxiv` (`https://arxiv.org/abs/<id>`) or taken from `url`.
 - Retired landmarks are left out.
+- **Water names** are cartography, placed by hand. The build fails when a name's `at` is on land and warns when more than `LABELS.waterOnLand` of its text lies on land at the scale it first appears. Titles keep clear of ocean names, and landmark labels keep clear of every water name shown at their zoom level. The viewer draws them at a constant screen size, rotated by `angle`, and along a parabola sagging `arc` px at the middle (the same geometry `labels.mjs` uses for collisions).
 
 ## 4. Build
 
@@ -344,9 +353,9 @@ Zoom is the d3-zoom scale `k`, clamped to [0.8, 12] × fit-to-world. Levels swit
 
 | Level | `k` | Shown |
 |---|---|---|
-| z0 World | < 2 | coast, territory titles and subtitles, the Old World title, capitals with labels |
-| z1 Region | 2–5 | adds city and town symbols, labels where `minZoom ≤ 1`, and Old World province names that fit (`labelZoom: 1`) |
-| z2 Local | ≥ 5 | adds outposts and hamlets, all labels, and the remaining Old World province names |
+| z0 World | < 2 | coast, territory titles and subtitles, the Old World title, capitals with labels, ocean names |
+| z1 Region | 2–5 | adds city and town symbols, labels where `minZoom ≤ 1`, Old World province names that fit (`labelZoom: 1`), and sea names |
+| z2 Local | ≥ 5 | adds outposts and hamlets, all labels, the remaining Old World province names, and lake names |
 
 - Territory titles fade between z1 and z2.
 - Symbols and text stay a constant screen size.
@@ -432,7 +441,7 @@ When a landmark is selected:
 
 Each milestone ends with a screenshot review before the next begins.
 
-**Status (2026-10-09):** milestones 1–6 are done. Criteria 1–4 are checked by `map/acceptance_test.py` and by a fresh-clone build. Criteria 5, 7 and 8 were verified in the browser with real rendered text (no label overlaps at any zoom level). Criterion 6 holds at sea level 0.36, which gives 12 landmasses, isthmuses joining strongly linked regions, and straits elsewhere. Criterion 9 was checked in a 390×844 frame: the bottom sheet and taps work, and pinch zoom comes from d3-zoom's touch support. The survey is still a draft (`world.accepted: false`) until it's accepted by hand.
+**Status (2026-10-09):** milestones 1–6 are done. Criteria 1–4 are checked by `map/acceptance_test.py` and by a fresh-clone build. Criteria 5, 7 and 8 were verified in the browser with real rendered text (no label overlaps at any zoom level). Criterion 6 holds at sea level 0.36, which gives 12 landmasses, isthmuses joining strongly linked regions, and straits elsewhere. Criterion 9 was checked in a 390×844 frame: the bottom sheet and taps work, and pinch zoom comes from d3-zoom's touch support. The survey was accepted on 2026-10-11 (`world.accepted: true`), so the geography is now permanent.
 
 ## 8. Open items
 

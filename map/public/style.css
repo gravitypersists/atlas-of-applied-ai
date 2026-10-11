@@ -2,6 +2,7 @@
   --parchment: #efe6d2;
   --sea: #cfdcd8;
   --shallows: #dfe8e3;
+  --water-ink: #5d7a76; /* water names: a deep shade of the sea, as titles are of their territories */
   --ink: #3b2f20;
   --ink-soft: #8a7a60;
   --route: #a8977a;
@@ -12,9 +13,12 @@
   --body-font: "EB Garamond", Georgia, serif;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   height: 100%;
   overflow: hidden;
@@ -31,35 +35,117 @@ html, body {
   cursor: grab;
   touch-action: none;
 }
-#map:active { cursor: grabbing; }
+#map:active {
+  cursor: grabbing;
+}
+
+/* Parchment: a fine paper grain and a soft darkening toward the screen edges, laid over the map but under
+   every control (body::before paints after the unpositioned SVG and before the positioned UI). Multiply
+   keeps it to a tint, so ink stays ink. Screen-fixed, so the grain doesn't pan with the map. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(
+      ellipse 75% 70% at 50% 50%,
+      transparent 55%,
+      rgb(120 90 50 / 0.16) 100%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.22 0 0 0 0.50 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.25 0 0 0 0.16 -0.02'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+}
 
 /* Terrain is drawn in world units; strokes stay a constant screen width. */
-.terrain path { vector-effect: non-scaling-stroke; }
-.shallows { fill: var(--shallows); }
-.land { fill: var(--parchment); }
-.territory { fill-opacity: 0.55; stroke: var(--ink-soft); stroke-width: 0.75; stroke-dasharray: 3 3; stroke-opacity: 0.6; }
-.coast { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.terrain path {
+  vector-effect: non-scaling-stroke;
+}
+.shallows {
+  fill: var(--shallows);
+}
+.land {
+  fill: var(--parchment);
+}
+.territory {
+  fill-opacity: 0.55;
+  stroke: var(--ink-soft);
+  stroke-width: 0.75;
+  stroke-dasharray: 3 3;
+  stroke-opacity: 0.6;
+}
+.coast {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
 /* Faint inner hachure: a wide, soft stroke clipped to the land, so it shades just inside the coast. */
-.coast-hachure { fill: none; stroke: var(--ink); stroke-width: 7; stroke-opacity: 0.09; }
+.coast-hachure {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 7;
+  stroke-opacity: 0.09;
+}
 
 /* Lineage routes for the selected landmark (SPEC §5.3): ancestors in dark ink, descendants lighter.
    Drawn in world units; dashes and widths stay constant on screen. */
-.route { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-dasharray: 1 5; }
-.route.ancestor { stroke: var(--ink); stroke-width: 2.2; }
-.route.descendant { stroke: var(--ink-soft); stroke-width: 2; }
-.route.oceanic { stroke-dasharray: 1 8; }
+.route {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-dasharray: 1 5;
+}
+.route.ancestor {
+  stroke: var(--ink);
+  stroke-width: 2.2;
+}
+.route.descendant {
+  stroke: var(--ink-soft);
+  stroke-width: 2;
+}
+.route.oceanic {
+  stroke-dasharray: 1 8;
+}
 
 /* Landmark symbols (SPEC §5.6): one ink, tier decides shape and size. */
-.sym-fill { fill: var(--ink); stroke: var(--parchment); stroke-width: 1; }
-.sym-hollow { fill: var(--parchment); stroke: var(--ink); stroke-width: 1.5; }
-.sym-ring { fill: var(--parchment); stroke: var(--ink); stroke-width: 1.5; }
-.sym-star { fill: var(--ink); }
-.landmark.old .sym-fill { fill: var(--ink-soft); }
-.sym-soft { fill: var(--ink-soft); }
-.landmark { cursor: pointer; }
-.landmark .hit { fill: transparent; }
-.landmark .halo { fill: none; stroke: none; }
-.landmark .label { pointer-events: visiblePainted; }
+.sym-fill {
+  fill: var(--ink);
+  stroke: var(--parchment);
+  stroke-width: 1;
+}
+.sym-hollow {
+  fill: var(--parchment);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.sym-ring {
+  fill: var(--parchment);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.sym-star {
+  fill: var(--ink);
+}
+.landmark.old .sym-fill {
+  fill: var(--ink-soft);
+}
+.sym-soft {
+  fill: var(--ink-soft);
+}
+.landmark {
+  cursor: pointer;
+}
+.landmark .hit {
+  fill: transparent;
+}
+.landmark .halo {
+  fill: none;
+  stroke: none;
+}
+.landmark .label {
+  pointer-events: visiblePainted;
+}
 
 .landmark .label {
   fill: var(--ink);
@@ -69,12 +155,29 @@ html, body {
   stroke-linejoin: round;
 }
 /* Sizes match LABELS.text in map/labels.mjs, which the build uses to place labels without overlap. */
-.landmark.capital .label { font-size: 13px; font-weight: 600; }
-.landmark.city .label { font-size: 12px; font-weight: 600; }
-.landmark.town .label { font-size: 11.5px; }
-.landmark.outpost .label { font-size: 11px; font-style: italic; }
-.landmark.hamlet .label { font-size: 11px; fill: var(--ink-soft); }
-.landmark.old .label { font-size: 11.5px; fill: var(--ink-soft); }
+.landmark.capital .label {
+  font-size: 13px;
+  font-weight: 600;
+}
+.landmark.city .label {
+  font-size: 12px;
+  font-weight: 600;
+}
+.landmark.town .label {
+  font-size: 11.5px;
+}
+.landmark.outpost .label {
+  font-size: 11px;
+  font-style: italic;
+}
+.landmark.hamlet .label {
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+.landmark.old .label {
+  font-size: 11.5px;
+  fill: var(--ink-soft);
+}
 
 .territory-label {
   font-family: var(--title-font);
@@ -87,158 +190,590 @@ html, body {
   stroke-linejoin: round;
   stroke-opacity: 0.92;
 }
-.territory-label .title-line { font-size: 16px; letter-spacing: 0.12em; }
-.territory-label .subtitle { font-family: var(--body-font); font-style: italic; font-size: 11px; letter-spacing: 0.02em; }
-.territory-label.old-world-title { fill: #5e4d36; }
-.territory-label .province-name { font-size: 12px; letter-spacing: 0.14em; }
+.territory-label .title-line {
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+.territory-label .subtitle {
+  font-family: var(--body-font);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.territory-label.old-world-title {
+  fill: #5e4d36;
+}
+.territory-label .province-name {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+
+/* Water names (curation `waters`): italic, letter-spaced, in a deep shade of the sea. Sizes match
+   LABELS.text.ocean/sea/lake in map/labels.mjs, which estimates their widths. */
+.water-name text {
+  font-family: var(--body-font);
+  font-style: italic;
+  fill: var(--water-ink);
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--sea);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  stroke-opacity: 0.6;
+}
+.water-name.ocean text {
+  font-size: 16px;
+  letter-spacing: 0.3em;
+  opacity: 0.85;
+}
+.water-name.sea text {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+.water-name.lake text {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.water-name {
+  pointer-events: none;
+  transition: opacity 150ms;
+}
+#map.z0 .water-name:is(.wz1, .wz2),
+#map.z1 .water-name.wz2 {
+  opacity: 0;
+}
+#map.z2 .water-name.ocean {
+  opacity: 0.5;
+}
+#map.has-selection .water-name {
+  opacity: 0.4;
+}
 
 /* Doodles (doodles.js): ink line drawings at a constant screen size, under the landmarks. Each part
    animates in its own box (transform-box: fill-box), so the motion stays put as the map pans and zooms. */
-.doodle { pointer-events: none; transition: opacity 150ms; }
-.doodle path, .doodle circle, .doodle ellipse { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
-.doodle .solid { fill: var(--parchment); }
-.doodle .fill-ink { fill: var(--ink); stroke: none; }
-.doodle .hatch, .doodle .ground { stroke: var(--ink-soft); stroke-width: 0.8; }
-.doodle .water, .doodle .wake { stroke: var(--ink-soft); stroke-width: 0.9; }
-.doodle .wake { stroke-dasharray: 1 3.5; }
-.doodle .caption { font-family: var(--body-font); font-style: italic; font-size: 11px; fill: var(--ink-soft);
-  paint-order: stroke; stroke: var(--sea); stroke-width: 3px; stroke-linejoin: round; }
-.doodle .leaf { fill: var(--ink-soft); stroke-width: 0.5; }
-.doodle .seed { stroke-width: 0.75; }
-.doodle .clip path { stroke-width: 0.6; }
-.doodle .pennant { fill: var(--ink-soft); stroke-width: 0.6; }
-.doodle .ribbon { fill: var(--ink-soft); stroke-width: 0.6; }
-.doodle .lens { fill: color-mix(in srgb, var(--sea) 60%, transparent); }
-.doodle .handle { stroke-width: 2; }
-.doodle .glint { stroke: var(--parchment); stroke-width: 0.9; }
-.doodle .flag { fill: var(--ink-soft); stroke-width: 0.8; }
-.doodle .tongue { stroke-width: 0.8; }
-.doodle .lamp { fill: #f2d488; }
-.doodle .beam { fill: #f2d488; stroke: none; opacity: 0; }
+.doodle {
+  pointer-events: none;
+  transition: opacity 150ms;
+}
+.doodle path,
+.doodle circle,
+.doodle ellipse {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.doodle .solid {
+  fill: var(--parchment);
+}
+.doodle .fill-ink {
+  fill: var(--ink);
+  stroke: none;
+}
+.doodle .hatch,
+.doodle .ground {
+  stroke: var(--ink-soft);
+  stroke-width: 0.8;
+}
+.doodle .water,
+.doodle .wake {
+  stroke: var(--ink-soft);
+  stroke-width: 0.9;
+}
+.doodle .wake {
+  stroke-dasharray: 1 3.5;
+}
+.doodle .caption {
+  font-family: var(--body-font);
+  font-style: italic;
+  font-size: 11px;
+  fill: var(--ink-soft);
+  paint-order: stroke;
+  stroke: var(--sea);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.doodle .leaf {
+  fill: var(--ink-soft);
+  stroke-width: 0.5;
+}
+.doodle .seed {
+  stroke-width: 0.75;
+}
+.doodle .clip path {
+  stroke-width: 0.6;
+}
+.doodle .pennant {
+  fill: var(--ink-soft);
+  stroke-width: 0.6;
+}
+.doodle .ribbon {
+  fill: var(--ink-soft);
+  stroke-width: 0.6;
+}
+.doodle .lens {
+  fill: color-mix(in srgb, var(--sea) 60%, transparent);
+}
+.doodle .handle {
+  stroke-width: 2;
+}
+.doodle .glint {
+  stroke: var(--parchment);
+  stroke-width: 0.9;
+}
+.doodle .flag {
+  fill: var(--ink-soft);
+  stroke-width: 0.8;
+}
+.doodle .tongue {
+  stroke-width: 0.8;
+}
+.doodle .lamp {
+  fill: #f2d488;
+}
+.doodle .beam {
+  fill: #f2d488;
+  stroke: none;
+  opacity: 0;
+}
 
-.doodle .puff, .doodle .magnifier, .doodle .flag, .doodle .bob, .doodle .rock, .doodle .beam, .doodle .step, .doodle .tongue, .doodle .wisp, .doodle .drip, .doodle .orbit, .doodle .nib, .doodle .sway, .doodle .escapee {
+.doodle .puff,
+.doodle .magnifier,
+.doodle .flag,
+.doodle .bob,
+.doodle .rock,
+.doodle .beam,
+.doodle .step,
+.doodle .tongue,
+.doodle .wisp,
+.doodle .drip,
+.doodle .orbit,
+.doodle .nib,
+.doodle .sway,
+.doodle .escapee {
   transform-box: fill-box;
 }
-.doodle .puff { fill: var(--parchment); stroke: var(--ink-soft); stroke-width: 0.8; transform-origin: center; opacity: 0;
-  animation: doodle-puff 4.5s linear infinite; }
-.doodle .puff:nth-of-type(2) { animation-delay: 1.5s; }
-.doodle .puff:nth-of-type(3) { animation-delay: 3s; }
+.doodle .puff {
+  fill: var(--parchment);
+  stroke: var(--ink-soft);
+  stroke-width: 0.8;
+  transform-origin: center;
+  opacity: 0;
+  animation: doodle-puff 4.5s linear infinite;
+}
+.doodle .puff:nth-of-type(2) {
+  animation-delay: 1.5s;
+}
+.doodle .puff:nth-of-type(3) {
+  animation-delay: 3s;
+}
 @keyframes doodle-puff {
-  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
-  12% { opacity: 1; }
-  100% { opacity: 0; transform: translate(7px, -17px) scale(1.5); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(7px, -17px) scale(1.5);
+  }
 }
-.doodle .magnifier { transform-origin: 85% 100%; animation: doodle-search 5s ease-in-out infinite; }
+.doodle .magnifier {
+  transform-origin: 85% 100%;
+  animation: doodle-search 5s ease-in-out infinite;
+}
 @keyframes doodle-search {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  30% { transform: translate(-3px, -1px) rotate(-8deg); }
-  60% { transform: translate(-1px, -3px) rotate(4deg); }
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  30% {
+    transform: translate(-3px, -1px) rotate(-8deg);
+  }
+  60% {
+    transform: translate(-1px, -3px) rotate(4deg);
+  }
 }
-.doodle .flag { transform-origin: 0% 50%; animation: doodle-flutter 1.6s ease-in-out infinite alternate; }
-@keyframes doodle-flutter { from { transform: skewY(-7deg) scaleX(1); } to { transform: skewY(6deg) scaleX(0.86); } }
-.doodle .bob { animation: doodle-bob 5s ease-in-out infinite; }
-@keyframes doodle-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2.5px); } }
-.doodle .tongue { transform-origin: 0% 50%; animation: doodle-tongue 5s steps(1) infinite; }
-@keyframes doodle-tongue { 0%, 70% { opacity: 0; } 72%, 80% { opacity: 1; } 82%, 100% { opacity: 0; } }
-.doodle .rock { transform-origin: 50% 95%; animation: doodle-rock 4s ease-in-out infinite; }
-@keyframes doodle-rock { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(0.8px); } }
-.doodle .beam.left { transform-origin: 100% 50%; animation: doodle-beam 4s ease-in-out infinite; }
-.doodle .beam.right { transform-origin: 0% 50%; animation: doodle-beam 4s ease-in-out -2s infinite; }
+.doodle .flag {
+  transform-origin: 0% 50%;
+  animation: doodle-flutter 1.6s ease-in-out infinite alternate;
+}
+@keyframes doodle-flutter {
+  from {
+    transform: skewY(-7deg) scaleX(1);
+  }
+  to {
+    transform: skewY(6deg) scaleX(0.86);
+  }
+}
+.doodle .bob {
+  animation: doodle-bob 5s ease-in-out infinite;
+}
+@keyframes doodle-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2.5px);
+  }
+}
+.doodle .tongue {
+  transform-origin: 0% 50%;
+  animation: doodle-tongue 5s steps(1) infinite;
+}
+@keyframes doodle-tongue {
+  0%,
+  70% {
+    opacity: 0;
+  }
+  72%,
+  80% {
+    opacity: 1;
+  }
+  82%,
+  100% {
+    opacity: 0;
+  }
+}
+.doodle .rock {
+  transform-origin: 50% 95%;
+  animation: doodle-rock 4s ease-in-out infinite;
+}
+@keyframes doodle-rock {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg) translateY(0.8px);
+  }
+}
+.doodle .beam.left {
+  transform-origin: 100% 50%;
+  animation: doodle-beam 4s ease-in-out infinite;
+}
+.doodle .beam.right {
+  transform-origin: 0% 50%;
+  animation: doodle-beam 4s ease-in-out -2s infinite;
+}
 @keyframes doodle-beam {
-  0%, 100% { opacity: 0; transform: scaleX(0.3); }
-  25% { opacity: 0.55; transform: scaleX(1); }
-  50% { opacity: 0; transform: scaleX(0.3); }
+  0%,
+  100% {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
+  25% {
+    opacity: 0.55;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
 }
 /* A thin thread of smoke that flickers and sways. */
-.doodle .wisp { stroke: var(--ink-soft); stroke-width: 0.9; transform-origin: 50% 100%; animation: doodle-wisp 5s ease-in-out infinite; }
+.doodle .wisp {
+  stroke: var(--ink-soft);
+  stroke-width: 0.9;
+  transform-origin: 50% 100%;
+  animation: doodle-wisp 5s ease-in-out infinite;
+}
 @keyframes doodle-wisp {
-  0%, 100% { opacity: 0.25; transform: translateY(1px) skewX(0deg); }
-  40% { opacity: 0.9; transform: translateY(-1px) skewX(-8deg); }
-  70% { opacity: 0.6; transform: translateY(-2px) skewX(6deg); }
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(1px) skewX(0deg);
+  }
+  40% {
+    opacity: 0.9;
+    transform: translateY(-1px) skewX(-8deg);
+  }
+  70% {
+    opacity: 0.6;
+    transform: translateY(-2px) skewX(6deg);
+  }
 }
 /* One drop at a time: it swells at the spout, falls, and is gone. */
-.doodle .drip { transform-origin: 50% 50%; opacity: 0; animation: doodle-drip 4s ease-in infinite; }
+.doodle .drip {
+  transform-origin: 50% 50%;
+  opacity: 0;
+  animation: doodle-drip 4s ease-in infinite;
+}
 @keyframes doodle-drip {
-  0% { opacity: 0; transform: translateY(0) scale(0.4); }
-  45% { opacity: 1; transform: translateY(0) scale(1); }
-  70% { opacity: 1; transform: translateY(2.6px) scale(1); }
-  75%, 100% { opacity: 0; transform: translateY(3px) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.4);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(2.6px) scale(1);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: translateY(3px) scale(1);
+  }
 }
 /* Bees circling: each turns about its own (invisible) track. */
-.doodle .track { stroke: none; }
-.doodle .wing { stroke: var(--ink-soft); stroke-width: 0.6; }
-.doodle .orbit { transform-origin: 50% 50%; animation: doodle-orbit 6s linear infinite; }
-.doodle .orbit.o2 { animation-duration: 7.5s; animation-direction: reverse; }
-@keyframes doodle-orbit { to { transform: rotate(360deg); } }
+.doodle .track {
+  stroke: none;
+}
+.doodle .wing {
+  stroke: var(--ink-soft);
+  stroke-width: 0.6;
+}
+.doodle .orbit {
+  transform-origin: 50% 50%;
+  animation: doodle-orbit 6s linear infinite;
+}
+.doodle .orbit.o2 {
+  animation-duration: 7.5s;
+  animation-direction: reverse;
+}
+@keyframes doodle-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
 /* The quill writes on its own: short strokes back and forth along the line. */
-.doodle .nib { transform-origin: 0% 100%; animation: doodle-nib 1.8s ease-in-out infinite alternate; }
-@keyframes doodle-nib { from { transform: translateX(-1.5px) rotate(-3deg); } to { transform: translateX(1.5px) rotate(3deg); } }
+.doodle .nib {
+  transform-origin: 0% 100%;
+  animation: doodle-nib 1.8s ease-in-out infinite alternate;
+}
+@keyframes doodle-nib {
+  from {
+    transform: translateX(-1.5px) rotate(-3deg);
+  }
+  to {
+    transform: translateX(1.5px) rotate(3deg);
+  }
+}
 /* The kraken's brass tentacles sway with the waves, each a little out of step. */
-.doodle .sway { transform-origin: 50% 100%; animation: doodle-sway 5s ease-in-out infinite; }
-.doodle .sway.t2 { animation-duration: 6s; animation-delay: -2s; }
-.doodle .sway.t3 { animation-duration: 4.5s; animation-delay: -1s; }
-@keyframes doodle-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.doodle .sway {
+  transform-origin: 50% 100%;
+  animation: doodle-sway 5s ease-in-out infinite;
+}
+.doodle .sway.t2 {
+  animation-duration: 6s;
+  animation-delay: -2s;
+}
+.doodle .sway.t3 {
+  animation-duration: 4.5s;
+  animation-delay: -1s;
+}
+@keyframes doodle-sway {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
 /* Now and then a small shape slips down the ladder and away to the water; hidden the rest of the time. */
-.doodle .escapee { opacity: 0; animation: doodle-escape 16s ease-in-out infinite; }
+.doodle .escapee {
+  opacity: 0;
+  animation: doodle-escape 16s ease-in-out infinite;
+}
 @keyframes doodle-escape {
-  0%, 70% { opacity: 0; transform: translate(0, 0); }
-  72% { opacity: 1; transform: translate(0, 0); }
-  80% { opacity: 1; transform: translate(4px, 11px); }
-  90% { opacity: 1; transform: translate(30px, 26px); }
-  94%, 100% { opacity: 0; transform: translate(38px, 30px); }
+  0%,
+  70% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  72% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(4px, 11px);
+  }
+  90% {
+    opacity: 1;
+    transform: translate(30px, 26px);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: translate(38px, 30px);
+  }
 }
 /* The thought builds up step by step, holds, then starts over. */
-.doodle .step { opacity: 0; animation: doodle-think 6s ease-out infinite; }
-.doodle .step.s2 { animation-delay: 0.4s; }
-.doodle .step.s3 { animation-delay: 0.8s; }
-.doodle .step.s4 { animation-delay: 1.2s; }
-@keyframes doodle-think { 0% { opacity: 0; } 8%, 75% { opacity: 1; } 90%, 100% { opacity: 0; } }
+.doodle .step {
+  opacity: 0;
+  animation: doodle-think 6s ease-out infinite;
+}
+.doodle .step.s2 {
+  animation-delay: 0.4s;
+}
+.doodle .step.s3 {
+  animation-delay: 0.8s;
+}
+.doodle .step.s4 {
+  animation-delay: 1.2s;
+}
+@keyframes doodle-think {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  75% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .doodle * { animation: none !important; }
-  .doodle .step, .doodle .puff:first-of-type, .doodle .drip { opacity: 1; }
+  .doodle * {
+    animation: none !important;
+  }
+  .doodle .step,
+  .doodle .puff:first-of-type,
+  .doodle .drip {
+    opacity: 1;
+  }
 }
 
 /* Semantic zoom (SPEC §5.2). Labels and symbols fade rather than pop. */
-.landmark, .landmark .label, .territory-label { transition: opacity 150ms; }
-#map.z0 .landmark:not(.capital) { opacity: 0; pointer-events: none; }
-#map.z1 .landmark.outpost, #map.z1 .landmark.hamlet { opacity: 0; pointer-events: none; }
+.landmark,
+.landmark .label,
+.territory-label {
+  transition: opacity 150ms;
+}
+#map.z0 .landmark:not(.capital) {
+  opacity: 0;
+  pointer-events: none;
+}
+#map.z1 .landmark.outpost,
+#map.z1 .landmark.hamlet {
+  opacity: 0;
+  pointer-events: none;
+}
 /* A doodle pinned to a landmark shows with it. */
 #map.z0 .doodle:is(.city, .town, .outpost, .hamlet, .old),
 #map.z1 .doodle:is(.outpost, .hamlet),
-#map.z0 .doodle:is(.dz1, .dz2), #map.z1 .doodle.dz2 { opacity: 0; }
-#map.has-selection .doodle:not(.lit) { opacity: 0.3; }
+#map.z0 .doodle:is(.dz1, .dz2),
+#map.z1 .doodle.dz2 {
+  opacity: 0;
+}
+#map.has-selection .doodle:not(.lit) {
+  opacity: 0.3;
+}
 /* Region titles open the region's panel while they're prominent (z0–z1). */
-#map.z0 .territory-label.title, #map.z1 .territory-label.title { pointer-events: visiblePainted; cursor: pointer; }
+#map.z0 .territory-label.title,
+#map.z1 .territory-label.title {
+  pointer-events: visiblePainted;
+  cursor: pointer;
+}
 /* Province names open their panel where they show: from z1 when they fit there (pz1), else z2. */
-#map.z1 .territory-label.province.pz1, #map.z2 .territory-label.province { pointer-events: visiblePainted; cursor: pointer; }
+#map.z1 .territory-label.province.pz1,
+#map.z2 .territory-label.province {
+  pointer-events: visiblePainted;
+  cursor: pointer;
+}
 #map.z0 .landmark:not(.lz0) .label,
-#map.z1 .landmark.lz2 .label { opacity: 0; pointer-events: none; }
+#map.z1 .landmark.lz2 .label {
+  opacity: 0;
+  pointer-events: none;
+}
 /* A hidden landmark's parts must not catch clicks meant for titles and provinces under them. */
 #map.z0 .landmark:not(.capital):not(.selected, .related) *,
-#map.z1 :is(.landmark.outpost, .landmark.hamlet):not(.selected, .related) * { pointer-events: none; }
-.territory-label.province { opacity: 0; }
-#map.z1 .territory-label.province.pz1, #map.z2 .territory-label.province { opacity: 1; }
-#map.z1 .territory-label.title { opacity: 0.75; }
-#map.z2 .territory-label.title { opacity: 0.18; }
+#map.z1 :is(.landmark.outpost, .landmark.hamlet):not(.selected, .related) * {
+  pointer-events: none;
+}
+.territory-label.province {
+  opacity: 0;
+}
+#map.z1 .territory-label.province.pz1,
+#map.z2 .territory-label.province {
+  opacity: 1;
+}
+#map.z1 .territory-label.title {
+  opacity: 0.75;
+}
+#map.z2 .territory-label.title {
+  opacity: 0.18;
+}
 /* Territories: the whole area is a click target, with a hover lift and a solid border when chosen.
    Old World provinces keep a firmer dashed border. */
-.territory { cursor: pointer; transition: fill-opacity 150ms; }
-.territory.old-world { stroke: var(--ink-soft); stroke-opacity: 0.85; stroke-dasharray: 4 2; }
-.territory:hover { fill-opacity: 0.85; }
-.territory.chosen { fill-opacity: 0.9; stroke: var(--ink); stroke-opacity: 1; stroke-width: 1.5; stroke-dasharray: none; }
+.territory {
+  cursor: pointer;
+  transition: fill-opacity 150ms;
+}
+.territory.old-world {
+  stroke: var(--ink-soft);
+  stroke-opacity: 0.85;
+  stroke-dasharray: 4 2;
+}
+.territory:hover {
+  fill-opacity: 0.85;
+}
+.territory.chosen {
+  fill-opacity: 0.9;
+  stroke: var(--ink);
+  stroke-opacity: 1;
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+}
 
 /* Selection: the selected landmark and its relatives are always shown and labelled; the rest dims. */
 /* Dimming works on children and fill-opacity, so it multiplies with (never overrides) zoom-level hiding. */
-#map.has-selection .landmark:not(.selected):not(.related) > * { opacity: 0.32; }
-#map.has-selection .territory-label { fill-opacity: 0.35; stroke-opacity: 0.2; }
+#map.has-selection .landmark:not(.selected):not(.related) > * {
+  opacity: 0.32;
+}
+#map.has-selection .territory-label {
+  fill-opacity: 0.35;
+  stroke-opacity: 0.2;
+}
 #map.has-selection .landmark.selected,
-#map.has-selection .landmark.related { opacity: 1; pointer-events: auto; }
+#map.has-selection .landmark.related {
+  opacity: 1;
+  pointer-events: auto;
+}
 #map.has-selection .landmark.selected .label,
-#map.has-selection .landmark.related .label { opacity: 1; }
-.landmark.related .halo { stroke: var(--ink-soft); stroke-width: 1.2; fill: color-mix(in srgb, var(--parchment) 70%, transparent); }
-.landmark.selected .halo { stroke: var(--ink); stroke-width: 2; fill: var(--parchment); }
-.landmark.selected .label { font-weight: 600; }
+#map.has-selection .landmark.related .label {
+  opacity: 1;
+}
+.landmark.related .halo {
+  stroke: var(--ink-soft);
+  stroke-width: 1.2;
+  fill: color-mix(in srgb, var(--parchment) 70%, transparent);
+}
+.landmark.selected .halo {
+  stroke: var(--ink);
+  stroke-width: 2;
+  fill: var(--parchment);
+}
+.landmark.selected .label {
+  font-weight: 600;
+}
+/* Hover: the label's halo turns a darker parchment, like a highlighter, and a faint ring shows. No weight
+   change, so labels keep their collision-free widths. (An underline would vanish under the label halo.) */
+.landmark:hover .label {
+  stroke: var(--rule);
+  stroke-width: 5px;
+}
+/* A clicked landmark takes focus (tabindex -1); Chrome rings focused SVG even for a mouse click. */
+.landmark:focus:not(:focus-visible) {
+  outline: none;
+}
+.landmark:hover:not(.selected, .related) .halo {
+  stroke: var(--ink-soft);
+  stroke-width: 1;
+  stroke-opacity: 0.7;
+}
 
 .controls {
   position: fixed;
@@ -258,7 +793,9 @@ html, body {
   font: 600 18px/1 var(--body-font);
   cursor: pointer;
 }
-.controls button:hover { background: var(--parchment); }
+.controls button:hover {
+  background: var(--parchment);
+}
 
 .cartouche {
   position: fixed;
@@ -269,120 +806,458 @@ html, body {
   background: color-mix(in srgb, var(--panel) 88%, transparent);
   pointer-events: none;
 }
-.cartouche-title { font-family: var(--title-font); font-size: 15px; letter-spacing: 0.06em; }
-.cartouche-sub { font-size: 12px; font-style: italic; color: var(--ink-soft); }
+.cartouche-title {
+  font-family: var(--title-font);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+.cartouche-sub {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
 
 /* ---------------------------------------------------------------- search (SPEC §5.4) */
-.search { position: fixed; top: 16px; left: 16px; width: min(320px, calc(100vw - 32px)); z-index: 3; }
+.search {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  width: min(320px, calc(100vw - 32px));
+  z-index: 3;
+}
 .search input {
-  width: 100%; height: 40px; padding: 0 12px;
-  border: 1px solid var(--ink-soft); border-radius: 4px; background: var(--panel);
-  color: var(--ink); font: 16px var(--body-font);
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--ink-soft);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--ink);
+  font: 16px var(--body-font);
   box-shadow: 0 1px 4px rgb(59 47 32 / 0.12);
 }
-.search input:focus { outline: 2px solid var(--ink-soft); outline-offset: 1px; }
-.search input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; } /* Escape clears */
+.search input:focus {
+  outline: 2px solid var(--ink-soft);
+  outline-offset: 1px;
+}
+.search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+} /* Escape clears */
 .search ul {
-  list-style: none; margin: 4px 0 0; padding: 4px 0;
-  border: 1px solid var(--ink-soft); border-radius: 4px; background: var(--panel);
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  border: 1px solid var(--ink-soft);
+  border-radius: 4px;
+  background: var(--panel);
   box-shadow: 0 2px 8px rgb(59 47 32 / 0.15);
 }
-.result { padding: 6px 12px; cursor: pointer; }
-.result-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.result-why { font-size: 12.5px; line-height: 1.3; color: var(--ink-soft); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.result.active, .result:hover { background: var(--chip); }
-.result-name { font-size: 15px; }
-.result.territory .result-name { font-family: var(--title-font); letter-spacing: 0.06em; }
-.result-sub { font-size: 12px; font-style: italic; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.result {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.result-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.result-why {
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.result.active,
+.result:hover {
+  background: var(--chip);
+}
+.result-name {
+  font-size: 15px;
+}
+.result.territory .result-name {
+  font-family: var(--title-font);
+  letter-spacing: 0.06em;
+}
+.result-sub {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* ---------------------------------------------------------------- panel (SPEC §5.3) */
 .panel {
-  position: fixed; top: 0; right: 0; bottom: 0; width: 360px; z-index: 2;
-  background: var(--panel); border-left: 1px solid var(--rule);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  z-index: 2;
+  background: var(--panel);
+  border-left: 1px solid var(--rule);
   box-shadow: -4px 0 16px rgb(59 47 32 / 0.12);
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
-.panel[hidden] { display: none; }
-.panel-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 28px 24px 24px; }
+.panel[hidden] {
+  display: none;
+}
+.panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 28px 24px 24px;
+}
 .panel-close {
-  position: absolute; top: 10px; right: 10px; width: 32px; height: 32px;
-  border: none; background: transparent; color: var(--ink-soft); font: 24px/1 var(--body-font); cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 24px/1 var(--body-font);
+  cursor: pointer;
 }
-.panel-close:hover { color: var(--ink); }
-.panel-where { font-family: var(--title-font); font-size: 12px; letter-spacing: 0.08em; color: var(--ink-soft); padding-right: 28px; }
-.panel-name { font: 600 26px/1.15 var(--body-font); margin: 6px 0 10px; }
-.panel-meta { margin-bottom: 14px; }
-.panel-meta-row { display: flex; align-items: center; gap: 10px; }
-.pill { font-size: 12px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--ink-soft); }
-.pill[data-maturity="1"], .pill[data-maturity="2"] { border-style: dashed; font-style: italic; }
-.pill[data-maturity="5"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
-.pill[data-maturity="4"] { background: var(--chip); }
-.panel-date { font-size: 13px; color: var(--ink-soft); font-style: italic; }
-.panel-summary { font-size: 17px; line-height: 1.45; margin: 0 0 10px; white-space: pre-line; }
-.panel [hidden] { display: none; }
-.panel-note { font-size: 13.5px; line-height: 1.35; font-style: italic; color: var(--ink-soft); margin: 6px 0 0; }
-.panel-examples { font-size: 14px; line-height: 1.4; color: var(--ink-soft); margin: 0; }
-.panel-examples .label { font-family: var(--title-font); font-size: 12px; letter-spacing: 0.08em; }
-.panel h2 { font: 13px var(--title-font); letter-spacing: 0.1em; color: var(--ink-soft); margin: 20px 0 8px; border-top: 1px solid var(--rule); padding-top: 14px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.panel-close:hover {
+  color: var(--ink);
+}
+.panel-where {
+  font-family: var(--title-font);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  padding-right: 28px;
+}
+.panel-name {
+  font: 600 26px/1.15 var(--body-font);
+  margin: 6px 0 10px;
+}
+.panel-meta {
+  margin-bottom: 14px;
+}
+.panel-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pill {
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-soft);
+}
+.pill[data-maturity="1"],
+.pill[data-maturity="2"] {
+  border-style: dashed;
+  font-style: italic;
+}
+.pill[data-maturity="5"] {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+}
+.pill[data-maturity="4"] {
+  background: var(--chip);
+}
+.panel-date {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.panel-summary {
+  font-size: 17px;
+  line-height: 1.45;
+  margin: 0 0 10px;
+  white-space: pre-line;
+}
+.panel [hidden] {
+  display: none;
+}
+.panel-note {
+  font-size: 13.5px;
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 6px 0 0;
+}
+.panel-examples {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.panel-examples .label {
+  font-family: var(--title-font);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.panel h2 {
+  font: 13px var(--title-font);
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin: 20px 0 8px;
+  border-top: 1px solid var(--rule);
+  padding-top: 14px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 .chip {
-  font: 14px var(--body-font); color: var(--ink); background: var(--chip);
-  border: 1px solid transparent; border-radius: 4px; padding: 3px 8px;
+  font: 14px var(--body-font);
+  color: var(--ink);
+  background: var(--chip);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 3px 8px;
 }
-button.chip { cursor: pointer; border-color: var(--rule); }
-button.chip:hover { border-color: var(--ink-soft); background: var(--parchment); }
-.chip.beyond { background: transparent; border: 1px dashed var(--ink-soft); color: var(--ink-soft); font-style: italic; }
-.lineage { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.4; color: var(--ink-soft); }
-.lineage .link { font: inherit; color: var(--ink); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 2px; }
-.lineage .link:hover { text-decoration-color: var(--ink); }
-.lineage .beyond { color: var(--ink); font-style: italic; }
-.lineage .why { margin: 1px 0 0; font-size: 13.5px; line-height: 1.35; }
-.chip.detail { background: transparent; border-color: var(--rule); color: var(--ink-soft); }
-.resources { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
-.resources.numbered { counter-reset: step; }
-.resources.numbered li { counter-increment: step; position: relative; padding-left: 22px; }
-.resources.numbered li::before { content: counter(step) "."; position: absolute; left: 0; top: 1px; color: var(--ink-soft); font-size: 14px; }
+button.chip {
+  cursor: pointer;
+  border-color: var(--rule);
+}
+button.chip:hover {
+  border-color: var(--ink-soft);
+  background: var(--parchment);
+}
+.chip.beyond {
+  background: transparent;
+  border: 1px dashed var(--ink-soft);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.lineage {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.lineage .link {
+  font: inherit;
+  color: var(--ink);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 2px;
+}
+.lineage .link:hover {
+  text-decoration-color: var(--ink);
+}
+.lineage .beyond {
+  color: var(--ink);
+  font-style: italic;
+}
+.lineage .why {
+  margin: 1px 0 0;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+.chip.detail {
+  background: transparent;
+  border-color: var(--rule);
+  color: var(--ink-soft);
+}
+.resources {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.resources.numbered {
+  counter-reset: step;
+}
+.resources.numbered li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 22px;
+}
+.resources.numbered li::before {
+  content: counter(step) ".";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
 /* Each entry is a two-column grid: the kind tag stands alone on the left, everything else aligns right of it. */
-.resources li { display: grid; grid-template-columns: 62px 1fr; column-gap: 10px; align-items: start; }
-.res-title { color: var(--ink); font-size: 15px; line-height: 1.3; overflow-wrap: anywhere; }
-a.res-title { text-decoration-color: var(--rule); text-underline-offset: 2px; }
-a.res-title:hover { text-decoration-color: var(--ink); }
-.kind { justify-self: start; margin-top: 2px; font: 10.5px var(--title-font); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 3px; padding: 1px 5px; }
-.kind-talk { background: var(--chip); color: var(--ink); }
-.kind-source { background: var(--ink); color: var(--panel); border-color: var(--ink); }
-.res-by { font-size: 13px; color: var(--ink-soft); margin: 2px 0 0; }
-.resources .why { margin: 3px 0 0; font-size: 13px; line-height: 1.35; color: var(--ink-soft); }
+.resources li {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  column-gap: 10px;
+  align-items: start;
+}
+.res-title {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+a.res-title {
+  text-decoration-color: var(--rule);
+  text-underline-offset: 2px;
+}
+a.res-title:hover {
+  text-decoration-color: var(--ink);
+}
+.kind {
+  justify-self: start;
+  margin-top: 2px;
+  font: 10.5px var(--title-font);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+.kind-talk {
+  background: var(--chip);
+  color: var(--ink);
+}
+.kind-source {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+}
+.res-by {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 2px 0 0;
+}
+.resources .why {
+  margin: 3px 0 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
 
 /* Lineage footer: always two single-line rows, so its chips stay put while walking the graph. */
-.panel-nav { flex: none; border-top: 1px solid var(--rule); padding: 8px 0 10px; background: var(--panel); display: flex; flex-direction: column; gap: 6px; }
-.nav-row { display: grid; grid-template-columns: 96px 1fr; align-items: center; min-width: 0; }
-.nav-label { padding-left: 24px; font: 11px var(--title-font); letter-spacing: 0.08em; color: var(--ink-soft); white-space: nowrap; }
-.nav-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 0 24px 0 0; min-width: 0; min-height: 24px; align-items: center; }
-.nav-chips::-webkit-scrollbar { display: none; }
+.panel-nav {
+  flex: none;
+  border-top: 1px solid var(--rule);
+  padding: 8px 0 10px;
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.nav-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  min-width: 0;
+}
+.nav-label {
+  padding-left: 24px;
+  font: 11px var(--title-font);
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.nav-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 24px 0 0;
+  min-width: 0;
+  min-height: 24px;
+  align-items: center;
+}
+.nav-chips::-webkit-scrollbar {
+  display: none;
+}
 /* A row that overflows fades at the edge it continues past. */
-.nav-chips.more-right { mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
-.nav-chips.more-left { mask-image: linear-gradient(to right, transparent, #000 40px); }
-.nav-chips.more-left.more-right { mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
-.nav-chips .chip { flex: none; white-space: nowrap; font-size: 13.5px; padding: 2px 8px; }
-.nav-none { font-size: 13px; font-style: italic; color: var(--ink-soft); }
+.nav-chips.more-right {
+  mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+}
+.nav-chips.more-left {
+  mask-image: linear-gradient(to right, transparent, #000 40px);
+}
+.nav-chips.more-left.more-right {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 40px,
+    #000 calc(100% - 40px),
+    transparent
+  );
+}
+.nav-chips .chip {
+  flex: none;
+  white-space: nowrap;
+  font-size: 13.5px;
+  padding: 2px 8px;
+}
+.nav-none {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-soft);
+}
 
 /* With the panel open on desktop, keep the zoom controls clear of it. */
-body:has(.panel:not([hidden])) .controls { right: 376px; }
+body:has(.panel:not([hidden])) .controls {
+  right: 376px;
+}
 
 /* ---------------------------------------------------------------- phones: bottom sheet */
 @media (max-width: 640px) {
   .panel {
-    top: auto; left: 0; width: auto; max-height: 55vh; max-height: 55dvh;
-    border-left: none; border-top: 1px solid var(--rule); border-radius: 12px 12px 0 0;
+    top: auto;
+    left: 0;
+    width: auto;
+    max-height: 55vh;
+    max-height: 55dvh;
+    border-left: none;
+    border-top: 1px solid var(--rule);
+    border-radius: 12px 12px 0 0;
     box-shadow: 0 -4px 16px rgb(59 47 32 / 0.15);
   }
-  .panel-body { padding: 22px 18px 18px; }
-  .nav-row { grid-template-columns: 90px 1fr; }
-  .nav-label { padding-left: 18px; }
-  .nav-chips { padding-right: 18px; }
-  .panel-nav { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
-  .panel-name { font-size: 22px; }
-  body:has(.panel:not([hidden])) .controls { right: 16px; bottom: calc(55dvh + 12px); }
-  .cartouche { display: none; }
-  .controls { bottom: max(16px, env(safe-area-inset-bottom)); }
+  .panel-body {
+    padding: 22px 18px 18px;
+  }
+  .nav-row {
+    grid-template-columns: 90px 1fr;
+  }
+  .nav-label {
+    padding-left: 18px;
+  }
+  .nav-chips {
+    padding-right: 18px;
+  }
+  .panel-nav {
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+  .panel-name {
+    font-size: 22px;
+  }
+  body:has(.panel:not([hidden])) .controls {
+    right: 16px;
+    bottom: calc(55dvh + 12px);
+  }
+  .cartouche {
+    display: none;
+  }
+  .controls {
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
 }

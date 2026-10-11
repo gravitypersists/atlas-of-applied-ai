@@ -376,7 +376,8 @@ function writeLedger(ledger) {
   }
   const lines = [
     "# Applied AI Engineering Atlas: the permanent geography ledger.",
-    "# Append-only. Positions here never change once settled (see SPEC.md §3.2).",
+    "# Append-only. Positions here are terrain anchors and never change once settled (see SPEC.md §3.2);",
+    "# to move where a landmark is drawn, set `at` for it under `nodes` in map/curation.yaml.",
     "# Editing an existing entry by hand is a deliberate cartographic act: do it in a reviewed commit.",
     "world:",
     `  seed: ${w.seed}`,
@@ -449,6 +450,20 @@ function readDoodles() {
   return (sandbox.window.DOODLES ?? []).map(({ id, at, dx = 0, dy = 0, minZoom = 0, box }) => ({ id, at, dx, dy, minZoom, box }));
 }
 
+// Water names (curation `waters`, SPEC §3.4): hand-placed, each centred at sea.
+function readWaters(curation, terrain) {
+  const errors = [];
+  const waters = (curation.waters ?? []).map((w, i) => {
+    const where = `curation waters[${i}]${w?.name ? ` (${w.name})` : ""}`;
+    if (!w?.name || !Array.isArray(w.at) || w.at.length !== 2 || !w.at.every(Number.isFinite)) errors.push(`${where}: needs a name and at: [x, y]`);
+    else if (!(w.kind in LABELS.waterZoom)) errors.push(`${where}: kind must be one of ${Object.keys(LABELS.waterZoom).join(", ")}`);
+    else if (terrain?.land[Terrain.cellOf(terrain.grid, w.at[0], w.at[1])]) errors.push(`${where}: [${w.at.join(", ")}] is on land`);
+    return { name: w?.name, kind: w?.kind, at: w?.at, angle: w?.angle ?? 0, arc: w?.arc ?? 0 };
+  });
+  if (errors.length) fail(errors.join("\n  "));
+  return waters;
+}
+
 // Reader content for the panel (SPEC §5.3): one shape for node resources and region learning paths.
 const resourceOf = (r) => ({ kind: r.kind, title: r.title, by: r.by ?? null, year: r.year ?? null, url: r.url, why: r.why ?? null });
 
@@ -457,12 +472,13 @@ function render(model, curation) {
   if (!ledger) fail("No ledger yet. Run `node build.mjs survey` first.");
   const { bb, byId, regionById, edges, children } = model;
   const placed = placedOf(ledger);
+  const shown = shownOf(placed, curation);
   const unplaced = bb.nodes.filter((n) => !placed.has(n.id));
   if (unplaced.length) fail(`not settled: ${unplaced.map((n) => n.id).join(", ")}`);
 
   const settledIndex = new Map(ledger.settlements.map((s, i) => [s.id, i]));
   const landmarks = bb.nodes.filter((n) => placed.has(n.id)).map((n) => {
-    const s = placed.get(n.id);
+    const s = shown.get(n.id);
     return {
       id: n.id, name: n.name, region: n.region, x: s.x, y: s.y,
       group: regionById.get(n.region).kind === "root" ? "old-world" : "applied",
@@ -493,12 +509,14 @@ function render(model, curation) {
   } else {
     terrain = buildTerrain(model, ledger);
     geometry = terrainGeometry(terrain, territories);
+    checkShown(model, curation, placed, shown, terrain);
   }
 
   // Cartography: tiers, title anchors, and label zoom thresholds (SPEC §4.7–4.8).
   for (const l of landmarks) l.settledIndex = settledIndex.get(l.id);
   assignTiers(landmarks, curation.nodes ?? {});
-  const labelReport = placeLabels({ landmarks, territories, oldWorld, terrain, overrides: curation.nodes ?? {}, doodles: readDoodles() });
+  const waters = readWaters(curation, terrain);
+  const labelReport = placeLabels({ landmarks, territories, oldWorld, terrain, overrides: curation.nodes ?? {}, doodles: readDoodles(), waters });
   for (const l of landmarks) delete l.settledIndex;
   for (const t of [...territories, oldWorld]) delete t.labelCurated;
   const tierCounts = {};
@@ -507,6 +525,7 @@ function render(model, curation) {
   console.log(`labels: tiers ${Object.entries(tierCounts).map(([k, v]) => `${k} ${v}`).join(", ")}; labels appear at z0/z1/z2: ${byZoom.join("/")}`);
   if (labelReport.titleOverlaps.length) console.warn(`warning: titles that could not avoid overlap: ${labelReport.titleOverlaps.join(", ")}`);
   if (labelReport.titleCovers.length) console.log(`labels: titles covering z1 symbols: ${labelReport.titleCovers.join(", ")}`);
+  if (labelReport.waterOnLand.length) console.warn(`warning: water names partly on land: ${labelReport.waterOnLand.join(", ")}`);
   if (labelReport.unplaced.length) console.warn(`warning: labels still colliding at z2 (${labelReport.unplaced.length}): ${labelReport.unplaced.join(", ")}`);
 
   const out = {
@@ -520,7 +539,8 @@ function render(model, curation) {
     ...geometry,
     territories,
     landmarks,
-    routes: edges.filter((e) => placed.has(e.source) && placed.has(e.target)).map((e) => routeOf(e, placed)),
+    waters,
+    routes: edges.filter((e) => placed.has(e.source) && placed.has(e.target)).map((e) => routeOf(e, shown)),
   };
   fs.writeFileSync(PATHS.mapJson, JSON.stringify(out, null, 1) + "\n");
   console.log(`wrote ${path.relative(ROOT, PATHS.mapJson)}: ${landmarks.length} landmarks, ${out.routes.length} routes`);
@@ -549,6 +569,37 @@ function regionPalette(bb) {
 }
 
 const placedOf = (ledger) => new Map(ledger.settlements.filter((s) => !ledger.retired?.includes(s.id)).map((s) => [s.id, s]));
+// Where each landmark is drawn: its curated `at` (curation `nodes.<id>.at`), else its ledger position.
+// The ledger position stays the landmark's terrain anchor (the uplift that raised its land); `at` moves
+// only the symbol, its label, routes and doodles, so moving a landmark never reshapes the coast.
+const shownOf = (placed, curation) => new Map([...placed].map(([id, s]) => {
+  const at = curation.nodes?.[id]?.at;
+  return [id, at ? { ...s, x: at[0], y: at[1] } : s];
+}));
+const SHOWN_CROWDING = 25; // world units: warn when two drawn landmarks are closer than this
+
+// A curated `at` must name a landmark and sit on land inside the landmark's own territory.
+function checkShown(model, curation, placed, shown, terrain) {
+  const { grid, land, owner, regions } = terrain;
+  const errors = [], warnings = [];
+  for (const [id, o] of Object.entries(curation.nodes ?? {})) {
+    if (!o?.at) continue;
+    if (!placed.has(id)) { errors.push(`curation nodes.${id}.at: no settled landmark ${id}`); continue; }
+    const [x, y] = o.at, region = model.byId.get(id).region;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) { errors.push(`curation nodes.${id}.at: expected [x, y]`); continue; }
+    const k = Terrain.cellOf(grid, x, y);
+    if (!land[k]) errors.push(`curation nodes.${id}.at: [${x}, ${y}] is at sea`);
+    else if (regions[owner[k]] !== region) errors.push(`curation nodes.${id}.at: [${x}, ${y}] is in ${regions[owner[k]]} territory, not ${region}`);
+  }
+  const pts = [...shown];
+  for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+    const [a, p] = pts[i], [b, q] = pts[j];
+    const moved = curation.nodes?.[a]?.at || curation.nodes?.[b]?.at;
+    if (moved && Math.hypot(p.x - q.x, p.y - q.y) < SHOWN_CROWDING) warnings.push(`${a} and ${b} are drawn ${Math.hypot(p.x - q.x, p.y - q.y).toFixed(0)} units apart`);
+  }
+  for (const w of warnings) console.warn(`warning: ${w}`);
+  if (errors.length) fail(errors.join("\n  "));
+}
 
 function loadTerrain(grid) {
   if (!fs.existsSync(PATHS.terrain)) return null;
@@ -700,7 +751,7 @@ function setSeaLevel(ledger, level) {
 // ---------------------------------------------------------------- settlement (SPEC §4.4)
 // Places backbone nodes that aren't in the ledger yet, retires ledger entries that left the backbone,
 // and appends both to the ledger. Existing positions are never touched.
-function settle(model, ledger, { dryRun = false } = {}) {
+function settle(model, ledger, curation, { dryRun = false } = {}) {
   const { bb, byId, regionById } = model;
   const isRoot = (regionId) => regionById.get(regionId).kind === "root";
   const inLedger = new Set(ledger.settlements.map((s) => s.id));
@@ -714,8 +765,11 @@ function settle(model, ledger, { dryRun = false } = {}) {
   const { grid, land, owner, regions } = terrain;
   const field = Terrain.coastField(grid, land, owner);
 
-  // Current landmarks (retired ones still reserve their position).
-  const pos = new Map(ledger.settlements.map((s) => [s.id, { x: s.x, y: s.y, region: byId.get(s.id)?.region ?? null }]));
+  // Current landmarks where they're drawn (retired ones still reserve their anchor). New nodes settle
+  // near their parents as drawn and keep clear of them; terrain simulation uses the anchors.
+  const shownAt = shownOf(placedOf(ledger), curation);
+  const pos = new Map(ledger.settlements.map((s) => [s.id, { x: shownAt.get(s.id)?.x ?? s.x, y: shownAt.get(s.id)?.y ?? s.y, region: byId.get(s.id)?.region ?? null }]));
+  const anchors = new Map(ledger.settlements.map((s) => [s.id, { x: s.x, y: s.y }]));
   const rootXs = [...pos.values()].filter((p) => p.region && isRoot(p.region)).map((p) => p.x);
   const appliedXs = [...pos.values()].filter((p) => p.region && !isRoot(p.region)).map((p) => p.x);
   const divide = (Math.max(...rootXs) + Math.min(...appliedXs)) / 2; // the ocean between the worlds
@@ -786,11 +840,12 @@ function settle(model, ledger, { dryRun = false } = {}) {
     // shallow, so distance alone can't promise that. Simulate the terrain for the best few sites (with
     // the nodes settled so far) and take the first whose land touches no other landmark.
     if (n.maturity <= 2) {
-      const islet = ranked.slice(0, SETTLE.isletTries).find((c) => isletAt(model, ledger, grid, pos, n.id, c));
+      const islet = ranked.slice(0, SETTLE.isletTries).find((c) => isletAt(model, ledger, grid, anchors, n.id, c));
       if (islet) best = islet;
       else report.warnings.push(`${n.id}: no site among the best ${SETTLE.isletTries} stays a separate islet; it joins nearby land`);
     }
     pos.set(n.id, { x: best.x, y: best.y, region: n.region });
+    anchors.set(n.id, { x: best.x, y: best.y });
     const neighbour = [...pos.entries()].filter(([id]) => id !== n.id)
       .map(([id, p]) => ({ id, d: Math.hypot(p.x - best.x, p.y - best.y) })).sort((a, b) => a.d - b.d)[0];
     report.settled.push({ id: n.id, x: best.x, y: best.y, region: n.region, offshore: best.water, near: neighbour.id });
@@ -801,7 +856,7 @@ function settle(model, ledger, { dryRun = false } = {}) {
     for (const s of ledger.settlements) {
       const node = byId.get(s.id);
       if (!node) continue;
-      const o = owner[Terrain.cellOf(grid, s.x, s.y)];
+      const p = pos.get(s.id), o = owner[Terrain.cellOf(grid, p.x, p.y)];
       if (o !== 255 && regions[o] !== node.region) report.warnings.push(`${s.id} now belongs to ${node.region} but sits in ${regions[o]} territory`);
     }
   }
@@ -932,7 +987,7 @@ else if (cmd === "sea") {
   if (!ledger) fail("No ledger yet. Run `node build.mjs survey` first.");
   ledger.retired ??= [];
   const dryRun = args.includes("--dry-run");
-  printSettleReport(settle(model, ledger, { dryRun }), dryRun);
+  printSettleReport(settle(model, ledger, curation, { dryRun }), dryRun);
   if (dryRun) process.exit(0);
 } else fail(`unknown command: ${cmd}`);
 

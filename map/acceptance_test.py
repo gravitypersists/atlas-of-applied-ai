@@ -10,8 +10,9 @@ Runs the real build against throwaway changes and checks the permanence guarante
   3. frontier: a maturity 1-2 node settles on an islet of its own
   4. growth: raising that node to maturity 3 grows land and joins it to its parent's landmass
   5. retirement: removing a node from the backbone keeps its position and land
+  6. drawn positions: a curated `at` moves where a landmark is drawn and leaves the terrain alone
 
-backbone.json and everything under map/atlas and map/public/map.json are backed up first and always
+backbone.json, map/curation.yaml, everything under map/atlas and map/public/map.json are backed up first and always
 restored, whatever happens. Needs Node (with `npm install` done in map/) and Python 3.
 """
 
@@ -26,7 +27,8 @@ from pathlib import Path
 
 MAP = Path(__file__).resolve().parent
 ROOT = MAP.parent
-FILES = [ROOT / "backbone.json", MAP / "atlas" / "ledger.yaml", MAP / "atlas" / "terrain.json", MAP / "public" / "map.json"]
+CURATION = MAP / "curation.yaml"
+FILES = [ROOT / "backbone.json", CURATION, MAP / "atlas" / "ledger.yaml", MAP / "atlas" / "terrain.json", MAP / "public" / "map.json"]
 
 failures = []
 
@@ -37,8 +39,10 @@ def check(ok, msg):
         failures.append(msg)
 
 
-def build(*args):
+def build(*args, ok=True):
     r = subprocess.run(["node", str(MAP / "build.mjs"), *args], capture_output=True, text=True)
+    if not ok:
+        return r
     if r.returncode != 0:
         raise RuntimeError(f"build {' '.join(args)} failed:\n{r.stdout}{r.stderr}")
     return r.stdout
@@ -61,7 +65,7 @@ const t = JSON.parse(fs.readFileSync({json.dumps(str(MAP / 'atlas' / 'terrain.js
 const n = t.width * t.height;
 const land = T.rleDecode(t.land, n), owner = T.rleDecode(t.owner, n);
 const {{ label }} = T.components({{ width: t.width, height: t.height }}, land);
-process.stdout.write(JSON.stringify({{ width: t.width, cell: t.cell, land: Array.from(land), owner: Array.from(owner), label: Array.from(label) }}));
+process.stdout.write(JSON.stringify({{ width: t.width, cell: t.cell, regions: t.regions, land: Array.from(land), owner: Array.from(owner), label: Array.from(label) }}));
 """
     r = subprocess.run(["node", "--input-type=module", "-e", js], capture_output=True, text=True, check=True)
     return json.loads(r.stdout)
@@ -140,11 +144,37 @@ def main():
         check("retired: [test-old]" in (MAP / "atlas" / "ledger.yaml").read_text(), "the node moved to the retired list")
         check(any(e["id"] == "test-old" for e in ledger()), "its ledger entry still reserves its position")
         check(not any(a and not b for a, b in zip(T2["land"], T3["land"])), "its land was kept")
+
+        print("6. drawn positions")
+        def draw_at(id, x, y):
+            text = CURATION.read_text()
+            assert "\nnodes:\n" in text
+            CURATION.write_text(text.replace("\nnodes:\n", f"\nnodes:\n  {id}: {{at: [{x}, {y}]}}\n", 1))
+        moved = "retrieval-augmented-generation"
+        ax, ay = pos[moved]
+        region = T3["regions"].index("retrieval-and-knowledge")
+        cell = lambda x, y: int(y // T3["cell"]) * T3["width"] + int(x // T3["cell"])
+        target = next(((ax + dx, ay + dy) for dx in range(40, 0, -4) for dy in (0, 20, -20)
+                       if T3["owner"][cell(ax + dx, ay + dy)] == region), None)
+        check(target is not None, "found a spot in the landmark's own territory to move it to")
+        snap = {f: f.read_bytes() for f in FILES if f.parent.name == "atlas"}
+        draw_at(moved, *target)
+        build()
+        m = json.loads((MAP / "public" / "map.json").read_text())
+        drawn = next(l for l in m["landmarks"] if l["id"] == moved)
+        check((drawn["x"], drawn["y"]) == target, "the landmark is drawn at its curated position")
+        check(all(f.read_bytes() == b for f, b in snap.items()), "the ledger and terrain are byte-identical")
+        check(any(r["path"].startswith(f"M{target[0]:g},{target[1]:g}Q") for r in m["routes"] if r["from"] == moved),
+              "routes start from where the landmark is drawn")
+        shutil.copy(backup / CURATION.name, CURATION)
+        draw_at(moved, 10, 10)
+        r = build(ok=False)
+        check(r.returncode != 0 and "at sea" in r.stderr, "a curated position at sea fails the build")
     finally:
         for f in FILES:
             shutil.copy(backup / f.name, f)
         shutil.rmtree(backup, ignore_errors=True)
-        print("restored backbone.json, map/atlas, map/public/map.json")
+        print("restored backbone.json, map/curation.yaml, map/atlas, map/public/map.json")
 
     print(f"\n{'all checks passed' if not failures else f'{len(failures)} check(s) failed'}")
     sys.exit(1 if failures else 0)

@@ -12,6 +12,7 @@ const MAX_RESULTS = 8;
 const svg = d3.select("#map");
 const defs = svg.append("defs");
 const terrainLayer = svg.append("g").attr("class", "terrain");
+const waterLayer = svg.append("g").attr("class", "waters");
 const routeLayer = svg.append("g").attr("class", "routes");
 const titleLayer = svg.append("g").attr("class", "titles");
 const doodleLayer = svg.append("g").attr("class", "doodles");
@@ -93,6 +94,24 @@ function init(map) {
     terrainLayer.append("path").attr("class", "coast").attr("d", map.coast);
   }
 
+  // ---------------------------------------------------------------- water names
+  // Hand-placed in curation; each shows from its kind's zoom level (wz0–wz2). Text with an `arc` runs
+  // along a quadratic curve sagging that many px at its middle, sized to the build's width estimate.
+  const waters = waterLayer.selectAll("g").data(map.waters ?? []).join("g")
+    .attr("class", (d) => `water-name ${d.kind} wz${d.minZoom}`)
+    .attr("aria-hidden", "true");
+  waters.each(function (d, i) {
+    const g = d3.select(this);
+    if (!d.arc) { g.append("text").attr("dy", "0.35em").text(d.text); return; }
+    // The parabola y = arc·(1 − (x/h)²) over the text's half-width h, as in labels.mjs, run on past
+    // the text's ends (to ±L) so the textPath never clips. A symmetric quadratic Bézier is that parabola.
+    const h = d.width / 2, L = h + 16, yEnd = d.arc * (1 - (L * L) / (h * h));
+    g.append("path").attr("id", `water-path-${i}`).attr("fill", "none").attr("stroke", "none")
+      .attr("d", `M${-L},${yEnd} Q0,${2 * d.arc - yEnd} ${L},${yEnd}`);
+    g.append("text").attr("dy", "0.35em").append("textPath").attr("href", `#water-path-${i}`)
+      .attr("startOffset", "50%").text(d.text);
+  });
+
   // ---------------------------------------------------------------- titles
   const titled = [
     ...map.territories.filter((t) => t.group === "applied" && t.label).map((t) => ({ ...t, kind: "title" })),
@@ -144,6 +163,7 @@ function init(map) {
     const f = scales ? Math.max(MIN_MARK_SCALE, Math.min(1, t.k / scales[0])) : 1;
     landmarks.attr("transform", (d) => `translate(${t.applyX(d.x)},${t.applyY(d.y)}) scale(${f})`);
     doodles.attr("transform", (d) => `translate(${t.applyX(d.pin.x)},${t.applyY(d.pin.y)}) scale(${f})`);
+    waters.attr("transform", (d) => `translate(${t.applyX(d.at[0])},${t.applyY(d.at[1])}) scale(${f}) rotate(${d.angle})`);
     titles.attr("transform", (d) => `translate(${t.applyX(d.label[0])},${t.applyY(d.label[1])}) scale(${f})`);
     const level = scales
       ? (t.k < scales[1] ? 0 : t.k < scales[2] ? 1 : 2)

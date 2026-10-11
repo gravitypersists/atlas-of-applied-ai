@@ -28,7 +28,7 @@ The atlas is published as a private claude.ai artifact (https://claude.ai/artifa
 
 Run `map/acceptance_test.py` after changing `build.mjs`, `terrain.mjs` or settlement logic. The viewer has no automated tests, so check it in a browser at a desktop width and in a narrow (phone-sized) frame.
 
-The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`. Cartography (symbol tiers, title anchors, collision-free label placement per zoom level) lives in `map/labels.mjs`; its text sizes must match `map/public/style.css`. Region `title` (the fun name) is set in `backbone.yaml`, and `name` is the subtitle. Doodles (small ink vignettes pinned to landmarks or sea) live in `map/public/doodles.js`; follow `DOODLES.md` when adding one.
+The map is specified in `SPEC.md` (contracts) and `STRATEGY.md` (intent). `map/atlas/ledger.yaml` and `map/atlas/terrain.json` are the permanent geography. Once the survey is accepted (`world.accepted: true`), existing ledger positions, land cells and territory claims never change, sea level can only fall, and new nodes are only appended. Ledger positions are terrain anchors; to move where a landmark is drawn, set `at: [x, y]` for it under `nodes` in `map/curation.yaml` (it must be on land in its own territory), never edit the ledger. Before acceptance, both files are drafts and get regenerated. Terrain constants live in `TERRAIN` in `map/terrain.mjs`. Cartography (symbol tiers, title anchors, collision-free label placement per zoom level) lives in `map/labels.mjs`; its text sizes must match `map/public/style.css`. Region `title` (the fun name) is set in `backbone.yaml`, and `name` is the subtitle. Doodles (small ink vignettes pinned to landmarks or sea) live in `map/public/doodles.js`; follow `DOODLES.md` when adding one. Water names (oceans, seas, lakes) are placed by hand under `waters` in `map/curation.yaml`; their text sizes in `LABELS.text` must also match `style.css`.
 
 After any edit to `backbone.yaml`, run both Python scripts, then `node map/build.mjs` so the new node settles onto the map. `validate.py` must report 0 errors.
 
@@ -53,7 +53,7 @@ Top-level keys: `meta` (relationship enum, maturity tiers), `regions`, `boundary
 ## Semantics that matter for edits (from STRATEGY.md)
 
 The map gives these fields meaning, so treat them carefully:
-- Lineage edges set position: descendants are placed near their parents. Once a node is placed, its position is permanent (see `SPEC.md`), so new nodes settle near their parents and never move existing ones.
+- Lineage edges set position: descendants are placed near their parents. Once a node is placed, its anchor is permanent (see `SPEC.md`), so new nodes settle near their parents and never move existing ones; only its drawn position can be curated.
 - Maturity and cross-region edges raise a hidden elevation field, and a sea level cuts it into land and sea. Maturity 1–2 nodes start as islets and join the mainland as they mature. Strongly connected regions end up sharing land.
 - Dates are approximate (sometimes the paper, sometimes the first product). They're good enough for layout and replay, not for presenting as precise.
 

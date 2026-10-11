@@ -7,7 +7,7 @@ How the `backbone.yaml` taxonomy becomes a browsable, fantasy-style map of appli
 The goal is a map someone can wander casually. They should be able to see where a technique lives, what it grew out of, and what's new, then click through to learn more.
 
 1. **Low cognitive load comes first.** A first-time viewer should understand the map within seconds and never need a legend. When fidelity to the data competes with legibility, legibility wins.
-2. **It's a map, not a visualization.** Once a landmark is placed, it never moves. The same goes for land: once it exists, it stays. The map grows by accretion, the way a real atlas gains new coastline and settlements across editions.
+2. **It's a map, not a visualization.** Land, once it exists, stays, and so do territory borders. The map grows by accretion, the way a real atlas gains new coastline and settlements across editions. The layout's job is to raise land and group regions; once the land is fixed, where a landmark is drawn on it is a cartographer's choice (see *Anchors and drawn positions*).
 3. **The data suggests and the procedure decides.** Lineage, maturity, and region tags shape the terrain. Nothing forces a particular outcome, and a human can override anything during curation.
 4. **One interaction model.** Pan, zoom, and click a landmark. Everything else hangs off the click.
 5. **It grows by zooming.** The 141 backbone nodes make up the overview. Deep-dive content appears as finer detail at higher zoom.
@@ -79,6 +79,8 @@ Time runs roughly west to east, which makes the map read like a world atlas rath
 - mature nodes are pulled toward the region's interior, and frontier nodes toward the open sea
 
 The survey leaves generous space around hubs, because they'll attract settlers. The result is curated by hand once and then **written to the ledger, where it's fixed permanently**.
+
+**Anchors and drawn positions.** A landmark's ledger position is its *anchor*: the spot its uplift rises from, so it shaped the land and keeps shaping any growth. Anchors never move, because moving one would raise new land around it and, since land never sinks, bulge the coast. Where the landmark is *drawn* is separate. It starts at the anchor and can be moved by hand anywhere on land inside its own territory (`at` in `map/curation.yaml`), so a cartographer can loosen the survey's even spacing, put a port on the shore or a town by a border. The symbol, label, routes and doodles follow the drawn position; the terrain doesn't notice.
 
 **Settlement (every later build).** A new node is not placed by a global layout. It goes through a local search for the best open site near its parents, judged on how close it is to the parents, whether there's room, whether it's in its own region's territory, and whether the site suits its maturity: frontier nodes go just offshore, everything else goes along the coast. Its uplift then raises land in place, so new technology settles at the frontier and pushes the coast outward.
 
@@ -166,6 +168,6 @@ These now live as `title` on each applied region in `backbone.yaml`. The titles 
 3. Each region gets a fun title plus a serious subtitle.
 4. Simple geometric symbology for now.
 5. Start from the current 141 nodes. Deep-dive content grows in at deeper zoom.
-6. Positions and land are permanent. The map only grows.
+6. Land, territory claims and landmark anchors are permanent. The map only grows. Where a landmark is drawn can be curated freely within its territory.
 7. Hidden elevation plus a single sea level decide what is contiguous land and what is island.
 8. The Old World is its own continent in the west. Time runs roughly west to east, and an ocean separates the Old World from the New World.

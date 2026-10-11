@@ -24,7 +24,13 @@ export const LABELS = {
     title: { size: 16, em: 0.9, caps: 0.9, lineHeight: 1.1 },   // IM Fell English SC, spaced caps; size varies, see titleSizes
     subtitle: { size: 11, em: 0.5, caps: 0.68 },                // EB Garamond italic
     province: { size: 12, em: 0.88, caps: 0.88 },               // spaced caps
+    // Water names, EB Garamond italic: oceans in spaced capitals, seas and lakes in small letter-spaced text.
+    ocean: { size: 16, em: 0.5, caps: 1.05, upper: true },
+    sea: { size: 13, em: 0.5, caps: 0.75 },
+    lake: { size: 11, em: 0.46, caps: 0.7 },
   },
+  waterZoom: { ocean: 0, sea: 1, lake: 2 },   // the zoom level each kind of water name appears at
+  waterOnLand: 0.12,                // warn when more than this share of a water name's text lies on land
   titleWrap: 14,                    // titles longer than this many characters break onto two lines (or stay on one, if that fits better)
   titleSizes: [24, 22, 20, 18, 16], // px, largest first: a title grows when its territory has room
   titleInside: 0.9,                 // share of a title's box on its own territory needed to go above 16px
@@ -109,6 +115,33 @@ function labelBox(l, side, s) {
   return { x0: l.x + (x0 - p) / s, y0: l.y + (y0 - p) / s, x1: l.x + (x0 + w + p) / s, y1: l.y + (y0 + h + p) / s };
 }
 
+// A water name's text in screen px: its width, and a function giving a point of its band as world units.
+// The text is centred on `at`, rotated by `angle` degrees, and bowed along a quadratic curve that sags
+// `arc` px at its middle (negative bows upward).
+export function waterGeometry(w) {
+  const st = LABELS.text[w.kind];
+  const text = st.upper ? w.name.toUpperCase() : w.name;
+  const width = textWidth(text, st), height = st.size;
+  const a = ((w.angle ?? 0) * Math.PI) / 180, arc = w.arc ?? 0;
+  // u along the text (-1..1), v across it (-1..1, top to bottom), at scale s px per world unit.
+  const point = (u, v, s) => {
+    const x = (u * width) / 2, y = arc * (1 - u * u) + (v * height) / 2 - height * 0.15;
+    return [w.at[0] + (x * Math.cos(a) - y * Math.sin(a)) / s, w.at[1] + (x * Math.sin(a) + y * Math.cos(a)) / s];
+  };
+  return { text, width, height, point };
+}
+
+function waterBox(w, s) {
+  const { point } = waterGeometry(w);
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let i = 0; i <= 8; i++) for (const v of [-1, 1]) {
+    const [x, y] = point(-1 + i / 4, v, s);
+    x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y);
+  }
+  const p = LABELS.pad / s;
+  return { x0: x0 - p, y0: y0 - p, x1: x1 + p, y1: y1 + p };
+}
+
 function symbolBox(l, s) {
   const r = LABELS.symbol[l.tier] + LABELS.pad;
   return { x0: l.x - r / s, y0: l.y - r / s, x1: l.x + r / s, y1: l.y + r / s };
@@ -143,9 +176,30 @@ function interiorCandidates(grid, mask, limit = 1500) {
 // ---------------------------------------------------------------- placement (§4.8)
 // Places territory titles (z0–z1), Old World province names (z2), and landmark labels with a minZoom
 // each. Mutates territories, oldWorld and landmarks; returns a report.
-export function placeLabels({ landmarks, territories, oldWorld, terrain, overrides = {}, doodles = [] }) {
+export function placeLabels({ landmarks, territories, oldWorld, terrain, overrides = {}, doodles = [], waters = [] }) {
   const scales = levelScales(landmarks);
-  const report = { titleOverlaps: [], titleCovers: [], unplaced: [] };
+  const report = { titleOverlaps: [], titleCovers: [], unplaced: [], waterOnLand: [] };
+
+  // Water names are placed by hand (curation `waters`). Each shows from its kind's zoom level; the build
+  // keeps titles and landmark labels clear of it, and warns when much of its text lies on land.
+  for (const w of waters) {
+    w.minZoom = LABELS.waterZoom[w.kind];
+    const g = waterGeometry(w), s = scales[w.minZoom];
+    w.text = g.text;
+    w.width = Math.round(g.width);
+    if (terrain) {
+      const { grid, land } = terrain;
+      let hit = 0, n = 0;
+      for (let i = 0; i <= 24; i++) for (const v of [-0.6, 0, 0.6]) {
+        const [x, y] = g.point(-1 + i / 12, v, s);
+        const gi = Math.floor((x - grid.x0) / grid.cell), gj = Math.floor((y - grid.y0) / grid.cell);
+        n++;
+        if (gi >= 0 && gj >= 0 && gi < grid.width && gj < grid.height && land[gj * grid.width + gi]) hit++;
+      }
+      if (hit / n > LABELS.waterOnLand) report.waterOnLand.push(`${w.name} (${Math.round((100 * hit) / n)}%)`);
+    }
+  }
+  const watersAt = (z, s) => waters.filter((w) => w.minZoom <= z).map((w) => waterBox(w, s));
   const applied = territories.filter((t) => t.group === "applied");
   const provinces = territories.filter((t) => t.group === "old-world");
 
@@ -179,6 +233,7 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
     const [x0, y0, x1, y1] = d.box ?? LABELS.doodle;
     return [{ x0: pin.x + (d.dx + x0) / s0, y0: pin.y + (d.dy + y0) / s0, x1: pin.x + (d.dx + x1) / s0, y1: pin.y + (d.dy + y1) / s0 }];
   });
+  const oceanBoxes = watersAt(0, s0);
   const z1Symbols = landmarks.filter((l) => !LOCAL_ONLY.has(l.tier));
   const titled = [
     ...applied.map((t) => ({ t, titleLines: titleLines(t.title ?? t.subtitle), subtitleText: t.title ? t.subtitle : null, size: landmarks.filter((l) => l.region === t.id).length })),
@@ -218,7 +273,7 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
         for (const c of curated ? [curated] : cands) {
           const box = titleBox({ ...it, label: c }, s0);
           if (!curated && (placedTitles.some((b) => overlaps(b, box)) || capitals.some((l) => overlaps(symbolBox(l, s0), box)) ||
-            doodleBoxes.some((b) => overlaps(b, box)))) continue;
+            doodleBoxes.some((b) => overlaps(b, box)) || oceanBoxes.some((b) => overlaps(b, box)))) continue;
           const inside = insideShare(box, owners);
           const covered = z1Symbols.filter((l) => overlaps(symbolBox(l, s1), titleBox({ ...it, label: c }, s1))).length;
           const score = inside - LABELS.titleCoverCost * covered;
@@ -254,7 +309,7 @@ export function placeLabels({ landmarks, territories, oldWorld, terrain, overrid
     const s = scales[z];
     const placed = landmarks.filter((l) => l.minZoom !== null).map((l) => labelBox(l, l.labelSide, s));
     const symbols = landmarks.filter(symbolVisible[z]).map((l) => ({ l, box: symbolBox(l, s) }));
-    const titles = z < 2 ? titled.map((item) => titleBox({ ...item, label: item.t.label }, s)) : [];
+    const titles = [...(z < 2 ? titled.map((item) => titleBox({ ...item, label: item.t.label }, s)) : []), ...watersAt(z, s)];
     for (const l of order) {
       if (l.minZoom !== null || !eligible[z](l)) continue;
       const curated = overrides[l.id]?.label;

@@ -1,5 +1,6 @@
 # Applied AI Engineering Atlas: the permanent geography ledger.
-# Append-only. Positions here never change once settled (see SPEC.md §3.2).
+# Append-only. Positions here are terrain anchors and never change once settled (see SPEC.md §3.2);
+# to move where a landmark is drawn, set `at` for it under `nodes` in map/curation.yaml.
 # Editing an existing entry by hand is a deliberate cartographic act: do it in a reviewed commit.
 world:
   seed: 7
@@ -7,7 +8,7 @@ world:
   cell: 4
   sea_level: 0.36
   surveyed: "2026-10-08"
-  accepted: false
+  accepted: true
 settlements:
   - {id: bm25, x: 1090.8, y: 1123.2, settled: "2026-10-08"}
   - {id: approximate-nearest-neighbor-search, x: 1195.3, y: 1083.2, settled: "2026-10-08"}

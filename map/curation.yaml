@@ -1,5 +1,5 @@
 # Cartography choices for the atlas map (SPEC.md §3.4).
-# Freely editable. Nothing here moves a settled landmark.
+# Freely editable. Nothing here moves a landmark's terrain anchor or reshapes settled land.
 
 old_world: { title: The Old World, subtitle: Ancestral Disciplines }
 
@@ -46,7 +46,8 @@ survey:
     # The Painted Isles: room for sea between the islands.
     multimodal-applied: { scale: 1.6, shift: [170, 0], jitter: 45 } # jitter: seeded nudge so spacing isn't too even
 
-# Symbol tier overrides (SPEC.md §4.7).
+# Per-landmark cartography: `tier` overrides the symbol tier (SPEC.md §4.7), `label` the label side, and
+# `at: [x, y]` where the landmark is drawn (its terrain anchor stays in the ledger; SPEC.md §3.2, §3.4).
 nodes:
   # Old World capitals (2026-10-11). The Transformer leads Deep Learning, though Pretrained LMs score
   # higher on children: it is the landmark the whole New World grew from. Knowledge Graphs ties with
@@ -63,8 +64,57 @@ nodes:
   # Capability Benchmarks. Benchmarks stay the capital: the region grew out of them.
   capability-benchmarks: { tier: capital }
   llm-as-a-judge: { tier: city }
+  # The Peninsula of Long Thought, redrawn by hand (2026-10-11). The survey laid its landmarks in a ruler
+  # line down the arm by date; these loosen it: Chain-of-Thought's family gathers at the neck, the search
+  # and verification work spreads down both shores, and the reasoning-model towns share the southern bulb.
+  # The islet outposts stay on their anchors.
+  scratchpads: {at: [2178, 1832]}
+  chain-of-thought: {at: [2214, 1866]}
+  self-consistency: {at: [2270, 1882]}
+  program-aided-reasoning: {at: [2186, 1930]}
+  reflexion: {at: [2276, 1964]}
+  tree-of-thoughts: {at: [2246, 2016]}
+  process-reward-models: {at: [2302, 2078]}
+  step-back-prompting: {at: [2232, 2132]}
+  math-shepherd: {at: [2352, 2190]}
+  llm-modulo: {at: [2282, 2236]}
+  reasoning-budget-control: {at: [2440, 2240]}
+  test-time-compute-scaling: {at: [2340, 2266]}
+  reasoning-models: {at: [2410, 2300]}
+  cot-monitoring: {at: [2470, 2322]}
+  # Decision Models takes the islet in the Gulf of Two More Years, and Agent-to-Agent Protocols its old
+  # spot in the Free Cities (2026-10-11).
+  decision-models: {at: [2566, 1859]}
+  agent-to-agent-protocols: {at: [2952.1, 1309.2]}
 
 # Title anchors (world units). Pin one when the automatic placement (labels.mjs: the largest size that
 # fits inside the territory, clear of other titles and capitals) picks a poor spot.
 # The earlier pins were cleared on 2026-10-11, when titles started sizing to fit inside their territory.
 regions: {}
+
+# Water names (SPEC §3.4), placed by hand at sea. `kind` sets size and when a name appears: ocean (world
+# zoom), sea (region zoom: seas, gulfs, straits, sounds, bays), lake (local zoom). `at` is the name's
+# centre in world units, `angle` tilts it (degrees, clockwise), `arc` bows it (px of sag at the middle;
+# negative bows up). The build fails if `at` is on land and warns when much of the text is.
+# Named 2026-10-11: the four oceans keep time's compass (the winters behind in the west, the preprints
+# arriving in the east); inner waters are named for what lies between their shores.
+waters:
+  # Oceans
+  - {name: The Sea of Attention, kind: ocean, at: [1760, 742], arc: 6}         # between the Old World and the New: the crossing the Transformer made
+  - {name: The Winter Sea, kind: ocean, at: [400, 1180], angle: -90}            # west of the Old World: the AI winters
+  - {name: The Preprint Sea, kind: ocean, at: [4620, 1480], angle: 90}          # the eastern edge, where new work washes in
+  - {name: The Common Crawl, kind: ocean, at: [3150, 2540], arc: -6}            # the open southern ocean everything was scraped from
+  # Seas, gulfs, straits and bays
+  - {name: Gulf of Two More Years, kind: sea, at: [2520, 2020], arc: 5}        # off the Peninsula of Long Thought: AGI, always just across it
+  - {name: The Modality Gap, kind: sea, at: [3868, 1845], angle: 90}           # the Painted Isles' channel from the mainland
+  - {name: Sim-to-Real Strait, kind: sea, at: [4000, 2215], arc: 4}            # between the Clockwork Isle and the rest
+  - {name: Red Tape Narrows, kind: sea, at: [3640, 1010]}                      # the Chancery's channel from the Bulwark
+  - {name: Jailbreak Bay, kind: sea, at: [3236, 1183], angle: -12}                         # the Bulwark's inner bay, pirates and all
+  - {name: Lighthill Fjord, kind: sea, at: [725, 1703]}                        # the Old World's western fjord (the 1973 report)
+  - {name: Moravec Sound, kind: sea, at: [1205, 2120], angle: -90}             # between Robotics and Computer Vision
+  - {name: The Vanishing Gulf, kind: sea, at: [1559, 1658]}                    # narrows to nothing between Deep Learning and Vision
+  - {name: Stopword Bay, kind: sea, at: [845, 1214]}                           # under Information Retrieval's horn
+  # Lakes
+  - {name: Forgetting Mere, kind: lake, at: [2660, 1240]}                      # catastrophic forgetting, in the Tempering Grounds
+  - {name: Model Collapse Tarn, kind: lake, at: [2505, 1282]}                  # the Quarries' inlet
+  - {name: Lake Recall, kind: lake, at: [3182, 1950]}                          # the Archival Reach
