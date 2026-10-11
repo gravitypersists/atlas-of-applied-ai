@@ -363,6 +363,9 @@ body::before {
   stroke-width: 3px;
   stroke-linejoin: round;
 }
+.doodle .caption.on-land {
+  stroke: var(--parchment);
+}
 .doodle .leaf {
   fill: var(--ink-soft);
   stroke-width: 0.5;

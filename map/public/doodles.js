@@ -248,12 +248,13 @@ window.DOODLES = [
       <path class="solid" d="M-1.3 -10.8 L6.4 -12.6 L9 -11.2 L7.2 -8.8 L-0.6 -7 Z"/>
       <path class="hatch" d="M1 -20.5 h4.5 M-1 -14.5 h-4.5 M1.2 -9.4 L5.4 -10.4"/>`,
   },
-  // A lonely islet off the Chancery, heaped with paperclips and one more on its way: Bostrom's maximizer.
+  // The Free Cities, below Model Collapse Tarn: a heap of paperclips with one more on its way, Bostrom's
+  // maximizer at work.
   {
-    id: "paperclips", at: [4560, 800], dx: 16, dy: 0, box: [-48, -24, 48, 23],
-    svg: `
-      <path class="solid" d="M-15 1 Q-12 -3 -6 -3.6 Q0 -4.6 6 -3.6 Q12 -3 15 1 Z"/>
-      <path class="solid" d="M-9.5 -3.4 Q-7 -12.5 0 -14 Q7 -12.5 9.5 -3.4 Z"/>
+    id: "paperclips", at: [2520, 1382], dx: 0, dy: 0, minZoom: 1,
+    svg: `<g transform="scale(1.25)">
+      <path class="ground" d="M-15 0.4 Q-7 -0.6 0 0.3 T15 0.2"/>
+      <path class="solid" d="M-11.5 0.2 Q-8 -12.5 0 -14 Q8 -12.5 11.5 0.2 Z"/>
       <g class="clip">
         <path d="M0 0 V-4.6 A1.1 1.1 0 0 1 2.2 -4.6 V-1 A0.7 0.7 0 0 1 0.8 -1 V-4" transform="translate(-6.5 -4.2) rotate(-65) scale(1.0)"/>
         <path d="M0 0 V-4.6 A1.1 1.1 0 0 1 2.2 -4.6 V-1 A0.7 0.7 0 0 1 0.8 -1 V-4" transform="translate(-3.5 -4.5) rotate(80) scale(1.0)"/>
@@ -268,8 +269,8 @@ window.DOODLES = [
       </g>
       <g class="clip"><path d="M0 0 V-4.6 A1.1 1.1 0 0 1 2.2 -4.6 V-1 A0.7 0.7 0 0 1 0.8 -1 V-4" transform="translate(4.5 -17.5) rotate(30) scale(1.1)"/></g>
       <path class="hatch" d="M2.4 -21.6 L3.2 -20.2 M7.6 -21 L6.8 -19.6"/>
-      <path class="water" d="M-21 1.2 q2.5 -1.6 5 0 M16 1.2 q2.5 -1.6 5 0 M-12 5 h9 M4 6 h11"/>
-      <text class="caption" x="0" y="19" text-anchor="middle">Here be paperclips</text>`,
+      </g>
+      <text class="caption on-land" x="0" y="15" text-anchor="middle">A growing mountain of paper clips</text>`,
   },
   // The bay below Indirect Prompt Injection: a pirate ship lying off the Bulwark, two masts, gunports run out,
   // a torn mainsail and the black flag up.

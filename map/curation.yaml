@@ -103,7 +103,7 @@ waters:
   # Oceans
   - {name: The Sea of Attention, kind: ocean, at: [1760, 742], arc: 6}         # between the Old World and the New: the crossing the Transformer made
   - {name: The Winter Sea, kind: ocean, at: [400, 1180], angle: -90}            # west of the Old World: the AI winters
-  - {name: The Uncharted Unknown, kind: ocean, at: [4620, 1480], angle: 90}    # the eastern edge, where the map runs out
+  - {name: The Uncharted Unknown, kind: ocean, at: [4596, 1400], angle: 75}    # the eastern edge, where the map runs out
   - {name: The Common Crawl, kind: ocean, at: [3150, 2540], arc: -6}            # the open southern ocean everything was scraped from
   # Seas, gulfs, straits and bays
   - {name: Gulf of Two More Years, kind: sea, at: [2520, 2020], arc: 5}        # off the Peninsula of Long Thought: AGI, always just across it
