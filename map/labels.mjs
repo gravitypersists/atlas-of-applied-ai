@@ -37,14 +37,15 @@ const LOCAL_ONLY = new Set(["outpost", "hamlet"]);
 const SIDES = ["right", "left", "above", "below"];
 
 // ---------------------------------------------------------------- tiers (§4.7)
-// score = maturity + log2(1 + childCount). Root nodes are `old`; each applied region has exactly one
-// capital (highest score, then most children, then oldest, then id); then outposts, hamlets (deep-dive
-// `layer: detail` nodes, which never compete with the backbone on the overview), cities, towns.
+// score = maturity + log2(1 + childCount). Every region, applied or Old World province, has exactly one
+// capital (highest score, then most children, then oldest, then id). The other root nodes are `old`.
+// The rest of an applied region: outposts, hamlets (deep-dive `layer: detail` nodes, which never compete
+// with the backbone on the overview), cities, towns.
 export function assignTiers(landmarks, overrides = {}) {
   const score = (l) => l.maturity + Math.log2(1 + l.children.length);
   const capitals = new Map();
   for (const l of landmarks) {
-    if (l.group === "old-world" || l.layer === "detail") continue;
+    if (l.layer === "detail") continue;
     const c = capitals.get(l.region);
     const better = !c || score(l) > score(c) ||
       (score(l) === score(c) && (l.children.length > c.children.length ||
@@ -54,8 +55,8 @@ export function assignTiers(landmarks, overrides = {}) {
   for (const l of landmarks) {
     l.score = Math.round(score(l) * 100) / 100;
     l.tier = overrides[l.id]?.tier ??
-      (l.group === "old-world" ? "old"
-        : capitals.get(l.region) === l ? "capital"
+      (capitals.get(l.region) === l ? "capital"
+        : l.group === "old-world" ? "old"
         : l.maturity <= 2 ? "outpost"
         : l.layer === "detail" ? "hamlet"
         : l.maturity >= 4 && l.children.length >= 2 ? "city"

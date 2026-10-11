@@ -23,6 +23,7 @@ export const TERRAIN = {
     width: 26,              // world units
   },
   spine: { height: 0.75, width: 45 },              // defaults for a curated spine (curation.yaml terrain)
+  inlet: { depth: 1.4, width: 28 },                 // defaults for a curated inlet: a sound or fjord cut into the land
   warp: { amplitude: 120, scale: 380, octaves: 4 }, // multi-octave domain warp: peninsulas and coves
   bedrock: { amplitude: 0.32, scale: 240, octaves: 5 },
   detail: { amplitude: 0.16, scale: 38, octaves: 3 }, // fine coastal raggedness, rocks and skerries
@@ -102,7 +103,7 @@ export function makeGrid(world) {
 // E(p) = 1 − exp(−(Σ uplift + Σ ridge)) + bedrock − basin. Recomputed every build; never stored.
 // The saturating sum keeps dense interiors near 1, so the coast sits where influence fades and the
 // bedrock noise is large enough to shape it. It is still monotonic: more uplift never lowers E.
-export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) {
+export function elevation(grid, { landmarks, ridges, inlets = [], seed }, boost = new Map()) {
   const T = TERRAIN;
   const { width, height, cell, wx, wy } = grid;
   const E = new Float32Array(width * height);
@@ -168,6 +169,27 @@ export function elevation(grid, { landmarks, ridges, seed }, boost = new Map()) 
   }
 
   for (let k = 0; k < E.length; k++) E[k] = 1 - Math.exp(-E[k]);
+  const cut = inlets.length ? new Float32Array(E.length) : null;
+
+  // Inlets: curated channels lowered after saturation, so they cut through even dense interiors.
+  // Warped like ridges, so their banks wander. Depth tapers from the mouth (first point) to the head.
+  for (const inl of inlets) {
+    const w = inl.width, n = inl.points.length - 1;
+    for (let s = 0; s < n; s++) {
+      const [ax0, ay0] = inl.points[s], [bx0, by0] = inl.points[s + 1];
+      const da = inl.depth * (1 - 0.35 * (s / n)), db = inl.depth * (1 - 0.35 * ((s + 1) / n));
+      const a = span(ax0, ay0, 3 * w), b = span(bx0, by0, 3 * w);
+      const [ax, ay] = warp(ax0, ay0), [bx, by] = warp(bx0, by0);
+      const vx = bx - ax, vy = by - ay, len2 = vx * vx + vy * vy || 1;
+      for (let j = Math.min(a.j0, b.j0); j <= Math.max(a.j1, b.j1); j++) for (let i = Math.min(a.i0, b.i0); i <= Math.max(a.i1, b.i1); i++) {
+        const k = j * width + i;
+        const t = Math.max(0, Math.min(1, ((qx[k] - ax) * vx + (qy[k] - ay) * vy) / len2));
+        const dx = qx[k] - (ax + t * vx), dy = qy[k] - (ay + t * vy), d2 = dx * dx + dy * dy;
+        // Segments overlap at their joints; take the deepest cut rather than summing.
+        if (d2 < 9 * w * w) { const v = (da + (db - da) * t) * Math.exp(-d2 / (2 * w * w)); if (v > cut[k]) { E[k] -= v - cut[k]; cut[k] = v; } }
+      }
+    }
+  }
 
   // Harbour bays: round dents (unwarped, so the bay sits where it was measured).
   for (const l of landmarks) {
@@ -259,7 +281,7 @@ export function terrainInputs(model, placed, regionStyles = {}) {
   // Spines: a curated polyline per region, raised as a broad ridge so a long landform (a peninsula)
   // holds together even where its landmarks are young islets. Positions are fixed world units.
   for (const [region, c] of Object.entries(regionStyles)) {
-    if (typeof c !== "object" || !c.spine) continue;
+    if (region === "inlets" || typeof c !== "object" || !c.spine) continue;
     if (!regionById.has(region)) throw new Error(`curation terrain: unknown region ${region}`);
     const { points, height = T.spine.height, width = T.spine.width } = c.spine;
     for (let i = 1; i < points.length; i++) {
@@ -267,7 +289,12 @@ export function terrainInputs(model, placed, regionStyles = {}) {
       ridges.push({ ax, ay, bx, by, height, width });
     }
   }
-  return { landmarks, ridges };
+  // Inlets: curated channels of sea cut into the land (curation.yaml terrain.inlets), mouth first.
+  const inlets = (regionStyles.inlets ?? []).map(({ points, depth = T.inlet.depth, width = T.inlet.width }) => {
+    if (!Array.isArray(points) || points.length < 2) throw new Error("curation terrain.inlets: each inlet needs 2+ points");
+    return { points, depth, width };
+  });
+  return { landmarks, ridges, inlets };
 }
 
 // Carves a harbour bay for a seeded share of near-shore landmarks (sets `bay` on inputs.landmarks).

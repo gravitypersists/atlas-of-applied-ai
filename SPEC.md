@@ -123,6 +123,8 @@ terrain:                               # per-region terrain style (TERRAIN.style
   multimodal-applied: archipelago      # tighter uplift and no lineage ridges: one island per landmark
   planning-and-reasoning:              # or an object: optional `style`, plus a curated spine
     spine: {points: [[2230, 1790], [2200, 1960], ...], height: 0.75, width: 45}   # height/width default to TERRAIN.spine
+  inlets:                              # curated channels of sea, mouth first; depth/width default to TERRAIN.inlet
+    - {points: [[1200, 2120], [1205, 1990], [1215, 1870]], depth: 1.4, width: 28}
 nodes:
   bm25: {label: left}                  # label side: right (default) | left | above | below
   react-agent-loop: {tier: capital}    # force a symbol tier
@@ -201,6 +203,7 @@ The saturating sum keeps dense interiors near 1, so coasts form where influence 
 - **Bedrock.** Seeded fBm at two scales: a broad one that pushes land out into peninsulas and pulls it back into bays independently of the landmarks, and a fine one (`detail`) that gives coasts their raggedness, coves, and small rocks.
 - **Basin.** A smooth falloff in the outer margin of `bounds`, so the world ends in sea.
 
+- **Inlets.** `terrain.inlets` lists curated channels of sea (sounds, fjords, bays), each a polyline in world units from its mouth to its head. An inlet is cut from E after saturation, so it reaches through even a dense interior, with a Gaussian profile (`width`) and a depth that tapers by a third from mouth to head; where segments overlap, the deepest cut wins. Inlets are warped like ridges, so their banks wander. They give the Old World its sounds and fjords, which its broad, overlapping uplift would otherwise fill in. An inlet never floods a landmark: the coverage guarantee raises the landmark instead. Once the survey is accepted the high-water mark keeps existing land, so an inlet added later only shapes new land.
 - **Harbours.** About half of the landmarks of maturity 3 or more that sit within `TERRAIN.harbour.reach` of the sea (chosen by a seed from the node id) get a round bay carved just seaward of them, so they sit on a cove a few units from the water instead of in the middle of their own rise. Which landmarks qualify, and which way is seaward, are measured on E without bays. A region with a curated spine gets no bays, since its outline is hand-shaped.
 
 Uplift and ridges are non-negative, and bedrock and basin are fixed per location. Bays are the one negative term, and which landmarks get one can change as the map grows. Adding nodes, raising maturity, or adding edges can therefore lower E in places, but once the survey is accepted the high-water mark (§4.2) means no land ever sinks.
@@ -291,8 +294,8 @@ Within each region, `score = maturity + log2(1 + childCount)`. The rules below r
 
 | Tier | Rule |
 |---|---|
-| `old` | Root-region node. Size is still scaled by score. |
-| `capital` | The highest score in each applied region. Exactly one per region. |
+| `capital` | The highest score in each region, applied or Old World province. Exactly one per region. |
+| `old` | Any other root-region node. Size is still scaled by score. |
 | `outpost` | maturity ≤ 2 |
 | `hamlet` | `layer: detail` (deep-dive content). Never the capital. |
 | `city` | maturity ≥ 4 and childCount ≥ 2 |
