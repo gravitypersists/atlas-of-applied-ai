@@ -139,20 +139,18 @@ window.DOODLES = [
       <circle class="fill-ink" cx="3.8" cy="-24.2" r="0.75"/>
       <path class="hatch" d="M-1.2 -21.2 Q0.6 -18 3.2 -16.4"/>`,
   },
-  // The Free Cities, beside Coding Agents: a quill writing on its own, its scroll already spilling onto the floor.
+  // The Free Cities, beside Coding Agents: a quill writing on its own, a page of squiggles already filled.
   {
     id: "quill", at: "coding-agents", dx: -26, dy: -12,
     svg: `
-      <path class="ground" d="M-18 0.4 Q-6 -0.5 4 0.4 T20 0.2"/>
-      <path d="M4 -10.5 V0 M16.5 -10.5 V0"/>
-      <path class="solid" d="M-0.5 -10 V-12 H18.5 V-10 Z"/>
-      <path class="solid" d="M-3.2 -12 H15 V-12.6 H-1.2 Q-3.2 -12.6 -3.2 -11 Z"/>
-      <path class="solid" d="M-3.2 -11.5 H0.8 V-2 Q0.8 0 -2 0 H-12 V-0.4 Q-14.6 -0.4 -14.6 -2 Q-14.6 -3.4 -12.6 -3.4 H-3.2 Z"/>
-      <path class="hatch" d="M-2.4 -9 h2.4 M-2.4 -6.5 h2.4 M-2.4 -4 h1.8 M-10 -1.6 h2.5 M-6.5 -1.6 h2.5 M4 -13.6 h4"/>
+      <path class="ground" d="M-14 0.4 Q-5 -0.5 3 0.4 T13 0.2"/>
+      <path class="solid" d="M-11 0 L-8 -22 H5.5 L8.8 -18.6 L6 0 Z"/>
+      <path d="M5.5 -22 L5.2 -18.3 L8.8 -18.6"/>
+      <path class="hatch" d="M-6 -17 q1.1 -1.5 2.2 0 t2.2 0 t2.2 0 t2.2 0 M-6.6 -12.7 q1.1 -1.5 2.2 0 t2.2 0 t2.2 0 t2.2 0 t2.2 0 M-7.2 -8.4 q1.1 -1.5 2.2 0 t2.2 0 t2.2 0 t2.2 0 t2.2 0 M-7.8 -4.1 q1.1 -1.5 2.2 0 t2.2 0 t2.2 0"/>
       <g class="nib">
-        <path d="M10 -12.8 L15.5 -28"/>
-        <path class="solid" d="M10.9 -15 Q10.6 -23 16.5 -29 Q17.4 -22 12.2 -15.6 Z"/>
-        <path class="hatch" d="M12.6 -19 L11.4 -20.4 M14 -22.6 L12.6 -24 M13.4 -18.6 L15.2 -19.6 M14.8 -22.4 L16.4 -23.6"/>
+        <path d="M-1.2 -4.1 L12.6 -31"/>
+        <path class="solid" d="M1.6 -9.4 Q3.4 -22 13.6 -32.4 Q13.8 -20.4 3.4 -8.6 Z"/>
+        <path class="hatch" d="M4.6 -14.6 L3.6 -16.8 M7.4 -20.6 L6.4 -22.8 M6 -14.4 L8.2 -15.4 M9 -20.4 L11.2 -21.6"/>
       </g>`,
   },
   // The Free Cities, below the Model Context Protocol: a mooring mast, every kind of airship tied on the same way.
