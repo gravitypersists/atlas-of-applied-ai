@@ -18356,8 +18356,8 @@
    "id": "sycophancy",
    "name": "Sycophancy",
    "region": "safety-and-security",
-   "x": 2994.7,
-   "y": 1024.2,
+   "x": 3054,
+   "y": 970,
    "group": "applied",
    "maturity": 3,
    "maturityLabel": "Maturing",
@@ -18398,8 +18398,8 @@
    "id": "data-poisoning",
    "name": "Backdoors and Data Poisoning",
    "region": "safety-and-security",
-   "x": 3055.9,
-   "y": 981.7,
+   "x": 2995,
+   "y": 1024,
    "group": "applied",
    "maturity": 3,
    "maturityLabel": "Maturing",
@@ -25465,14 +25465,14 @@
    "to": "sycophancy",
    "cross": true,
    "oceanic": false,
-   "path": "M2833.8,1014.8Q2915.6,997 2994.7,1024.2"
+   "path": "M2833.8,1014.8Q2937.6,961.6 3054,970"
   },
   {
    "from": "supervised-fine-tuning",
    "to": "data-poisoning",
    "cross": true,
    "oceanic": false,
-   "path": "M2776.3,912.1Q2906.4,986 3055.9,981.7"
+   "path": "M2776.3,912.1Q2870,998.7 2995,1024"
   },
   {
    "from": "mixed-initiative-interaction",

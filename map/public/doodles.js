@@ -313,6 +313,30 @@ window.DOODLES = [
       <path class="water" d="M-25 4.5 q3 -1.8 6 0 M19 4.5 q3 -1.8 6 0 M-8 6.5 h16"/>
     </g>`,
   },
+  // The bay above Sycophancy, off the Bulwark's north shore: two sirens on a rock, singing whatever you want to hear.
+  {
+    id: "sirens", at: [3088, 922], dx: 0, dy: 0, minZoom: 1, box: [-22, -30, 24, 6],
+    svg: `
+      <path class="solid" d="M-15 0.5 L-12.5 -5 L-9.5 -6.6 L-7.6 -11.4 L-3.4 -12.8 L0.4 -10.6 L4.6 -12.4 L8.6 -9.6 L11.6 -4.6 L14.6 0.5 Z"/>
+      <path class="hatch" d="M-9.5 -6.6 L-7.4 -3.4 M0.4 -10.6 L-0.4 -6.4 M8.6 -9.6 L7 -5.6 M-3 -4 L-1.4 -1.4"/>
+      <path class="solid" d="M-6.4 -12.2 Q-11.6 -11 -12.4 -6.4 Q-12.8 -3 -15.4 -1.4 L-14 -0.4 Q-10.6 -2.2 -9.8 -5.8 Q-9 -9.2 -3 -10.6 Z"/>
+      <path class="fill-ink" d="M-15 -0.8 L-19.6 -3.4 L-17.4 -0.4 L-19 2.8 Z"/>
+      <path class="solid" d="M-7 -11.8 Q-5.6 -15 -6.8 -20.6 H-2.4 Q-3.6 -15 -2.4 -11.4 Z"/>
+      <path d="M-3.6 -19.6 Q-1 -18 -0.6 -15.4"/>
+      <circle class="solid" cx="-4.6" cy="-23.4" r="2.6"/>
+      <path class="fill-ink" d="M-7.2 -23.6 Q-7.4 -26.6 -4.6 -26.4 Q-2 -26.2 -2 -24.2 Q-4 -24.8 -5.2 -22.8 Q-6 -18 -9.8 -14.2 Q-7.8 -18.6 -7.2 -23.6 Z"/>
+      <path class="solid" d="M7.6 -11.4 Q12.6 -10.4 13.2 -6 Q13.6 -2.8 16.4 -1.4 L15 -0.4 Q11.4 -2 10.8 -5.4 Q10 -8.8 3.6 -9.8 Z"/>
+      <path class="fill-ink" d="M16 -0.8 L20.6 -3.4 L18.4 -0.4 L20 2.8 Z"/>
+      <path class="solid" d="M3.4 -11 Q4.8 -14.6 3.6 -20 H8 Q6.8 -14.6 8 -11.4 Z"/>
+      <path d="M6.8 -19.4 L9.8 -24"/>
+      <circle class="solid" cx="5.8" cy="-23" r="2.6"/>
+      <path class="fill-ink" d="M3.2 -23.2 Q3 -26.2 5.8 -26 Q8.4 -25.8 8.4 -23.8 Q6.4 -24.4 5.2 -22.4 Q4.4 -17.6 1.4 -14 Q2.8 -18.4 3.2 -23.2 Z"/>
+      <ellipse class="fill-ink" cx="13.6" cy="-20.4" rx="1.2" ry="0.85"/>
+      <path d="M14.7 -20.6 V-25 L16.2 -23.8"/>
+      <ellipse class="fill-ink" cx="18.4" cy="-14.8" rx="1.2" ry="0.85"/>
+      <path d="M19.5 -15 V-19.4 L21 -18.2"/>
+      <path class="water" d="M-22 1.6 q2.5 -1.6 5 0 M18 1.8 q2.5 -1.6 5 0 M-9 3.8 h16"/>`,
+  },
   // The Watchtowers, beside Capability Benchmarks: a great mountain whose summit is crowded with flags, since
   // every climber has already made it to the top.
   {

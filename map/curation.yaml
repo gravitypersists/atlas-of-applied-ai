@@ -87,6 +87,10 @@ nodes:
   # spot in the Free Cities (2026-10-11).
   decision-models: {at: [2566, 1859]}
   agent-to-agent-protocols: {at: [2952.1, 1309.2]}
+  # The Bulwark's north shore (2026-10-12): Sycophancy and Backdoors and Data Poisoning swap places, and
+  # Sycophancy moves up onto the shoreline, where the sirens sing to it from their rock in the bay.
+  sycophancy: {at: [3054, 970]}
+  data-poisoning: {at: [2995, 1024]}
 
 # Title anchors (world units). Pin one when the automatic placement (labels.mjs: the largest size that
 # fits inside the territory, clear of other titles and capitals) picks a poor spot.
