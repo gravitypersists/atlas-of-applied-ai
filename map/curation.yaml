@@ -119,6 +119,7 @@ waters:
   - {name: Moravec Sound, kind: sea, at: [1205, 2120], angle: -90}             # between Robotics and Computer Vision
   - {name: The Vanishing Gulf, kind: sea, at: [1559, 1658]}                    # narrows to nothing between Deep Learning and Vision
   - {name: Stopword Bay, kind: sea, at: [845, 1214]}                           # under Information Retrieval's horn
+  - {name: The Sound of Trademark Disputes, kind: sea, at: [4282, 1774], angle: -35}  # between Video Generation, the voice isles and Speech Recognition
   # Lakes
   - {name: Forgetting Mere, kind: lake, at: [2660, 1240]}                      # catastrophic forgetting, in the Tempering Grounds
   - {name: Model Collapse Tarn, kind: lake, at: [2505, 1282]}                  # the Quarries' inlet

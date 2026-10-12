@@ -19746,7 +19746,7 @@
    "children": [],
    "score": 3,
    "tier": "town",
-   "minZoom": 1,
+   "minZoom": 2,
    "labelSide": "right"
   },
   {
@@ -19898,7 +19898,7 @@
    ],
    "score": 6,
    "tier": "town",
-   "minZoom": 1,
+   "minZoom": 2,
    "labelSide": "right"
   },
   {
@@ -19979,7 +19979,7 @@
    ],
    "score": 4.58,
    "tier": "town",
-   "minZoom": 1,
+   "minZoom": 2,
    "labelSide": "right"
   },
   {
@@ -20472,7 +20472,7 @@
    ],
    "score": 4.58,
    "tier": "town",
-   "minZoom": 1,
+   "minZoom": 2,
    "labelSide": "right"
   },
   {
@@ -23192,6 +23192,19 @@
    "minZoom": 1,
    "text": "Stopword Bay",
    "width": 82
+  },
+  {
+   "name": "The Sound of Trademark Disputes",
+   "kind": "sea",
+   "at": [
+    4282,
+    1774
+   ],
+   "angle": -35,
+   "arc": 0,
+   "minZoom": 1,
+   "text": "The Sound of Trademark Disputes",
+   "width": 203
   },
   {
    "name": "Forgetting Mere",
