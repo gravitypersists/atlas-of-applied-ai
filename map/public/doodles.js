@@ -261,7 +261,9 @@ window.DOODLES = [
           <path d="M-8.5 -14.7 L-5.4 -15.8 L-2.1 -16.2 L1.0 -15.9 L4.0 -15.1 L6.7 -13.7 L9.1 -11.8 L10.9 -9.6 L12.3 -7.1 L13.1 -4.4 L13.3 -1.8 L13.0 0.9 L12.3 3.3 L11.1 5.5 L9.5 7.3 L7.6 8.7 L5.6 9.7 L3.5 10.3 L1.4 10.4 L-0.7 10.1 L-2.5 9.4 L-4.1 8.4 L-5.4 7.1 L-6.4 5.6 L-7.1 4.1 L-7.4 2.5 L-7.3 1.0 L-7.0 -0.5 L-6.4 -1.7 L-5.6 -2.7 L-4.6 -3.5 L-3.5 -4.0 L-2.5 -4.3 L-1.5 -4.3 L-0.5 -4.1 L0.2 -3.7 L0.8 -3.1 L1.2 -2.5 L1.4 -1.8 L1.3 -1.2 L1.0 -0.6"/>
         </g>
       </g>
-      <ellipse class="fill-ink" cx="0" cy="-7.5" rx="1.5" ry="0.8"/>`,
+      <ellipse class="fill-ink" cx="0" cy="-7.5" rx="6.5" ry="2.9" fill-opacity="0.18"/>
+      <ellipse class="fill-ink" cx="0" cy="-7.5" rx="4.6" ry="2.05" fill-opacity="0.4"/>
+      <ellipse class="fill-ink" cx="0" cy="-7.5" rx="3" ry="1.35"/>`,
   },
   // The Painted Isles, below Video Generation: a face eating spaghetti, after the 2023 clip that became the benchmark.
   {
