@@ -36,6 +36,7 @@ const routeLayer = svg.append("g").attr("class", "routes");
 const titleLayer = svg.append("g").attr("class", "titles");
 const doodleLayer = svg.append("g").attr("class", "doodles");
 const landmarkLayer = svg.append("g").attr("class", "landmarks");
+const noteLayer = svg.append("g").attr("class", "doodle-notes");
 
 let fitK = 1;
 
@@ -188,6 +189,47 @@ function init(map) {
   const wobble = defs.append("filter").attr("id", "doodle-wobble").attr("x", "-10%").attr("y", "-10%").attr("width", "120%").attr("height", "120%");
   wobble.append("feTurbulence").attr("type", "fractalNoise").attr("baseFrequency", 0.09).attr("numOctaves", 2).attr("seed", 7);
   wobble.append("feDisplacementMap").attr("in", "SourceGraphic").attr("scale", 1.1).attr("xChannelSelector", "R").attr("yChannelSelector", "G");
+  // A doodle with a `note` is clickable: a click pops the note out on a slip of paper, drawn in its own layer
+  // above the labels. A second click, a click anywhere else, or Escape puts it away.
+  const noted = doodles.filter((d) => d.note);
+  const notes = noteLayer.selectAll("g").data(noted.data()).join("g")
+    .attr("class", (d) => `doodle doodle-note dz${d.minZoom ?? 0}${d.pin.tier ? ` ${d.pin.tier}` : ""}`)
+    .attr("aria-hidden", "true");
+  notes.each(function (d) {
+    const [nx, ny] = d.noteAt ?? [0, -30];
+    // The offset sits on a wrapper: the slip's own transform belongs to its CSS pop animation.
+    const slip = d3.select(this).append("g").attr("transform", `translate(${(d.dx ?? 0) + nx},${(d.dy ?? 0) + ny})`)
+      .append("g").attr("class", "slip");
+    const paper = slip.append("path").attr("class", "solid").attr("filter", "url(#doodle-wobble)");
+    const text = slip.append("text").attr("class", "note-text").attr("text-anchor", "middle");
+    d.note.forEach((line, i) => text.append("tspan").attr("x", 0).attr("dy", i ? "1.25em" : 0).classed("first", !i).text(line));
+    // Sized to its text, and again on each opening in case the web font arrived after the first measure.
+    d.fitNote = () => {
+      text.attr("y", 0);
+      const b = text.node().getBBox(), px = 7, py = 5;
+      const w = b.width / 2 + px, h = b.height + 2 * py;
+      text.attr("y", -h + py - b.y);
+      // A slip with a folded corner.
+      paper.attr("d", `M${-w} ${-h} H${w - 5} L${w} ${-h + 5} V0 H${-w} Z M${w - 5} ${-h} V${-h + 5} H${w}`);
+    };
+    d.fitNote();
+  });
+  const closeNotes = () => { notes.classed("open", false); noted.attr("aria-expanded", "false"); };
+  noted.classed("has-note", true).attr("aria-hidden", null).attr("role", "button").attr("tabindex", 0)
+    .attr("aria-expanded", "false").attr("aria-label", (d) => d.noteLabel ?? "Read the note")
+    .on("click", function (event, d) {
+      event.stopPropagation();
+      const open = !notes.filter((n) => n === d).classed("open");
+      closeNotes();
+      if (open) d.fitNote();
+      notes.filter((n) => n === d).classed("open", open);
+      d3.select(this).attr("aria-expanded", String(open));
+    })
+    .on("keydown", function (event) { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); this.dispatchEvent(new MouseEvent("click")); } });
+  noted.insert("rect", ":first-child").attr("class", "hit").each(function (d) {
+    const [x0, y0, x1, y1] = d.box ?? [-4, -32, 40, 6];
+    d3.select(this).attr("x", x0 + (d.dx ?? 0)).attr("y", y0 + (d.dy ?? 0)).attr("width", x1 - x0).attr("height", y1 - y0);
+  });
 
   // ---------------------------------------------------------------- zoom
   let transform = d3.zoomIdentity;
@@ -203,6 +245,7 @@ function init(map) {
     const f = (scales ? Math.max(MIN_MARK_SCALE, Math.min(1, t.k / scales[0])) : 1) * markScale;
     landmarks.attr("transform", (d) => `translate(${t.applyX(d.x)},${t.applyY(d.y)}) scale(${f})`);
     doodles.attr("transform", (d) => `translate(${t.applyX(d.pin.x)},${t.applyY(d.pin.y)}) scale(${f})`);
+    notes.attr("transform", (d) => `translate(${t.applyX(d.pin.x)},${t.applyY(d.pin.y)}) scale(${f})`);
     waters.attr("transform", (d) => `translate(${t.applyX(d.at[0])},${t.applyY(d.at[1])}) scale(${f}) rotate(${d.angle})`);
     titles.attr("transform", (d) => `translate(${t.applyX(d.label[0])},${t.applyY(d.label[1])}) scale(${f})`);
     const level = scales
@@ -331,10 +374,10 @@ function init(map) {
   }
 
   landmarks.on("click", (event, d) => { event.stopPropagation(); select(d.id); });
-  svg.on("click", () => clearSelection()); // d3-zoom suppresses the click that ends a drag
+  svg.on("click", () => { clearSelection(); closeNotes(); }); // d3-zoom suppresses the click that ends a drag
   document.getElementById("panel-close").onclick = () => clearSelection();
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && document.activeElement !== searchInput && !about.open) clearSelection();
+    if (e.key === "Escape" && document.activeElement !== searchInput && !about.open) { clearSelection(); closeNotes(); }
   });
 
   // ---------------------------------------------------------------- panel

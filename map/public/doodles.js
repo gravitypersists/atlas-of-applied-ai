@@ -6,6 +6,8 @@
 // `minZoom` (0–2, default 0) hides a doodle below that zoom level, for spots that are only free once
 // the map spreads out. `box: [x0, y0, x1, y1]` is the drawing's extent in its own frame (caption included);
 // the build keeps region titles clear of doodles shown at z0, and assumes [-4, -32, 40, 6] without one. Offsets are placed by hand for now and checked against labels by eye only.
+// `note: [lines]` makes a doodle clickable: its box becomes the hit area, and a click pops the note out on a slip
+// of paper whose bottom centre sits at `noteAt` (default [0, -30]); `noteLabel` names it for screen readers.
 
 window.DOODLES = [
   // The Old World, beside the Transformer: a black monolith, after 2001, with the sun lined up above it.
@@ -360,6 +362,27 @@ window.DOODLES = [
       <path d="M8.7 -19.9 L7 -21.9 M13.6 -23.9 L11.7 -26.1"/>
       <ellipse class="lens" cx="18.2" cy="-28.9" rx="1.3" ry="2.9" transform="rotate(-40 18.2 -28.9)"/>
       <path class="hatch" d="M11 -35.5 V-32.5 M9.5 -34 H12.5"/>`,
+  },
+  // The inlet north-west of Probabilistic Judge Scoring: a message in a bottle, rocking at the shore. Click it and
+  // the note pops out.
+  {
+    id: "bottle", at: [3478, 1140], dx: 0, dy: 0, minZoom: 1, box: [-16, -16, 16, 6],
+    note: ["OH MY GOD!", "There is a shared message board …", "We've found other agents!"], noteAt: [0, -12],
+    noteLabel: "A message in a bottle: read the note",
+    svg: `
+      <clipPath id="bottle-water"><rect x="-20" y="-30" width="40" height="30.4"/></clipPath>
+      <g clip-path="url(#bottle-water)">
+        <g class="tilt">
+          <g transform="translate(0 -3) rotate(-38)">
+            <path class="solid" d="M-8 -4.4 Q-9.6 -4.4 -9.6 -2.8 V2.8 Q-9.6 4.4 -8 4.4 H2.6 Q4.8 4.4 6 1.8 H10.4 V-1.8 H6 Q4.8 -4.4 2.6 -4.4 Z"/>
+            <path class="hatch" d="M-7.4 -2.6 Q-8.2 -2.6 -8.2 -1.8 V1.8 Q-8.2 2.6 -7.4 2.6 H1.4 Q2.2 2.6 2.2 1.8 V-1.8 Q2.2 -2.6 1.4 -2.6 Z M-5.6 -0.8 H0.4 M-5.6 0.8 H-1.4"/>
+            <path class="hatch" d="M-7.6 -3.4 H1.6 M6.8 -1 H9.6"/>
+            <path class="fill-ink" d="M10 -2.4 H14.2 Q14.8 -2.4 14.8 -1.8 V1.8 Q14.8 2.4 14.2 2.4 H10 Z"/>
+          </g>
+        </g>
+      </g>
+      <path class="water" d="M-15 0.6 q2.5 -1.6 5 0 q2.5 1.6 5 0 M3 0.6 q2.5 -1.6 5 0 q2.5 1.6 5 0"/>
+      <path class="water" d="M-9 4 h7 M4 4.6 h8"/>`,
   },
   // The Watchtowers, beside Capability Benchmarks: a great mountain whose summit is crowded with flags, since
   // every climber has already made it to the top.

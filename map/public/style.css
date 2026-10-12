@@ -436,6 +436,7 @@ body::before {
 .doodle .nib,
 .doodle .sway,
 .doodle .swirl,
+.doodle .tilt,
 .doodle .escapee {
   transform-box: fill-box;
 }
@@ -640,6 +641,20 @@ body::before {
 .doodle .swirl .bounds {
   stroke: none;
 }
+/* The message bottle rocks ever so slightly on the waves, about its waterline. */
+.doodle .tilt {
+  transform-origin: 40% 85%;
+  animation: doodle-tilt 4.5s ease-in-out infinite;
+}
+@keyframes doodle-tilt {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+  50% {
+    transform: rotate(2.5deg) translateY(0.5px);
+  }
+}
 /* The quill writes on its own: short strokes back and forth along the line. */
 .doodle .nib {
   transform-origin: 0% 100%;
@@ -743,6 +758,56 @@ body::before {
   }
 }
 
+/* A doodle with a note (doodles.js `note`) takes clicks on its box; the note pops out of it on a slip of paper. */
+.doodle.has-note {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.doodle .hit {
+  fill: transparent;
+  stroke: none;
+}
+.doodle.has-note:focus {
+  outline: none;
+}
+.doodle.has-note:focus-visible .hit {
+  stroke: var(--ink-soft);
+  stroke-dasharray: 2 2;
+}
+.doodle-note .slip {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: translateY(8px) scale(0.15) rotate(-8deg);
+  opacity: 0;
+  transition:
+    transform 280ms cubic-bezier(0.3, 1.5, 0.6, 1),
+    opacity 140ms;
+}
+.doodle-note.open .slip {
+  transform: rotate(-2deg);
+  opacity: 1;
+}
+.doodle-note.open {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.doodle-note .note-text {
+  font-family: var(--body-font);
+  font-style: italic;
+  font-size: 12px;
+  fill: var(--ink);
+}
+.doodle-note .note-text .first {
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .doodle-note .slip {
+    transition: none;
+  }
+}
+
 /* Semantic zoom (SPEC §5.2). Labels and symbols fade rather than pop. */
 .landmark,
 .landmark .label,
@@ -765,7 +830,12 @@ body::before {
 #map.z1 .doodle.dz2 {
   opacity: 0;
 }
-#map.has-selection .doodle:not(.lit) {
+/* A hidden doodle can't be clicked, and its note goes with it. */
+#map.z0 .doodle:is(.dz1, .dz2),
+#map.z1 .doodle.dz2 {
+  pointer-events: none;
+}
+#map.has-selection .doodle:not(.lit, .doodle-note) {
   opacity: 0.3;
 }
 /* Region titles open the region's panel while they're prominent (z0–z1). */
