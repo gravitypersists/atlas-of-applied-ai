@@ -394,6 +394,15 @@ body::before {
   stroke: var(--parchment);
   stroke-width: 0.9;
 }
+.doodle .sail {
+  fill: var(--ink);
+  stroke: var(--parchment);
+  stroke-width: 0.8;
+}
+.doodle .cutlass {
+  stroke: var(--parchment);
+  stroke-width: 0.9;
+}
 .doodle .flag {
   fill: var(--ink-soft);
   stroke-width: 0.8;

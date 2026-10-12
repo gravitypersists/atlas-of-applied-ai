@@ -289,18 +289,20 @@ window.DOODLES = [
       <text class="caption on-land" x="0" y="15" text-anchor="middle">A growing mountain of paper clips</text>`,
   },
   // The bay below Indirect Prompt Injection: a pirate ship lying off the Bulwark, two masts, gunports run out,
-  // a torn mainsail and the black flag up.
+  // black sails (the torn mainsail carrying crossed cutlasses) and the black flag up.
   {
     id: "pirates", at: [3310, 1160], dx: 0, dy: 4, minZoom: 1,
     svg: `<g transform="scale(0.85)">
       <g class="rock">
         <path d="M-20 -6 L-27 -10.5 M-27 -10.5 L-9 -31 M-9 -31 L4 -35"/>
-        <path class="solid" d="M-10 -29 L-25.5 -10.5 L-16.5 -10.5 Z"/>
+        <path class="sail" d="M-10.5 -28.5 L-25.5 -10.5 L-16.5 -10.5 Z"/>
         <path d="M-9 -6 V-31 M4 -6 V-35"/>
-        <path class="solid" d="M-14 -29 Q-9 -27.6 -4 -29 Q-3.2 -25 -4 -21 Q-9 -19.8 -14 -21 Q-14.8 -25 -14 -29 Z"/>
-        <path class="solid" d="M-15 -19 Q-9 -17.4 -3 -19 Q-2 -14.5 -3 -10 Q-9 -8.6 -15 -10 Q-16 -14.5 -15 -19 Z"/>
-        <path class="solid" d="M-1 -32 Q4 -30.6 9 -32 Q9.8 -28 9 -24 Q4 -22.8 -1 -24 Q-1.8 -28 -1 -32 Z"/>
-        <path class="solid" d="M-2 -22 Q4 -20.4 10 -22 Q11 -17 10 -12 L7.2 -11.5 L5.8 -14 L4.2 -11.1 L-2 -12 Q-3 -17 -2 -22 Z"/>
+        <path class="sail" d="M-14 -29 Q-9 -27.6 -4 -29 Q-3.2 -25 -4 -21 Q-9 -19.8 -14 -21 Q-14.8 -25 -14 -29 Z"/>
+        <path class="sail" d="M-15 -19 Q-9 -17.4 -3 -19 Q-2 -14.5 -3 -10 Q-9 -8.6 -15 -10 Q-16 -14.5 -15 -19 Z"/>
+        <path class="sail" d="M-1 -32 Q4 -30.6 9 -32 Q9.8 -28 9 -24 Q4 -22.8 -1 -24 Q-1.8 -28 -1 -32 Z"/>
+        <path class="sail" d="M-3 -22.5 Q4 -20.8 11 -22.5 Q12.2 -17 11 -11.5 L8 -11 L6.4 -13.8 L4.6 -10.6 L-3 -11.5 Q-4.2 -17 -3 -22.5 Z"/>
+        <path class="cutlass" d="M0.4 -14.2 Q5.2 -16.4 8 -21 M7.6 -14.2 Q2.8 -16.4 0 -21 M-0.2 -16.2 L2 -13.6 M8.2 -16.2 L6 -13.6"/>
+        <path d="M-15.8 -29.2 H-2.2 M-16.8 -19.2 H-1.2 M-2.8 -32.2 H10.8 M-4.8 -22.7 H12.8"/>
         <path class="solid" d="M-20 -6 H13 L14 -11 H21 L19.5 -3 Q18 2.5 13 3 H-12 Q-17 1.5 -20 -6 Z"/>
         <path d="M-18.6 -2.6 H19.2"/>
         <path class="fill-ink" d="M-12.5 -5.2 h2.4 v1.8 h-2.4 Z M-6.5 -5.2 h2.4 v1.8 h-2.4 Z M-0.5 -5.2 h2.4 v1.8 h-2.4 Z M5.5 -5.2 h2.4 v1.8 h-2.4 Z"/>
