@@ -23129,6 +23129,19 @@
    "width": 108
   },
   {
+   "name": "The Gulf of \"Super Intelligence\"",
+   "kind": "sea",
+   "at": [
+    4030,
+    698
+   ],
+   "angle": 0,
+   "arc": 4,
+   "minZoom": 1,
+   "text": "The Gulf of \"Super Intelligence\"",
+   "width": 210
+  },
+  {
    "name": "Jailbreak Bay",
    "kind": "sea",
    "at": [
