@@ -27,7 +27,7 @@ The drawings and their placement live in `map/public/doodles.js`. Line, fill and
   | `flag`     | a soft-ink pennant; it flutters                                                                  |
   | `caption`  | the one line of italic text                                                                      |
 
-- **Colour.** The only colour on the map is the lighthouse's warm lamp and beam (`#f2d488`). Keep colour that rare: one small warm accent at most, and only where light is the point.
+- **Colour.** The only colours on the map are the lighthouse's warm lamp and beam (`#f2d488`) and the strawberries' red (`#c8553d`, class `berry`). Keep colour that rare: one small accent at most, and only where it is what makes the thing recognisable.
 - **Draw from simple shapes.** Rectangles with crenellations, arches, bezier humps and a few hatch lines are enough. Detail below about 1.5 px disappears at world zoom, so leave it out.
 - **Let the wobble do the hand-drawing.** Every doodle passes through the `doodle-wobble` filter, which roughens each line slightly. Draw clean, straight geometry; don't jitter the paths by hand.
 - **Ground the doodle.** Things on land stand on a `ground` line, and things at sea sit on `water` strokes. A doodle must never float.

@@ -373,6 +373,9 @@ body::before {
 .doodle .seed {
   stroke-width: 0.75;
 }
+.doodle .berry {
+  fill: #c8553d;
+}
 .doodle .clip path {
   stroke-width: 0.6;
 }
