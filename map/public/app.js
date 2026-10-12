@@ -332,6 +332,8 @@ function init(map) {
     const related = new Set([...l.parents.map((p) => p.id), ...l.children]);
     svg.classed("has-selection", true);
     territoryAreas.classed("chosen", false);
+    titles.classed("chosen", false);
+    landmarks.classed("in-region", false);
     landmarks
       .classed("selected", (d) => d === l)
       .classed("related", (d) => related.has(d.id));
@@ -355,6 +357,9 @@ function init(map) {
     clearSelection();
     selected = t;
     territoryAreas.classed("chosen", (d) => d.id === id);
+    // The chosen region reveals all its landmarks as dots, and its title fades so they read (style.css).
+    titles.classed("chosen", (d) => d.id === id);
+    landmarks.classed("in-region", (l) => inRegion(l, id));
     renderRegionPanel(t);
     setHash(`#${encodeURIComponent(id)}`);
     const members = map.landmarks.filter((l) => inRegion(l, id));
@@ -367,6 +372,8 @@ function init(map) {
     svg.classed("has-selection", false);
     landmarks.classed("selected", false).classed("related", false);
     territoryAreas.classed("chosen", false);
+    titles.classed("chosen", false);
+    landmarks.classed("in-region", false);
     doodles.classed("lit", false);
     routeLayer.selectAll("path").remove();
     document.getElementById("panel").hidden = true;

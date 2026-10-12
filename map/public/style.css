@@ -860,6 +860,19 @@ body::before {
 #map.z1 :is(.landmark.outpost, .landmark.hamlet):not(.selected, .related) * {
   pointer-events: none;
 }
+/* A chosen region is the threshold for full reveal: from region zoom on, all its landmarks show as dots
+   (and take taps), so its frontier and detail are visible to zoom into. Their labels keep their own zoom
+   level, since they were placed collision-free for it. */
+#map.z1 .landmark.in-region:is(.outpost, .hamlet) {
+  opacity: 1;
+  pointer-events: auto;
+}
+#map.z1 .landmark.in-region:is(.outpost, .hamlet) * {
+  pointer-events: auto;
+}
+#map.z1 .landmark.in-region.lz2 .label {
+  pointer-events: none;
+}
 .territory-label.province {
   opacity: 0;
 }
@@ -870,7 +883,8 @@ body::before {
 #map.z1 .territory-label.title {
   opacity: 0.75;
 }
-#map.z2 .territory-label.title {
+#map.z2 .territory-label.title,
+#map.z1 .territory-label.title.chosen {
   opacity: 0.18;
 }
 /* Territories: the whole area is a click target, with a hover lift and a solid border when chosen.
