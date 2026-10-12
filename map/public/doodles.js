@@ -337,6 +337,24 @@ window.DOODLES = [
       <path d="M19.5 -15 V-19.4 L21 -18.2"/>
       <path class="water" d="M-22 1.6 q2.5 -1.6 5 0 M18 1.8 q2.5 -1.6 5 0 M-9 3.8 h16"/>`,
   },
+  // The Chancery, south-east of AI Risk Management Frameworks: an observatory, its telescope trained on the horizon for what's coming.
+  {
+    id: "observatory", at: [4140, 905], dx: 0, dy: 0, minZoom: 1,
+    svg: `
+      <path class="ground" d="M-16 0.4 Q-6 -0.6 2 0.4 T16 0.2"/>
+      <path class="solid" d="M-11 0 V-4 H11 V0 Z"/>
+      <path class="solid" d="M-8.5 -4 V-12.5 H8.5 V-4 Z"/>
+      <path class="hatch" d="M-6.5 -9.5 h3 M3.5 -9.5 h3 M-5 -6.5 h2.5 M2.5 -6.5 h2.5 M-8 -2 h3 M5 -2 h3"/>
+      <path class="fill-ink" d="M-1.6 -4 V-7.6 A1.6 1.6 0 0 1 1.6 -7.6 V-4 Z"/>
+      <path class="solid" d="M-10 -12.5 Q-10 -21.5 0 -21.5 Q10 -21.5 10 -12.5 Z"/>
+      <path class="fill-ink" d="M0.6 -21.5 Q2.8 -21.4 4.8 -20.7 V-12.5 H0.6 Z"/>
+      <path class="hatch" d="M-5 -20.4 Q-6.4 -16.6 -6.2 -12.5 M-1.6 -21.4 Q-2.2 -17 -2 -12.5 M7.6 -18.8 Q8.2 -15.6 8 -12.5"/>
+      <path d="M-11 -12.5 H11"/>
+      <path class="solid" d="M3.4 -15.1 L19.3 -27.3 L16.7 -30.3 L1.8 -16.9 Z"/>
+      <path d="M8.7 -19.9 L7 -21.9 M13.6 -23.9 L11.7 -26.1"/>
+      <ellipse class="lens" cx="18.2" cy="-28.9" rx="1.3" ry="2.9" transform="rotate(-40 18.2 -28.9)"/>
+      <path class="hatch" d="M11 -35.5 V-32.5 M9.5 -34 H12.5"/>`,
+  },
   // The Watchtowers, beside Capability Benchmarks: a great mountain whose summit is crowded with flags, since
   // every climber has already made it to the top.
   {
