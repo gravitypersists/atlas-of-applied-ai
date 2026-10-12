@@ -153,6 +153,23 @@ window.DOODLES = [
         <path class="hatch" d="M4.6 -14.6 L3.6 -16.8 M7.4 -20.6 L6.4 -22.8 M6 -14.4 L8.2 -15.4 M9 -20.4 L11.2 -21.6"/>
       </g>`,
   },
+  // The Tempering Grounds, beside LoRA: the comedy and tragedy masks, one cheap adapter per persona.
+  {
+    id: "masks", at: "low-rank-adaptation", dx: -36, dy: 6,
+    svg: `
+      <path class="ground" d="M-12 0.4 Q-3 -0.5 5 0.4 T16 0.2"/>
+      <g transform="translate(7 0) rotate(16)">
+        <path class="solid" d="M-6 -15 Q-6.8 -4 0 0 Q6.8 -4 6 -15 Q0 -17.6 -6 -15 Z"/>
+        <path class="hatch" d="M-4.4 -12.6 L-1.4 -13.6 M4.4 -12.6 L1.4 -13.6"/>
+        <path class="fill-ink" d="M-4.2 -10.2 Q-2.6 -11.6 -1 -11 Q-2.4 -9.4 -4.2 -10.2 Z M4.2 -10.2 Q2.6 -11.6 1 -11 Q2.4 -9.4 4.2 -10.2 Z"/>
+        <path class="fill-ink" d="M-3.4 -3.2 Q0 -7.4 3.4 -3.2 Q0 -5.2 -3.4 -3.2 Z"/>
+      </g>
+      <g transform="rotate(-12)">
+        <path class="solid" d="M-6 -15 Q-6.8 -4 0 0 Q6.8 -4 6 -15 Q0 -17.6 -6 -15 Z"/>
+        <path class="fill-ink" d="M-4.4 -10.4 Q-2.7 -13 -1 -10.4 Q-2.7 -11.6 -4.4 -10.4 Z M4.4 -10.4 Q2.7 -13 1 -10.4 Q2.7 -11.6 4.4 -10.4 Z"/>
+        <path class="fill-ink" d="M-3.8 -6.6 Q0 -1 3.8 -6.6 Q0 -4.6 -3.8 -6.6 Z"/>
+      </g>`,
+  },
   // The Free Cities, below the Model Context Protocol: a mooring mast, every kind of airship tied on the same way.
   {
     id: "airship-mast", at: "model-context-protocol", dx: 0, dy: 42, minZoom: 2,
