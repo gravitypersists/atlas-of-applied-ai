@@ -123,3 +123,4 @@ waters:
   - {name: Forgetting Mere, kind: lake, at: [2660, 1240]}                      # catastrophic forgetting, in the Tempering Grounds
   - {name: Model Collapse Tarn, kind: lake, at: [2505, 1282]}                  # the Quarries' inlet
   - {name: Lake Recall, kind: lake, at: [3182, 1950]}                          # the Archival Reach
+  - {name: Reservoir for Universal Basic Income, kind: lake, at: [2921, 1661]}  # between Deep Research Agents and Reasoning Trace Display

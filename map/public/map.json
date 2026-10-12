@@ -23231,6 +23231,19 @@
    "minZoom": 2,
    "text": "Lake Recall",
    "width": 59
+  },
+  {
+   "name": "Reservoir for Universal Basic Income",
+   "kind": "lake",
+   "at": [
+    2921,
+    1661
+   ],
+   "angle": 0,
+   "arc": 0,
+   "minZoom": 2,
+   "text": "Reservoir for Universal Basic Income",
+   "width": 185
   }
  ],
  "routes": [
