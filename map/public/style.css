@@ -416,6 +416,37 @@ body::before {
 .doodle .lamp {
   fill: #f2d488;
 }
+.doodle .lantern {
+  fill: #c8553d;
+  stroke-width: 0.7;
+}
+.doodle .lantern-glow {
+  fill: #c8553d;
+  stroke: none;
+  opacity: 0.22;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: doodle-lantern 5s ease-in-out infinite;
+}
+@keyframes doodle-lantern {
+  0%,
+  100% {
+    opacity: 0.16;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.34;
+    transform: scale(1.1);
+  }
+}
+.doodle .linen {
+  fill: var(--parchment);
+  stroke-width: 0.6;
+}
+.doodle .heart {
+  fill: var(--ink);
+  stroke: none;
+}
 .doodle .beam {
   fill: #f2d488;
   stroke: none;

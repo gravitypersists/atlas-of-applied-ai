@@ -23129,6 +23129,19 @@
    "width": 124
   },
   {
+   "name": "The Red Lantern Isles",
+   "kind": "sea",
+   "at": [
+    4085,
+    2080
+   ],
+   "angle": 0,
+   "arc": 4,
+   "minZoom": 1,
+   "text": "The Red Lantern Isles",
+   "width": 141
+  },
+  {
    "name": "Red Tape Narrows",
    "kind": "sea",
    "at": [

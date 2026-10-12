@@ -9,6 +9,29 @@
 // `note: [lines]` makes a doodle clickable: its box becomes the hit area, and a click pops the note out on a slip
 // of paper whose bottom centre sits at `noteAt` (default [0, -30]); `noteLabel` names it for screen readers.
 
+// A pirate ship: two masts, gunports run out, black sails (the torn mainsail carrying crossed cutlasses) and the
+// black flag up. Drawn twice: off the Bulwark, and in the Red Lantern Isles.
+const PIRATE_SHIP = `<g transform="scale(0.85)">
+      <g class="rock">
+        <path d="M-20 -6 L-27 -10.5 M-27 -10.5 L-9 -31 M-9 -31 L4 -35"/>
+        <path class="sail" d="M-10.5 -28.5 L-25.5 -10.5 L-16.5 -10.5 Z"/>
+        <path d="M-9 -6 V-31 M4 -6 V-35"/>
+        <path class="sail" d="M-14 -29 Q-9 -27.6 -4 -29 Q-3.2 -25 -4 -21 Q-9 -19.8 -14 -21 Q-14.8 -25 -14 -29 Z"/>
+        <path class="sail" d="M-15 -19 Q-9 -17.4 -3 -19 Q-2 -14.5 -3 -10 Q-9 -8.6 -15 -10 Q-16 -14.5 -15 -19 Z"/>
+        <path class="sail" d="M-1 -32 Q4 -30.6 9 -32 Q9.8 -28 9 -24 Q4 -22.8 -1 -24 Q-1.8 -28 -1 -32 Z"/>
+        <path class="sail" d="M-3 -22.5 Q4 -20.8 11 -22.5 Q12.2 -17 11 -11.5 L8 -11 L6.4 -13.8 L4.6 -10.6 L-3 -11.5 Q-4.2 -17 -3 -22.5 Z"/>
+        <path class="cutlass" d="M0.4 -14.2 Q5.2 -16.4 8 -21 M7.6 -14.2 Q2.8 -16.4 0 -21 M-0.2 -16.2 L2 -13.6 M8.2 -16.2 L6 -13.6"/>
+        <path d="M-15.8 -29.2 H-2.2 M-16.8 -19.2 H-1.2 M-2.8 -32.2 H10.8 M-4.8 -22.7 H12.8"/>
+        <path class="solid" d="M-20 -6 H13 L14 -11 H21 L19.5 -3 Q18 2.5 13 3 H-12 Q-17 1.5 -20 -6 Z"/>
+        <path d="M-18.6 -2.6 H19.2"/>
+        <path class="fill-ink" d="M-12.5 -5.2 h2.4 v1.8 h-2.4 Z M-6.5 -5.2 h2.4 v1.8 h-2.4 Z M-0.5 -5.2 h2.4 v1.8 h-2.4 Z M5.5 -5.2 h2.4 v1.8 h-2.4 Z"/>
+        <path class="hatch" d="M15.6 -8.4 h3.2"/>
+        <path class="fill-ink" d="M4 -35 H12 V-29.6 H4 Z"/>
+        <path class="glint" d="M6 -33.6 L10 -31 M10 -33.6 L6 -31"/>
+      </g>
+      <path class="water" d="M-25 4.5 q3 -1.8 6 0 M19 4.5 q3 -1.8 6 0 M-8 6.5 h16"/>
+    </g>`;
+
 window.DOODLES = [
   // The Old World, beside the Transformer: a black monolith, after 2001, with the sun lined up above it.
   {
@@ -313,30 +336,10 @@ window.DOODLES = [
       </g>
       <text class="caption on-land" x="0" y="15" text-anchor="middle">A growing mountain of paper clips</text>`,
   },
-  // The bay below Indirect Prompt Injection: a pirate ship lying off the Bulwark, two masts, gunports run out,
-  // black sails (the torn mainsail carrying crossed cutlasses) and the black flag up.
+  // The bay below Indirect Prompt Injection: a pirate ship lying off the Bulwark.
   {
     id: "pirates", at: [3310, 1160], dx: 0, dy: 4, minZoom: 1,
-    svg: `<g transform="scale(0.85)">
-      <g class="rock">
-        <path d="M-20 -6 L-27 -10.5 M-27 -10.5 L-9 -31 M-9 -31 L4 -35"/>
-        <path class="sail" d="M-10.5 -28.5 L-25.5 -10.5 L-16.5 -10.5 Z"/>
-        <path d="M-9 -6 V-31 M4 -6 V-35"/>
-        <path class="sail" d="M-14 -29 Q-9 -27.6 -4 -29 Q-3.2 -25 -4 -21 Q-9 -19.8 -14 -21 Q-14.8 -25 -14 -29 Z"/>
-        <path class="sail" d="M-15 -19 Q-9 -17.4 -3 -19 Q-2 -14.5 -3 -10 Q-9 -8.6 -15 -10 Q-16 -14.5 -15 -19 Z"/>
-        <path class="sail" d="M-1 -32 Q4 -30.6 9 -32 Q9.8 -28 9 -24 Q4 -22.8 -1 -24 Q-1.8 -28 -1 -32 Z"/>
-        <path class="sail" d="M-3 -22.5 Q4 -20.8 11 -22.5 Q12.2 -17 11 -11.5 L8 -11 L6.4 -13.8 L4.6 -10.6 L-3 -11.5 Q-4.2 -17 -3 -22.5 Z"/>
-        <path class="cutlass" d="M0.4 -14.2 Q5.2 -16.4 8 -21 M7.6 -14.2 Q2.8 -16.4 0 -21 M-0.2 -16.2 L2 -13.6 M8.2 -16.2 L6 -13.6"/>
-        <path d="M-15.8 -29.2 H-2.2 M-16.8 -19.2 H-1.2 M-2.8 -32.2 H10.8 M-4.8 -22.7 H12.8"/>
-        <path class="solid" d="M-20 -6 H13 L14 -11 H21 L19.5 -3 Q18 2.5 13 3 H-12 Q-17 1.5 -20 -6 Z"/>
-        <path d="M-18.6 -2.6 H19.2"/>
-        <path class="fill-ink" d="M-12.5 -5.2 h2.4 v1.8 h-2.4 Z M-6.5 -5.2 h2.4 v1.8 h-2.4 Z M-0.5 -5.2 h2.4 v1.8 h-2.4 Z M5.5 -5.2 h2.4 v1.8 h-2.4 Z"/>
-        <path class="hatch" d="M15.6 -8.4 h3.2"/>
-        <path class="fill-ink" d="M4 -35 H12 V-29.6 H4 Z"/>
-        <path class="glint" d="M6 -33.6 L10 -31 M10 -33.6 L6 -31"/>
-      </g>
-      <path class="water" d="M-25 4.5 q3 -1.8 6 0 M19 4.5 q3 -1.8 6 0 M-8 6.5 h16"/>
-    </g>`,
+    svg: PIRATE_SHIP,
   },
   // The bay above Sycophancy, off the Bulwark's north shore: two sirens on a rock, singing whatever you want to hear.
   {
@@ -361,6 +364,43 @@ window.DOODLES = [
       <ellipse class="fill-ink" cx="18.4" cy="-14.8" rx="1.2" ry="0.85"/>
       <path d="M19.5 -15 V-19.4 L21 -18.2"/>
       <path class="water" d="M-22 1.6 q2.5 -1.6 5 0 M18 1.8 q2.5 -1.6 5 0 M-9 3.8 h16"/>`,
+  },
+  // The Red Lantern Isles, south of the Painted Isles: a pirate cove where open weights moor with no harbour master.
+  // A shack flies the black flag, a red lantern glows by the door, a heart is cut in the gable, and stockings
+  // and bloomers dry on the line to the palm.
+  {
+    id: "pirate-cove", at: [4048, 1976], dx: 0, dy: 0, minZoom: 1, box: [-24, -33, 25, 5],
+    svg: `
+      <path class="solid" d="M-18 1 Q-14 -3.6 -6 -4.2 Q4 -4.8 12 -3 Q17 -1.6 19 1 Z"/>
+      <path class="hatch" d="M-12 -1.6 h2.5 M3 -2.2 h3 M13 -0.8 h2"/>
+      <path d="M12.6 -3.6 Q11.6 -14 15.2 -24"/>
+      <path class="hatch" d="M12.1 -7.5 l1.4 0.4 M12.1 -11.5 l1.5 0.3 M12.6 -15.5 l1.5 0.2 M13.6 -19.5 l1.4 0.1"/>
+      <path class="solid" d="M15.2 -24 Q10 -27.6 5.4 -24.2 Q10 -25.4 15.2 -24 Z"/>
+      <path class="solid" d="M15.2 -24 Q12 -30.4 7.6 -30.4 Q12.4 -28.6 15.2 -24 Z"/>
+      <path class="solid" d="M15.2 -24 Q19 -30.2 23 -28.6 Q18.6 -28.2 15.2 -24 Z"/>
+      <path class="solid" d="M15.2 -24 Q20.6 -24.6 22.6 -20.4 Q19 -23 15.2 -24 Z"/>
+      <path class="solid" d="M-15 -4 V-14 H-3.4 V-4 Z"/>
+      <path class="hatch" d="M-15 -7.4 H-12.6 M-15 -10.8 H-12.6 M-5.6 -7.4 H-3.4 M-5.8 -10.8 H-3.4"/>
+      <path class="fill-ink" d="M-10.6 -4 V-9.2 H-7.6 V-4 Z"/>
+      <path class="solid" d="M-16.8 -13.6 L-9.2 -20.4 L-1.6 -13.6 Z"/>
+      <path class="heart" d="M-9.2 -14.6 L-10.9 -16.2 Q-11.7 -17.1 -10.9 -17.8 Q-9.9 -18.4 -9.2 -17.3 Q-8.5 -18.4 -7.5 -17.8 Q-6.7 -17.1 -7.5 -16.2 Z"/>
+      <path d="M-9.2 -20.4 V-28.4"/>
+      <path class="fill-ink" d="M-9.2 -28.4 H-3 L-4.2 -26.4 L-3 -24.4 H-9.2 Z"/>
+      <path class="glint" d="M-7.6 -27.4 L-5.2 -25.4 M-5.2 -27.4 L-7.6 -25.4"/>
+      <path d="M-15 -11.6 H-17.4 V-10.4"/>
+      <circle class="lantern-glow" cx="-17.4" cy="-8.4" r="4"/>
+      <path class="lantern" d="M-18.7 -10.4 H-16.1 L-15.5 -8.4 L-16.1 -6.4 H-18.7 L-19.3 -8.4 Z"/>
+      <path d="M-3.4 -14 Q3.6 -10.6 12.2 -14.6"/>
+      <path class="linen" d="M-2.2 -13.2 H-0.6 V-9 Q-0.6 -8.4 0 -8.4 H0.6 Q1.3 -8.4 1.3 -7.6 Q1.3 -6.8 0.5 -6.8 H-1 Q-2.2 -6.8 -2.2 -8 Z"/>
+      <path class="linen" d="M1.4 -12.6 H3 V-8.4 Q3 -7.8 3.6 -7.8 H4.2 Q4.9 -7.8 4.9 -7 Q4.9 -6.2 4.1 -6.2 H2.6 Q1.4 -6.2 1.4 -7.4 Z"/>
+      <path class="fill-ink" d="M-2.2 -13.2 H-0.6 V-12 H-2.2 Z M1.4 -12.6 H3 V-11.4 H1.4 Z"/>
+      <path class="linen" d="M6 -12.7 L10 -13.6 L10.6 -9.2 L9 -8.9 L8 -10.8 L7.2 -8.6 L5.6 -8.6 Z"/>
+      <path class="water" d="M-23 2.4 q2.5 -1.6 5 0 M19 2.4 q2.5 -1.6 5 0 M-6 4.4 h14"/>`,
+  },
+  // The Red Lantern Isles, south-east of the pirate cove: another pirate ship, bow toward the shack, in for the night.
+  {
+    id: "pirates-red-lantern", at: [4170, 2040], dx: 0, dy: 4, minZoom: 1,
+    svg: PIRATE_SHIP,
   },
   // The Chancery, south-east of AI Risk Management Frameworks: an observatory, its telescope trained on the horizon for what's coming.
   {

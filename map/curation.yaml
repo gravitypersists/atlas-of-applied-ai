@@ -114,6 +114,7 @@ waters:
   - {name: The Modality Gap, kind: sea, at: [3868, 1845], angle: 90}           # the Painted Isles' channel from the mainland
   - {name: Gap of Shared Understanding, kind: sea, at: [3770, 1582]}           # between the Engine Works and the Watchtowers, opening toward the Painted Isles
   - {name: Sim-to-Real Strait, kind: sea, at: [4000, 2215], arc: 4}            # between the Clockwork Isle and the rest
+  - {name: The Red Lantern Isles, kind: sea, at: [4085, 2080], arc: 4}         # the unclaimed islets south of the Painted Isles: open weights, no harbour master, lanterns lit after dark
   - {name: Red Tape Narrows, kind: sea, at: [3640, 1010]}                      # the Chancery's channel from the Bulwark
   - {name: 'The Gulf of "Super Intelligence"', kind: sea, at: [4030, 698], arc: 4}  # the bay north of the Chancery, where the regulators look out
   - {name: Jailbreak Bay, kind: sea, at: [3226, 1184], angle: -12}                         # the Bulwark's inner bay, pirates and all
