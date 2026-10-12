@@ -224,6 +224,22 @@ window.DOODLES = [
       <path class="water" d="M-16 6 h10 M-1 7.5 h12 M15 6 h8"/>
       <text class="caption" x="1" y="20" text-anchor="middle">Here be automata</text>`,
   },
+  // Far out in the Uncharted Unknown, northeast of its name: a whirlpool turning slowly round one point, the singularity.
+  {
+    id: "singularity", at: [4630, 620], dx: 0, dy: 0, box: [-28, -18, 28, 6],
+    svg: `
+      <path class="water" d="M-21.5 -9 A21.5 9 0 0 1 -12 -15.6 M-4 -16.9 A21.5 9 0 0 1 9 -16.6 M15 -14.6 A21.5 9 0 0 1 21.4 -8 M20 -4.4 A21.5 9 0 0 1 8 0.9 M-6 1.2 A21.5 9 0 0 1 -19.5 -4"/>
+      <path class="water" d="M-27 -2 q2.5 -1.6 5 0 M22 -2.5 q2.5 -1.6 5 0 M-12 4 h8 M5 4.4 h9"/>
+      <g transform="translate(0 -7.5) scale(1 0.44)">
+        <g class="swirl">
+          <circle class="bounds" r="17"/>
+          <path d="M17.0 0.0 L16.3 3.2 L15.1 6.2 L13.3 8.9 L11.0 11.0 L8.5 12.7 L5.7 13.7 L2.8 14.2 L0.0 14.1 L-2.7 13.5 L-5.1 12.4 L-7.3 10.9 L-9.0 9.0 L-10.2 6.8 L-11.0 4.6 L-11.4 2.3 L-11.2 0.0 L-10.6 -2.1 L-9.7 -4.0 L-8.4 -5.6 L-6.9 -6.9 L-5.2 -7.8 L-3.4 -8.3 L-1.7 -8.4 L-0.0 -8.2 L1.5 -7.6 L2.8 -6.8 L3.9 -5.8 L4.7 -4.7 L5.1 -3.4 L5.3 -2.2 L5.3 -1.0 L5.0 -0.0 L4.4 0.9 L3.8 1.6 L3.0 2.0 L2.3 2.3 L1.5 2.3 L0.9 2.1 L0.3 1.8 L0.0 1.2"/>
+          <path d="M-8.5 14.7 L-11.0 12.5 L-12.9 9.9 L-14.3 7.0 L-15.1 4.0 L-15.2 1.0 L-14.7 -1.9 L-13.7 -4.7 L-12.3 -7.1 L-10.4 -9.1 L-8.2 -10.6 L-5.8 -11.7 L-3.3 -12.3 L-0.8 -12.3 L1.6 -11.9 L3.7 -11.0 L5.6 -9.7 L7.1 -8.2 L8.3 -6.4 L9.0 -4.5 L9.4 -2.5 L9.3 -0.6 L8.9 1.2 L8.1 2.8 L7.1 4.1 L5.9 5.1 L4.5 5.9 L3.1 6.3 L1.7 6.4 L0.4 6.2 L-0.8 5.7 L-1.7 5.1 L-2.5 4.3 L-3.0 3.4 L-3.3 2.5 L-3.3 1.6 L-3.1 0.8 L-2.8 0.2 L-2.3 -0.3 L-1.7 -0.6 L-1.0 -0.6"/>
+          <path d="M-8.5 -14.7 L-5.4 -15.8 L-2.1 -16.2 L1.0 -15.9 L4.0 -15.1 L6.7 -13.7 L9.1 -11.8 L10.9 -9.6 L12.3 -7.1 L13.1 -4.4 L13.3 -1.8 L13.0 0.9 L12.3 3.3 L11.1 5.5 L9.5 7.3 L7.6 8.7 L5.6 9.7 L3.5 10.3 L1.4 10.4 L-0.7 10.1 L-2.5 9.4 L-4.1 8.4 L-5.4 7.1 L-6.4 5.6 L-7.1 4.1 L-7.4 2.5 L-7.3 1.0 L-7.0 -0.5 L-6.4 -1.7 L-5.6 -2.7 L-4.6 -3.5 L-3.5 -4.0 L-2.5 -4.3 L-1.5 -4.3 L-0.5 -4.1 L0.2 -3.7 L0.8 -3.1 L1.2 -2.5 L1.4 -1.8 L1.3 -1.2 L1.0 -0.6"/>
+        </g>
+      </g>
+      <ellipse class="fill-ink" cx="0" cy="-7.5" rx="1.5" ry="0.8"/>`,
+  },
   // The Painted Isles, below Video Generation: a face eating spaghetti, after the 2023 clip that became the benchmark.
   {
     id: "spaghetti", at: "video-generation", dx: 0, dy: 34, minZoom: 2,

@@ -423,6 +423,7 @@ body::before {
 .doodle .orbit,
 .doodle .nib,
 .doodle .sway,
+.doodle .swirl,
 .doodle .escapee {
   transform-box: fill-box;
 }
@@ -614,6 +615,18 @@ body::before {
   to {
     transform: rotate(360deg);
   }
+}
+/* The whirlpool turns slowly round its centre. Its arms are drawn round, then squashed into perspective,
+   so their stroke must not squash with them; the invisible circle centres the box it turns in. */
+.doodle .swirl {
+  transform-origin: 50% 50%;
+  animation: doodle-orbit 16s linear infinite reverse;
+}
+.doodle .swirl path {
+  vector-effect: non-scaling-stroke;
+}
+.doodle .swirl .bounds {
+  stroke: none;
 }
 /* The quill writes on its own: short strokes back and forth along the line. */
 .doodle .nib {
