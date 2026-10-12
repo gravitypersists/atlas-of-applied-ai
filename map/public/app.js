@@ -87,10 +87,14 @@ function placeLabel(text, d) {
 }
 
 const yearOf = (date) => (date ? String(date).slice(0, 4) : null);
-// Keeps the URL in step with the selection. Sandboxed frames (e.g. a published artifact) may refuse
-// history updates; selection must keep working regardless.
-function setHash(url) {
-  try { history.replaceState(null, "", url); } catch { /* not allowed here; deep links still work on load */ }
+// Keeps the URL in step with the selection. With `push`, a new selection becomes a browser history entry,
+// so Back returns to the previous one. Sandboxed frames (e.g. a published artifact) may refuse history
+// updates; selection must keep working regardless.
+function setHash(url, { push = false } = {}) {
+  try {
+    if (push && new URL(url, location.href).href !== location.href) history.pushState(null, "", url);
+    else history.replaceState(null, "", url);
+  } catch { /* not allowed here; deep links still work on load */ }
 }
 
 function init(map) {
@@ -324,8 +328,9 @@ function init(map) {
   const regionById = (id) => (id === OLD_WORLD ? oldWorldRegion : territoryById.get(id));
   const inRegion = (l, id) => (id === OLD_WORLD ? territoryById.get(l.region)?.group === "old-world" : l.region === id);
 
-  function select(id, { fly = true, instant = false } = {}) {
-    if (regionById(id)) { selectRegion(id, { instant }); return; }
+  // `push: false` when the URL already names the selection: on load, and on Back/Forward.
+  function select(id, { fly = true, instant = false, push = true } = {}) {
+    if (regionById(id)) { selectRegion(id, { instant, push }); return; }
     const l = byId.get(id);
     if (!l) return;
     selected = l;
@@ -342,7 +347,7 @@ function init(map) {
       .attr("class", (r) => `route ${r.to === id ? "ancestor" : "descendant"}${r.oceanic ? " oceanic" : ""}`)
       .attr("d", (r) => r.path);
     renderPanel(l);
-    setHash(`#${encodeURIComponent(id)}`);
+    setHash(`#${encodeURIComponent(id)}`, { push });
     if (fly) {
       // At least region zoom, so the landmark and its neighbours are labelled.
       const k = Math.max(transform.k, scales ? scales[1] * 1.15 : fitK * 2.3);
@@ -351,22 +356,23 @@ function init(map) {
   }
 
   // A region: its panel (overview, learning path, landmarks), framed on the map. Landmarks stay undimmed.
-  function selectRegion(id, { instant = false } = {}) {
+  function selectRegion(id, { instant = false, push = true } = {}) {
     const t = regionById(id);
     if (!t) return;
-    clearSelection();
+    clearSelection({ keepUrl: true });
     selected = t;
     territoryAreas.classed("chosen", (d) => d.id === id);
     // The chosen region reveals all its landmarks as dots, and its title fades so they read (style.css).
     titles.classed("chosen", (d) => d.id === id);
     landmarks.classed("in-region", (l) => inRegion(l, id));
     renderRegionPanel(t);
-    setHash(`#${encodeURIComponent(id)}`);
+    setHash(`#${encodeURIComponent(id)}`, { push });
     const members = map.landmarks.filter((l) => inRegion(l, id));
     fitBox(d3.min(members, (l) => l.x), d3.min(members, (l) => l.y), d3.max(members, (l) => l.x), d3.max(members, (l) => l.y), instant ? 0 : FLY_MS);
   }
 
-  function clearSelection() {
+  // Closing is a history entry too, so Back after closing reopens what was closed.
+  function clearSelection({ keepUrl = false } = {}) {
     if (!selected) return;
     selected = null;
     svg.classed("has-selection", false);
@@ -377,7 +383,7 @@ function init(map) {
     doodles.classed("lit", false);
     routeLayer.selectAll("path").remove();
     document.getElementById("panel").hidden = true;
-    setHash(location.pathname + location.search);
+    if (!keepUrl) setHash(location.pathname + location.search, { push: true });
   }
 
   landmarks.on("click", (event, d) => { event.stopPropagation(); select(d.id); });
@@ -637,8 +643,16 @@ function init(map) {
   // ---------------------------------------------------------------- deep links (SPEC §5.5)
   const fromHash = () => decodeURIComponent(location.hash.slice(1));
   const linkable = (id) => byId.has(id) || !!regionById(id);
-  if (linkable(fromHash())) select(fromHash(), { instant: true });
-  window.addEventListener("hashchange", () => { if (linkable(fromHash()) && fromHash() !== selected?.id) select(fromHash()); });
+  if (linkable(fromHash())) select(fromHash(), { instant: true, push: false });
+  // Back/Forward (popstate) and hand-edited hashes (hashchange, which may follow popstate) show whatever the
+  // URL names; a URL naming nothing closes the panel.
+  const followUrl = () => {
+    const id = fromHash();
+    if (linkable(id)) { if (id !== selected?.id) select(id, { push: false }); }
+    else clearSelection({ keepUrl: true });
+  };
+  window.addEventListener("popstate", followUrl);
+  window.addEventListener("hashchange", followUrl);
 
   // Debug hook: atlas.zoomTo(rel, x, y) jumps to a zoom relative to fit-to-world, centred on a world point.
   window.atlas = {
