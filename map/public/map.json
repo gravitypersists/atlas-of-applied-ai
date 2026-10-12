@@ -17043,7 +17043,7 @@
    "children": [],
    "score": 3,
    "tier": "town",
-   "minZoom": 1,
+   "minZoom": 2,
    "labelSide": "right"
   },
   {
@@ -23101,6 +23101,19 @@
    "minZoom": 1,
    "text": "The Modality Gap",
    "width": 108
+  },
+  {
+   "name": "Gap of Shared Understanding",
+   "kind": "sea",
+   "at": [
+    3770,
+    1582
+   ],
+   "angle": 0,
+   "arc": 0,
+   "minZoom": 1,
+   "text": "Gap of Shared Understanding",
+   "width": 177
   },
   {
    "name": "Sim-to-Real Strait",
