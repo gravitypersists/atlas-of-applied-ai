@@ -1523,3 +1523,9 @@ body:has(.panel:not([hidden])) .controls {
     bottom: max(16px, env(safe-area-inset-bottom));
   }
 }
+
+/* The social preview render (`?card`, see app.js) leaves out the controls. */
+body.card .search,
+body.card .controls {
+  display: none;
+}

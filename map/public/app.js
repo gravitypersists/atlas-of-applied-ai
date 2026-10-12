@@ -40,6 +40,9 @@ const noteLayer = svg.append("g").attr("class", "doodle-notes");
 
 let fitK = 1;
 
+// `?card` renders the map without its search and zoom controls, for the social preview image (og-image.jpg).
+if (new URLSearchParams(location.search).has("card")) document.body.classList.add("card");
+
 // no-store: the map is rebuilt often during curation, and a stale cached copy hides layout changes.
 d3.json("map.json", { cache: "no-store" }).then(init);
 

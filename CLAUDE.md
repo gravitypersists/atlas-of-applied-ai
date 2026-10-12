@@ -24,6 +24,13 @@ python3 map/acceptance_test.py         # permanence/growth/determinism checks (~
 python3 map/artifact_page.py out.html  # the viewer page without its document skeleton, for publishing as an artifact
 ```
 
+The atlas is also on GitHub Pages (https://gravitypersists.github.io/atlas-of-applied-ai/), deployed from `map/public` on every push to main that touches it. Its social preview is `map/public/og-image.jpg` (1200×630), a render of the map with its controls hidden (`?card`). Re-render it after visible map changes, with the dev server running:
+
+```sh
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars --window-size=1200,630 --virtual-time-budget=8000 --screenshot=/tmp/card.png "http://localhost:8000/?card"
+sips -s format jpeg -s formatOptions 85 /tmp/card.png --out map/public/og-image.jpg
+```
+
 The atlas is published as a private claude.ai artifact (https://claude.ai/artifact/1w3VzysDkBXJxvaewKsQau). To update it, publish the `artifact_page.py` output to that URL with `map/public/app.js`, `doodles.js`, `style.css` and `map.json` as supporting files.
 
 Run `map/acceptance_test.py` after changing `build.mjs`, `terrain.mjs` or settlement logic. The viewer has no automated tests, so check it in a browser at a desktop width and in a narrow (phone-sized) frame.
